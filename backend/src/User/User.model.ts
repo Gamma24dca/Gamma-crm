@@ -1,7 +1,7 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 export const UserModel = mongoose.model(
-  "User",
+  'User',
   new mongoose.Schema({
     name: {
       type: String,
@@ -24,5 +24,5 @@ export const UserModel = mongoose.model(
       type: String,
       required: true,
     },
-  })
+  }),
 );
