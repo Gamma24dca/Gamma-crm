@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import SignIn from "../SignIn/SignIn";
+import SignIn from "../../Organisms/SignIn/SignIn";
 
 function App() {
   return (
