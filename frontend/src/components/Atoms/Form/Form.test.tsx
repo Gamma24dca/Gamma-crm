@@ -1,25 +1,27 @@
-import "@testing-library/jest-dom";
-import { render } from "@testing-library/react";
-import Form from "./Form.tsx";
+import { render } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import { it } from 'vitest';
 
-it("Renders to the page ", () => {
+import Form from './Form';
+
+it('Renders to the page ', () => {
   const { getByTestId } = render(
     <Form>
       <input />
     </Form>
   );
 
-  const form = getByTestId("form");
+  const form = getByTestId('form');
   expect(form).toBeVisible();
 });
 
-it("Accept children input", () => {
+it('Accept children input', () => {
   const { getByTestId } = render(
     <Form>
       <input />
     </Form>
   );
 
-  const form = getByTestId("form");
-  expect(form).toContainHTML("input");
+  const form = getByTestId('form');
+  expect(form).toContainHTML('input');
 });
