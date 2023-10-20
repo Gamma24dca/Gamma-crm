@@ -13,8 +13,6 @@ describe('Input component', () => {
   });
 
   it('should focus on click', () => {
-    render(<Input id="input" type="text" name="Dawid" />);
-
     async () => {
       render(<Input id="input" type="text" name="Dawid" />);
       const input = screen.getByRole('textbox');

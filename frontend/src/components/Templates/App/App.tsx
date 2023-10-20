@@ -1,14 +1,21 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import SignIn from '../../Organisms/SignIn/SignIn';
+import NotFound from '../NotFound/NotFound';
 
-function App() {
+export function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<SignIn />} />
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+      <Route path="/" element={<SignIn />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 }
 
-export default App;
+// If you want deploy site to static cdn, use Hashrouter instead
+export function WrappedApp() {
+  return (
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  );
+}
