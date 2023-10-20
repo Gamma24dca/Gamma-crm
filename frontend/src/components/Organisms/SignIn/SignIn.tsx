@@ -1,9 +1,18 @@
+// import { useFormik } from 'formik';
+// import * as Yup from 'yup';
 import FormContainer from '../../Atoms/FormContainer/FormContainer';
 import Form from '../../Atoms/Form/Form';
 import Input from '../../Atoms/Input/Input';
 import styles from './SignIn.module.css';
 import FormControl from '../../Atoms/FormControl/FormControl';
 import Label from '../../Atoms/Label/Label';
+
+// const signInSchema = Yup.object({
+//   password: Yup.string().required('Hasło jest wymagane'),
+//   email: Yup.string()
+//     .email('Nieprawidłowy adres email')
+//     .required('Email jest wymagany'),
+// });
 
 function SignIn() {
   return (

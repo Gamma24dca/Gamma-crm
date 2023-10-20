@@ -31,10 +31,12 @@
   "devDependencies": {
     "@babel/core": "^7.23.2",
     "@babel/preset-env": "^7.23.2",
+    "@types/lodash.omit": "^4.5.8",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-jest": "^27.4.2",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^5.0.1",
+    "lodash.omit": "^4.5.0",
     "onchange": "^7.1.0"
   },
   "babel": {
