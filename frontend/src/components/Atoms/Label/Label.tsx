@@ -7,7 +7,7 @@ type LabelProps = {
 
 function Label({ htmlFor, labelContent }: LabelProps) {
   return (
-    <label htmlFor={htmlFor} className={styles.label}>
+    <label data-testid="label" htmlFor={htmlFor} className={styles.label}>
       {labelContent}
     </label>
   );
