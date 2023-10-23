@@ -33,7 +33,9 @@ AuthRouter.post('/signin', async (req, res) => {
       res.status(StatusCodes.OK).json({ token });
     }
   } catch (error) {
-    res.status(StatusCodes.UNAUTHORIZED).json({ message: error.message });
+    res
+      .status(StatusCodes.UNAUTHORIZED)
+      .json({ error: { message: error.message } });
   }
 });
 
@@ -44,6 +46,21 @@ AuthRouter.post('/signup', async (req, res) => {
   } catch (error) {
     res
       .status(StatusCodes.BAD_REQUEST)
+      .json({ error: { message: error.message } });
+  }
+});
+
+AuthRouter.post('/signout', async (req, res) => {
+  try {
+    res.status(StatusCodes.OK).cookie('token', '', {
+      httpOnly: true,
+      secure: true,
+      signed: true,
+      maxAge: 1,
+    });
+  } catch (error) {
+    res
+      .status(StatusCodes.NOT_FOUND)
       .json({ error: { message: error.message } });
   }
 });
