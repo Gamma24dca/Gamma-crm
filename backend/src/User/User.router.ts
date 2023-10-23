@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import { UserController } from './User.controller';
 import passport from 'passport';
 
-const UserRouter = Router();
+export const UserRouter = Router();
 
 UserRouter.get(
   '/',
