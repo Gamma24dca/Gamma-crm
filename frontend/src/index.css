@@ -2,21 +2,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;600;800&display=swap');
 
 :root {
-  --color-bg: #20212c;
-  --color-lighter: #3e3f4e;
-  --color-main: #2b2c37;
-  --color-title: #ffffff;
-  --color-subTitle: #ffffff;
-  --color-board: #20212c;
-  --color-themeSwitchBox: #20212c;
-  --color-addButton: #ffffff;
-  --color-ellipsis: #20212c;
-  --color-checked: rgba(255, 255, 255, 0.5);
+  --color-bg: #f4f7fd;
+  /* --color-lighter: #828fa3; */
+  /* --color-lighter: #e4ebfa; */
+  --color-lighter: #ffffff;
+  --color-title: #111111;
+  --color-subTitle: #828fa3;
+  --color-board: #ffffff;
+  --color-themeSwitchBox: #f4f7fd;
+  --color-addButton: #f0effa;
+  --color-ellipsis: #e4ebfa;
+  --color-checked: rgba(0, 0, 0, 0.5);
   font-family: Montserrat, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
+  color: #111111;
   background-color: var(--color-bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;

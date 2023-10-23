@@ -8,6 +8,7 @@
   padding: 2rem 0 5rem 0;
   background-color: var(--color-lighter);
   border-radius: 10px;
+  box-shadow: 0 4px 6px #364e7e1a;
 }
 
 @media (max-width: 630px) {
