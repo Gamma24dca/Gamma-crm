@@ -6,7 +6,7 @@ const proxy = httpProxy.createProxy();
 const server = http.createServer((req, res) => {
   if (req.url.includes("/api/")) {
     proxy.web(req, res, {
-      target: "http://localhost:5555",
+      target: "http://localhost:4000",
       changeOrigin: true,
     });
   } else {

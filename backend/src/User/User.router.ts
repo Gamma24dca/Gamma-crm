@@ -8,7 +8,6 @@ export const UserRouter = Router();
 UserRouter.get(
   '/',
   passport.authenticate('jwt', { session: false }),
-
   async (req, res) => {
     try {
       const users = await UserController.getUsers();
@@ -27,7 +26,7 @@ UserRouter.get(
   async (req, res) => {
     const id = req.params.id === 'me' ? req.user.id : req.params.id;
     try {
-      const user = await UserController.getUser(id);
+      const user = await UserController.getUser({ _id: id });
       res.status(StatusCodes.OK).json(user);
     } catch (error) {
       res.status(StatusCodes.NOT_FOUND).json({ message: error.message });
@@ -38,12 +37,16 @@ UserRouter.get(
 UserRouter.patch(
   '/:id',
   passport.authenticate('jwt', { session: false }),
+
   async (req, res) => {
     const id = req.params.id === 'me' ? req.user.id : req.params.id;
     try {
-      const updatedUser = UserController.updateUser(id, {
-        ...req.body,
-      });
+      const updatedUser = await UserController.updateUser(
+        { _id: id },
+        {
+          ...req.body,
+        },
+      );
       res.status(StatusCodes.ACCEPTED).json(updatedUser);
     } catch (error) {
       res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
@@ -57,7 +60,7 @@ UserRouter.delete(
   async (req, res) => {
     const id = req.params.id === 'me' ? req.user.id : req.params.id;
     try {
-      const user = UserController.deleteUser(id);
+      const user = await UserController.deleteUser({ _id: id });
       res.status(StatusCodes.NO_CONTENT).json(user);
     } catch (error) {
       res.status(StatusCodes.NOT_FOUND).json({ message: error.message });

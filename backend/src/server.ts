@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+import './Auth/Passport';
 const mongoose = require('mongoose');
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
@@ -31,5 +32,5 @@ app.use(morgan('tiny'));
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
 app.use('/api/auth', AuthRouter);
-app.use('/api/user', UserRouter);
+app.use('/api/users', UserRouter);
 app.get('/api/status', (_, res) => res.status(200).json({ ok: true }));
