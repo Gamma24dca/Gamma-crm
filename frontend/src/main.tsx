@@ -1,13 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { WrappedApp } from './components/Templates/App/App';
+import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 import UserProvider from './providers/UserProvider';
+import App from './components/Templates/App/App';
+
+// If you want deploy site to static cdn, use Hashrouter instead
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <UserProvider>
-      <WrappedApp />
-    </UserProvider>
+    <BrowserRouter>
+      <UserProvider>
+        <App />
+      </UserProvider>
+    </BrowserRouter>
   </React.StrictMode>
 );

@@ -1,0 +1,18 @@
+.submitbtn {
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  width: 220px;
+  height: 55px;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  border: 1px solid #f68c1e;
+  background-color: #f68c1e;
+  transition: all 0.3s ease;
+}
+
+.submitbtn:hover {
+  background-color: rgb(246, 140, 30, 0);
+  color: #f68c1e;
+}
