@@ -41,13 +41,16 @@ type SignInProps = {
 };
 
 export async function signIn({ email, password }: SignInProps): Promise<void> {
-  const formBody = { email, password, grantType: 'cookie' };
-  const response = await fetch('api/auth/signin', {
+  const response = await fetch('/api/auth/signin', {
     method: 'POST',
+    body: JSON.stringify({
+      email,
+      password,
+      grantType: 'cookie',
+    }),
     headers: {
       'Content-type': 'application/json; charset=UTF-8',
     },
-    body: JSON.stringify(formBody),
   });
 
   if (!response.ok) {

@@ -49,6 +49,12 @@ module.exports = {
         endOfLine: 'auto',
       },
     ],
+    'react/function-component-definition': [
+      2,
+      {
+        namedComponents: 'function-declaration',
+      },
+    ],
   },
   ignorePatterns: ['vite.config.ts'],
 };
