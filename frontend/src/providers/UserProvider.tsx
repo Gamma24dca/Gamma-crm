@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { createContext, useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, getCurrentUser } from '../services/users-service';
 import { signIn, signOut, signUp } from '../services/auth-service';
@@ -10,14 +10,14 @@ export type UserContextValue = {
   signUp: typeof signUp;
 };
 
-export const UserContext = React.createContext<UserContextValue>({
+export const UserContext = createContext<UserContextValue>({
   user: undefined,
   signIn: () => Promise.resolve(),
   signOut: () => Promise.resolve(),
   signUp: () => Promise.resolve(),
 });
 
-type ChildrenProps = {
+export type ChildrenProps = {
   children: string | JSX.Element | JSX.Element[];
 };
 

@@ -16,7 +16,9 @@ export async function getUserById(id: string): Promise<User | null> {
     }
     throw new Error(`${response.status} ${response.statusText}`);
   } catch (error) {
-    throw new Error(error.message);
+    if (Config.isDev) {
+      throw new Error('User by ID', error.message);
+    }
     return null;
   }
 }
@@ -30,7 +32,7 @@ export async function getCurrentUser(): Promise<User | null> {
     throw new Error(`${response.status} ${response.statusText}`);
   } catch (error) {
     if (Config.isDev) {
-      throw new Error('UsersService.getCurrentUser', error.message);
+      throw new Error('Current user', error.message);
     }
     return null;
   }
