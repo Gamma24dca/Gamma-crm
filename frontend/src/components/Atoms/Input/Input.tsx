@@ -1,18 +1,35 @@
-import styles from './Input.module.css';
-
 type InputProps = {
   id: string;
   type: string;
   name: string;
+  className: string;
+  placeholder: string;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  onBlur: React.ChangeEventHandler<HTMLInputElement>;
+  value: string;
 };
-function Input({ id, type, name, ...restProps }: InputProps) {
+function Input({
+  id,
+  type,
+  name,
+  className,
+  placeholder,
+  onChange,
+  onBlur,
+  value,
+  ...restProps
+}: InputProps) {
   return (
     <input
       data-testid="input"
-      className={styles.input}
+      className={className}
       id={id}
       type={type}
       name={name}
+      placeholder={placeholder}
+      onChange={onChange}
+      onBlur={onBlur}
+      value={value}
       {...restProps}
     />
   );
