@@ -13,7 +13,6 @@ AuthRouter.post('/signin', async (req, res) => {
         .json({ message: 'email and password are required' });
       return;
     }
-
     const token = await AuthController.signUser(email, password);
     if (token === null) {
       res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Unauthorized' });
@@ -32,16 +31,14 @@ AuthRouter.post('/signin', async (req, res) => {
     } else {
       res.status(StatusCodes.OK).json({ token });
     }
-  } catch (error) {
-    res
-      .status(StatusCodes.UNAUTHORIZED)
-      .json({ error: { message: error.message } });
+  } catch {
+    res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Unauthorized' });
   }
 });
 
 AuthRouter.post('/signup', async (req, res) => {
   try {
-    const newUser = AuthController.addUser(req.body);
+    const newUser = await AuthController.addUser(req.body);
     res.status(StatusCodes.CREATED).json(newUser);
   } catch (error) {
     res
@@ -52,12 +49,15 @@ AuthRouter.post('/signup', async (req, res) => {
 
 AuthRouter.post('/signout', async (req, res) => {
   try {
-    res.status(StatusCodes.OK).cookie('token', '', {
-      httpOnly: true,
-      secure: true,
-      signed: true,
-      maxAge: 1,
-    });
+    res
+      .status(StatusCodes.OK)
+      .cookie('token', '', {
+        httpOnly: true,
+        secure: true,
+        signed: true,
+        maxAge: 1,
+      })
+      .end();
   } catch (error) {
     res
       .status(StatusCodes.NOT_FOUND)

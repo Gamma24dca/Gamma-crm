@@ -8,15 +8,6 @@ export const AuthController = {
     const user = await UserModel.findOne({ email }).exec();
     return omit(user.toObject(), ['password']);
   },
-  async addUser(user) {
-    await UserModel.validate(user);
-    const newUser = await UserModel.create({
-      ...user,
-      password: await bcrypt.hash(user.password, 8),
-    });
-
-    return omit(newUser.toObject(), ['password']);
-  },
   async signUser(email: string, password: string): Promise<null | string> {
     const user = await UserModel.findOne({ email }).exec();
     if (!user) {
@@ -33,5 +24,13 @@ export const AuthController = {
         expiresIn: '1h',
       },
     );
+  },
+  async addUser(user) {
+    await UserModel.validate(user);
+    const newUser = await UserModel.create({
+      ...user,
+      password: await bcrypt.hash(user.password, 8),
+    });
+    return omit(newUser.toObject(), ['password']);
   },
 };
