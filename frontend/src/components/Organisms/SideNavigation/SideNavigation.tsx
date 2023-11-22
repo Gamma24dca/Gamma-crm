@@ -1,3 +1,4 @@
+import { NavLink } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import styles from './SideNavigation.module.css';
 
@@ -39,7 +40,13 @@ function SideNavigation() {
         <div className={styles.btnsWrapper}>
           {sideNavButtons.map((btn) => {
             return (
-              <div key={btn.name} className={styles.sideNavBtnWrapper}>
+              <NavLink
+                className={({ isActive }) =>
+                  isActive ? `${styles.active}` : `${styles.inactive}`
+                }
+                key={btn.name}
+                to={`${btn.name}`}
+              >
                 <Icon
                   icon={btn.icon}
                   width="28"
@@ -49,7 +56,7 @@ function SideNavigation() {
                 <button type="button" className={styles.sideNavBtn}>
                   {btn.name}
                 </button>
-              </div>
+              </NavLink>
             );
           })}
         </div>

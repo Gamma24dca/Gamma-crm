@@ -1,11 +1,8 @@
 .sideNavContainer {
-  width: 15%;
   height: 100vh;
-  position: fixed;
-  left: 0;
-  top: 0;
   background-color: var(--color-lighter);
   border-right: 1px solid var(--color-border);
+  z-index: 2;
 }
 
 .logoContainer {
@@ -31,7 +28,18 @@
   gap: 20px;
 }
 
-.sideNavBtnWrapper {
+.sideNavBtn {
+  font-family: Montserrat;
+  color: inherit;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 18px;
+  border: none;
+  background-color: transparent;
+}
+
+.inactive,
+.active {
   display: flex;
   align-items: center;
   gap: 5px;
@@ -43,20 +51,15 @@
   cursor: pointer;
 }
 
-.sideNavBtn {
-  color: inherit;
-  cursor: pointer;
-  font-family: Montserrat;
-  font-weight: 600;
-  font-size: 18px;
-  border: none;
-  background-color: transparent;
-}
-
-.sideNavBtnWrapper:hover {
+.active {
   background-color: var(--color-orange);
   color: var(--color-lighter);
-  opacity: 0.7;
+  opacity: 1;
+}
+.inactive:hover {
+  background-color: var(--color-orange);
+  color: var(--color-lighter);
+  opacity: 0.5;
 }
 
 .icon {
@@ -64,6 +67,17 @@
   transition: all 0.3s ease;
 }
 
-.sideNavBtnWrapper:hover .icon {
+.inactive:hover .icon {
+  opacity: 1;
   color: var(--color-lighter);
+}
+
+.active .icon {
+  color: var(--color-lighter);
+  opacity: 1;
+}
+
+.inactive:hover .sideNavBtn {
+  color: var(--color-lighter);
+  opacity: 1;
 }
