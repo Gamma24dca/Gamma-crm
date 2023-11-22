@@ -1,8 +1,3 @@
-:root {
-  --color-dark: #000;
-  --color-light: #f3f3f3;
-  --color-error: #f68c1e;
-}
 .testHeader {
   color: var(--color-title);
   text-align: center;
@@ -16,7 +11,7 @@
 
 .error {
   font-size: 1rem;
-  color: var(--color-error);
+  color: var(--color-orange);
   animation: appear 0.7s;
   margin: 0;
 }
@@ -24,7 +19,7 @@
 .errorBorder {
   animation: appear 0.7s;
   border-radius: 0.5rem;
-  border: 0.3rem solid var(--color-error);
+  border: 0.3rem solid var(--color-orange);
   width: 25rem;
   height: 3.5rem;
   /* color: #787878; */

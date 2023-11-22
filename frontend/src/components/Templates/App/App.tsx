@@ -3,6 +3,7 @@ import SignIn from '../../Organisms/SignIn/SignIn';
 import NotFound from '../NotFound/NotFound';
 import HomePage from '../../../pages/HomePage/HomePage';
 import PrivateRouteProvider from '../../../providers/PrivateRouteProvider';
+import Navigation from '../../Organisms/Navigation/Navigation';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         element={
           <PrivateRouteProvider>
             <div>
+              <Navigation />
               <HomePage />
             </div>
           </PrivateRouteProvider>

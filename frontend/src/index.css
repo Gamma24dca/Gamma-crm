@@ -2,16 +2,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;600;800&display=swap');
 
 :root {
+  --color-dark: #000;
+  --color-light: #f3f3f3;
+  --color-orange: #f68c1e;
   --color-bg: #f4f7fd;
-  /* --color-lighter: #828fa3; */
-  /* --color-lighter: #e4ebfa; */
   --color-lighter: #ffffff;
   --color-title: #111111;
   --color-subTitle: #828fa3;
   --color-board: #ffffff;
   --color-themeSwitchBox: #f4f7fd;
   --color-addButton: #f0effa;
-  --color-ellipsis: #e4ebfa;
+  --color-border: #e4ebfa;
   --color-checked: rgba(0, 0, 0, 0.5);
   font-family: Montserrat, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
