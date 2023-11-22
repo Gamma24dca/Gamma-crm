@@ -1,0 +1,69 @@
+.sideNavContainer {
+  width: 15%;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background-color: var(--color-lighter);
+  border-right: 1px solid var(--color-border);
+}
+
+.logoContainer {
+  width: 100%;
+  height: 90px;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo {
+  width: 200px;
+}
+
+.btnsWrapper {
+  height: 90vh;
+  padding: 50px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: front;
+  align-items: start;
+  gap: 20px;
+}
+
+.sideNavBtnWrapper {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--color-navButton);
+  transition: all 0.3s ease;
+  border-radius: 50px;
+  padding: 10px 50px;
+  transform: translateX(-50px);
+  cursor: pointer;
+}
+
+.sideNavBtn {
+  color: inherit;
+  cursor: pointer;
+  font-family: Montserrat;
+  font-weight: 600;
+  font-size: 18px;
+  border: none;
+  background-color: transparent;
+}
+
+.sideNavBtnWrapper:hover {
+  background-color: var(--color-orange);
+  color: var(--color-lighter);
+  opacity: 0.7;
+}
+
+.icon {
+  color: var(--color-navButton);
+  transition: all 0.3s ease;
+}
+
+.sideNavBtnWrapper:hover .icon {
+  color: var(--color-lighter);
+}

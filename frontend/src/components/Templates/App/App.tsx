@@ -1,9 +1,10 @@
 import { Routes, Route } from 'react-router-dom';
 import SignIn from '../../Organisms/SignIn/SignIn';
 import NotFound from '../NotFound/NotFound';
-import HomePage from '../../../pages/HomePage/HomePage';
+// import HomePage from '../../../pages/HomePage/HomePage';
 import PrivateRouteProvider from '../../../providers/PrivateRouteProvider';
 import Navigation from '../../Organisms/Navigation/Navigation';
+import SideNavigation from '../../Organisms/SideNavigation/SideNavigation';
 
 function App() {
   return (
@@ -14,7 +15,8 @@ function App() {
           <PrivateRouteProvider>
             <div>
               <Navigation />
-              <HomePage />
+              <SideNavigation />
+              {/* <HomePage /> */}
             </div>
           </PrivateRouteProvider>
         }

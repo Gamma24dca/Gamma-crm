@@ -2,13 +2,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;600;800&display=swap');
 
 :root {
+  --color-bg: #f4f7fd;
   --color-dark: #000;
   --color-light: #f3f3f3;
-  --color-orange: #f68c1e;
-  --color-bg: #f4f7fd;
   --color-lighter: #ffffff;
+  --color-orange: #f68c1e;
+  --color-navButton: #828fa3;
   --color-title: #111111;
-  --color-subTitle: #828fa3;
   --color-board: #ffffff;
   --color-themeSwitchBox: #f4f7fd;
   --color-addButton: #f0effa;
