@@ -10,3 +10,102 @@
   border-radius: 10px;
   box-shadow: 0 4px 6px var(--color-shadow);
 }
+
+.topBar,
+.userTile {
+  width: 100%;
+  min-height: 50px;
+  display: flex;
+  position: absolute;
+  top: 10px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.userTile {
+  width: 95%;
+  margin: 0 auto;
+  align-items: center;
+  justify-content: start;
+  position: static;
+  transform: translateX(5px);
+  border: none;
+  background-color: rgba(99, 95, 199, 0.25);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.userTile:hover {
+  transform: scale(1.03);
+}
+
+.personalDataWrapper {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.barItem {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-navButton);
+}
+
+.usersContainer {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+  padding: 100px 0px;
+  gap: 30px;
+}
+
+.userImg {
+  max-width: 45px;
+  border-radius: 50%;
+  padding: 10px;
+  transform: translateX(80px);
+}
+
+.userName,
+.userJob,
+.userEmail,
+.userPhone,
+.personIcon,
+.mailIcon,
+.phoneIcon,
+.jobIcon {
+  position: absolute;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.userPhone,
+.phoneIcon {
+  left: 85%;
+}
+
+.userEmail {
+  left: 55%;
+}
+.mailIcon {
+  left: 60%;
+}
+
+.userJob {
+  left: 40%;
+}
+
+.jobIcon {
+  left: 41%;
+}
+
+.userName {
+  left: 10.2%;
+}
+
+.personIcon {
+  left: 13%;
+}

@@ -47,9 +47,7 @@ function SignIn() {
         <Form onSubmit={formik.handleSubmit}>
           <h1 className={styles.testHeader}>Zaloguj się</h1>
           {formik.status === 'error' && (
-            <div className={styles.error}>
-              There was an error while submitting
-            </div>
+            <div className={styles.error}>Logowanie nie powiodło się</div>
           )}
 
           <FormControl>
@@ -96,7 +94,7 @@ function SignIn() {
 
           <SubmitButton
             disabled={formik.isSubmitting}
-            buttonContent={formik.isSubmitting ? 'Logowanie' : 'Zaloguj!'}
+            buttonContent={formik.isSubmitting ? 'Logowanie' : 'Zaloguj'}
           />
           {/* <h3 className={styles.linkHeader}>
             Don&apos;t have an account?{' '}
