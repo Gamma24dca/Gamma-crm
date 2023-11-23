@@ -1,10 +1,12 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import SignIn from '../../Organisms/SignIn/SignIn';
+import SignIn from '../../components/Organisms/SignIn/SignIn';
+
 import NotFound from '../NotFound/NotFound';
-import HomePage from '../../../pages/HomePage/HomePage';
-import PrivateRouteProvider from '../../../providers/PrivateRouteProvider';
-import MainTemplate from '../MainTemplate/MainTemplate';
-import useAuth from '../../../hooks/useAuth';
+import HomePage from '../HomePage/HomePage';
+import PrivateRouteProvider from '../../providers/PrivateRouteProvider';
+import MainTemplate from '../../components/Templates/MainTemplate/MainTemplate';
+import useAuth from '../../hooks/useAuth';
+import UsersView from '../UsersView/UsersView';
 
 function App() {
   const { user } = useAuth();
@@ -17,9 +19,15 @@ function App() {
           path="/pulpit"
           element={
             <PrivateRouteProvider>
-              <div>
-                <HomePage />
-              </div>
+              <HomePage />
+            </PrivateRouteProvider>
+          }
+        />
+        <Route
+          path="/użytkownicy"
+          element={
+            <PrivateRouteProvider>
+              <UsersView />
             </PrivateRouteProvider>
           }
         />

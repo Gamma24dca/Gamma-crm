@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 import UserProvider from './providers/UserProvider';
-import App from './components/Templates/App/App';
+import App from './pages/App/App';
 
 // If you want deploy site to static cdn, use Hashrouter instead
 

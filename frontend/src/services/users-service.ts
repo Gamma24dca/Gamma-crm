@@ -8,6 +8,21 @@ export type User = {
   job: string;
 };
 
+export async function getAllUsers(): Promise<User[] | null> {
+  try {
+    const response = await fetch('/api/users');
+    if (response.ok) {
+      return await response.json();
+    }
+    throw new Error(`${response.status} ${response.statusText}`);
+  } catch (error) {
+    if (Config.isDev) {
+      throw new Error('User by ID', error.message);
+    }
+    return null;
+  }
+}
+
 export async function getUserById(id: string): Promise<User | null> {
   try {
     const response = await fetch(`/api/users/${id}`);

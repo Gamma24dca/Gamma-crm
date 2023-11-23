@@ -20,6 +20,10 @@ const sideNavButtons = [
     icon: 'clarity:building-line',
   },
   {
+    name: 'Zadania',
+    icon: 'ic:outline-add-task',
+  },
+  {
     name: 'Magazyn',
     icon: 'material-symbols:warehouse-outline-rounded',
   },
