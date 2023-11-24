@@ -25,9 +25,9 @@ function ModalTemplate({
       className={styles.modalOpenContainer}
     >
       {children}
-      <button type="button" className={styles.closeBtn} onClick={onClose}>
+      {/* <button type="button" className={styles.closeBtn} onClick={onClose}>
         &times;
-      </button>
+      </button> */}
     </ReactModal>
   ) : (
     <ReactModal
@@ -37,9 +37,9 @@ function ModalTemplate({
       className={styles.modalExitContainer}
     >
       {children}
-      <button type="button" className={styles.closeBtn} onClick={onClose}>
+      {/* <button type="button" className={styles.closeBtn} onClick={onClose}>
         &times;
-      </button>
+      </button> */}
     </ReactModal>
   );
 }

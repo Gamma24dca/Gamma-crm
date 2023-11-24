@@ -24,7 +24,7 @@ function UsersView() {
         onClose={closeModal}
         exitAnim={exitAnim}
       >
-        <h2>test</h2>
+        <h2>Dodaj użytkownika</h2>
       </ModalTemplate>
       <div className={styles.topBar}>
         <Icon
