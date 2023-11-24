@@ -1,11 +1,14 @@
 import { Config } from '../config';
 
 export type User = {
-  _id: string;
   email: string;
-  name: string;
-  lastname: string;
+  img: string;
   job: string;
+  lastname: string;
+  name: string;
+  password: string;
+  phone: number;
+  _id: string;
 };
 
 export async function getAllUsers(): Promise<User[] | null> {

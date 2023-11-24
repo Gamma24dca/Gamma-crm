@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { useEffect, useState } from 'react';
 import { getAllUsers } from '../../services/users-service';
@@ -48,7 +49,11 @@ function UsersView() {
         {users.length > 0 ? (
           users.map((user) => {
             return (
-              <div key={user._id} className={styles.userTile}>
+              <Link
+                key={user._id}
+                className={styles.userTile}
+                to={`/użytkownicy/${user._id}`}
+              >
                 <img src={user.img} alt="user" className={styles.userImg} />
 
                 <p className={styles.userName}>
@@ -57,7 +62,7 @@ function UsersView() {
                 <p className={styles.userJob}>{user.job}</p>
                 <p className={styles.userEmail}>{user.email}</p>
                 <p className={styles.userPhone}>{user.phone}</p>
-              </div>
+              </Link>
             );
           })
         ) : (

@@ -25,7 +25,7 @@ AuthRouter.post('/signin', async (req, res) => {
           httpOnly: true,
           secure: true,
           signed: true,
-          maxAge: 1000 * 60 * 60,
+          maxAge: 1000 * 60 * 60 * 24,
         })
         .end();
     } else {

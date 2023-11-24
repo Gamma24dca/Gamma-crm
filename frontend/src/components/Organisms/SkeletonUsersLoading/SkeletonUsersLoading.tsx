@@ -10,6 +10,8 @@ function SkeletonUsersLoading() {
       <div className={styles.loadingUserTile} />
       <div className={styles.loadingUserTile} />
       <div className={styles.loadingUserTile} />
+      <div className={styles.loadingUserTile} />
+      <div className={styles.loadingUserTile} />
     </>
   );
 }
