@@ -24,6 +24,10 @@ const sideNavButtons = [
     icon: 'ic:outline-add-task',
   },
   {
+    name: 'Ankiety',
+    icon: 'fluent:poll-24-regular',
+  },
+  {
     name: 'Magazyn',
     icon: 'material-symbols:warehouse-outline-rounded',
   },

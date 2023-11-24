@@ -1,0 +1,30 @@
+@keyframes loading {
+  0% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.4;
+  }
+}
+
+.loadingUserTile {
+  width: 95%;
+  min-height: 50px;
+  display: flex;
+  border: none;
+  background-color: #f4f7fd;
+  border-radius: 6px;
+  margin: 0 auto;
+  align-items: center;
+  justify-content: start;
+  position: static;
+  transform: translateX(5px);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  animation: loading 1s linear infinite;
+}

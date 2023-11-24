@@ -7,6 +7,7 @@ import PrivateRouteProvider from '../../providers/PrivateRouteProvider';
 import MainTemplate from '../../components/Templates/MainTemplate/MainTemplate';
 import useAuth from '../../hooks/useAuth';
 import UsersView from '../UsersView/UsersView';
+import UserProfile from '../UserProfile/UserProfile';
 
 function App() {
   const { user } = useAuth();
@@ -28,6 +29,14 @@ function App() {
           element={
             <PrivateRouteProvider>
               <UsersView />
+            </PrivateRouteProvider>
+          }
+        />
+        <Route
+          path="/użytkownicy/:id"
+          element={
+            <PrivateRouteProvider>
+              <UserProfile />
             </PrivateRouteProvider>
           }
         />

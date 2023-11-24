@@ -2,6 +2,7 @@ import { Icon } from '@iconify/react';
 import { useEffect, useState } from 'react';
 import { getAllUsers } from '../../services/users-service';
 import styles from './UsersView.module.css';
+import SkeletonUsersLoading from '../../components/Organisms/SkeletonUsersLoading/SkeletonUsersLoading';
 
 function UsersView() {
   const [users, setUsers] = useState([]);
@@ -11,7 +12,6 @@ function UsersView() {
       setUsers(allUsers);
     });
   }, []);
-
   return (
     <div className={styles.usersViewContainer}>
       <div className={styles.topBar}>
@@ -45,20 +45,24 @@ function UsersView() {
         />
       </div>
       <div className={styles.usersContainer}>
-        {users.map((user) => {
-          return (
-            <div key={user._id} className={styles.userTile}>
-              <img src={user.img} alt="user" className={styles.userImg} />
+        {users.length > 0 ? (
+          users.map((user) => {
+            return (
+              <div key={user._id} className={styles.userTile}>
+                <img src={user.img} alt="user" className={styles.userImg} />
 
-              <p className={styles.userName}>
-                {`${user.name} ${user.lastname}`}
-              </p>
-              <p className={styles.userJob}>{user.job}</p>
-              <p className={styles.userEmail}>{user.email}</p>
-              <p className={styles.userPhone}>{user.phone}</p>
-            </div>
-          );
-        })}
+                <p className={styles.userName}>
+                  {`${user.name} ${user.lastname}`}
+                </p>
+                <p className={styles.userJob}>{user.job}</p>
+                <p className={styles.userEmail}>{user.email}</p>
+                <p className={styles.userPhone}>{user.phone}</p>
+              </div>
+            );
+          })
+        ) : (
+          <SkeletonUsersLoading />
+        )}
       </div>
     </div>
   );
