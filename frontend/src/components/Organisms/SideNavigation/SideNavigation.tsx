@@ -20,6 +20,10 @@ const sideNavButtons = [
     icon: 'clarity:building-line',
   },
   {
+    name: 'Klienci',
+    icon: 'lucide:contact',
+  },
+  {
     name: 'Zadania',
     icon: 'ic:outline-add-task',
   },

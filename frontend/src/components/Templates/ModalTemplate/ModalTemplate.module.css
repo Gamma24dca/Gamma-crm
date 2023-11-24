@@ -1,0 +1,84 @@
+.overlay,
+.exitOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  padding: 5% 10%;
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: 199;
+}
+
+.exitOverlay {
+  animation: overlayExit 0.3s ease forwards;
+}
+
+.modalOpenContainer,
+.modalExitContainer {
+  position: relative;
+  border: 1px solid #ccc;
+  background: #fff;
+  overflow: auto;
+  border-radius: 5px;
+  outline: none;
+  padding: 24px;
+  width: 100%;
+  height: 100%;
+}
+
+.modalOpenContainer {
+  animation: popupOpen 0.5s ease forwards;
+}
+
+.modalExitContainer {
+  animation: popupClose 0.5s ease forwards;
+}
+
+@keyframes overlayExit {
+  from {
+    background-color: rgba(0, 0, 0, 0.75);
+  }
+  to {
+    background-color: rgba(0, 0, 0, 0);
+  }
+}
+
+@keyframes popupOpen {
+  0% {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.1);
+    opacity: 0.1;
+  }
+
+  80% {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 0.9;
+  }
+  100% {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes popupClose {
+  0% {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.9;
+  }
+
+  100% {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+}
