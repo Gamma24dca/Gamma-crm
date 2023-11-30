@@ -14,7 +14,7 @@
 
 .loadingUserTile {
   width: 95%;
-  min-height: 50px;
+  min-height: 60px;
   display: flex;
   border: none;
   background-color: #f4f7fd;

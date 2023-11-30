@@ -1,7 +1,7 @@
 import ReactModal from 'react-modal';
 import styles from './ModalTemplate.module.css';
 
-if (process.env.NODE_ENV !== 'test') ReactModal.setAppElement('#app');
+if (process.env.NODE_ENV !== 'test') ReactModal.setAppElement('#root');
 
 type ModalTypes = {
   isOpen: boolean;

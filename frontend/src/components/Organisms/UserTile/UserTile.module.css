@@ -14,6 +14,12 @@
   transition: all 0.3s ease;
 }
 
+.tileWrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
 .userTile:hover {
   transform: scale(1.01);
   background-color: rgba(99, 95, 199, 0.25);
@@ -56,9 +62,42 @@
 }
 
 .iconWrapper {
-  /* transform: translate(10px, -65px); */
+  cursor: pointer;
+  transform: translateX(-10px);
+  transition: all 0.3s ease;
+}
+
+.iconWrapper:hover {
+  transform: translateX(-10px) scale(1.1);
+}
+
+.userEditWindow {
   position: absolute;
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  right: 2.1%;
+  transform: translateY(60%);
+  background-color: var(--color-lighter);
+  width: 65px;
+  height: 70px;
+  z-index: 20;
+  border-radius: 6px;
+  box-shadow: 0 4px 8px var(--color-shadow);
+}
+
+.editBtn {
+  font-family: Montserrat;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.editBtn:hover {
+  color: var(--color-navButton);
 }
 
 @media (max-width: 1700px) {

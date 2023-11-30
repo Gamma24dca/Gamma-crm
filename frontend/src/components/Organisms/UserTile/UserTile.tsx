@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { Icon } from '@iconify/react';
 import { Link } from 'react-router-dom';
 import styles from './UserTile.module.css';
+import { deleteUser } from '../../../services/users-service';
 
 type UserTileProps = {
   _id: string;
@@ -21,8 +23,10 @@ function UserTile({
   email,
   phone,
 }: UserTileProps) {
+  const [isEditOpen, setIsEditOpen] = useState(false);
+
   return (
-    <>
+    <div className={styles.tileWrapper}>
       <Link className={styles.userTile} to={`/użytkownicy/${_id}`}>
         <img src={img} alt="user" className={styles.userImg} />
         <p className={styles.userName}>{`${name} ${lastname}`}</p>
@@ -32,14 +36,35 @@ function UserTile({
       </Link>
       <div className={styles.iconWrapper}>
         <Icon
-          icon="ph:dots-three-outline-vertical-fill"
-          color="#f68c1e"
-          className={styles.dotsIcon}
-          width="24"
-          height="24"
+          icon="raphael:edit"
+          color="#828fa3"
+          width="26"
+          height="26"
+          onClick={() => {
+            setIsEditOpen((val) => !val);
+          }}
         />
       </div>
-    </>
+
+      {/* Create context with redux to get all users again after deleting */}
+      {isEditOpen && (
+        <div className={styles.userEditWindow}>
+          <button
+            type="button"
+            className={styles.editBtn}
+            onClick={() => {
+              deleteUser(_id);
+              setIsEditOpen(false);
+            }}
+          >
+            Usuń
+          </button>
+          <button type="button" className={styles.editBtn}>
+            Edytuj
+          </button>
+        </div>
+      )}
+    </div>
   );
 }
 

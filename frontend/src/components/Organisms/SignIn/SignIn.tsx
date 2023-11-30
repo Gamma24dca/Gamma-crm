@@ -20,6 +20,7 @@ const signInSchema = Yup.object({
 
 function SignIn() {
   const { user, signIn } = useAuth();
+
   const formik = useFormik({
     initialValues: {
       email: '',
