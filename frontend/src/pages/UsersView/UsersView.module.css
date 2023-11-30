@@ -147,3 +147,15 @@
 .addNewUserBtn:hover {
   scale: 1.1;
 }
+
+@media (max-width: 1760px) {
+  .userName {
+    left: 12%;
+  }
+}
+
+@media (max-width: 1500px) {
+  .userName {
+    left: 14%;
+  }
+}
