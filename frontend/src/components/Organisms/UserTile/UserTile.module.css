@@ -1,0 +1,73 @@
+.userTile {
+  display: flex;
+  width: 95%;
+  min-height: 55px;
+  margin: 0 auto;
+  align-items: center;
+  justify-content: start;
+  position: static;
+  transform: translateX(5px);
+  border: none;
+  background-color: #f4f7fd;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.userTile:hover {
+  transform: scale(1.01);
+  background-color: rgba(99, 95, 199, 0.25);
+}
+
+.userImg {
+  max-width: 45px;
+  border-radius: 50%;
+  padding: 10px;
+  transform: translateX(80px);
+}
+
+.userName,
+.userJob,
+.userEmail,
+.userPhone,
+.dotsIcon {
+  position: absolute;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.userPhone {
+  left: 85%;
+}
+
+.userEmail {
+  left: 55%;
+}
+
+.userJob {
+  left: 40%;
+}
+
+.jobIcon {
+  left: 41%;
+}
+
+.userName {
+  left: 10.2%;
+}
+
+.dotsIcon {
+  right: 2%;
+}
+
+@media (max-width: 1700px) {
+  .userName {
+    left: 12%;
+  }
+}
+
+@media (max-width: 1500px) {
+  .userName {
+    left: 14%;
+  }
+}

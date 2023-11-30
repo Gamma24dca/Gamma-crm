@@ -39,6 +39,7 @@ module.exports = {
     'react/jsx-props-no-spreading': 'off',
     '@typescript-eslint/no-unused-expressions': 'off',
     'no-underscore-dangle': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
     'react/jsx-filename-extension': [
       1,
       {

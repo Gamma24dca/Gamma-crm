@@ -6,7 +6,7 @@ type InputProps = {
   placeholder: string;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   onBlur: React.ChangeEventHandler<HTMLInputElement>;
-  value: string;
+  value: string | number;
 };
 function Input({
   id,

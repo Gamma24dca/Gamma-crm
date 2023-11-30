@@ -23,7 +23,7 @@
   border-radius: 10px;
   outline: none;
   padding: 24px;
-  width: 50%;
+  width: fit-content;
   height: fit-content;
   display: flex;
   flex-direction: column;

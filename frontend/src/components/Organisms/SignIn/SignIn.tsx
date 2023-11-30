@@ -44,7 +44,7 @@ function SignIn() {
     <>
       <img src="./orange.png" alt="logo gamma" className={styles.logo} />
       <FormContainer>
-        <Form onSubmit={formik.handleSubmit}>
+        <Form onSubmit={formik.handleSubmit} isSignInView>
           <h1 className={styles.testHeader}>Zaloguj się</h1>
           {formik.status === 'error' && (
             <div className={styles.error}>Logowanie nie powiodło się</div>
@@ -95,13 +95,8 @@ function SignIn() {
           <SubmitButton
             disabled={formik.isSubmitting}
             buttonContent={formik.isSubmitting ? 'Logowanie' : 'Zaloguj'}
+            isSignInView
           />
-          {/* <h3 className={styles.linkHeader}>
-            Don&apos;t have an account?{' '}
-            <Link className={styles.signUpLink} to="/signup">
-              Sign up!
-            </Link>
-          </h3> */}
         </Form>
       </FormContainer>
     </>

@@ -1,3 +1,4 @@
+.signInViewSubmitbtn,
 .submitbtn {
   font-size: 1.6rem;
   font-weight: 600;
@@ -12,7 +13,15 @@
   transition: all 0.3s ease;
 }
 
-.submitbtn:hover {
+.submitbtn {
+  margin-top: 20px;
+  font-size: 1.4rem;
+  width: 180px;
+  height: 50px;
+}
+
+.submitbtn:hover,
+.signInViewSubmitbtn:hover {
   background-color: rgb(246, 140, 30, 0);
   color: #f68c1e;
 }

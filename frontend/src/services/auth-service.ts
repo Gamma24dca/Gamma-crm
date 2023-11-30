@@ -1,24 +1,24 @@
 // eslint-disable-next-line
 import { Config } from '../config';
-
-type User = {
-  name: string;
-  lastname: string;
-  email: string;
-  password: string;
-};
+import { User } from './users-service';
 
 export async function signUp({
-  email,
-  password,
   name,
   lastname,
+  email,
+  phone,
+  password,
+  job,
+  img,
 }: User): Promise<void> {
   const formInfo = {
-    email,
-    password,
     name,
     lastname,
+    email,
+    phone,
+    password,
+    job,
+    img,
   };
 
   const response = await fetch('/api/auth/signup', {
