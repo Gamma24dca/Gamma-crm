@@ -22,12 +22,14 @@ function UserTile({
   phone,
 }: UserTileProps) {
   return (
-    <Link className={styles.userTile} to={`/użytkownicy/${_id}`}>
-      <img src={img} alt="user" className={styles.userImg} />
-      <p className={styles.userName}>{`${name} ${lastname}`}</p>
-      <p className={styles.userJob}>{job}</p>
-      <p className={styles.userEmail}>{email}</p>
-      <p className={styles.userPhone}>{phone}</p>
+    <>
+      <Link className={styles.userTile} to={`/użytkownicy/${_id}`}>
+        <img src={img} alt="user" className={styles.userImg} />
+        <p className={styles.userName}>{`${name} ${lastname}`}</p>
+        <p className={styles.userJob}>{job}</p>
+        <p className={styles.userEmail}>{email}</p>
+        <p className={styles.userPhone}>{phone}</p>
+      </Link>
       <div className={styles.iconWrapper}>
         <Icon
           icon="ph:dots-three-outline-vertical-fill"
@@ -37,7 +39,7 @@ function UserTile({
           height="24"
         />
       </div>
-    </Link>
+    </>
   );
 }
 

@@ -56,9 +56,9 @@
 }
 
 .iconWrapper {
+  /* transform: translate(10px, -65px); */
   position: absolute;
-  right: 0;
-  padding: 15px;
+  display: flex;
 }
 
 @media (max-width: 1700px) {
