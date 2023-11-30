@@ -54,11 +54,17 @@ function UsersView() {
       const { img } = values;
 
       formik.setStatus(null);
-      return signUp({ name, lastname, email, phone, password, job, img }).catch(
-        () => {
-          formik.setStatus('error');
-        }
-      );
+      return signUp({
+        name,
+        lastname,
+        email,
+        phone,
+        password,
+        job,
+        img,
+      }).catch(() => {
+        formik.setStatus('error');
+      });
     },
   });
 

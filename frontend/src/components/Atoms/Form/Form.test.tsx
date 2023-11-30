@@ -6,7 +6,7 @@ import Form from './Form';
 
 it('Renders to the page ', () => {
   const { getByTestId } = render(
-    <Form onSubmit={() => {}}>
+    <Form isSignInView={false} onSubmit={() => {}}>
       <input />
     </Form>
   );
@@ -17,7 +17,7 @@ it('Renders to the page ', () => {
 
 it('Accept children input', () => {
   const { getByTestId } = render(
-    <Form onSubmit={() => {}}>
+    <Form isSignInView={false} onSubmit={() => {}}>
       <input />
     </Form>
   );

@@ -29,8 +29,7 @@
 .userName,
 .userJob,
 .userEmail,
-.userPhone,
-.dotsIcon {
+.userPhone {
   position: absolute;
   font-size: 15px;
   font-weight: 600;
@@ -56,8 +55,10 @@
   left: 10.2%;
 }
 
-.dotsIcon {
-  right: 2%;
+.iconWrapper {
+  position: absolute;
+  right: 0;
+  padding: 15px;
 }
 
 @media (max-width: 1700px) {

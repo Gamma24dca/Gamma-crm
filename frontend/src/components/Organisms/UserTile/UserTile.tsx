@@ -28,13 +28,15 @@ function UserTile({
       <p className={styles.userJob}>{job}</p>
       <p className={styles.userEmail}>{email}</p>
       <p className={styles.userPhone}>{phone}</p>
-      <Icon
-        icon="ph:dots-three-outline-vertical-fill"
-        color="#f68c1e"
-        className={styles.dotsIcon}
-        width="24"
-        height="24"
-      />
+      <div className={styles.iconWrapper}>
+        <Icon
+          icon="ph:dots-three-outline-vertical-fill"
+          color="#f68c1e"
+          className={styles.dotsIcon}
+          width="24"
+          height="24"
+        />
+      </div>
     </Link>
   );
 }

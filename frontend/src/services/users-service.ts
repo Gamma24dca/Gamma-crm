@@ -1,6 +1,7 @@
 import { Config } from '../config';
 
 export type User = {
+  _id: string;
   email: string;
   img: string;
   job: string;

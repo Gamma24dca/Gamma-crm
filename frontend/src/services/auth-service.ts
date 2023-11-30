@@ -1,6 +1,15 @@
 // eslint-disable-next-line
 import { Config } from '../config';
-import { User } from './users-service';
+
+type SignUpProps = {
+  email: string;
+  img: string;
+  job: string;
+  lastname: string;
+  name: string;
+  password: string;
+  phone: number;
+};
 
 export async function signUp({
   name,
@@ -10,7 +19,7 @@ export async function signUp({
   password,
   job,
   img,
-}: User): Promise<void> {
+}: SignUpProps): Promise<void> {
   const formInfo = {
     name,
     lastname,
