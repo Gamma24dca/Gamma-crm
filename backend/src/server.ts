@@ -7,6 +7,7 @@ import cors from 'cors';
 import { AuthRouter } from './Auth/Auth.router';
 import { UserRouter } from './User/User.router';
 import morgan from 'morgan';
+import { TaskRouter } from './Tasks/Task.router';
 
 const app = express();
 
@@ -19,7 +20,6 @@ mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
     console.log('connected to database');
-    // listen to port
     app.listen(process.env.PORT, () => {
       console.log('listening for requests on port', process.env.PORT);
     });
@@ -33,4 +33,5 @@ app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
 app.use('/api/auth', AuthRouter);
 app.use('/api/users', UserRouter);
+app.use('/api/tasks', TaskRouter);
 app.get('/api/status', (_, res) => res.status(200).json({ ok: true }));

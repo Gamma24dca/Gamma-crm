@@ -23,9 +23,9 @@ export const TaskController = {
   async deleteTask(id) {
     return await TaskModel.findByIdAndDelete(id);
   },
-  async addSubtask(taskID, subtask) {
+  async addSubtask(taskID, subtaskID) {
     const task = await TaskController.getTask(taskID);
-    task.subtasks.push(subtask);
+    task.subtasks.push(subtaskID);
     await TaskController.updateTask(taskID, task);
     const updatedTask = await TaskController.getTask(taskID);
     return updatedTask.subtasks;
@@ -33,7 +33,8 @@ export const TaskController = {
 
   async deleteSubtask(taskID, subtaskID) {
     const task = await TaskController.getTask(taskID);
-    task.subtasks = task.subtasks.filter((subtask) => subtask !== subtaskID);
+    // @ts-ignore
+    task.subtasks = task.subtasks.filter((subtask) => subtask.id !== subtaskID);
     await TaskController.updateTask(taskID, task);
     const updatedTask = await TaskController.getTask(taskID);
     return updatedTask.subtasks;
