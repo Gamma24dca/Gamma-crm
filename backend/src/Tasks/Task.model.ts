@@ -11,6 +11,9 @@ export const TaskModel = mongoose.model(
       type: String,
       required: true,
     },
+    client: {
+      type: String,
+    },
     path: {
       type: String,
     },
@@ -18,9 +21,18 @@ export const TaskModel = mongoose.model(
       type: String,
       required: true,
     },
+    images: [
+      {
+        imgURL: { type: String },
+      },
+    ],
     date: {
       type: Date,
       required: true,
+    },
+    priority: {
+      type: Number,
+      enum: [200, 400, 600, 800, 1000],
     },
     subtasks: [
       {

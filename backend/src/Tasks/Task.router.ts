@@ -40,9 +40,11 @@ TaskRouter.post(
       const newTask = await TaskController.addTask({
         title: req.body.title,
         author: req.user.id,
+        client: req.body.client,
         path: req.body.path,
         description: req.body.description,
         date: new Date(),
+        priority: req.body.priority,
         status: req.body.status,
         deadline: req.body.deadline,
       });
