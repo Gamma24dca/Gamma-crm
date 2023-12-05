@@ -41,7 +41,7 @@ function UsersView() {
       phone: 0,
       password: '',
       job: '',
-      img: '',
+      img: 'https://res.cloudinary.com/dpktrptfr/image/upload/v1701779173/Windows_10_Default_Profile_Picture.svg_o9zszg.png',
     },
     validationSchema: createUserSchema,
     onSubmit: (values) => {
