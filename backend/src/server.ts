@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 import './Auth/Passport';
+import fs from 'fs';
 const mongoose = require('mongoose');
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
@@ -10,6 +11,10 @@ import morgan from 'morgan';
 import { TaskRouter } from './Tasks/Task.router';
 
 const app = express();
+
+if (!fs.existsSync('uploads')) {
+  fs.mkdirSync('uploads');
+}
 
 app.use((req, res, next) => {
   console.log(req.path, req.method);

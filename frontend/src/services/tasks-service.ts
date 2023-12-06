@@ -7,12 +7,13 @@ export type Task = {
   client: string;
   path: string;
   description: string;
-  date: Date;
-  priority: number;
+  image: File | Blob;
+  date: string | Blob;
+  priority: string | Blob;
   status: string;
   deadline: string;
-  participants: object[];
-  subtasks: object[];
+  participants: string | Blob;
+  subtasks: string | Blob;
 };
 
 export async function getAllTasks(): Promise<Task[] | null> {
@@ -62,6 +63,7 @@ export async function addTask({
   client,
   path,
   description,
+  image,
   date,
   priority,
   status,
@@ -69,26 +71,27 @@ export async function addTask({
   participants,
   subtasks,
 }: Task): Promise<Task | null> {
-  const taskInfo = {
-    title,
-    author,
-    client,
-    path,
-    description,
-    date,
-    priority,
-    status,
-    deadline,
-    participants,
-    subtasks,
-  };
   try {
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('author', author);
+    formData.append('client', client);
+    formData.append('path', path);
+    formData.append('description', description);
+    formData.append('image', image);
+    formData.append('date', date);
+    formData.append('priority', priority);
+    formData.append('status', status);
+    formData.append('deadline', deadline);
+    formData.append('participants', participants);
+    formData.append('subtasks', subtasks);
+
     const response = await fetch('/api/tasks', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(taskInfo),
+      body: formData,
     });
 
     if (response.ok) {

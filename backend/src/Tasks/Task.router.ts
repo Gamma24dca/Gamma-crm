@@ -3,6 +3,10 @@ import passport from 'passport';
 import { StatusCodes } from 'http-status-codes';
 import { TaskController } from './Task.controller';
 import '../Auth/Passport';
+import { uploadImg } from '../lib/firebase';
+import { multer } from '../lib/multer';
+
+const upload = multer({ dest: 'uploads/' });
 
 export const TaskRouter = Router();
 
@@ -35,6 +39,7 @@ TaskRouter.get(
 TaskRouter.post(
   '/',
   passport.authenticate('jwt', { session: false }),
+  upload.single('imgFile'),
   async (req, res) => {
     try {
       const newTask = await TaskController.addTask({
@@ -43,6 +48,7 @@ TaskRouter.post(
         client: req.body.client,
         path: req.body.path,
         description: req.body.description,
+        image: await uploadImg(req.file.path),
         date: new Date(),
         priority: req.body.priority,
         status: req.body.status,

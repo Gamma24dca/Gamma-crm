@@ -21,11 +21,9 @@ export const TaskModel = mongoose.model(
       type: String,
       required: true,
     },
-    images: [
-      {
-        imgURL: { type: String },
-      },
-    ],
+    image: {
+      type: String,
+    },
     date: {
       type: Date,
       required: true,
