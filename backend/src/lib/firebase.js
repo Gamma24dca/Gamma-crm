@@ -1,6 +1,6 @@
 import { initializeApp, cert } from 'firebase-admin/app';
 import { getStorage } from 'firebase-admin/storage';
-var serviceAccount = require('../../firebase.key.json');
+import { serviceAccount } from '../../firebase.key.json';
 
 initializeApp({
   credential: cert(serviceAccount),
