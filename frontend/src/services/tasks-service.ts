@@ -7,15 +7,13 @@ export type Task = {
   client: string;
   path: string;
   description: string;
-  image: File | Blob;
-  date: string | Blob;
-  priority: string | Blob;
+  date: Date;
+  priority: number;
   status: string;
   deadline: string;
-  participants: string | Blob;
-  subtasks: string | Blob;
+  participants: object[];
+  subtasks: object[];
 };
-
 export async function getAllTasks(): Promise<Task[] | null> {
   try {
     const response = await fetch('/api/tasks', {
@@ -57,51 +55,51 @@ export async function getTaskById(id: string): Promise<Task | null> {
   }
 }
 
-export async function addTask({
-  title,
-  author,
-  client,
-  path,
-  description,
-  image,
-  date,
-  priority,
-  status,
-  deadline,
-  participants,
-  subtasks,
-}: Task): Promise<Task | null> {
-  try {
-    const formData = new FormData();
-    formData.append('title', title);
-    formData.append('author', author);
-    formData.append('client', client);
-    formData.append('path', path);
-    formData.append('description', description);
-    formData.append('image', image);
-    formData.append('date', date);
-    formData.append('priority', priority);
-    formData.append('status', status);
-    formData.append('deadline', deadline);
-    formData.append('participants', participants);
-    formData.append('subtasks', subtasks);
+// export async function addTask({
+//   title,
+//   author,
+//   client,
+//   path,
+//   description,
+//   image,
+//   date,
+//   priority,
+//   status,
+//   deadline,
+//   participants,
+//   subtasks,
+// }: Task): Promise<Task | null> {
+//   try {
+//     const formData = new FormData();
+//     formData.append('title', title);
+//     formData.append('author', author);
+//     formData.append('client', client);
+//     formData.append('path', path);
+//     formData.append('description', description);
+//     formData.append('image', image);
+//     formData.append('date', date);
+//     formData.append('priority', priority);
+//     formData.append('status', status);
+//     formData.append('deadline', deadline);
+//     formData.append('participants', participants);
+//     formData.append('subtasks', subtasks);
 
-    const response = await fetch('/api/tasks', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: formData,
-    });
+//     const response = await fetch('/api/tasks', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: formData,
+//     });
 
-    if (response.ok) {
-      return await response.json();
-    }
-    throw new Error(`${response.status} ${response.statusText}`);
-  } catch (error) {
-    if (Config.isDev) {
-      console.error('Add task', error.message);
-    }
-    return null;
-  }
-}
+//     if (response.ok) {
+//       return await response.json();
+//     }
+//     throw new Error(`${response.status} ${response.statusText}`);
+//   } catch (error) {
+//     if (Config.isDev) {
+//       console.error('Add task', error.message);
+//     }
+//     return null;
+//   }
+// }
