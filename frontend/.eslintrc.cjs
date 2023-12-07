@@ -40,6 +40,8 @@ module.exports = {
     '@typescript-eslint/no-unused-expressions': 'off',
     'no-underscore-dangle': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/ban-ts-comment': 'off',
+
     'react/jsx-filename-extension': [
       1,
       {

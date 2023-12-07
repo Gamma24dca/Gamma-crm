@@ -5,9 +5,9 @@ import fs from 'fs';
 const mongoose = require('mongoose');
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import morgan from 'morgan';
 import { AuthRouter } from './Auth/Auth.router';
 import { UserRouter } from './User/User.router';
-import morgan from 'morgan';
 import { TaskRouter } from './Tasks/Task.router';
 
 const app = express();

@@ -15,7 +15,7 @@ function Navigation() {
       </div>
       <input className={styles.navInput} />
       <button type="button" className={styles.signOutBtn} onClick={signOut}>
-        Sign out
+        Wyloguj
       </button>
     </div>
   );

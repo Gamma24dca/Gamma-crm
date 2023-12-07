@@ -19,7 +19,7 @@ export const TaskModel = mongoose.model(
     },
     description: {
       type: String,
-      required: true,
+      // required: true,
     },
     image: {
       type: String,
@@ -29,8 +29,8 @@ export const TaskModel = mongoose.model(
       required: true,
     },
     priority: {
-      type: Number,
-      enum: [200, 400, 600, 800, 1000],
+      type: String,
+      enum: ['200', '400', '600', '800', '1000'],
     },
     subtasks: [
       {

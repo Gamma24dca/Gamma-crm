@@ -106,7 +106,7 @@
   flex-direction: column;
   justify-content: start;
   align-items: start;
-  padding: 100px 0px;
+  /* padding: 100px 0px; */
   gap: 24px;
 }
 
