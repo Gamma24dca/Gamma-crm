@@ -2,6 +2,7 @@ import { createContext, useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, getCurrentUser } from '../services/users-service';
 import { signIn, signOut, signUp } from '../services/auth-service';
+import Loader from '../components/Molecules/Loader/Loader';
 
 export type UserContextValue = {
   user: undefined | null | User;
@@ -56,7 +57,7 @@ function UserProvider({ children }: ChildrenProps) {
   if (currentUser === undefined) {
     return (
       <div>
-        <p>...loading</p>
+        <Loader />
       </div>
     );
   }

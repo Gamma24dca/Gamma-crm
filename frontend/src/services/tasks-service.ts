@@ -1,21 +1,5 @@
 import { Config } from '../config';
 
-export type Task = {
-  // _id?: string;
-  // title: string;
-  // author?: string;
-  // client: string;
-  // path: string;
-  // description: string;
-  image: File;
-  // date?: string | Blob | Date;
-  // priority: string | Blob | number;
-  // status: string;
-  // deadline: string;
-  // participants?: string | Blob | object[];
-  // subtasks?: string | Blob | object[];
-};
-
 type TaskTypes = {
   title: string;
   client: string;
@@ -27,7 +11,7 @@ type TaskTypes = {
   deadline: string;
 };
 
-export async function getAllTasks(): Promise<Task[] | null> {
+export async function getAllTasks(): Promise<TaskTypes[] | null> {
   try {
     const response = await fetch('/api/tasks', {
       method: 'GET',
@@ -48,7 +32,7 @@ export async function getAllTasks(): Promise<Task[] | null> {
   }
 }
 
-export async function getTaskById(id: string): Promise<Task | null> {
+export async function getTaskById(id: string): Promise<TaskTypes | null> {
   try {
     const response = await fetch(`/api/tasks/${id}`, {
       method: 'GET',

@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { addTask } from '../services/tasks-service';
 
 const useAddNewTask = () => {
-  const defaultImgSrc = './add-image-icon.png';
+  const defaultImgSrc = './add-image-icon.svg';
   const imgIconRef = useRef(null);
   const [title, setTitle] = useState('');
   const [client, setClient] = useState('');
@@ -67,7 +67,7 @@ const useAddNewTask = () => {
     const [file] = event.target.files;
     if (file) {
       setImgFile(file);
-      setImgLabel('Zmień');
+      setImgLabel('Zmień zdjęcie');
     }
   };
 

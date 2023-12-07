@@ -52,67 +52,91 @@ function TasksView() {
               </div>
             ) : (
               <>
-                <div>
-                  <p>Stwórz zlecenie</p>
-                  <button type="button" onClick={createTaskHandler}>
+                <div className={styles.topBarContainer}>
+                  <h2>Stwórz zlecenie</h2>
+                  <button
+                    type="button"
+                    onClick={createTaskHandler}
+                    className={styles.addTaskBtn}
+                  >
                     Dodaj
                   </button>
                 </div>
-                <div>
-                  <input
-                    ref={imgIconRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                  />
-                  <button type="button" onClick={handleIconClick}>
-                    <span>{imgLabel}</span>
-                    <img alt="your" src={imgSrc} className={styles.addImage} />
-                  </button>
-                </div>
-                <div className={styles.inputsContainer}>
-                  <input
-                    type="text"
-                    placeholder="Tytuł"
-                    value={title}
-                    onChange={handleTitleChange}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Klient"
-                    value={client}
-                    onChange={handleClientChange}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Ścieżka plików"
-                    value={path}
-                    onChange={handlePathChange}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Opis"
-                    value={description}
-                    onChange={handleDescriptionChange}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Priorytet"
-                    value={priority}
-                    onChange={handlePriorityChange}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Status"
-                    value={status}
-                    onChange={handleStatusChange}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Deadline"
-                    value={deadline}
-                    onChange={handleDeadlineChange}
-                  />
+                <div className={styles.mainContainer}>
+                  <div>
+                    <input
+                      ref={imgIconRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileChange}
+                      className={styles.inputRef}
+                    />
+                    <button
+                      type="button"
+                      onClick={handleIconClick}
+                      className={styles.addImgField}
+                    >
+                      <div className={styles.addImgFieldContainer}>
+                        <span className={styles.imgLabel}>{imgLabel}</span>
+                        <img
+                          alt="your"
+                          src={imgSrc}
+                          className={styles.addImage}
+                        />
+                      </div>
+                    </button>
+                  </div>
+                  <div className={styles.inputsContainer}>
+                    <input
+                      type="text"
+                      placeholder="Tytuł"
+                      value={title}
+                      onChange={handleTitleChange}
+                      className={styles.input}
+                    />
+                    <input
+                      type="text"
+                      placeholder="Klient"
+                      value={client}
+                      onChange={handleClientChange}
+                      className={styles.input}
+                    />
+                    <input
+                      type="text"
+                      placeholder="Ścieżka plików"
+                      value={path}
+                      onChange={handlePathChange}
+                      className={styles.input}
+                    />
+                    <input
+                      type="text"
+                      placeholder="Opis"
+                      value={description}
+                      onChange={handleDescriptionChange}
+                      className={styles.input}
+                    />
+                    <input
+                      type="text"
+                      placeholder="Priorytet"
+                      value={priority}
+                      onChange={handlePriorityChange}
+                      className={styles.input}
+                    />
+                    <input
+                      type="text"
+                      placeholder="Status"
+                      value={status}
+                      onChange={handleStatusChange}
+                      className={styles.input}
+                    />
+                    <input
+                      type="text"
+                      placeholder="Deadline"
+                      value={deadline}
+                      onChange={handleDeadlineChange}
+                      className={styles.input}
+                    />
+                  </div>
                 </div>
               </>
             )}

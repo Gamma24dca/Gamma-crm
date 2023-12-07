@@ -16,14 +16,85 @@
 }
 
 .addImage {
-  max-width: 200px;
+  max-width: 400px;
+}
+
+.addImgField {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
 }
 
 .inputsContainer {
+  min-width: 300px;
   display: flex;
   flex-direction: column;
+  gap: 10px;
+}
+
+.input {
+  width: 100%;
+  height: 35px;
+  max-width: 400px;
+  border-radius: 10px;
+  border: 1px solid var(--color-navButton);
+  text-align: center;
 }
 
 .loaderWrapper {
   padding: 190px;
+}
+
+.topBarContainer {
+  display: flex;
+  height: 55px;
+  align-items: end;
+  justify-content: center;
+}
+
+.addTaskBtn {
+  font-family: Montserrat;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  background-color: var(--color-orange);
+  padding: 10px 30px;
+  border-radius: 30px;
+  cursor: pointer;
+  color: var(--color-lighter);
+  transition: all 0.3s ease-out;
+  position: absolute;
+  bottom: 20px;
+  right: 110px;
+}
+
+.addTaskBtn:hover {
+  background-color: var(--color-lighter);
+  color: var(--color-dark);
+  border: 1px solid var(--color-orange);
+}
+
+.mainContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+}
+
+.inputRef {
+  display: none;
+}
+
+.addImgFieldContainer {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 20px;
+  border-radius: 10px;
+  border: 1px solid grey;
+  padding: 0 20px 20px 0;
+}
+
+.imgLabel {
+  font-size: 16px;
+  font-weight: 600;
 }

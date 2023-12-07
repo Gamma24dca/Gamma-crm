@@ -21,7 +21,7 @@ export const AuthController = {
       { sub: email },
       process.env.JWT_SECRET || 'secret',
       {
-        expiresIn: '1h',
+        expiresIn: '24h',
       },
     );
   },
