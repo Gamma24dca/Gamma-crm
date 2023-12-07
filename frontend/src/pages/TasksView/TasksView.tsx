@@ -2,6 +2,7 @@ import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplat
 import useModal from '../../hooks/useModal';
 import styles from './TasksView.module.css';
 import useAddNewTask from '../../hooks/useAddNewTask';
+import Loader from '../../components/Molecules/Loader/Loader';
 
 function TasksView() {
   const { showModal, exitAnim, openModal, closeModal } = useModal();
@@ -40,11 +41,15 @@ function TasksView() {
         exitAnim={exitAnim}
       >
         {isLoading ? (
-          <p>Loading...</p>
+          <div className={styles.loaderWrapper}>
+            <Loader />
+          </div>
         ) : (
           <div>
             {showFinalMessage ? (
-              <p>{finalMessage}</p>
+              <div className={styles.loaderWrapper}>
+                <p>{finalMessage}</p>
+              </div>
             ) : (
               <>
                 <div>
