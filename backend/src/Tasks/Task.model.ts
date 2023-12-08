@@ -19,7 +19,7 @@ export const TaskModel = mongoose.model(
     },
     description: {
       type: String,
-      // required: true,
+      required: true,
     },
     image: {
       type: String,

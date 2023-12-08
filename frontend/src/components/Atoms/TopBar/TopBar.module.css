@@ -1,0 +1,15 @@
+.topBar {
+  width: 80%;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  position: fixed;
+  left: 50%;
+  transform: translateX(-41.1%);
+  top: 135px;
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-board);
+  box-shadow: 0 4px 8px var(--color-shadow);
+  border-radius: 10px 10px 0 0;
+  z-index: 3;
+}

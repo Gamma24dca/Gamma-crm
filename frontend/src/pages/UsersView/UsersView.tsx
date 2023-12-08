@@ -14,6 +14,8 @@ import Input from '../../components/Atoms/Input/Input';
 import inputStyle from '../../components/Atoms/Input/Input.module.css';
 import SubmitButton from '../../components/Atoms/SubmitBtn/SubmitBtn';
 import UserTile from '../../components/Organisms/UserTile/UserTile';
+import TopBar from '../../components/Atoms/TopBar/TopBar';
+import ViewContainer from '../../components/Atoms/ViewContainer/ViewContainer';
 
 const createUserSchema = Yup.object({
   name: Yup.string().required('Imie jest wymagane'),
@@ -227,7 +229,7 @@ function UsersView() {
           />
         </Form>
       </ModalTemplate>
-      <div className={styles.topBar}>
+      <TopBar>
         <Icon
           icon="icon-park-outline:edit-name"
           width="35"
@@ -256,8 +258,8 @@ function UsersView() {
           color="#828fa3"
           className={styles.phoneIcon}
         />
-      </div>
-      <div className={styles.usersViewContainer}>
+      </TopBar>
+      <ViewContainer>
         <div className={styles.usersContainer}>
           {users.length > 0 ? (
             users.map((userItem) => {
@@ -278,7 +280,7 @@ function UsersView() {
             <SkeletonUsersLoading />
           )}
         </div>
-      </div>
+      </ViewContainer>
 
       <button type="button" onClick={() => openModal()}>
         <Icon

@@ -109,36 +109,36 @@ TaskRouter.patch(
   },
 );
 
-// TaskRouter.post(
-//   '/:id/subtasks',
-//   passport.authenticate('jwt', { session: false }),
-//   async (req, res) => {
-//     try {
-//       const newSubtask = await TaskController.addSubtask(req.params.id, {
-//         content: req.body.content,
-//       });
-//       res.status(StatusCodes.ACCEPTED).json(newSubtask);
-//     } catch (error) {
-//       res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
-//     }
-//   },
-// );
+TaskRouter.post(
+  '/:id/subtasks',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const newSubtask = await TaskController.addSubtask(req.params.id, {
+        content: req.body.content,
+      });
+      res.status(StatusCodes.ACCEPTED).json(newSubtask);
+    } catch (error) {
+      res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
+    }
+  },
+);
 
-// TaskRouter.delete(
-//   '/:taskID/subtasks/:subtaskID',
-//   passport.authenticate('jwt', { session: false }),
-//   async (req, res) => {
-//     try {
-//       await TaskController.deleteSubtask(
-//         req.params.taskID,
-//         req.params.subtaskID,
-//       );
-//       res.status(StatusCodes.NO_CONTENT).json({});
-//     } catch (error) {
-//       res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
-//     }
-//   },
-// );
+TaskRouter.delete(
+  '/:taskID/subtasks/:subtaskID',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      await TaskController.deleteSubtask(
+        req.params.taskID,
+        req.params.subtaskID,
+      );
+      res.status(StatusCodes.NO_CONTENT).json({});
+    } catch (error) {
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+    }
+  },
+);
 
 TaskRouter.delete(
   '/:id',

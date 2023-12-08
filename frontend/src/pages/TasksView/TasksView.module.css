@@ -27,6 +27,7 @@
 
 .inputsContainer {
   min-width: 300px;
+  min-height: 390px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -90,8 +91,12 @@
   flex-direction: column-reverse;
   gap: 20px;
   border-radius: 10px;
-  border: 1px solid grey;
-  padding: 0 20px 20px 0;
+  padding: 20px 30px;
+  transition: all 0.3s ease;
+}
+
+.addImgFieldContainer:hover {
+  box-shadow: 0 4px 20px #364e7e1a;
 }
 
 .imgLabel {
