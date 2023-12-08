@@ -16,6 +16,7 @@ import SubmitButton from '../../components/Atoms/SubmitBtn/SubmitBtn';
 import UserTile from '../../components/Organisms/UserTile/UserTile';
 import TopBar from '../../components/Atoms/TopBar/TopBar';
 import ViewContainer from '../../components/Atoms/ViewContainer/ViewContainer';
+import TilesColumnContainer from '../../components/Atoms/TilesColumnContainer/TilesColumnContainer';
 
 const createUserSchema = Yup.object({
   name: Yup.string().required('Imie jest wymagane'),
@@ -260,7 +261,7 @@ function UsersView() {
         />
       </TopBar>
       <ViewContainer>
-        <div className={styles.usersContainer}>
+        <TilesColumnContainer>
           {users.length > 0 ? (
             users.map((userItem) => {
               return (
@@ -279,7 +280,7 @@ function UsersView() {
           ) : (
             <SkeletonUsersLoading />
           )}
-        </div>
+        </TilesColumnContainer>
       </ViewContainer>
 
       <button type="button" onClick={() => openModal()}>

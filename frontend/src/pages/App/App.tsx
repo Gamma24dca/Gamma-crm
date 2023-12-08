@@ -14,6 +14,7 @@ function App() {
     <MainTemplate>
       <Routes>
         <Route path="*" element={<HomePage />} />
+        <Route path="/signin" element={<Navigate to="/pulpit" />} />
         <Route path="/" element={<Navigate to="/pulpit" />} />
         <Route path="/pulpit" element={<HomePage />} />
         <Route path="/użytkownicy" element={<UsersView />} />

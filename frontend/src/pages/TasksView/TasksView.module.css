@@ -26,20 +26,22 @@
 }
 
 .inputsContainer {
-  min-width: 300px;
-  min-height: 390px;
+  min-width: 450px;
+  min-height: 450px;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
 .input {
+  font-size: 16px;
   width: 100%;
   height: 35px;
   max-width: 400px;
   border-radius: 10px;
   border: 1px solid var(--color-navButton);
   text-align: center;
+  padding: 5px 10px;
 }
 
 .loaderWrapper {
@@ -54,19 +56,18 @@
 }
 
 .addTaskBtn {
-  font-family: Montserrat;
   font-size: 16px;
   font-weight: 600;
   border: none;
   background-color: var(--color-orange);
-  padding: 10px 30px;
+  padding: 12px 45px;
   border-radius: 30px;
   cursor: pointer;
   color: var(--color-lighter);
   transition: all 0.3s ease-out;
   position: absolute;
-  bottom: 20px;
-  right: 110px;
+  bottom: 25px;
+  right: 180px;
 }
 
 .addTaskBtn:hover {
