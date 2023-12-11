@@ -3,6 +3,7 @@ import { Icon } from '@iconify/react';
 import { Link } from 'react-router-dom';
 import styles from './UserTile.module.css';
 import { deleteUser } from '../../../services/users-service';
+import TileContainer from '../../Atoms/TileContainer/TileContainer';
 
 type UserTileProps = {
   _id: string;
@@ -26,7 +27,8 @@ function UserTile({
   const [isEditOpen, setIsEditOpen] = useState(false);
 
   return (
-    <div className={styles.tileWrapper}>
+    // Extract this elements to separate components
+    <TileContainer>
       <Link className={styles.userTile} to={`/użytkownicy/${_id}`}>
         <img src={img} alt="user" className={styles.userImg} />
         <p className={styles.userName}>{`${name} ${lastname}`}</p>
@@ -64,7 +66,7 @@ function UserTile({
           </button>
         </div>
       )}
-    </div>
+    </TileContainer>
   );
 }
 
