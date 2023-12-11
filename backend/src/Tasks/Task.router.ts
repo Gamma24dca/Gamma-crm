@@ -68,7 +68,7 @@ TaskRouter.get(
 TaskRouter.post(
   '/',
   passport.authenticate('jwt', { session: false }),
-  upload.single('imgFile'),
+  upload.single('image'),
   async (req, res) => {
     try {
       const newPost = await TaskController.addTask({

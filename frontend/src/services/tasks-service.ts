@@ -1,11 +1,12 @@
 import { Config } from '../config';
 
-type TaskTypes = {
+export type TaskTypes = {
+  _id?: string;
   title: string;
   client: string;
   path: string;
   description: string;
-  imgFile: File;
+  image: File | string;
   priority: string;
   status: string;
   deadline: string;
@@ -57,7 +58,7 @@ export async function addTask({
   client,
   path,
   description,
-  imgFile,
+  image,
   priority,
   status,
   deadline,
@@ -68,7 +69,7 @@ export async function addTask({
     formData.append('client', client);
     formData.append('path', path);
     formData.append('description', description);
-    formData.append('imgFile', imgFile);
+    formData.append('image', image);
     formData.append('priority', priority);
     formData.append('status', status);
     formData.append('deadline', deadline);

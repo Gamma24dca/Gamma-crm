@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Icon } from '@iconify/react';
-import { Link } from 'react-router-dom';
 import styles from './UserTile.module.css';
 import { deleteUser } from '../../../services/users-service';
 import TileContainer from '../../Atoms/TileContainer/TileContainer';
+import TileWrapper from '../../Atoms/TileWrapper/TileWrapper';
 
 type UserTileProps = {
   _id: string;
@@ -29,13 +29,13 @@ function UserTile({
   return (
     // Extract this elements to separate components
     <TileContainer>
-      <Link className={styles.userTile} to={`/użytkownicy/${_id}`}>
+      <TileWrapper linkPath={`/użytkownicy/${_id}`}>
         <img src={img} alt="user" className={styles.userImg} />
         <p className={styles.userName}>{`${name} ${lastname}`}</p>
         <p className={styles.userJob}>{job}</p>
         <p className={styles.userEmail}>{email}</p>
         <p className={styles.userPhone}>{phone}</p>
-      </Link>
+      </TileWrapper>
       <div className={styles.iconWrapper}>
         <Icon
           icon="raphael:edit"

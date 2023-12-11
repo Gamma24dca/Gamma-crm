@@ -1,11 +1,21 @@
+import { useEffect, useState } from 'react';
 import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplate';
 import useModal from '../../hooks/useModal';
 import styles from './TasksView.module.css';
 import useAddNewTask from '../../hooks/useAddNewTask';
 import Loader from '../../components/Molecules/Loader/Loader';
+import { getAllTasks } from '../../services/tasks-service';
+import TopBar from '../../components/Atoms/TopBar/TopBar';
+import ViewContainer from '../../components/Atoms/ViewContainer/ViewContainer';
+import TilesColumnContainer from '../../components/Atoms/TilesColumnContainer/TilesColumnContainer';
+import SkeletonUsersLoading from '../../components/Organisms/SkeletonUsersLoading/SkeletonUsersLoading';
+import TileWrapper from '../../components/Atoms/TileWrapper/TileWrapper';
 
 function TasksView() {
   const { showModal, exitAnim, openModal, closeModal } = useModal();
+
+  // Have to improve form validation, possibly formik is needed
+
   const {
     title,
     client,
@@ -32,6 +42,14 @@ function TasksView() {
     createTaskHandler,
     clearValues,
   } = useAddNewTask();
+
+  const [tasks, setTasks] = useState([]);
+
+  useEffect(() => {
+    getAllTasks().then((allTasks) => {
+      setTasks(allTasks);
+    });
+  }, [exitAnim]);
 
   return (
     <>
@@ -155,6 +173,27 @@ function TasksView() {
           tasks
         </button>
       </div>
+      <TopBar>
+        <p>data</p>
+        <p>autor</p>
+        <p>opis</p>
+      </TopBar>
+      <ViewContainer>
+        <TilesColumnContainer>
+          {tasks.length > 0 ? (
+            tasks.map((task) => {
+              return (
+                <TileWrapper key={task._id} linkPath={`/zlecenia/${task._id}`}>
+                  <p>{task.title}</p>
+                  <p>{task.description}</p>
+                </TileWrapper>
+              );
+            })
+          ) : (
+            <SkeletonUsersLoading />
+          )}
+        </TilesColumnContainer>
+      </ViewContainer>
     </>
   );
 }

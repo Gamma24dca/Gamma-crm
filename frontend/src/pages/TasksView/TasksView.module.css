@@ -1,6 +1,7 @@
 .tasksContainer {
   width: 100%;
-  height: 100vh;
+  position: absolute;
+  /* height: 100vh; */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -103,4 +104,14 @@
 .imgLabel {
   font-size: 16px;
   font-weight: 600;
+}
+
+.iconWrapper {
+  cursor: pointer;
+  transform: translateX(-10px);
+  transition: all 0.3s ease;
+}
+
+.iconWrapper:hover {
+  transform: translateX(-10px) scale(1.1);
 }

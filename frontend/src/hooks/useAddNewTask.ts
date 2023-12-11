@@ -12,7 +12,7 @@ const useAddNewTask = () => {
   const [status, setStatus] = useState('');
   const [deadline, setDeadline] = useState('');
   const [imgLabel, setImgLabel] = useState('Dodaj zdjęcie');
-  const [imgFile, setImgFile] = useState(null);
+  const [image, setImage] = useState(null);
   const [finalMessage, setFinalMessage] = useState('');
   const [showFinalMessage, setShowFinalMessage] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -20,7 +20,7 @@ const useAddNewTask = () => {
   const clearValues = () => {
     setIsLoading(false);
     setShowFinalMessage(false);
-    setImgFile(null);
+    setImage(null);
     setTitle('');
     setClient('');
     setPath('Z:');
@@ -30,7 +30,7 @@ const useAddNewTask = () => {
     setImgLabel('Dodaj zdjęcie');
   };
 
-  const imgSrc = imgFile ? URL.createObjectURL(imgFile) : defaultImgSrc;
+  const imgSrc = image ? URL.createObjectURL(image) : defaultImgSrc;
 
   const handleIconClick = () => {
     imgIconRef.current.click();
@@ -66,7 +66,7 @@ const useAddNewTask = () => {
   const handleFileChange = (event) => {
     const [file] = event.target.files;
     if (file) {
-      setImgFile(file);
+      setImage(file);
       setImgLabel('Zmień zdjęcie');
     }
   };
@@ -79,7 +79,7 @@ const useAddNewTask = () => {
         client,
         path,
         description,
-        imgFile,
+        image,
         priority,
         status,
         deadline,
@@ -107,7 +107,7 @@ const useAddNewTask = () => {
     client,
     path,
     description,
-    imgFile,
+    image,
     priority,
     status,
     deadline,
