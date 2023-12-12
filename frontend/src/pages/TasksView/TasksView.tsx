@@ -51,6 +51,12 @@ function TasksView() {
     });
   }, [exitAnim]);
 
+  // console.log(tasks);
+
+  const sortedTasks = tasks.sort((a, b) => {
+    return Number(b.priority) - Number(a.priority);
+  });
+
   return (
     <>
       <ModalTemplate
@@ -180,12 +186,17 @@ function TasksView() {
       </TopBar>
       <ViewContainer>
         <TilesColumnContainer>
-          {tasks.length > 0 ? (
-            tasks.map((task) => {
+          {sortedTasks.length > 0 ? (
+            sortedTasks.map((task) => {
               return (
                 <TileWrapper key={task._id} linkPath={`/zlecenia/${task._id}`}>
+                  <p>{task.date.split('T')[0]}</p>
+                  <p>{task.client}</p>
                   <p>{task.title}</p>
                   <p>{task.description}</p>
+                  <p>{task.path}</p>
+                  <p>{task.status}</p>
+                  <p>{task.deadline.split('T')[0]}</p>
                 </TileWrapper>
               );
             })
