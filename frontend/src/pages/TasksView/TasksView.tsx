@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import Calendar from 'react-calendar';
 import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplate';
 import useModal from '../../hooks/useModal';
 import styles from './TasksView.module.css';
@@ -21,8 +22,6 @@ function TasksView() {
     client,
     path,
     description,
-    priority,
-    status,
     deadline,
     imgLabel,
     imgSrc,
@@ -44,14 +43,13 @@ function TasksView() {
   } = useAddNewTask();
 
   const [tasks, setTasks] = useState([]);
+  const [isCalendarVisible, setIsCalendarVisible] = useState(false);
 
   useEffect(() => {
     getAllTasks().then((allTasks) => {
       setTasks(allTasks);
     });
   }, [exitAnim]);
-
-  // console.log(tasks);
 
   const sortedTasks = tasks.sort((a, b) => {
     return Number(b.priority) - Number(a.priority);
@@ -139,27 +137,42 @@ function TasksView() {
                       onChange={handleDescriptionChange}
                       className={styles.input}
                     />
-                    <input
-                      type="text"
-                      placeholder="Priorytet"
-                      value={priority}
+                    <select
+                      className={styles.selectInput}
                       onChange={handlePriorityChange}
-                      className={styles.input}
-                    />
-                    <input
-                      type="text"
-                      placeholder="Status"
-                      value={status}
+                    >
+                      <option value="">Priorytet</option>
+                      <option value="200">200</option>
+                      <option value="400">400</option>
+                      <option value="600">600</option>
+                      <option value="800">800</option>
+                      <option value="1000">1000</option>
+                    </select>
+                    <select
+                      className={styles.selectInput}
                       onChange={handleStatusChange}
-                      className={styles.input}
-                    />
-                    <input
-                      type="text"
-                      placeholder="Deadline"
-                      value={deadline}
-                      onChange={handleDeadlineChange}
-                      className={styles.input}
-                    />
+                    >
+                      <option value="">Status zlecenia</option>
+                      <option value="Studio">Studio</option>
+                      <option value="Druk">Druk</option>
+                      <option value="Kalander">Kalander</option>
+                      <option value="Szwalnia">Szwalnia</option>
+                      <option value="Pakowanie">Pakowanie</option>
+                      <option value="Wysyłka">Wysyłka</option>
+                    </select>
+                    <button
+                      type="button"
+                      className={styles.buttonInput}
+                      onClick={() => setIsCalendarVisible((val) => !val)}
+                    >
+                      <p>Deadline</p>
+                    </button>
+                    {isCalendarVisible ? (
+                      <Calendar
+                        onChange={handleDeadlineChange}
+                        value={deadline}
+                      />
+                    ) : null}
                   </div>
                 </div>
               </>
@@ -174,6 +187,7 @@ function TasksView() {
           onClick={() => {
             openModal();
             clearValues();
+            setIsCalendarVisible(false);
           }}
         >
           tasks

@@ -59,8 +59,8 @@ const useAddNewTask = () => {
     setStatus(event.target.value);
   };
 
-  const handleDeadlineChange = (event) => {
-    setDeadline(event.target.value);
+  const handleDeadlineChange = (date) => {
+    setDeadline(date);
   };
 
   const handleFileChange = (event) => {
@@ -108,8 +108,6 @@ const useAddNewTask = () => {
     path,
     description,
     image,
-    priority,
-    status,
     deadline,
     handleIconClick,
     imgIconRef,

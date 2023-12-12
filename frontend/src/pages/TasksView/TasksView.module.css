@@ -34,7 +34,9 @@
   gap: 10px;
 }
 
-.input {
+.input,
+.selectInput,
+.buttonInput {
   font-size: 16px;
   width: 100%;
   height: 35px;
@@ -43,6 +45,26 @@
   border: 1px solid var(--color-navButton);
   text-align: center;
   padding: 5px 10px;
+}
+
+.selectInput,
+.buttonInput {
+  font-family: Montserrat;
+  min-width: 423px;
+  min-height: 45px;
+}
+
+.buttonInput {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  background-color: transparent;
+}
+
+.buttonInput:hover {
+  transform: scale(1.03);
 }
 
 .loaderWrapper {
