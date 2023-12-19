@@ -1,8 +1,8 @@
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Icon } from '@iconify/react';
-import { useEffect, useState } from 'react';
-import { getAllUsers } from '../../services/users-service';
+import { useEffect } from 'react';
+import { deleteUser, getAllUsers } from '../../services/users-service';
 import styles from './UsersView.module.css';
 import SkeletonUsersLoading from '../../components/Organisms/SkeletonUsersLoading/SkeletonUsersLoading';
 import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplate';
@@ -17,6 +17,7 @@ import UserTile from '../../components/Organisms/UserTile/UserTile';
 import TopBar from '../../components/Atoms/TopBar/TopBar';
 import ViewContainer from '../../components/Atoms/ViewContainer/ViewContainer';
 import TilesColumnContainer from '../../components/Atoms/TilesColumnContainer/TilesColumnContainer';
+import useUsersContext from '../../hooks/useUsersContext';
 
 const createUserSchema = Yup.object({
   name: Yup.string().required('Imie jest wymagane'),
@@ -31,7 +32,6 @@ const createUserSchema = Yup.object({
 });
 
 function UsersView() {
-  const [users, setUsers] = useState([]);
   const { signUp } = useAuth();
 
   const { showModal, exitAnim, openModal, closeModal } = useModal();
@@ -71,11 +71,29 @@ function UsersView() {
     },
   });
 
+  // @ts-ignore
+  const { users, dispatch } = useUsersContext();
+
   useEffect(() => {
     getAllUsers().then((allUsers) => {
-      setUsers(allUsers);
+      dispatch({ type: 'SET_USERS', payload: allUsers });
     });
-  }, []);
+  }, [dispatch]);
+
+  const deleteUserCallback = (_id) => {
+    deleteUser(_id).then((deletedUser) => {
+      dispatch({ type: 'DELETE_USER', payload: deletedUser });
+    });
+
+    try {
+      getAllUsers().then((allUsers) => {
+        dispatch({ type: 'SET_USERS', payload: allUsers });
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <>
       <ModalTemplate
@@ -274,6 +292,9 @@ function UsersView() {
                   job={userItem.job}
                   email={userItem.email}
                   phone={userItem.phone}
+                  deleteUserCallback={() => {
+                    deleteUserCallback(userItem._id);
+                  }}
                 />
               );
             })

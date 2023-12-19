@@ -41,6 +41,7 @@ module.exports = {
     'no-underscore-dangle': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
+    'react/prop-types': 'off',
 
     'react/jsx-filename-extension': [
       1,

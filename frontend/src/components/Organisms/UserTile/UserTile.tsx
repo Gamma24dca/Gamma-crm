@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Icon } from '@iconify/react';
 import styles from './UserTile.module.css';
-import { deleteUser } from '../../../services/users-service';
 import TileContainer from '../../Atoms/TileContainer/TileContainer';
 import TileWrapper from '../../Atoms/TileWrapper/TileWrapper';
 
@@ -13,6 +12,7 @@ type UserTileProps = {
   job: string;
   email: string;
   phone: number;
+  deleteUserCallback: () => void;
 };
 
 function UserTile({
@@ -23,6 +23,7 @@ function UserTile({
   job,
   email,
   phone,
+  deleteUserCallback,
 }: UserTileProps) {
   const [isEditOpen, setIsEditOpen] = useState(false);
 
@@ -54,10 +55,7 @@ function UserTile({
           <button
             type="button"
             className={styles.editBtn}
-            onClick={() => {
-              deleteUser(_id);
-              setIsEditOpen(false);
-            }}
+            onClick={deleteUserCallback}
           >
             Usuń
           </button>
