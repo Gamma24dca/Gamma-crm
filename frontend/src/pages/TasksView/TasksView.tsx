@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Calendar from 'react-calendar';
 import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplate';
 import useModal from '../../hooks/useModal';
@@ -43,7 +43,7 @@ function TasksView() {
     clearValues,
   } = useAddNewTask();
 
-  const [isCalendarVisible, setIsCalendarVisible] = useState(false);
+  // const [isCalendarVisible, setIsCalendarVisible] = useState(false);
 
   // @ts-ignore
   const { tasks, dispatch } = useTasksContext();
@@ -130,20 +130,21 @@ function TasksView() {
                         />
                         <input
                           type="text"
-                          placeholder="Ścieżka plików"
-                          value={path}
-                          onChange={handlePathChange}
+                          placeholder="Opis"
+                          value={description}
+                          onChange={handleDescriptionChange}
                           className={styles.input}
                         />
                       </div>
                       <div className={styles.rightRow}>
                         <input
                           type="text"
-                          placeholder="Opis"
-                          value={description}
-                          onChange={handleDescriptionChange}
+                          placeholder="Ścieżka plików"
+                          value={path}
+                          onChange={handlePathChange}
                           className={styles.input}
                         />
+
                         <select
                           className={styles.selectInput}
                           onChange={handlePriorityChange}
@@ -170,19 +171,16 @@ function TasksView() {
                       </div>
                     </div>
 
-                    <button
-                      type="button"
+                    <p
                       className={styles.buttonInput}
-                      onClick={() => setIsCalendarVisible((val) => !val)}
+                      // onClick={() => setIsCalendarVisible((val) => !val)}
                     >
                       <p>Deadline</p>
-                    </button>
-                    {isCalendarVisible ? (
-                      <Calendar
-                        onChange={handleDeadlineChange}
-                        value={deadline}
-                      />
-                    ) : null}
+                    </p>
+                    <Calendar
+                      onChange={handleDeadlineChange}
+                      value={deadline}
+                    />
                   </div>
                 </div>
               </>
@@ -197,22 +195,22 @@ function TasksView() {
           onClick={() => {
             openModal();
             clearValues();
-            setIsCalendarVisible(false);
+            // setIsCalendarVisible(false);
           }}
         >
           tasks
         </button>
       </div>
       <TopBar>
-        <p className={styles.createdAtDate}>Utworzono</p>
-        <p className={styles.authorName}>Autor</p>
-        <p className={styles.title}>Tytuł</p>
-        <p className={styles.description}>Opis</p>
-        <p className={styles.path}>Ścieżka</p>
-        <p className={styles.status}>Status</p>
-        <p className={styles.client}>Klient</p>
-        <p className={styles.priority}>Priorytet</p>
-        <p className={styles.deadline}>Deadline</p>
+        <p className={styles.createdAtDateBar}>Utworzono</p>
+        <p className={styles.authorNameBar}>Autor</p>
+        <p className={styles.titleBar}>Tytuł</p>
+        <p className={styles.descriptionBar}>Opis</p>
+        <p className={styles.pathBar}>Ścieżka</p>
+        <p className={styles.statusBar}>Status</p>
+        <p className={styles.clientBar}>Klient</p>
+        <p className={styles.priorityBar}>Priorytet</p>
+        <p className={styles.deadlineBar}>Deadline</p>
       </TopBar>
       <ViewContainer>
         <TilesColumnContainer>

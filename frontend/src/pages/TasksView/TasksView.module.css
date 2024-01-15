@@ -47,8 +47,7 @@
   padding: 5px 10px;
 }
 
-.selectInput,
-.buttonInput {
+.selectInput {
   font-family: Montserrat;
   min-width: 242px;
   min-height: 45px;
@@ -59,13 +58,10 @@
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
-  cursor: pointer;
   background-color: transparent;
   margin: 0 auto;
-}
-
-.buttonInput:hover {
-  transform: scale(1.03);
+  border: none;
+  padding: 15px 0 0 0;
 }
 
 .loaderWrapper {
@@ -163,50 +159,91 @@
 .status,
 .client,
 .deadline,
-.priority {
+.priority,
+.createdAtDateBar,
+.authorNameBar,
+.titleBar,
+.descriptionBar,
+.pathBar,
+.statusBar,
+.clientBar,
+.deadlineBar,
+.priorityBar {
   font-weight: 600;
   position: absolute;
   font-size: 15px;
-  border-right: 2px solid var(--color-orange);
+  /* border-right: 2px solid var(--color-orange); */
   padding: 0 20px;
 }
 
+.deadlineBar {
+  left: 89%;
+}
+.deadline {
+  left: 90%;
+}
+
+.priorityBar {
+  left: 80%;
+}
 .priority {
   left: 82%;
 }
 
-.deadline {
-  left: 90%;
+.clientBar {
+  left: 69.5%;
 }
 
 .client {
   left: 70%;
 }
 
+.statusBar {
+  left: 62%;
+}
 .status {
   left: 62%;
 }
 
+.pathBar {
+  left: 48%;
+}
 .path {
   left: 46%;
 }
 
+.path,
 .description {
-  left: 29%;
-  max-width: 190px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
 }
 
+.descriptionBar {
+  left: 35%;
+}
+.description {
+  left: 29%;
+  max-width: 190px;
+}
+
+.titleBar {
+  left: 23%;
+}
 .title {
   left: 20.5%;
 }
 
+.authorNameBar {
+  left: 12.5%;
+}
 .authorName {
   left: 11.5%;
 }
 
+.createdAtDateBar {
+  left: 3%;
+}
 .createdAtDate {
   left: 0%;
 }
