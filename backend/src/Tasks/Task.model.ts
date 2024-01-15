@@ -11,6 +11,14 @@ export const TaskModel = mongoose.model(
       type: String,
       required: true,
     },
+    authorName: {
+      type: String,
+      required: true,
+    },
+    authorAvatar: {
+      type: String,
+      // required: true,
+    },
     client: {
       type: String,
     },

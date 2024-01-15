@@ -1,5 +1,6 @@
 .tileWrapper {
   display: flex;
+  justify-content: space-around;
   width: 95%;
   min-height: 55px;
   margin: 0 auto;

@@ -11,6 +11,7 @@ import ViewContainer from '../../components/Atoms/ViewContainer/ViewContainer';
 import TilesColumnContainer from '../../components/Atoms/TilesColumnContainer/TilesColumnContainer';
 import SkeletonUsersLoading from '../../components/Organisms/SkeletonUsersLoading/SkeletonUsersLoading';
 import TileWrapper from '../../components/Atoms/TileWrapper/TileWrapper';
+import useTasksContext from '../../hooks/useTasksContext';
 
 function TasksView() {
   const { showModal, exitAnim, openModal, closeModal } = useModal();
@@ -42,14 +43,16 @@ function TasksView() {
     clearValues,
   } = useAddNewTask();
 
-  const [tasks, setTasks] = useState([]);
   const [isCalendarVisible, setIsCalendarVisible] = useState(false);
+
+  // @ts-ignore
+  const { tasks, dispatch } = useTasksContext();
 
   useEffect(() => {
     getAllTasks().then((allTasks) => {
-      setTasks(allTasks);
+      dispatch({ type: 'SET_TASKS', payload: allTasks });
     });
-  }, [exitAnim]);
+  }, [exitAnim, dispatch]);
 
   const sortedTasks = tasks.sort((a, b) => {
     return Number(b.priority) - Number(a.priority);
@@ -109,57 +112,64 @@ function TasksView() {
                     </button>
                   </div>
                   <div className={styles.inputsContainer}>
-                    <input
-                      type="text"
-                      placeholder="Tytuł"
-                      value={title}
-                      onChange={handleTitleChange}
-                      className={styles.input}
-                    />
-                    <input
-                      type="text"
-                      placeholder="Klient"
-                      value={client}
-                      onChange={handleClientChange}
-                      className={styles.input}
-                    />
-                    <input
-                      type="text"
-                      placeholder="Ścieżka plików"
-                      value={path}
-                      onChange={handlePathChange}
-                      className={styles.input}
-                    />
-                    <input
-                      type="text"
-                      placeholder="Opis"
-                      value={description}
-                      onChange={handleDescriptionChange}
-                      className={styles.input}
-                    />
-                    <select
-                      className={styles.selectInput}
-                      onChange={handlePriorityChange}
-                    >
-                      <option value="">Priorytet</option>
-                      <option value="200">200</option>
-                      <option value="400">400</option>
-                      <option value="600">600</option>
-                      <option value="800">800</option>
-                      <option value="1000">1000</option>
-                    </select>
-                    <select
-                      className={styles.selectInput}
-                      onChange={handleStatusChange}
-                    >
-                      <option value="">Status zlecenia</option>
-                      <option value="Studio">Studio</option>
-                      <option value="Druk">Druk</option>
-                      <option value="Kalander">Kalander</option>
-                      <option value="Szwalnia">Szwalnia</option>
-                      <option value="Pakowanie">Pakowanie</option>
-                      <option value="Wysyłka">Wysyłka</option>
-                    </select>
+                    <div className={styles.rowContainer}>
+                      <div className={styles.leftRow}>
+                        <input
+                          type="text"
+                          placeholder="Tytuł"
+                          value={title}
+                          onChange={handleTitleChange}
+                          className={styles.input}
+                        />
+                        <input
+                          type="text"
+                          placeholder="Klient"
+                          value={client}
+                          onChange={handleClientChange}
+                          className={styles.input}
+                        />
+                        <input
+                          type="text"
+                          placeholder="Ścieżka plików"
+                          value={path}
+                          onChange={handlePathChange}
+                          className={styles.input}
+                        />
+                      </div>
+                      <div className={styles.rightRow}>
+                        <input
+                          type="text"
+                          placeholder="Opis"
+                          value={description}
+                          onChange={handleDescriptionChange}
+                          className={styles.input}
+                        />
+                        <select
+                          className={styles.selectInput}
+                          onChange={handlePriorityChange}
+                        >
+                          <option value="">Priorytet</option>
+                          <option value="200">200</option>
+                          <option value="400">400</option>
+                          <option value="600">600</option>
+                          <option value="800">800</option>
+                          <option value="1000">1000</option>
+                        </select>
+                        <select
+                          className={styles.selectInput}
+                          onChange={handleStatusChange}
+                        >
+                          <option value="">Status zlecenia</option>
+                          <option value="Studio">Studio</option>
+                          <option value="Druk">Druk</option>
+                          <option value="Kalander">Kalander</option>
+                          <option value="Szwalnia">Szwalnia</option>
+                          <option value="Pakowanie">Pakowanie</option>
+                          <option value="Wysyłka">Wysyłka</option>
+                        </select>
+                      </div>
+                    </div>
+
                     <button
                       type="button"
                       className={styles.buttonInput}
@@ -194,9 +204,15 @@ function TasksView() {
         </button>
       </div>
       <TopBar>
-        <p>data</p>
-        <p>autor</p>
-        <p>opis</p>
+        <p className={styles.createdAtDate}>Utworzono</p>
+        <p className={styles.authorName}>Autor</p>
+        <p className={styles.title}>Tytuł</p>
+        <p className={styles.description}>Opis</p>
+        <p className={styles.path}>Ścieżka</p>
+        <p className={styles.status}>Status</p>
+        <p className={styles.client}>Klient</p>
+        <p className={styles.priority}>Priorytet</p>
+        <p className={styles.deadline}>Deadline</p>
       </TopBar>
       <ViewContainer>
         <TilesColumnContainer>
@@ -204,13 +220,25 @@ function TasksView() {
             sortedTasks.map((task) => {
               return (
                 <TileWrapper key={task._id} linkPath={`/zlecenia/${task._id}`}>
-                  <p>{task.date.split('T')[0]}</p>
-                  <p>{task.client}</p>
-                  <p>{task.title}</p>
-                  <p>{task.description}</p>
-                  <p>{task.path}</p>
-                  <p>{task.status}</p>
-                  <p>{task.deadline.split('T')[0]}</p>
+                  {/* <p>{index}</p> */}
+                  <p className={styles.createdAtDate}>
+                    {task.date.split('T')[0]}
+                  </p>
+                  <p className={styles.authorName}>{task.authorName}</p>
+                  <img
+                    src={task.authorAvatar}
+                    alt="user"
+                    className={styles.userImg}
+                  />
+                  <p className={styles.client}>{task.client}</p>
+                  <p className={styles.title}>{task.title}</p>
+                  <p className={styles.description}>{task.description}</p>
+                  <p className={styles.path}>{task.path}</p>
+                  <p className={styles.status}>{task.status}</p>
+                  <p className={styles.priority}>{task.priority}</p>
+                  <p className={styles.deadline}>
+                    {task.deadline.split('T')[0]}
+                  </p>
                 </TileWrapper>
               );
             })

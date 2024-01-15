@@ -75,6 +75,7 @@ select {
   margin-bottom: 70px;
   opacity: 0;
   animation: appear 0.7s ease forwards;
+  margin: 0 auto;
 }
 
 .react-calendar__navigation {

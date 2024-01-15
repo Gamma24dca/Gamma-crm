@@ -74,6 +74,9 @@ TaskRouter.post(
       const newPost = await TaskController.addTask({
         title: req.body.title,
         author: req.user.id,
+        authorName: req.user.name,
+        // @ts-ignore
+        authorAvatar: req.user.img,
         client: req.body.client,
         path: req.body.path,
         description: req.body.description,

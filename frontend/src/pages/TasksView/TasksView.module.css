@@ -28,7 +28,7 @@
 
 .inputsContainer {
   min-width: 450px;
-  min-height: 450px;
+  min-height: 620px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -50,7 +50,7 @@
 .selectInput,
 .buttonInput {
   font-family: Montserrat;
-  min-width: 423px;
+  min-width: 242px;
   min-height: 45px;
 }
 
@@ -61,6 +61,7 @@
   transition: all 0.3s ease;
   cursor: pointer;
   background-color: transparent;
+  margin: 0 auto;
 }
 
 .buttonInput:hover {
@@ -136,4 +137,84 @@
 
 .iconWrapper:hover {
   transform: translateX(-10px) scale(1.1);
+}
+
+.rowContainer {
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+  align-items: center;
+  margin-right: 30px;
+}
+
+.leftRow,
+.rightRow {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 220px;
+}
+
+.createdAtDate,
+.authorName,
+.title,
+.description,
+.path,
+.status,
+.client,
+.deadline,
+.priority {
+  font-weight: 600;
+  position: absolute;
+  font-size: 15px;
+  border-right: 2px solid var(--color-orange);
+  padding: 0 20px;
+}
+
+.priority {
+  left: 82%;
+}
+
+.deadline {
+  left: 90%;
+}
+
+.client {
+  left: 70%;
+}
+
+.status {
+  left: 62%;
+}
+
+.path {
+  left: 46%;
+}
+
+.description {
+  left: 29%;
+  max-width: 190px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.title {
+  left: 20.5%;
+}
+
+.authorName {
+  left: 11.5%;
+}
+
+.createdAtDate {
+  left: 0%;
+}
+
+.userImg {
+  position: absolute;
+  max-width: 40px;
+  border-radius: 50%;
+  padding: 8px;
+  left: 9%;
 }

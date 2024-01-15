@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { addTask } from '../services/tasks-service';
+// import useTasksContext from './useTasksContext';
 
 const useAddNewTask = () => {
   const defaultImgSrc = './add-image-icon.svg';
@@ -71,6 +72,8 @@ const useAddNewTask = () => {
     }
   };
 
+  // const { dispatch } = useTasksContext();
+
   const createTaskHandler = async () => {
     try {
       setIsLoading(true);
@@ -94,6 +97,19 @@ const useAddNewTask = () => {
       setFinalMessage('Zlecenie utworzone!');
       setShowFinalMessage(true);
       setIsLoading(false);
+      // dispatch({
+      //   type: 'ADD_TASK',
+      //   payload: {
+      //     title,
+      //     client,
+      //     path,
+      //     description,
+      //     image,
+      //     priority,
+      //     status,
+      //     deadline,
+      //   },
+      // });
     }
   };
 
