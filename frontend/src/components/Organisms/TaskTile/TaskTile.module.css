@@ -1,0 +1,143 @@
+.createdAtDate,
+.authorName,
+.title,
+.description,
+.path,
+.status,
+.client,
+.deadline,
+.priority,
+.createdAtDateBar,
+.authorNameBar,
+.titleBar,
+.descriptionBar,
+.pathBar,
+.statusBar,
+.clientBar,
+.deadlineBar,
+.priorityBar {
+  font-weight: 600;
+  position: absolute;
+  font-size: 15px;
+  /* border-right: 2px solid var(--color-orange); */
+  padding: 0 20px;
+}
+
+.deadlineBar {
+  left: 89%;
+}
+.deadline {
+  left: 90%;
+}
+
+.priorityBar {
+  left: 80%;
+}
+.priority {
+  left: 82%;
+}
+
+.clientBar {
+  left: 69.5%;
+}
+
+.client {
+  left: 70%;
+}
+
+.statusBar {
+  left: 62%;
+}
+.status {
+  left: 62%;
+}
+
+.pathBar {
+  left: 48%;
+}
+.path {
+  left: 46%;
+}
+
+.path,
+.description {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.descriptionBar {
+  left: 35%;
+}
+.description {
+  left: 29%;
+  max-width: 190px;
+}
+
+.titleBar {
+  left: 23%;
+}
+.title {
+  left: 20.5%;
+}
+
+.authorNameBar {
+  left: 12.5%;
+}
+.authorName {
+  left: 11.5%;
+}
+
+.createdAtDateBar {
+  left: 3%;
+}
+.createdAtDate {
+  left: 0%;
+}
+
+.userImg {
+  position: absolute;
+  max-width: 40px;
+  border-radius: 50%;
+  padding: 8px;
+  left: 9%;
+}
+
+.iconWrapper {
+  cursor: pointer;
+  transform: translateX(-10px);
+  transition: all 0.3s ease;
+}
+
+.iconWrapper:hover {
+  transform: translateX(-10px) scale(1.1);
+}
+
+.taskEditWindow {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  right: 2.1%;
+  transform: translateY(60%);
+  background-color: var(--color-lighter);
+  width: 65px;
+  height: 70px;
+  z-index: 20;
+  border-radius: 6px;
+  box-shadow: 0 4px 8px var(--color-shadow);
+}
+
+.editBtn {
+  font-family: Montserrat;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.editBtn:hover {
+  color: var(--color-navButton);
+}
