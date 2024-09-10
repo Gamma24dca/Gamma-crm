@@ -32,6 +32,9 @@ mongoose
   .catch((err) => {
     console.log(err);
   });
+app.get('/', (req, res) => {
+  res.send('Gamma mail API');
+});
 app.use(cors());
 app.use(morgan('tiny'));
 app.use(express.json());
