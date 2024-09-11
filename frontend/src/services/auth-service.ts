@@ -62,6 +62,7 @@ export async function signIn({ email, password }: SignInProps): Promise<void> {
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
       },
+      credentials: 'include',
     }
   );
 
