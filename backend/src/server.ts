@@ -35,7 +35,12 @@ mongoose
 app.get('/', (req, res) => {
   res.send('Gamma mail API');
 });
-app.use(cors());
+app.use(
+  cors({
+    origin: 'https://gamma-crm-frontend.onrender.com',
+    credentials: true,
+  }),
+);
 app.use(morgan('tiny'));
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
