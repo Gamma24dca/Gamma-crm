@@ -50,13 +50,10 @@ export async function getUserById(id: string): Promise<User | null> {
 
 export async function getCurrentUser(): Promise<User | null> {
   try {
-    const response = await fetch(
-      'https://gamma-crm.onrender.com/api/users/me',
-      {
-        method: 'GET',
-        credentials: 'include',
-      }
-    );
+    const response = await fetch('/api/users/me', {
+      method: 'GET',
+      credentials: 'include',
+    });
     if (response.ok) {
       return await response.json();
     }

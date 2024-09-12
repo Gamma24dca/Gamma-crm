@@ -50,20 +50,17 @@ type SignInProps = {
 };
 
 export async function signIn({ email, password }: SignInProps): Promise<void> {
-  const response = await fetch(
-    'https://gamma-crm.onrender.com/api/auth/signin',
-    {
-      method: 'POST',
-      body: JSON.stringify({
-        email,
-        password,
-        grantType: 'cookie',
-      }),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      },
-    }
-  );
+  const response = await fetch('/api/auth/signin', {
+    method: 'POST',
+    body: JSON.stringify({
+      email,
+      password,
+      grantType: 'cookie',
+    }),
+    headers: {
+      'Content-type': 'application/json; charset=UTF-8',
+    },
+  });
 
   if (!response.ok) {
     throw new Error(`${response.status} ${response.statusText}`);

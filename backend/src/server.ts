@@ -21,6 +21,8 @@ app.use((req, res, next) => {
   next();
 });
 
+const allowedOrigins = 'https://gamma-crm-frontend.onrender.com/';
+
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
@@ -35,7 +37,21 @@ mongoose
 app.get('/', (req, res) => {
   res.send('Gamma mail API');
 });
-app.use(cors());
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // allow requests with no origin
+      // (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) === -1) {
+        var msg =
+          'The CORS policy for this site does not allow access from the specified Origin.';
+        return callback(new Error(msg), false);
+      }
+      return callback(null, true);
+    },
+  }),
+);
 app.use(morgan('tiny'));
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
