@@ -53,6 +53,8 @@ export async function getCurrentUser(): Promise<User | null> {
     const response = await fetch(
       'https://gamma-crm.onrender.com/api/users/me',
       {
+        mode: 'no-cors',
+
         method: 'GET',
         credentials: 'include',
       }
