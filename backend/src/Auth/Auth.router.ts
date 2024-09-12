@@ -65,3 +65,7 @@ AuthRouter.post('/signout', async (req, res) => {
       .json({ error: { message: error.message } });
   }
 });
+
+AuthRouter.options('/signin', async (req, res) => {
+  res.status(StatusCodes.OK);
+});
