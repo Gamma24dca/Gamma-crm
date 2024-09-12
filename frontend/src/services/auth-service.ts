@@ -54,6 +54,7 @@ export async function signIn({ email, password }: SignInProps): Promise<void> {
     'https://gamma-crm.onrender.com/api/auth/signin',
     {
       method: 'POST',
+      credentials: 'include',
       body: JSON.stringify({
         email,
         password,

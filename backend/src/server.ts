@@ -21,7 +21,7 @@ app.use((req, res, next) => {
   next();
 });
 
-const allowedOrigins = 'https://gamma-crm-frontend.onrender.com/';
+const allowedOrigins = 'https://gamma-crm-frontend.onrender.com';
 
 mongoose
   .connect(process.env.MONGO_URI)
@@ -40,8 +40,6 @@ app.get('/', (req, res) => {
 app.use(
   cors({
     origin: function (origin, callback) {
-      // allow requests with no origin
-      // (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
       if (allowedOrigins.indexOf(origin) === -1) {
         var msg =
@@ -52,6 +50,16 @@ app.use(
     },
   }),
 );
+
+app.use((req, res, next) => {
+  res.append('Access-Control-Allow-Origin', [
+    'https://gamma-crm-frontend.onrender.com',
+    'http://localhost:5173',
+  ]);
+  res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.append('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
 app.use(morgan('tiny'));
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
