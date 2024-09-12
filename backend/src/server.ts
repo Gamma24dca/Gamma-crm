@@ -9,7 +9,6 @@ import morgan from 'morgan';
 import { AuthRouter } from './Auth/Auth.router';
 import { UserRouter } from './User/User.router';
 import { TaskRouter } from './Tasks/Task.router';
-import { StatusCodes } from 'http-status-codes';
 
 const app = express();
 
@@ -21,8 +20,6 @@ app.use((req, res, next) => {
   console.log(req.path, req.method);
   next();
 });
-
-const allowedOrigins = 'https://gamma-crm-frontend.onrender.com';
 
 mongoose
   .connect(process.env.MONGO_URI)
@@ -38,21 +35,21 @@ mongoose
 app.get('/', (req, res) => {
   res.send('Gamma mail API');
 });
-app.use(cors());
 
-app.use((req, res, next) => {
-  res.append('Access-Control-Allow-Origin', ['*']);
-  res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-  res.append(
-    'Access-Control-Allow-Headers',
-    'Content-Type, Authorization, X-Requested-With',
-  );
-  if (req.method === 'OPTIONS') {
-    res.WriteHeader(StatusCodes.OK);
-    return;
-  }
-  next();
-});
+// app.use((req, res, next) => {
+//   res.append('Access-Control-Allow-Origin', ['*']);
+//   res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+//   res.append(
+//     'Access-Control-Allow-Headers',
+//     'Content-Type, Authorization, X-Requested-With',
+//   );
+//   if (req.method === 'OPTIONS') {
+//     res.WriteHeader(StatusCodes.OK);
+//     return;
+//   }
+//   next();
+// });
+app.use(cors());
 app.use(morgan('tiny'));
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
