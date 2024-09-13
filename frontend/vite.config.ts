@@ -16,8 +16,7 @@ export default defineConfig({
     proxy: {
       '^/api': {
         changeOrigin: true,
-        target: 'https://gamma-crm.onrender.com/',
-        secure: false,
+        target: 'http://localhost:4000',
       },
     },
   },
