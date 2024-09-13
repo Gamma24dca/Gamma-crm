@@ -26,6 +26,7 @@ AuthRouter.post('/signin', async (req, res) => {
           secure: true,
           signed: true,
           maxAge: 1000 * 60 * 60 * 24 * 1000,
+          sameSite: 'none',
         })
         .end();
     } else {
@@ -63,4 +64,8 @@ AuthRouter.post('/signout', async (req, res) => {
       .status(StatusCodes.NOT_FOUND)
       .json({ error: { message: error.message } });
   }
+});
+
+AuthRouter.options('/signin', async (req, res) => {
+  res.status(StatusCodes.OK);
 });

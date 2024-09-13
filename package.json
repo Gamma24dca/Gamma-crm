@@ -19,7 +19,8 @@
     "dev": "run-p dev:*",
     "dev:backend": "npm run dev -w backend",
     "dev:frontend": "npm run dev -w frontend",
-    "postinstall": "npm run build -w frontend"
+    "postinstall": "npm run build -w frontend",
+    "prepare": "is-ci || husky install"
   },
   "dependencies": {
     "@typescript-eslint/parser": "^6.7.5",
