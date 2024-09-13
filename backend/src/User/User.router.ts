@@ -67,7 +67,3 @@ UserRouter.delete(
     }
   },
 );
-
-UserRouter.options('/:id', async (req, res) => {
-  res.status(StatusCodes.OK);
-});

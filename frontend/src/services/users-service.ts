@@ -13,7 +13,7 @@ export type User = {
 
 export async function getAllUsers(): Promise<User[] | null> {
   try {
-    const response = await fetch('https://gamma-crm.onrender.com/api/users', {
+    const response = await fetch('/api/users', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -33,9 +33,7 @@ export async function getAllUsers(): Promise<User[] | null> {
 
 export async function getUserById(id: string): Promise<User | null> {
   try {
-    const response = await fetch(
-      `https://gamma-crm.onrender.com/api/users/${id}`
-    );
+    const response = await fetch(`/api/users/${id}`);
     if (response.ok) {
       return await response.json();
     }
@@ -50,15 +48,7 @@ export async function getUserById(id: string): Promise<User | null> {
 
 export async function getCurrentUser(): Promise<User | null> {
   try {
-    const response = await fetch(
-      'https://gamma-crm.onrender.com/api/users/me',
-      {
-        mode: 'no-cors',
-
-        method: 'GET',
-        credentials: 'include',
-      }
-    );
+    const response = await fetch('https://gamma-crm.onrender.com/api/users/me');
     if (response.ok) {
       return await response.json();
     }
@@ -73,15 +63,12 @@ export async function getCurrentUser(): Promise<User | null> {
 
 export async function deleteUser(id: string) {
   try {
-    const response = await fetch(
-      `https://gamma-crm.onrender.com/api/users/${id}`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    const response = await fetch(`api/users/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
     if (response.ok) {
       return await response.json();
     }
