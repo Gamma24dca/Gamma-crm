@@ -35,20 +35,6 @@ mongoose
 app.get('/', (req, res) => {
   res.send('Gamma mail API');
 });
-
-// app.use((req, res, next) => {
-//   res.append('Access-Control-Allow-Origin', ['*']);
-//   res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-//   res.append(
-//     'Access-Control-Allow-Headers',
-//     'Content-Type, Authorization, X-Requested-With',
-//   );
-//   if (req.method === 'OPTIONS') {
-//     res.WriteHeader(StatusCodes.OK);
-//     return;
-//   }
-//   next();
-// });
 app.use(cors());
 app.use(morgan('tiny'));
 app.use(express.json());

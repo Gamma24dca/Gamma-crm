@@ -11,13 +11,10 @@ export const AuthController = {
   async signUser(email: string, password: string): Promise<null | string> {
     const user = await UserModel.findOne({ email }).exec();
     if (!user) {
-      console.log('ni ma usera');
       return null;
     }
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
-      console.log('chujowe hasło ');
-
       return null;
     }
     return jsonwebtoken.sign(
