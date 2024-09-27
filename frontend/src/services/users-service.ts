@@ -15,6 +15,7 @@ export async function getAllUsers(): Promise<User[] | null> {
   try {
     const response = await fetch('/api/users', {
       method: 'GET',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -33,7 +34,13 @@ export async function getAllUsers(): Promise<User[] | null> {
 
 export async function getUserById(id: string): Promise<User | null> {
   try {
-    const response = await fetch(`/api/users/${id}`);
+    const response = await fetch(`/api/users/${id}`, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
     if (response.ok) {
       return await response.json();
     }
@@ -70,6 +77,7 @@ export async function deleteUser(id: string) {
   try {
     const response = await fetch(`api/users/${id}`, {
       method: 'DELETE',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },
