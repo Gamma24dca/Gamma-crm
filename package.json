@@ -37,5 +37,8 @@
     "react-router-dom": "^6.26.2",
     "serve": "^14.2.1",
     "typescript": "^5.2.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.13"
   }
 }
