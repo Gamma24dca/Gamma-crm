@@ -16,6 +16,7 @@ export async function getAllTasks(): Promise<TaskTypes[] | null> {
   try {
     const response = await fetch('https://gamma-crm.onrender.com/api/tasks', {
       method: 'GET',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -39,6 +40,7 @@ export async function getTaskById(id: string): Promise<TaskTypes | null> {
       `https://gamma-crm.onrender.com/api/tasks/${id}`,
       {
         method: 'GET',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -79,6 +81,7 @@ export async function addTask({
 
     const response = await fetch('https://gamma-crm.onrender.com/api/tasks', {
       method: 'POST',
+      credentials: 'include',
       body: formData,
     });
 
