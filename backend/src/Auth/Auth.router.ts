@@ -22,7 +22,7 @@ AuthRouter.post('/signin', async (req, res) => {
       res
         .status(StatusCodes.OK)
         .cookie('token', token, {
-          httpOnly: false,
+          httpOnly: true,
           secure: true,
           signed: true,
           maxAge: 1000 * 60 * 60 * 24 * 1000,
@@ -57,6 +57,7 @@ AuthRouter.post('/signout', async (req, res) => {
         secure: true,
         signed: true,
         maxAge: 1,
+        sameSite: 'none',
       })
       .end();
   } catch (error) {

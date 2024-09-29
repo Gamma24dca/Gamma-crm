@@ -79,6 +79,7 @@ export async function signOut(): Promise<void> {
     'https://gamma-crm.onrender.com/api/auth/signout',
     {
       method: 'POST',
+      credentials: 'include',
     }
   );
 
