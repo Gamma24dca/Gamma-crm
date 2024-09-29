@@ -18,10 +18,10 @@ function App() {
         <Route path="/signin" element={<Navigate to="/pulpit" />} />
         <Route path="/" element={<Navigate to="/pulpit" />} />
         <Route path="/pulpit" element={<HomePage />} />
-        <Route path="/użytkownicy" element={<UsersView />} />
-        <Route path="/użytkownicy/:id" element={<UserProfile />} />
-        <Route path="/zlecenia" element={<TasksView />} />
-        <Route path="/zlecenia/:id" element={<TaskProfile />} />
+        <Route path="/users" element={<UsersView />} />
+        <Route path="/users/:id" element={<UserProfile />} />
+        <Route path="/tasks" element={<TasksView />} />
+        <Route path="/tasks/:id" element={<TaskProfile />} />
       </Routes>
     </MainTemplate>
   ) : (
