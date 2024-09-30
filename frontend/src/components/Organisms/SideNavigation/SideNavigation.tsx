@@ -8,11 +8,11 @@ const sideNavButtons = [
     icon: 'ic:outline-space-dashboard',
   },
   {
-    name: 'users',
+    name: 'użytkownicy',
     icon: 'uil:users-alt',
   },
   {
-    name: 'tasks',
+    name: 'zlecenia',
     icon: 'fluent:tasks-app-24-regular',
   },
   {
