@@ -4,9 +4,12 @@ import { StatusCodes } from 'http-status-codes';
 import { TaskController } from './Task.controller';
 import '../Auth/Passport';
 import { uploadImg } from '../lib/firebase';
-import { multer } from '../lib/multer';
+// import { multer } from '../lib/multer';
 
-const upload = multer({ dest: 'uploads/' });
+// const upload = multer({ dest: 'uploads/' });
+import multer from 'multer';
+
+const upload = multer({ storage: multer.memoryStorage() });
 
 export const TaskRouter = Router();
 

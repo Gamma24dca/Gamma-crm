@@ -77,7 +77,7 @@ const useAddNewTask = () => {
   const createTaskHandler = async () => {
     try {
       setIsLoading(true);
-      await addTask({
+      const response = await addTask({
         title,
         client,
         path,
@@ -87,16 +87,19 @@ const useAddNewTask = () => {
         status,
         deadline,
       });
+
+      if (response !== null) {
+        setFinalMessage('Zlecenie utworzone!');
+      } else {
+        setFinalMessage('Coś poszło nie tak :(');
+      }
     } catch (error) {
       console.log(error);
       setIsLoading(false);
-      setShowFinalMessage(true);
-      setFinalMessage('Coś poszło nie tak :(');
     } finally {
       setIsLoading(false);
-      setFinalMessage('Zlecenie utworzone!');
+
       setShowFinalMessage(true);
-      setIsLoading(false);
       // dispatch({
       //   type: 'ADD_TASK',
       //   payload: {

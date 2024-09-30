@@ -4,7 +4,7 @@ import styles from './SideNavigation.module.css';
 
 const sideNavButtons = [
   {
-    name: 'Pulpit',
+    name: 'pulpit',
     icon: 'ic:outline-space-dashboard',
   },
   {
@@ -16,23 +16,23 @@ const sideNavButtons = [
     icon: 'fluent:tasks-app-24-regular',
   },
   {
-    name: 'Firmy',
+    name: 'firmy',
     icon: 'clarity:building-line',
   },
   {
-    name: 'Klienci',
+    name: 'klienci',
     icon: 'lucide:contact',
   },
   {
-    name: 'Zadania',
+    name: 'zadania',
     icon: 'ic:outline-add-task',
   },
   {
-    name: 'Ankiety',
+    name: 'ankiety',
     icon: 'fluent:poll-24-regular',
   },
   {
-    name: 'Magazyn',
+    name: 'magazyn',
     icon: 'material-symbols:warehouse-outline-rounded',
   },
 ];
@@ -66,7 +66,7 @@ function SideNavigation() {
                   className={styles.icon}
                 />
                 <button type="button" className={styles.sideNavBtn}>
-                  {btn.name}
+                  {btn.name[0].toUpperCase() + btn.name.slice(1)}
                 </button>
               </NavLink>
             );
