@@ -7,9 +7,9 @@ import { uploadImg } from '../lib/firebase';
 // import { multer } from '../lib/multer';
 
 // const upload = multer({ dest: 'uploads/' });
-import multer from 'multer';
+// import multer from 'multer';
 
-const upload = multer({ storage: multer.memoryStorage() });
+// const upload = multer({ storage: multer.memoryStorage() });
 
 export const TaskRouter = Router();
 
@@ -71,7 +71,7 @@ TaskRouter.get(
 TaskRouter.post(
   '/',
   passport.authenticate('jwt', { session: false }),
-  upload.single('image'),
+  // upload.single('image'),
   async (req, res) => {
     try {
       const newPost = await TaskController.addTask({
