@@ -138,3 +138,11 @@ select {
 .react-calendar__navigation__arrow:hover {
   background-color: var(--color-border);
 }
+
+.mainLoaderWrapper {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

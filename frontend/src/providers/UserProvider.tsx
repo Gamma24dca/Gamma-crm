@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { User, getCurrentUser } from '../services/users-service';
 import { signIn, signOut, signUp } from '../services/auth-service';
 import Loader from '../components/Molecules/Loader/Loader';
-import styles from '../pages/TasksView/TasksView.module.css';
 
 export type UserContextValue = {
   user: undefined | null | User;
@@ -57,7 +56,7 @@ function UserProvider({ children }: ChildrenProps) {
 
   if (currentUser === undefined) {
     return (
-      <div className={styles.loaderWrapper}>
+      <div className="mainLoaderWrapper">
         <Loader />
       </div>
     );
