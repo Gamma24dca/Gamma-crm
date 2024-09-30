@@ -37,7 +37,8 @@ app.get('/', (req, res) => {
 });
 
 var corsOptions = {
-  origin: 'https://gamma-crm-frontend.onrender.com',
+  origin: ['https://gamma-crm-frontend.onrender.com', 'http://localhost:5173'],
+  default: 'https://gamma-crm-frontend.onrender.com',
   credentials: true,
   optionsSuccessStatus: 200,
 };
