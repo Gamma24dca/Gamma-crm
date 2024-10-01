@@ -7,9 +7,9 @@ import { uploadImg } from '../lib/firebase';
 // import { multer } from '../lib/multer';
 
 // const upload = multer({ dest: 'uploads/' });
-// import multer from 'multer';
+import multer from 'multer';
 
-// const upload = multer({ storage: multer.memoryStorage() });
+const upload = multer({ storage: multer.memoryStorage() });
 
 export const TaskRouter = Router();
 
@@ -71,9 +71,12 @@ TaskRouter.get(
 TaskRouter.post(
   '/',
   passport.authenticate('jwt', { session: false }),
-  // upload.single('image'),
+  upload.single('image'),
   async (req, res) => {
     try {
+      const fileName = `${Date.now()}_${req.file.originalname}`;
+      const imageUrl = await uploadImg(req.file.buffer, fileName); // Pass buffer and filename
+
       const newPost = await TaskController.addTask({
         title: req.body.title,
         author: req.user.id,
@@ -83,7 +86,7 @@ TaskRouter.post(
         client: req.body.client,
         path: req.body.path,
         description: req.body.description,
-        image: await uploadImg(req.file.path),
+        image: imageUrl,
         date: new Date(),
         priority: req.body.priority,
         status: req.body.status,
@@ -91,6 +94,7 @@ TaskRouter.post(
       });
       res.status(StatusCodes.ACCEPTED).json(newPost);
     } catch (error) {
+      console.error('Error during task creation:', error);
       if (error.name === 'ValidationError') {
         res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
       } else {

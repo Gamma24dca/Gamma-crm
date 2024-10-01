@@ -9,7 +9,27 @@ initializeApp({
 
 const Bucket = getStorage().bucket();
 
-export const uploadImg = async (filePath) => {
-  const [file] = await Bucket.upload(filePath, { public: true });
-  return file.publicUrl();
+export const uploadImg = async (fileBuffer, fileName) => {
+  const file = Bucket.file(fileName);
+
+  // Create a writable stream to upload the file buffer to Firebase
+  const stream = file.createWriteStream({
+    metadata: {
+      contentType: 'image/jpeg', // Set the content type based on your file type
+    },
+    public: true,
+  });
+
+  return new Promise((resolve, reject) => {
+    stream.on('error', (error) => {
+      reject(error);
+    });
+
+    stream.on('finish', async () => {
+      await file.makePublic();
+      resolve(file.publicUrl());
+    });
+
+    stream.end(fileBuffer); // Write the buffer to the stream
+  });
 };
