@@ -1,5 +1,5 @@
 .sideNavContainer {
-  width: 15%;
+  width: 13%;
   height: 100vh;
   background-color: var(--color-lighter);
   border-right: 1px solid var(--color-border);
@@ -81,4 +81,21 @@
 .inactive:hover .sideNavBtn {
   color: var(--color-lighter);
   opacity: 1;
+}
+
+@media (max-width: 1550px) {
+  .sideNavBtn {
+    font-size: 13px;
+  }
+
+  .logo {
+    width: 150px;
+  }
+
+  .inactive,
+  .active {
+    gap: 5px;
+    padding: 10px 30px 10px 40px;
+    transform: translateX(-50px);
+  }
 }

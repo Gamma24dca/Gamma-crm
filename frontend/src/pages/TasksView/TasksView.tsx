@@ -12,6 +12,7 @@ import TilesColumnContainer from '../../components/Atoms/TilesColumnContainer/Ti
 import SkeletonUsersLoading from '../../components/Organisms/SkeletonUsersLoading/SkeletonUsersLoading';
 import TileWrapper from '../../components/Atoms/TileWrapper/TileWrapper';
 import useTasksContext from '../../hooks/useTasksContext';
+import InfoBar from '../../components/Organisms/InfoBar/InfoBar';
 
 function TasksView() {
   const { showModal, exitAnim, openModal, closeModal } = useModal();
@@ -60,7 +61,7 @@ function TasksView() {
 
   return (
     <>
-      <ModalTemplate
+      {/* <ModalTemplate
         isOpen={showModal}
         onClose={closeModal}
         exitAnim={exitAnim}
@@ -218,7 +219,6 @@ function TasksView() {
             sortedTasks.map((task) => {
               return (
                 <TileWrapper key={task._id} linkPath={`/zlecenia/${task._id}`}>
-                  {/* <p>{index}</p> */}
                   <p className={styles.createdAtDate}>
                     {task.date.split('T')[0]}
                   </p>
@@ -244,7 +244,88 @@ function TasksView() {
             <SkeletonUsersLoading />
           )}
         </TilesColumnContainer>
-      </ViewContainer>
+      </ViewContainer> */}
+      <div className={styles.tasksContainer}>
+        <div className={styles.tasksWrapper}>
+          <InfoBar>
+            <div className={styles.tileContentWrapper}>
+              <p className={styles.createdAtDate}>Utworzono</p>
+            </div>
+            <div className={styles.taskAuthorCreatorWrapper}>
+              <p className={styles.createdAtDate}>Autor</p>
+            </div>
+            <div className={styles.tileContentWrapper}>
+              <p className={styles.client}>Klient</p>
+            </div>
+            <div className={styles.tileContentWrapper}>
+              <p className={styles.title}>Tytuł</p>
+            </div>
+            <div className={styles.tileContentWrapper}>
+              <p className={styles.description}>Opis</p>
+            </div>
+            <div className={styles.tileContentWrapper}>
+              <p className={styles.path}>Ścieżka</p>
+            </div>
+            <div className={styles.tileContentWrapper}>
+              <p className={styles.status}>Status</p>
+            </div>
+            <div className={styles.tileContentWrapper}>
+              <p className={styles.priority}>Priorytet</p>
+            </div>
+            <div className={styles.tileContentWrapper}>
+              <p className={styles.deadline}>Deadline</p>
+            </div>
+          </InfoBar>
+
+          {sortedTasks.length > 0 ? (
+            sortedTasks.map((task) => {
+              console.log(task);
+              return (
+                <div className={styles.tile} key={task._id}>
+                  <div className={styles.tileContentWrapper}>
+                    <p className={styles.createdAtDate}>
+                      {task.date.split('T')[0]}
+                    </p>
+                  </div>
+                  <div className={styles.taskAuthorCreatorWrapper}>
+                    <img
+                      src={task.authorAvatar}
+                      alt="user"
+                      className={styles.userImg}
+                    />
+                    <p className={styles.authorName}>{task.authorName}</p>
+                  </div>
+                  <div className={styles.tileContentWrapper}>
+                    <p className={styles.client}>{task.client}</p>
+                  </div>
+                  <div className={styles.tileContentWrapper}>
+                    <p className={styles.title}>{task.title}</p>
+                  </div>
+                  <div className={styles.tileContentWrapper}>
+                    <p className={styles.description}>{task.description}</p>
+                  </div>
+                  <div className={styles.tileContentWrapper}>
+                    <p className={styles.path}>{task.path}</p>
+                  </div>
+                  <div className={styles.tileContentWrapper}>
+                    <p className={styles.status}>{task.status}</p>
+                  </div>
+                  <div className={styles.tileContentWrapper}>
+                    <p className={styles.priority}>{task.priority}</p>
+                  </div>
+                  <div className={styles.tileContentWrapper}>
+                    <p className={styles.deadline}>
+                      {task.deadline.split('T')[0]}
+                    </p>
+                  </div>
+                </div>
+              );
+            })
+          ) : (
+            <SkeletonUsersLoading />
+          )}
+        </div>
+      </div>
     </>
   );
 }

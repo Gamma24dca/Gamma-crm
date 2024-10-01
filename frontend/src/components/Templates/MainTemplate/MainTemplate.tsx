@@ -6,9 +6,11 @@ import styles from './MainTemplate.module.css';
 function MainTemplate({ children }: ChildrenProps) {
   return (
     <div className={styles.mainWrapper}>
-      <Navigation />
       <SideNavigation />
-      {children}
+      <div>
+        <Navigation />
+        {children}
+      </div>
     </div>
   );
 }

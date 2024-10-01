@@ -1,7 +1,6 @@
-.tasksContainer {
+/* .tasksContainer {
   width: 100%;
   position: absolute;
-  /* height: 100vh; */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -172,7 +171,6 @@
   font-weight: 600;
   position: absolute;
   font-size: 15px;
-  /* border-right: 2px solid var(--color-orange); */
   padding: 0 20px;
 }
 
@@ -254,4 +252,90 @@
   border-radius: 50%;
   padding: 8px;
   left: 9%;
+} */
+
+/* ///////////////////////////////////////////////////////////////// */
+
+.tasksContainer {
+  width: 87%;
+  height: 90.5%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tasksWrapper {
+  position: relative;
+  width: 95%;
+  height: 80%;
+  max-height: 700px;
+  background-color: var(--color-lighter);
+  border-radius: 10px;
+  box-shadow: 0 4px 6px var(--color-shadow);
+  overflow-y: scroll;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* gap: 25px; */
+  padding: 0px 0 40px 0;
+  scrollbar-width: none;
+}
+
+.tile {
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  background-color: var(--color-bg);
+  border-radius: 10px;
+  gap: 30px;
+  padding-left: 30px;
+  margin-bottom: 25px;
+}
+
+.createdAtDate,
+.authorName,
+.title,
+.description,
+.path,
+.status,
+.client,
+.deadline,
+.priority,
+.createdAtDateBar,
+.authorNameBar,
+.titleBar,
+.descriptionBar,
+.pathBar,
+.statusBar,
+.clientBar,
+.deadlineBar,
+.priorityBar {
+  font-weight: 600;
+  font-size: 16px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.tileContentWrapper {
+  width: 150px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.taskAuthorCreatorWrapper {
+  display: flex;
+  align-items: center;
+  width: 170px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  gap: 10px;
+}
+
+.userImg {
+  max-width: 50px;
+  max-height: 50px;
+  border-radius: 50%;
 }

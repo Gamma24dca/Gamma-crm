@@ -1,0 +1,29 @@
+.InfoBarContainer {
+  width: 100%;
+  background-color: var(--color-lighter);
+  position: sticky;
+  z-index: 2;
+  top: 0;
+  margin-bottom: 20px;
+}
+
+.infoBar {
+  background-color: var(--color-lighter);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  border-radius: 0;
+  min-height: 30px;
+  margin-bottom: 0px;
+  /* padding-left: 24px; */
+}
+
+.separator {
+  background-color: var(--color-lighter);
+  width: 150%;
+  transform: translateX(-20%);
+  height: 3px;
+  /* border-bottom: 1px solid var(--color-border); */
+  box-shadow: 0 4px 8px var(--color-shadow);
+}

@@ -12,10 +12,9 @@ const Bucket = getStorage().bucket();
 export const uploadImg = async (fileBuffer, fileName) => {
   const file = Bucket.file(fileName);
 
-  // Create a writable stream to upload the file buffer to Firebase
   const stream = file.createWriteStream({
     metadata: {
-      contentType: 'image/jpeg', // Set the content type based on your file type
+      contentType: 'image/jpeg',
     },
     public: true,
   });
@@ -30,6 +29,6 @@ export const uploadImg = async (fileBuffer, fileName) => {
       resolve(file.publicUrl());
     });
 
-    stream.end(fileBuffer); // Write the buffer to the stream
+    stream.end(fileBuffer);
   });
 };

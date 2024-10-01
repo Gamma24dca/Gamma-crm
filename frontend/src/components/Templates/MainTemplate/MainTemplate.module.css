@@ -3,3 +3,11 @@
   height: 100%;
   display: flex;
 }
+
+.topNav {
+  width: 100vw;
+  height: 90px;
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-lighter);
+  display: flex;
+}
