@@ -6,7 +6,7 @@
 }
 
 .tileContentWrapper {
-  width: 150px;
+  width: 11%;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -15,7 +15,7 @@
 .taskAuthorCreatorWrapper {
   display: flex;
   align-items: center;
-  width: 150px;
+  width: 11%;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;

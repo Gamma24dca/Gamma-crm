@@ -83,11 +83,7 @@
   opacity: 1;
 }
 
-@media (max-width: 1550px) {
-  .sideNavBtn {
-    font-size: 13px;
-  }
-
+@media (max-width: 1750px) {
   .logo {
     width: 150px;
   }
@@ -97,5 +93,11 @@
     gap: 5px;
     padding: 10px 30px 10px 40px;
     transform: translateX(-50px);
+  }
+}
+
+@media (max-width: 1550px) {
+  .sideNavBtn {
+    font-size: 13px;
   }
 }

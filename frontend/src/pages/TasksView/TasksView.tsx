@@ -138,9 +138,7 @@ function TasksView() {
               return (
                 <TileWrapper key={task._id} linkPath={`/zlecenia/${task._id}`}>
                   <div className={styles.tileContentWrapper}>
-                    <p className={styles.createdAtDate}>
-                      {task.date.split('T')[0]}
-                    </p>
+                    <p>{task.date.split('T')[0]}</p>
                   </div>
                   <div className={styles.taskAuthorCreatorWrapper}>
                     <img
@@ -148,30 +146,28 @@ function TasksView() {
                       alt="user"
                       className={styles.userImg}
                     />
-                    <p className={styles.authorName}>{task.authorName}</p>
+                    <p>{task.authorName}</p>
                   </div>
                   <div className={styles.tileContentWrapper}>
-                    <p className={styles.client}>{task.client}</p>
+                    <p>{task.client}</p>
                   </div>
                   <div className={styles.tileContentWrapper}>
-                    <p className={styles.title}>{task.title}</p>
+                    <p>{task.title}</p>
                   </div>
                   <div className={styles.tileContentWrapper}>
-                    <p className={styles.description}>{task.description}</p>
+                    <p>{task.description}</p>
                   </div>
                   <div className={styles.tileContentWrapper}>
-                    <p className={styles.path}>{task.path}</p>
+                    <p>{task.path}</p>
                   </div>
                   <div className={styles.tileContentWrapper}>
-                    <p className={styles.status}>{task.status}</p>
+                    <p>{task.status}</p>
                   </div>
                   <div className={styles.tileContentWrapper}>
-                    <p className={styles.priority}>{task.priority}</p>
+                    <p>{task.priority}</p>
                   </div>
                   <div className={styles.tileContentWrapper}>
-                    <p className={styles.deadline}>
-                      {task.deadline.split('T')[0]}
-                    </p>
+                    <p>{task.deadline.split('T')[0]}</p>
                   </div>
                 </TileWrapper>
               );

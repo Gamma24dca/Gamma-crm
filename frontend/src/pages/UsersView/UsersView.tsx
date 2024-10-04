@@ -2,7 +2,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Icon } from '@iconify/react';
 import { useEffect } from 'react';
-import { deleteUser, getAllUsers } from '../../services/users-service';
+import { getAllUsers } from '../../services/users-service';
 import styles from './UsersView.module.css';
 import SkeletonUsersLoading from '../../components/Organisms/SkeletonUsersLoading/SkeletonUsersLoading';
 import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplate';
@@ -13,11 +13,11 @@ import FormControl from '../../components/Atoms/FormControl/FormControl';
 import Input from '../../components/Atoms/Input/Input';
 import inputStyle from '../../components/Atoms/Input/Input.module.css';
 import SubmitButton from '../../components/Atoms/SubmitBtn/SubmitBtn';
-import UserTile from '../../components/Organisms/UserTile/UserTile';
-import TopBar from '../../components/Atoms/TopBar/TopBar';
 import ViewContainer from '../../components/Atoms/ViewContainer/ViewContainer';
 import TilesColumnContainer from '../../components/Atoms/ListContainer/ListContainer';
 import useUsersContext from '../../hooks/useUsersContext';
+import TileWrapper from '../../components/Atoms/TileWrapper/TileWrapper';
+import InfoBar from '../../components/Organisms/InfoBar/InfoBar';
 
 const createUserSchema = Yup.object({
   name: Yup.string().required('Imie jest wymagane'),
@@ -79,20 +79,6 @@ function UsersView() {
       dispatch({ type: 'SET_USERS', payload: allUsers });
     });
   }, [dispatch]);
-
-  const deleteUserCallback = (_id) => {
-    deleteUser(_id).then((deletedUser) => {
-      dispatch({ type: 'DELETE_USER', payload: deletedUser });
-    });
-
-    try {
-      getAllUsers().then((allUsers) => {
-        dispatch({ type: 'SET_USERS', payload: allUsers });
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  };
 
   return (
     <>
@@ -248,54 +234,51 @@ function UsersView() {
           />
         </Form>
       </ModalTemplate>
-      <TopBar>
-        <Icon
-          icon="icon-park-outline:edit-name"
-          width="35"
-          height="35"
-          color="#828fa3"
-          className={styles.personIcon}
-        />
-        <Icon
-          icon="mdi:worker-outline"
-          width="35"
-          height="35"
-          color="#828fa3"
-          className={styles.jobIcon}
-        />
-        <Icon
-          icon="lucide:mail"
-          width="35"
-          height="35"
-          color="#828fa3"
-          className={styles.mailIcon}
-        />
-        <Icon
-          icon="tabler:phone"
-          width="35"
-          height="35"
-          color="#828fa3"
-          className={styles.phoneIcon}
-        />
-      </TopBar>
+
       <ViewContainer>
         <TilesColumnContainer>
+          <InfoBar>
+            <div className={styles.taskAuthorCreatorWrapperLabel}>
+              <p className={styles.InfoBarElement}>Autor</p>
+            </div>
+            <div className={styles.tileContentWrapper}>
+              <p className={styles.InfoBarElement}>Utworzono</p>
+            </div>
+
+            <div className={styles.tileContentWrapper}>
+              <p className={styles.InfoBarElement}>Klient</p>
+            </div>
+            <div className={styles.tileContentWrapper}>
+              <p className={styles.InfoBarElement}>Tytuł</p>
+            </div>
+          </InfoBar>
           {users.length > 0 ? (
             users.map((userItem) => {
               return (
-                <UserTile
+                <TileWrapper
                   key={userItem._id}
-                  _id={userItem._id}
-                  img={userItem.img}
-                  name={userItem.name}
-                  lastname={userItem.lastname}
-                  job={userItem.job}
-                  email={userItem.email}
-                  phone={userItem.phone}
-                  deleteUserCallback={() => {
-                    deleteUserCallback(userItem._id);
-                  }}
-                />
+                  linkPath={`/użytkownicy/${userItem._id}`}
+                >
+                  <div className={styles.taskAuthorCreatorWrapper}>
+                    <img
+                      src={userItem.img}
+                      alt="user"
+                      className={styles.userImg}
+                    />
+                    <p>{userItem.name}</p>
+                    <p>{userItem.lastname}</p>
+                  </div>
+
+                  <div className={styles.tileContentWrapper}>
+                    <p>{userItem.job}</p>
+                  </div>
+                  <div className={styles.tileContentWrapper}>
+                    <p>{userItem.email}</p>
+                  </div>
+                  <div className={styles.tileContentWrapper}>
+                    <p>{userItem.phone}</p>
+                  </div>
+                </TileWrapper>
               );
             })
           ) : (

@@ -77,6 +77,43 @@
   scale: 1.1;
 }
 
+.tileContentWrapper {
+  width: 25%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.taskAuthorCreatorWrapper,
+.taskAuthorCreatorWrapperLabel {
+  display: flex;
+  align-items: center;
+  width: 25%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  gap: 10px;
+  padding-left: 13%;
+  transform: translateX(-20%);
+}
+
+.taskAuthorCreatorWrapperLabel {
+  transform: translateX(-6%);
+}
+
+.InfoBarElement {
+  font-weight: 600;
+  font-size: 16px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.userImg {
+  max-width: 50px;
+  max-height: 50px;
+  border-radius: 50%;
+}
+
 @media (max-width: 1760px) {
   .userName {
     left: 12%;
