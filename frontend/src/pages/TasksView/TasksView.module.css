@@ -1,3 +1,25 @@
+/* ////////////////CONTROL BAR//////////////////// */
+.controlBarContainer {
+  width: 87%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.controlBar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 95%;
+  height: 80px;
+  background-color: var(--color-lighter);
+  margin: 0 auto;
+  border-radius: 10px;
+  /* box-shadow: 0 4px 6px var(--color-shadow); */
+}
+
+/* ///////////////////////////////////////////////////// */
 .InfoBarElement {
   font-weight: 600;
   font-size: 16px;

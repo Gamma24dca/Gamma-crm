@@ -88,17 +88,33 @@ function TasksView() {
           deadline={deadline}
         />
       </ModalTemplate>
-      <div className={styles.controllPanel}>
-        <button
-          type="button"
-          onClick={() => {
-            openModal();
-            clearValues();
-            // setIsCalendarVisible(false);
-          }}
-        >
-          Add Task
-        </button>
+      <div className={styles.controlBarContainer}>
+        <div className={styles.controlBar}>
+          <select name="widok" id="widok">
+            <option value="Lista">Lista</option>
+            <option value="Kanban">Kanban</option>
+          </select>
+          <button
+            type="button"
+            onClick={() => {
+              openModal();
+              clearValues();
+              // setIsCalendarVisible(false);
+            }}
+          >
+            Nowe zlecenie
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              openModal();
+              clearValues();
+              // setIsCalendarVisible(false);
+            }}
+          >
+            Filtry
+          </button>
+        </div>
       </div>
 
       <ViewContainer>
