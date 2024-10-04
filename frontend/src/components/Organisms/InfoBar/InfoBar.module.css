@@ -8,15 +8,15 @@
 }
 
 .infoBar {
+  width: 90%;
   background-color: var(--color-lighter);
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 30px;
+  gap: 40px;
   border-radius: 0;
   min-height: 30px;
   margin-bottom: 0px;
-  /* padding-left: 24px; */
+  transform: translateX(110px);
 }
 
 .separator {
@@ -26,4 +26,16 @@
   height: 3px;
   /* border-bottom: 1px solid var(--color-border); */
   box-shadow: 0 4px 8px var(--color-shadow);
+}
+
+@media (max-width: 2000px) {
+  .infoBar {
+    transform: translateX(90px);
+  }
+}
+
+@media (max-width: 1700px) {
+  .infoBar {
+    transform: translateX(80px);
+  }
 }

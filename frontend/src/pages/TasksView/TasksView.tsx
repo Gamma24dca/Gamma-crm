@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Calendar from 'react-calendar';
 import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplate';
 import useModal from '../../hooks/useModal';
@@ -61,7 +62,7 @@ function TasksView() {
 
   return (
     <>
-      {/* <ModalTemplate
+      <ModalTemplate
         isOpen={showModal}
         onClose={closeModal}
         exitAnim={exitAnim}
@@ -189,8 +190,7 @@ function TasksView() {
           </div>
         )}
       </ModalTemplate>
-      <div className={styles.tasksContainer}>
-        <h2>Tasks</h2>
+      <div className={styles.controllPanel}>
         <button
           type="button"
           onClick={() => {
@@ -199,81 +199,38 @@ function TasksView() {
             // setIsCalendarVisible(false);
           }}
         >
-          tasks
+          Add Task
         </button>
       </div>
-      <TopBar>
-        <p className={styles.createdAtDateBar}>Utworzono</p>
-        <p className={styles.authorNameBar}>Autor</p>
-        <p className={styles.titleBar}>Tytuł</p>
-        <p className={styles.descriptionBar}>Opis</p>
-        <p className={styles.pathBar}>Ścieżka</p>
-        <p className={styles.statusBar}>Status</p>
-        <p className={styles.clientBar}>Klient</p>
-        <p className={styles.priorityBar}>Priorytet</p>
-        <p className={styles.deadlineBar}>Deadline</p>
-      </TopBar>
-      <ViewContainer>
-        <TilesColumnContainer>
-          {sortedTasks.length > 0 ? (
-            sortedTasks.map((task) => {
-              return (
-                <TileWrapper key={task._id} linkPath={`/zlecenia/${task._id}`}>
-                  <p className={styles.createdAtDate}>
-                    {task.date.split('T')[0]}
-                  </p>
-                  <p className={styles.authorName}>{task.authorName}</p>
-                  <img
-                    src={task.authorAvatar}
-                    alt="user"
-                    className={styles.userImg}
-                  />
-                  <p className={styles.client}>{task.client}</p>
-                  <p className={styles.title}>{task.title}</p>
-                  <p className={styles.description}>{task.description}</p>
-                  <p className={styles.path}>{task.path}</p>
-                  <p className={styles.status}>{task.status}</p>
-                  <p className={styles.priority}>{task.priority}</p>
-                  <p className={styles.deadline}>
-                    {task.deadline.split('T')[0]}
-                  </p>
-                </TileWrapper>
-              );
-            })
-          ) : (
-            <SkeletonUsersLoading />
-          )}
-        </TilesColumnContainer>
-      </ViewContainer> */}
       <div className={styles.tasksContainer}>
         <div className={styles.tasksWrapper}>
           <InfoBar>
             <div className={styles.tileContentWrapper}>
-              <p className={styles.createdAtDate}>Utworzono</p>
+              <p className={styles.InfoBarElement}>Utworzono</p>
             </div>
             <div className={styles.taskAuthorCreatorWrapper}>
-              <p className={styles.createdAtDate}>Autor</p>
+              <p className={styles.InfoBarElement}>Autor</p>
             </div>
             <div className={styles.tileContentWrapper}>
-              <p className={styles.client}>Klient</p>
+              <p className={styles.InfoBarElement}>Klient</p>
             </div>
             <div className={styles.tileContentWrapper}>
-              <p className={styles.title}>Tytuł</p>
+              <p className={styles.InfoBarElement}>Tytuł</p>
             </div>
             <div className={styles.tileContentWrapper}>
-              <p className={styles.description}>Opis</p>
+              <p className={styles.InfoBarElement}>Opis</p>
             </div>
             <div className={styles.tileContentWrapper}>
-              <p className={styles.path}>Ścieżka</p>
+              <p className={styles.InfoBarElement}>Ścieżka</p>
             </div>
             <div className={styles.tileContentWrapper}>
-              <p className={styles.status}>Status</p>
+              <p className={styles.InfoBarElement}>Status</p>
             </div>
             <div className={styles.tileContentWrapper}>
-              <p className={styles.priority}>Priorytet</p>
+              <p className={styles.InfoBarElement}>Priorytet</p>
             </div>
             <div className={styles.tileContentWrapper}>
-              <p className={styles.deadline}>Deadline</p>
+              <p className={styles.InfoBarElement}>Deadline</p>
             </div>
           </InfoBar>
 
@@ -281,7 +238,11 @@ function TasksView() {
             sortedTasks.map((task) => {
               console.log(task);
               return (
-                <div className={styles.tile} key={task._id}>
+                <Link
+                  className={styles.tile}
+                  key={task._id}
+                  to={`/zlecenia/${task._id}`}
+                >
                   <div className={styles.tileContentWrapper}>
                     <p className={styles.createdAtDate}>
                       {task.date.split('T')[0]}
@@ -318,7 +279,7 @@ function TasksView() {
                       {task.deadline.split('T')[0]}
                     </p>
                   </div>
-                </div>
+                </Link>
               );
             })
           ) : (

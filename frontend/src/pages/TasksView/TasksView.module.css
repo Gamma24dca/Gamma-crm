@@ -1,9 +1,10 @@
-/* .tasksContainer {
-  width: 100%;
-  position: absolute;
+/* /////////////////////////////////MODAL///////////////////////////////////////// */
+
+.topBarContainer {
   display: flex;
+  height: 55px;
+  align-items: end;
   justify-content: center;
-  align-items: center;
 }
 
 .addImgIcon {
@@ -65,13 +66,6 @@
 
 .loaderWrapper {
   padding: 190px;
-}
-
-.topBarContainer {
-  display: flex;
-  height: 55px;
-  align-items: end;
-  justify-content: center;
 }
 
 .addTaskBtn {
@@ -150,111 +144,7 @@
   max-width: 220px;
 }
 
-.createdAtDate,
-.authorName,
-.title,
-.description,
-.path,
-.status,
-.client,
-.deadline,
-.priority,
-.createdAtDateBar,
-.authorNameBar,
-.titleBar,
-.descriptionBar,
-.pathBar,
-.statusBar,
-.clientBar,
-.deadlineBar,
-.priorityBar {
-  font-weight: 600;
-  position: absolute;
-  font-size: 15px;
-  padding: 0 20px;
-}
-
-.deadlineBar {
-  left: 89%;
-}
-.deadline {
-  left: 90%;
-}
-
-.priorityBar {
-  left: 80%;
-}
-.priority {
-  left: 82%;
-}
-
-.clientBar {
-  left: 69.5%;
-}
-
-.client {
-  left: 70%;
-}
-
-.statusBar {
-  left: 62%;
-}
-.status {
-  left: 62%;
-}
-
-.pathBar {
-  left: 48%;
-}
-.path {
-  left: 46%;
-}
-
-.path,
-.description {
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-}
-
-.descriptionBar {
-  left: 35%;
-}
-.description {
-  left: 29%;
-  max-width: 190px;
-}
-
-.titleBar {
-  left: 23%;
-}
-.title {
-  left: 20.5%;
-}
-
-.authorNameBar {
-  left: 12.5%;
-}
-.authorName {
-  left: 11.5%;
-}
-
-.createdAtDateBar {
-  left: 3%;
-}
-.createdAtDate {
-  left: 0%;
-}
-
-.userImg {
-  position: absolute;
-  max-width: 40px;
-  border-radius: 50%;
-  padding: 8px;
-  left: 9%;
-} */
-
-/* ///////////////////////////////////////////////////////////////// */
+/* ////////////////////////////////////////////////////////////////////////////////// */
 
 .tasksContainer {
   width: 87%;
@@ -278,11 +168,12 @@
   flex-direction: column;
   align-items: center;
   /* gap: 25px; */
-  padding: 0px 0 40px 0;
+  padding: 0 0px 40px 0px;
   scrollbar-width: none;
 }
 
 .tile {
+  width: 90%;
   min-height: 60px;
   display: flex;
   align-items: center;
@@ -291,26 +182,15 @@
   gap: 30px;
   padding-left: 30px;
   margin-bottom: 25px;
+  transition: all 0.3s ease;
 }
 
-.createdAtDate,
-.authorName,
-.title,
-.description,
-.path,
-.status,
-.client,
-.deadline,
-.priority,
-.createdAtDateBar,
-.authorNameBar,
-.titleBar,
-.descriptionBar,
-.pathBar,
-.statusBar,
-.clientBar,
-.deadlineBar,
-.priorityBar {
+.tile:hover {
+  transform: scale(1.01);
+  background-color: rgba(99, 95, 199, 0.25);
+}
+
+.InfoBarElement {
   font-weight: 600;
   font-size: 16px;
   text-overflow: ellipsis;
@@ -327,7 +207,7 @@
 .taskAuthorCreatorWrapper {
   display: flex;
   align-items: center;
-  width: 170px;
+  width: 150px;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -338,4 +218,18 @@
   max-width: 50px;
   max-height: 50px;
   border-radius: 50%;
+}
+
+@media (min-width: 2000px) {
+  .tasksWrapper {
+    max-height: 1000px;
+  }
+
+  .tileContentWrapper {
+    width: 200px;
+  }
+
+  .taskAuthorCreatorWrapper {
+    width: 220px;
+  }
 }
