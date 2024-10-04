@@ -16,7 +16,7 @@ import SubmitButton from '../../components/Atoms/SubmitBtn/SubmitBtn';
 import UserTile from '../../components/Organisms/UserTile/UserTile';
 import TopBar from '../../components/Atoms/TopBar/TopBar';
 import ViewContainer from '../../components/Atoms/ViewContainer/ViewContainer';
-import TilesColumnContainer from '../../components/Atoms/TilesColumnContainer/TilesColumnContainer';
+import TilesColumnContainer from '../../components/Atoms/ListContainer/ListContainer';
 import useUsersContext from '../../hooks/useUsersContext';
 
 const createUserSchema = Yup.object({

@@ -1,19 +1,16 @@
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import Calendar from 'react-calendar';
 import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplate';
 import useModal from '../../hooks/useModal';
 import styles from './TasksView.module.css';
 import useAddNewTask from '../../hooks/useAddNewTask';
-import Loader from '../../components/Molecules/Loader/Loader';
 import { getAllTasks } from '../../services/tasks-service';
-import TopBar from '../../components/Atoms/TopBar/TopBar';
 import ViewContainer from '../../components/Atoms/ViewContainer/ViewContainer';
-import TilesColumnContainer from '../../components/Atoms/TilesColumnContainer/TilesColumnContainer';
 import SkeletonUsersLoading from '../../components/Organisms/SkeletonUsersLoading/SkeletonUsersLoading';
 import TileWrapper from '../../components/Atoms/TileWrapper/TileWrapper';
 import useTasksContext from '../../hooks/useTasksContext';
 import InfoBar from '../../components/Organisms/InfoBar/InfoBar';
+import AddTaskModalContent from '../../components/Organisms/AddTaskModalContent/AddTaskModalContent';
+import ListContainer from '../../components/Atoms/ListContainer/ListContainer';
 
 function TasksView() {
   const { showModal, exitAnim, openModal, closeModal } = useModal();
@@ -67,128 +64,29 @@ function TasksView() {
         onClose={closeModal}
         exitAnim={exitAnim}
       >
-        {isLoading ? (
-          <div className={styles.loaderWrapper}>
-            <Loader />
-          </div>
-        ) : (
-          <div>
-            {showFinalMessage ? (
-              <div className={styles.loaderWrapper}>
-                <p>{finalMessage}</p>
-              </div>
-            ) : (
-              <>
-                <div className={styles.topBarContainer}>
-                  <h2>Stwórz zlecenie</h2>
-                  <button
-                    type="button"
-                    onClick={createTaskHandler}
-                    className={styles.addTaskBtn}
-                  >
-                    Dodaj
-                  </button>
-                </div>
-                <div className={styles.mainContainer}>
-                  <div>
-                    <input
-                      ref={imgIconRef}
-                      type="file"
-                      accept="image/*"
-                      onChange={handleFileChange}
-                      className={styles.inputRef}
-                    />
-                    <button
-                      type="button"
-                      onClick={handleIconClick}
-                      className={styles.addImgField}
-                    >
-                      <div className={styles.addImgFieldContainer}>
-                        <span className={styles.imgLabel}>{imgLabel}</span>
-                        <img
-                          alt="your"
-                          src={imgSrc}
-                          className={styles.addImage}
-                        />
-                      </div>
-                    </button>
-                  </div>
-                  <div className={styles.inputsContainer}>
-                    <div className={styles.rowContainer}>
-                      <div className={styles.leftRow}>
-                        <input
-                          type="text"
-                          placeholder="Tytuł"
-                          value={title}
-                          onChange={handleTitleChange}
-                          className={styles.input}
-                        />
-                        <input
-                          type="text"
-                          placeholder="Klient"
-                          value={client}
-                          onChange={handleClientChange}
-                          className={styles.input}
-                        />
-                        <input
-                          type="text"
-                          placeholder="Opis"
-                          value={description}
-                          onChange={handleDescriptionChange}
-                          className={styles.input}
-                        />
-                      </div>
-                      <div className={styles.rightRow}>
-                        <input
-                          type="text"
-                          placeholder="Ścieżka plików"
-                          value={path}
-                          onChange={handlePathChange}
-                          className={styles.input}
-                        />
-
-                        <select
-                          className={styles.selectInput}
-                          onChange={handlePriorityChange}
-                        >
-                          <option value="">Priorytet</option>
-                          <option value="200">200</option>
-                          <option value="400">400</option>
-                          <option value="600">600</option>
-                          <option value="800">800</option>
-                          <option value="1000">1000</option>
-                        </select>
-                        <select
-                          className={styles.selectInput}
-                          onChange={handleStatusChange}
-                        >
-                          <option value="">Status zlecenia</option>
-                          <option value="Studio">Studio</option>
-                          <option value="Druk">Druk</option>
-                          <option value="Kalander">Kalander</option>
-                          <option value="Szwalnia">Szwalnia</option>
-                          <option value="Pakowanie">Pakowanie</option>
-                          <option value="Wysyłka">Wysyłka</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <p
-                      className={styles.buttonInput}
-                      // onClick={() => setIsCalendarVisible((val) => !val)}
-                    >
-                      <p>Deadline</p>
-                    </p>
-                    <Calendar
-                      onChange={handleDeadlineChange}
-                      value={deadline}
-                    />
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
-        )}
+        <AddTaskModalContent
+          isLoading={isLoading}
+          showFinalMessage={showFinalMessage}
+          finalMessage={finalMessage}
+          createTaskHandler={createTaskHandler}
+          imgIconRef={imgIconRef}
+          title={title}
+          imgSrc={imgSrc}
+          handleFileChange={handleFileChange}
+          handleIconClick={handleIconClick}
+          imgLabel={imgLabel}
+          handleTitleChange={handleTitleChange}
+          client={client}
+          handleClientChange={handleClientChange}
+          description={description}
+          handleDescriptionChange={handleDescriptionChange}
+          path={path}
+          handlePathChange={handlePathChange}
+          handlePriorityChange={handlePriorityChange}
+          handleStatusChange={handleStatusChange}
+          handleDeadlineChange={handleDeadlineChange}
+          deadline={deadline}
+        />
       </ModalTemplate>
       <div className={styles.controllPanel}>
         <button
@@ -202,8 +100,9 @@ function TasksView() {
           Add Task
         </button>
       </div>
-      <div className={styles.tasksContainer}>
-        <div className={styles.tasksWrapper}>
+
+      <ViewContainer>
+        <ListContainer>
           <InfoBar>
             <div className={styles.tileContentWrapper}>
               <p className={styles.InfoBarElement}>Utworzono</p>
@@ -236,13 +135,8 @@ function TasksView() {
 
           {sortedTasks.length > 0 ? (
             sortedTasks.map((task) => {
-              console.log(task);
               return (
-                <Link
-                  className={styles.tile}
-                  key={task._id}
-                  to={`/zlecenia/${task._id}`}
-                >
+                <TileWrapper key={task._id} linkPath={`/zlecenia/${task._id}`}>
                   <div className={styles.tileContentWrapper}>
                     <p className={styles.createdAtDate}>
                       {task.date.split('T')[0]}
@@ -279,14 +173,14 @@ function TasksView() {
                       {task.deadline.split('T')[0]}
                     </p>
                   </div>
-                </Link>
+                </TileWrapper>
               );
             })
           ) : (
             <SkeletonUsersLoading />
           )}
-        </div>
-      </div>
+        </ListContainer>
+      </ViewContainer>
     </>
   );
 }

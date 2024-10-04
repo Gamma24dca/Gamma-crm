@@ -1,17 +1,13 @@
 .tileWrapper {
+  width: 90%;
+  min-height: 60px;
   display: flex;
-  justify-content: space-around;
-  width: 95%;
-  min-height: 55px;
-  margin: 0 auto;
   align-items: center;
-  justify-content: start;
-  position: static;
-  transform: translateX(5px);
-  border: none;
-  background-color: #f4f7fd;
-  border-radius: 6px;
-  cursor: pointer;
+  background-color: var(--color-bg);
+  border-radius: 10px;
+  gap: 30px;
+  padding-left: 30px;
+  margin-bottom: 25px;
   transition: all 0.3s ease;
 }
 
