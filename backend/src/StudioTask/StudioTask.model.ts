@@ -11,6 +11,14 @@ export const StudioTaskModel = mongoose.model(
       type: String,
       required: true,
     },
+    clientPerson: {
+      type: String,
+      required: true,
+    },
+    status: {
+      type: String,
+      required: true,
+    },
     author: {
       type: String,
       required: true,
@@ -23,8 +31,8 @@ export const StudioTaskModel = mongoose.model(
       type: String,
       // required: true,
     },
-    path: {
-      type: String,
+    participants: {
+      type: Array,
     },
     description: {
       type: String,
@@ -38,9 +46,6 @@ export const StudioTaskModel = mongoose.model(
     deadline: {
       type: Date,
       required: true,
-    },
-    participants: {
-      type: Array,
     },
   }),
 );
