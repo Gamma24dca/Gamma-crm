@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
-export const ClientModel = mongoose.model(
-  'Client',
+export const CompanyModel = mongoose.model(
+  'Company',
   new mongoose.Schema({
     name: {
       type: String,
