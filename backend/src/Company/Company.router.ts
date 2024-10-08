@@ -4,7 +4,7 @@ import { CompanyController } from './Company.controller';
 import { StatusCodes } from 'http-status-codes';
 import '../Auth/Passport';
 
-const CompanyRouter = Router();
+export const CompanyRouter = Router();
 
 CompanyRouter.get(
   '/',
