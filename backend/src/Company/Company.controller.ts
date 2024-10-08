@@ -16,6 +16,12 @@ export const CompanyController = {
     return await CompanyModel.create(company);
   },
 
+  async addTeamMember(companyID, member) {
+    const company = await CompanyController.getCompany(companyID);
+    company.teamMembers.push(member);
+    await CompanyController.updateCompany(companyID, company);
+  },
+
   async updateCompany(id, companyBody) {
     return await CompanyModel.findByIdAndUpdate(id, companyBody);
   },

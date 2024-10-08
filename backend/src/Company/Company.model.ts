@@ -18,6 +18,11 @@ export const CompanyModel = mongoose.model(
     website: {
       type: String,
     },
+    teamMembers: [
+      {
+        workerID: { type: String },
+      },
+    ],
     activeTasks: {
       type: Number,
       required: true,
