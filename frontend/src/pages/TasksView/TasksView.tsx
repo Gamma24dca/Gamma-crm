@@ -11,6 +11,7 @@ import useTasksContext from '../../hooks/useTasksContext';
 import InfoBar from '../../components/Organisms/InfoBar/InfoBar';
 import AddTaskModalContent from '../../components/Organisms/AddTaskModalContent/AddTaskModalContent';
 import ListContainer from '../../components/Atoms/ListContainer/ListContainer';
+import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
 
 function TasksView() {
   const { showModal, exitAnim, openModal, closeModal } = useModal();
@@ -88,34 +89,32 @@ function TasksView() {
           deadline={deadline}
         />
       </ModalTemplate>
-      <div className={styles.controlBarContainer}>
-        <div className={styles.controlBar}>
-          <select name="widok" id="widok">
-            <option value="Lista">Lista</option>
-            <option value="Kanban">Kanban</option>
-          </select>
-          <button
-            type="button"
-            onClick={() => {
-              openModal();
-              clearValues();
-              // setIsCalendarVisible(false);
-            }}
-          >
-            Nowe zlecenie
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              openModal();
-              clearValues();
-              // setIsCalendarVisible(false);
-            }}
-          >
-            Filtry
-          </button>
-        </div>
-      </div>
+      <ControlBar>
+        <select name="widok" id="widok">
+          <option value="Lista">Lista</option>
+          <option value="Kanban">Kanban</option>
+        </select>
+        <button
+          type="button"
+          onClick={() => {
+            openModal();
+            clearValues();
+            // setIsCalendarVisible(false);
+          }}
+        >
+          Nowe zlecenie
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            openModal();
+            clearValues();
+            // setIsCalendarVisible(false);
+          }}
+        >
+          Filtry
+        </button>
+      </ControlBar>
 
       <ViewContainer>
         <ListContainer>

@@ -2,7 +2,7 @@
   position: relative;
   width: 95%;
   height: 80%;
-  max-height: 700px;
+  max-height: 670px;
   background-color: var(--color-lighter);
   border-radius: 10px;
   box-shadow: 0 4px 6px var(--color-shadow);
@@ -15,8 +15,26 @@
   scrollbar-width: none;
 }
 
-@media (min-width: 2000px) {
+@media (min-width: 2500px) {
   .listContainer {
-    max-height: 1000px;
+    max-height: 700px;
+  }
+}
+
+@media (max-width: 1950px) {
+  .listContainer {
+    max-height: 630px;
+  }
+}
+
+@media (max-width: 1600px) {
+  .listContainer {
+    max-height: 600px;
+  }
+}
+
+@media (max-width: 1300px) {
+  .listContainer {
+    max-height: 500px;
   }
 }
