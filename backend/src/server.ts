@@ -52,5 +52,5 @@ app.use(cookieParser(process.env.JWT_SECRET));
 app.use('/api/auth', AuthRouter);
 app.use('/api/users', UserRouter);
 app.use('/api/tasks', TaskRouter);
-app.get('/api/companies', CompanyRouter);
+app.use('/api/companies', CompanyRouter);
 app.get('/api/status', (_, res) => res.status(200).json({ ok: true }));
