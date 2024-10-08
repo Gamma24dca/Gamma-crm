@@ -78,7 +78,7 @@ TaskRouter.post(
   async (req, res) => {
     try {
       const fileName = `${Date.now()}_${req.file.originalname}`;
-      const imageUrl = await uploadImg(req.file.buffer, fileName); // Pass buffer and filename
+      const imageUrl = await uploadImg(req.file.buffer, fileName);
 
       const newPost = await TaskController.addTask({
         title: req.body.title,

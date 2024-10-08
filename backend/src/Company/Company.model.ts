@@ -15,6 +15,9 @@ export const CompanyModel = mongoose.model(
       type: String,
       required: true,
     },
+    website: {
+      type: String,
+    },
     activeTasks: {
       type: Number,
       required: true,

@@ -12,11 +12,10 @@ import InfoBar from '../../components/Organisms/InfoBar/InfoBar';
 import AddTaskModalContent from '../../components/Organisms/AddTaskModalContent/AddTaskModalContent';
 import ListContainer from '../../components/Atoms/ListContainer/ListContainer';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
+import useAuth from '../../hooks/useAuth';
 
 function TasksView() {
   const { showModal, exitAnim, openModal, closeModal } = useModal();
-
-  // Have to improve form validation, possibly formik is needed
 
   const {
     title,
@@ -47,6 +46,13 @@ function TasksView() {
 
   // @ts-ignore
   const { tasks, dispatch } = useTasksContext();
+  const { user } = useAuth();
+
+  const filteredTaskByMe = tasks.filter((filteredTasks) => {
+    return filteredTasks.author === user[0]._id;
+  });
+
+  console.log(filteredTaskByMe);
 
   useEffect(() => {
     getAllTasks().then((allTasks) => {
@@ -90,6 +96,7 @@ function TasksView() {
         />
       </ModalTemplate>
       <ControlBar>
+        <h3>Zlecenia</h3>
         <select name="widok" id="widok">
           <option value="Lista">Lista</option>
           <option value="Kanban">Kanban</option>
