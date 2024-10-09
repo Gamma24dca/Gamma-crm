@@ -31,6 +31,10 @@ export const StudioTaskModel = mongoose.model(
       type: String,
       // required: true,
     },
+    // For Example Druk, Szwalnia, Mulimedia, social media
+    TaskType: {
+      type: String,
+    },
     participants: {
       type: Array,
     },
