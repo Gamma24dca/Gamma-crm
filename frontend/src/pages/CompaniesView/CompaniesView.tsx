@@ -7,13 +7,18 @@ import {
   CompaniesType,
   getAllCompanies,
 } from '../../services/companies-service';
+import { getAllUsers } from '../../services/users-service';
 
 function CompaniesView() {
   const [companies, setCompanies] = useState<CompaniesType[] | undefined>([]);
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     getAllCompanies().then((allCompanies) => {
       setCompanies(allCompanies);
+    });
+    getAllUsers().then((allusers) => {
+      setUsers(allusers);
     });
   }, []);
 
@@ -40,6 +45,23 @@ function CompaniesView() {
                     <p>{company.mail}</p>
                     <p>{company.website}</p>
                     <p>{company.activeTasks}</p>
+                    {users.map((user) => {
+                      return company.teamMembers.map((companyUser) => {
+                        return user._id === companyUser.workerID ? (
+                          <div
+                            className={styles.userWrapper}
+                            key={companyUser.workerID}
+                          >
+                            <img
+                              className={styles.userImg}
+                              src={user.img}
+                              alt="user"
+                            />
+                            <p>{user.name}</p>
+                          </div>
+                        ) : null;
+                      });
+                    })}
                   </div>
                 );
               })}
