@@ -8,6 +8,8 @@ import {
   getAllCompanies,
 } from '../../services/companies-service';
 import { getAllUsers } from '../../services/users-service';
+import TileWrapper from '../../components/Atoms/TileWrapper/TileWrapper';
+import SkeletonUsersLoading from '../../components/Organisms/SkeletonUsersLoading/SkeletonUsersLoading';
 
 function CompaniesView() {
   const [companies, setCompanies] = useState<CompaniesType[] | undefined>([]);
@@ -39,35 +41,37 @@ function CompaniesView() {
             <>
               {companies.map((company) => {
                 return (
-                  <div key={company._id} className={styles.test}>
+                  <TileWrapper key={company._id} linkPath={company._id}>
                     <p>{company.name}</p>
                     <p>{company.phone}</p>
                     <p>{company.mail}</p>
                     <p>{company.website}</p>
                     <p>{company.activeTasks}</p>
-                    {users.map((user) => {
-                      return company.teamMembers.map((companyUser) => {
-                        return user._id === companyUser.workerID ? (
-                          <div
-                            className={styles.userWrapper}
-                            key={companyUser.workerID}
-                          >
-                            <img
-                              className={styles.userImg}
-                              src={user.img}
-                              alt="user"
-                            />
-                            <p>{user.name}</p>
-                          </div>
-                        ) : null;
-                      });
-                    })}
-                  </div>
+                    <div>
+                      {users.flatMap((user) => {
+                        return company.teamMembers.map((companyUser) => {
+                          return user._id === companyUser.workerID ? (
+                            <div
+                              className={styles.userWrapper}
+                              key={companyUser.workerID}
+                            >
+                              <img
+                                className={styles.userImg}
+                                src={user.img}
+                                alt="user"
+                              />
+                              <p>{user.name}</p>
+                            </div>
+                          ) : null;
+                        });
+                      })}
+                    </div>
+                  </TileWrapper>
                 );
               })}
             </>
           ) : (
-            <p>loading</p>
+            <SkeletonUsersLoading />
           )}
         </ListContainer>
       </ViewContainer>

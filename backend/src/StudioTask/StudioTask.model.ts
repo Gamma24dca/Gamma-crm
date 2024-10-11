@@ -3,6 +3,11 @@ import mongoose from 'mongoose';
 export const StudioTaskModel = mongoose.model(
   'StudioTask',
   new mongoose.Schema({
+    // Four random unic digits generated in front
+    searchID: {
+      type: Number,
+      required: true,
+    },
     title: {
       type: String,
       required: true,
@@ -40,7 +45,6 @@ export const StudioTaskModel = mongoose.model(
     },
     description: {
       type: String,
-      required: true,
     },
     subtasks: [
       {
@@ -49,7 +53,6 @@ export const StudioTaskModel = mongoose.model(
     ],
     deadline: {
       type: Date,
-      required: true,
     },
   }),
 );
