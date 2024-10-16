@@ -69,7 +69,7 @@ function CompanyProfile() {
         <BackButton path="firmy" />
         {company.length > 0 && (
           <div>
-            <h3>{company[0].name}</h3>
+            <h2>{company[0].name}</h2>
           </div>
         )}
 
@@ -90,9 +90,51 @@ function CompanyProfile() {
       <ViewContainer>
         <div className={styles.containersWrapper}>
           <div className={styles.LeftContainer}>
+            <div className={styles.leftColumnTitle}>
+              <h3>Dane firmy</h3>
+            </div>
             {company.length > 0 ? (
-              <div>
-                <p>{company[0].name}</p>
+              <div className={styles.inputsWrapper}>
+                <label htmlFor="companyName">
+                  <strong>Nazwa:</strong>
+                  <input
+                    type="text"
+                    name="companyName"
+                    id="companyName"
+                    value={company[0].name}
+                    className={styles.companyInput}
+                  />
+                </label>
+                <label htmlFor="companyMail">
+                  <strong>E-Mail:</strong>
+                  <input
+                    type="text"
+                    name="companyMail"
+                    id="companyMail"
+                    value={company[0].mail}
+                    className={styles.companyInput}
+                  />
+                </label>
+                <label htmlFor="companyNumber">
+                  <strong>Numer:</strong>
+                  <input
+                    type="text"
+                    name="companyNumber"
+                    id="companyNumber"
+                    value={company[0].phone}
+                    className={styles.companyInput}
+                  />
+                </label>
+                <label htmlFor="companyWebsite">
+                  <strong>Strona:</strong>
+                  <input
+                    type="text"
+                    name="companyWebsite"
+                    id="companyWebsite"
+                    value={company[0].website}
+                    className={styles.companyInput}
+                  />
+                </label>
               </div>
             ) : (
               <p>loading</p>

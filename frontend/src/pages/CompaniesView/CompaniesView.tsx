@@ -27,12 +27,15 @@ function CompaniesView() {
   return (
     <>
       <ControlBar>
-        <button type="button" onClick={() => {}}>
-          Dodaj Firme
-        </button>
-        <button type="button" onClick={() => {}}>
-          Filtry
-        </button>
+        <h3>Firmy</h3>
+        <div>
+          <button type="button" onClick={() => {}}>
+            Dodaj Firme
+          </button>
+          <button type="button" onClick={() => {}}>
+            Filtry
+          </button>
+        </div>
       </ControlBar>
 
       <ViewContainer>
@@ -47,7 +50,7 @@ function CompaniesView() {
                     <p>{company.mail}</p>
                     <p>{company.website}</p>
                     <p>{company.activeTasks}</p>
-                    <div>
+                    <div className={styles.usersImgContainer}>
                       {users.flatMap((user) => {
                         return company.teamMembers.map((companyUser) => {
                           return user._id === companyUser.workerID ? (
@@ -60,7 +63,6 @@ function CompaniesView() {
                                 src={user.img}
                                 alt="user"
                               />
-                              <p>{user.name}</p>
                             </div>
                           ) : null;
                         });
