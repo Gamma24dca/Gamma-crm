@@ -1,0 +1,8 @@
+.backButton {
+  transition: all 0.3s ease;
+  margin-left: 20px;
+}
+
+.backButton:hover {
+  transform: translateX(-10px);
+}

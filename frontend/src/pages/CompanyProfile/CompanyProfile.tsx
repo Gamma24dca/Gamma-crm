@@ -9,6 +9,8 @@ import {
 } from '../../services/companies-service';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
 
+import BackButton from '../../components/Atoms/BackButton/BackButton';
+
 function CompanyProfile() {
   const [company, setCompany] = useState<CompaniesType[]>([]);
   const params = useParams();
@@ -32,6 +34,8 @@ function CompanyProfile() {
   return (
     <>
       <ControlBar>
+        <BackButton path="firmy" />
+
         {company.length > 0 && (
           <div>
             <h3>{company[0].name}</h3>
