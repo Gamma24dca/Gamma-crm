@@ -9,17 +9,6 @@
   transform: translateY(125px);
 }
 
-.backButton {
-  position: absolute;
-  left: 0;
-  top: 30px;
-  transition: all 0.3s ease;
-}
-
-.backButton:hover {
-  transform: translateX(-10px);
-}
-
 .taskImage {
   max-width: 50%;
   max-height: 50%;

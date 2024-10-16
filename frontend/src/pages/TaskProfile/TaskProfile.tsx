@@ -1,8 +1,9 @@
-import { Icon } from '@iconify/react';
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { getTaskById, TaskTypes } from '../../services/tasks-service';
 import styles from './TaskProfile.module.css';
+import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
+import BackButton from '../../components/Atoms/BackButton/BackButton';
 
 function TaskProfile() {
   const params = useParams();
@@ -25,27 +26,34 @@ function TaskProfile() {
   }, [params.id]);
 
   return (
-    <div className={styles.taskProfileContainer}>
-      <Link to="/zlecenia" className={styles.backButton}>
-        <Icon
-          icon="ion:arrow-back-outline"
-          color="#f68c1e"
-          width="40"
-          height="40"
-        />
-      </Link>
-      {task.length > 0 && (
-        <>
-          <h2 key={task[0]._id}>{task[0].title}</h2>
-          <img
-            // @ts-ignore
-            src={task[0].image}
-            alt="task pic"
-            className={styles.taskImage}
-          />
-        </>
-      )}
-    </div>
+    <>
+      <ControlBar>
+        <BackButton path="zlecenia" />
+        {task.length > 0 && (
+          <div>
+            <h3>{task[0]._id.substring(2, 8)}</h3>
+          </div>
+        )}
+        <div className={styles.controlBarBtnsWrapper}>
+          <button type="button" onClick={() => {}}>
+            Filtry
+          </button>
+        </div>
+      </ControlBar>
+      <div className={styles.taskProfileContainer}>
+        {task.length > 0 && (
+          <>
+            <h2 key={task[0]._id}>{task[0].title}</h2>
+            <img
+              // @ts-ignore
+              src={task[0].image}
+              alt="task pic"
+              className={styles.taskImage}
+            />
+          </>
+        )}
+      </div>
+    </>
   );
 }
 

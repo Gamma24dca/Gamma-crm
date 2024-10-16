@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ListContainer from '../../components/Atoms/ListContainer/ListContainer';
 import ViewContainer from '../../components/Atoms/ViewContainer/ViewContainer';
@@ -13,7 +13,39 @@ import BackButton from '../../components/Atoms/BackButton/BackButton';
 
 function CompanyProfile() {
   const [company, setCompany] = useState<CompaniesType[]>([]);
+  const [selectedMonth, setSelectedMonth] = useState('');
   const params = useParams();
+
+  const months = useMemo(
+    () => [
+      'Styczeń',
+      'Luty',
+      'Marzec',
+      'Kwiecień',
+      'Maj',
+      'Czerwiec',
+      'Lipiec',
+      'Sierpień',
+      'Wrzesień',
+      'Październik',
+      'Listopad',
+      'Grudzień',
+    ],
+    []
+  );
+
+  // State to hold the currently selected month
+
+  // Get current month and set it as default when the component mounts
+  useEffect(() => {
+    const currentMonthIndex = new Date().getMonth(); // Get the current month (0-based index)
+    setSelectedMonth(months[currentMonthIndex]); // Set the current month in the state
+  }, [months]);
+
+  // Handle month selection change
+  const handleChange = (e) => {
+    setSelectedMonth(e.target.value);
+  };
 
   useEffect(() => {
     getCurrentCompany(params.id)
@@ -35,16 +67,20 @@ function CompanyProfile() {
     <>
       <ControlBar>
         <BackButton path="firmy" />
-
         {company.length > 0 && (
           <div>
             <h3>{company[0].name}</h3>
           </div>
         )}
+
+        <select id="month-select" value={selectedMonth} onChange={handleChange}>
+          {months.map((month) => (
+            <option key={month} value={month}>
+              {month}
+            </option>
+          ))}
+        </select>
         <div className={styles.controlBarBtnsWrapper}>
-          <button type="button" onClick={() => {}}>
-            Dodaj Firme
-          </button>
           <button type="button" onClick={() => {}}>
             Filtry
           </button>
