@@ -1,0 +1,20 @@
+.containersWrapper {
+  display: flex;
+  width: 95%;
+  gap: 40px;
+}
+.LeftContainer {
+  width: 20%;
+  background-color: var(--color-lighter);
+  max-height: 400px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px var(--color-shadow);
+}
+
+.controlBarBtnsWrapper {
+  margin: 0 auto;
+}
+
+h3 {
+  margin-left: 50px;
+}

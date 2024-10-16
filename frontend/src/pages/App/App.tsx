@@ -8,6 +8,7 @@ import UserProfile from '../UserProfile/UserProfile';
 import TasksView from '../TasksView/TasksView';
 import TaskProfile from '../TaskProfile/TaskProfile';
 import CompaniesView from '../CompaniesView/CompaniesView';
+import CompanyProfile from '../CompanyProfile/CompanyProfile';
 
 function App() {
   const { user } = useAuth();
@@ -24,6 +25,7 @@ function App() {
         <Route path="/zlecenia" element={<TasksView />} />
         <Route path="/zlecenia/:id" element={<TaskProfile />} />
         <Route path="/firmy" element={<CompaniesView />} />
+        <Route path="/firmy/:id" element={<CompanyProfile />} />
       </Routes>
     </MainTemplate>
   ) : (
