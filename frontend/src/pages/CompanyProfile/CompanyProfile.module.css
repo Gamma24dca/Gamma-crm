@@ -1,5 +1,26 @@
 .controlBarBtnsWrapper {
+  position: relative;
+  right: 10%;
+}
+
+.selectInput {
+  font-family: Montserrat;
+  width: 150px;
+  height: 25px;
+  font-size: 14px;
+  border-radius: 30px;
+  border: 1px solid var(--color-navButton);
+  text-align: center;
+  transform: translateX(50%);
+}
+
+.navInput {
   margin: 0 auto;
+  width: 100%;
+  height: 25px;
+  max-width: 350px;
+  border-radius: 30px;
+  border: 1px solid var(--color-navButton);
 }
 h2 {
   margin: 0 30px;
@@ -20,7 +41,7 @@ h2 {
 
 .leftColumnTitle {
   text-align: center;
-  margin-bottom: 35px;
+  margin-bottom: 15px;
   h3 {
     font-size: 20px;
     margin: 0;
@@ -38,7 +59,7 @@ h2 {
   border: 0;
   border-bottom: 2px solid gray;
   outline: 0;
-  font-size: 16px;
+  font-size: 14px;
   padding: 7px 0;
   background: transparent;
 }
@@ -47,6 +68,74 @@ label {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.reckoningTaskListElement {
+  width: 100%;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.reckoningTaskListElement:hover:not(:first-child) {
+  background-color: var(--color-orange);
+  color: var(--color-lighter);
+}
+
+.companyInfoBar {
+  font-weight: 600;
+  width: 100%;
+  border-bottom: 3px solid var(--color-orange);
+  background-color: var(--color-navButton);
+  color: var(--color-bg);
+}
+
+.reckoningTaskListElementTile,
+.taskID,
+.taskWorker,
+.taskMonth {
+  width: 10%;
+  height: 40px;
+  text-align: center;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  border: 1px solid var(--color-shadow);
+}
+
+.reckoningTaskListElementTile:nth-child(1) {
+  width: 4.5%;
+}
+
+.reckoningTaskListElementTile:nth-child(2) {
+  max-width: 6%;
+}
+
+.reckoningTaskListElementTile:nth-child(3) {
+  width: 7%;
+}
+
+.reckoningTaskListElementTile:nth-child(4) {
+  width: 7%;
+}
+.reckoningTaskListElementTile:nth-child(5) {
+  width: 12%;
+}
+.reckoningTaskListElementTile:nth-child(6) {
+  width: 20%;
+}
+.reckoningTaskListElementTile:nth-child(7) {
+  width: 3%;
+  font-weight: 600;
+}
+.reckoningTaskListElementTile:nth-child(8) {
+  width: 15%;
+}
+.reckoningTaskListElementTile:nth-child(9) {
+  width: 15%;
 }
 
 @media (max-width: 1700px) {

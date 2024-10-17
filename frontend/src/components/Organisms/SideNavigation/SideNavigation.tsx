@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import styles from './SideNavigation.module.css';
 
@@ -40,13 +40,13 @@ const sideNavButtons = [
 function SideNavigation() {
   return (
     <div className={styles.sideNavContainer}>
-      <div className={styles.logoContainer}>
+      <Link to="/" className={styles.logoContainer}>
         <img
           src="https://res.cloudinary.com/dpktrptfr/image/upload/v1679038488/HomePage/orange.png"
           alt="Gamma logo"
           className={styles.logo}
         />
-      </div>
+      </Link>
 
       <div className={styles.buttonsContainer}>
         <div className={styles.btnsWrapper}>
