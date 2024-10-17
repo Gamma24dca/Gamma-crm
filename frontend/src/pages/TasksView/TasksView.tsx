@@ -13,6 +13,7 @@ import AddTaskModalContent from '../../components/Organisms/AddTaskModalContent/
 import ListContainer from '../../components/Atoms/ListContainer/ListContainer';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
 import useAuth from '../../hooks/useAuth';
+import CTA from '../../components/CTA/CTA';
 
 function TasksView() {
   const { showModal, exitAnim, openModal, closeModal } = useModal();
@@ -96,31 +97,24 @@ function TasksView() {
         />
       </ModalTemplate>
       <ControlBar>
-        <h3>Zlecenia</h3>
-        <select name="widok" id="widok">
+        <h3 className={styles.controlBarTitle}>Zlecenia</h3>
+        <select name="widok" id="widok" className={styles.selectInput}>
           <option value="Lista">Lista</option>
           <option value="Kanban">Kanban</option>
         </select>
-        <button
-          type="button"
-          onClick={() => {
-            openModal();
-            clearValues();
-            // setIsCalendarVisible(false);
-          }}
-        >
-          Nowe zlecenie
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            openModal();
-            clearValues();
-            // setIsCalendarVisible(false);
-          }}
-        >
-          Filtry
-        </button>
+        <input className={styles.navInput} />
+        <div className={styles.buttonsWrapper}>
+          <CTA
+            onClick={() => {
+              openModal();
+              clearValues();
+              // setIsCalendarVisible(false);
+            }}
+          >
+            Nowe zlecenie
+          </CTA>
+          <CTA onClick={() => {}}>Filtry</CTA>
+        </div>
       </ControlBar>
 
       <ViewContainer>

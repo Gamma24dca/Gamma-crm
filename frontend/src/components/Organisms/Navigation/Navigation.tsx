@@ -13,7 +13,7 @@ function Navigation() {
           <p className={styles.job}>{GammaUser.job}</p>
         </div>
       </div>
-      <input className={styles.navInput} />
+
       <button type="button" className={styles.signOutBtn} onClick={signOut}>
         Wyloguj
       </button>
