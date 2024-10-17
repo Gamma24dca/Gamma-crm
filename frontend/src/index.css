@@ -3,18 +3,12 @@
 
 :root {
   --color-bg: #f4f7fd;
-  --color-dark: #000;
-  --color-light: #f3f3f3;
+  --color-black: #000;
   --color-lighter: #ffffff;
   --color-shadow: #364e7e1a;
   --color-orange: #f68c1e;
   --color-navButton: #828fa3;
-  --color-title: #111111;
-  --color-board: #ffffff;
-  --color-themeSwitchBox: #f4f7fd;
-  --color-addButton: #f0effa;
-  --color-border: #e4ebfa;
-  --color-checked: rgba(0, 0, 0, 0.5);
+
   font-family: Montserrat, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -46,6 +40,10 @@ body {
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+}
+
+h2 {
+  font-weight: 700;
 }
 
 input,

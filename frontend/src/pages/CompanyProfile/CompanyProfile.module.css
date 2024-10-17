@@ -48,3 +48,24 @@ label {
   flex-direction: column;
   align-items: center;
 }
+
+@media (max-width: 1700px) {
+  .containersWrapper {
+    gap: 20px;
+  }
+
+  .leftColumnTitle {
+    margin-bottom: 25px;
+    h3 {
+      font-size: 16px;
+    }
+  }
+
+  .inputsWrapper {
+    font-size: 14px;
+  }
+
+  .companyInput {
+    font-size: 12px;
+  }
+}

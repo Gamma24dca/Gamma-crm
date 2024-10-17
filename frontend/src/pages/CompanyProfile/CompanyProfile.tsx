@@ -34,15 +34,11 @@ function CompanyProfile() {
     []
   );
 
-  // State to hold the currently selected month
-
-  // Get current month and set it as default when the component mounts
   useEffect(() => {
-    const currentMonthIndex = new Date().getMonth(); // Get the current month (0-based index)
-    setSelectedMonth(months[currentMonthIndex]); // Set the current month in the state
+    const currentMonthIndex = new Date().getMonth();
+    setSelectedMonth(months[currentMonthIndex]);
   }, [months]);
 
-  // Handle month selection change
   const handleChange = (e) => {
     setSelectedMonth(e.target.value);
   };

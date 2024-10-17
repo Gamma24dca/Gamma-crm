@@ -39,8 +39,8 @@
   }
 }
 
-@media (max-width: 1300px) {
+@media (max-width: 1370px) {
   .listContainer {
-    max-height: 500px;
+    max-height: 400px;
   }
 }
