@@ -11,10 +11,13 @@ import {
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
 import BackButton from '../../components/Atoms/BackButton/BackButton';
 import CTA from '../../components/CTA/CTA';
+import useModal from '../../hooks/useModal';
+import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplate';
 
 function CompanyProfile() {
   const [company, setCompany] = useState<CompaniesType[]>([]);
   const [selectedMonth, setSelectedMonth] = useState<string>('');
+  const { showModal, exitAnim, openModal, closeModal } = useModal();
   const params = useParams();
 
   const mockedTasks = [
@@ -26,7 +29,7 @@ function CompanyProfile() {
       createdAt: '03.03.2024',
       client: 'Stachowiczk Joanna',
       taskTitle: 'AKSIL_KATALOG_PRODUKTOW 2024',
-      hours: 29,
+      hours: 19,
       comment: 'projekt, poprawki i pliki do druku',
       printWhere: '',
       printSpec: '',
@@ -249,58 +252,29 @@ function CompanyProfile() {
 
   return (
     <>
+      <ModalTemplate
+        isOpen={showModal}
+        onClose={closeModal}
+        exitAnim={exitAnim}
+      >
+        <h2>modal</h2>
+      </ModalTemplate>
       <ControlBar>
-        <BackButton path="firmy" />
-        {company.length > 0 && (
-          <div className={styles.editCompanyWrapper}>
-            <button type="button" className={styles.editCompanyButton}>
-              <h2>{company[0].name}</h2>
-            </button>
-            <Icon icon="lucide:edit" width="24" height="24" color="#f68c1e" />
-          </div>
-        )}
-
-        <select
-          id="month-select"
-          value={selectedMonth}
-          onChange={handleChange}
-          className={styles.selectInput}
-        >
-          {months.map((month) => (
-            <option key={month} value={month}>
-              {month}
-            </option>
-          ))}
-        </select>
-
-        <div className={styles.searchInputControl}>
-          <label htmlFor="task-search">Szukaj</label>
-          <input
-            className={styles.navInput}
-            type="text"
-            name="task-search"
-            id="task-search"
-          />
-          <div className={styles.totalHoursWrapper}>
-            <p>Suma:</p>
-            <p>{totalHours}</p>
-          </div>
-        </div>
-
-        <div className={styles.controlBarBtnsWrapper}>
-          <CTA type="button" onClick={() => {}}>
-            Filtry
-          </CTA>
-        </div>
-        {/* <div className={styles.leftSide}>
+        <div className={styles.leftSide}>
           <BackButton path="firmy" />
           {company.length > 0 && (
-            <div className={styles.editCompanyWrapper}>
-              <button type="button" className={styles.editCompanyButton}>
+            <button type="button" className={styles.editCompanyWrapper}>
+              <button
+                type="button"
+                className={styles.editCompanyButton}
+                onClick={() => {
+                  openModal();
+                }}
+              >
                 <h2>{company[0].name}</h2>
               </button>
               <Icon icon="lucide:edit" width="24" height="24" color="#f68c1e" />
-            </div>
+            </button>
           )}
           <select
             id="month-select"
@@ -323,13 +297,17 @@ function CompanyProfile() {
             name="task-search"
             id="task-search"
           />
-          <div className={styles.totalHoursWrapper}>
-            <p>Suma:</p>
-          </div>
+
+          <p className={styles.summPar}>Suma:</p>
         </div>
-        <div className={styles.sum}>
+        <div className={styles.totalHoursContainer}>
           <p>{totalHours}</p>
-        </div> */}
+        </div>
+        <div className={styles.controlBarBtnsWrapper}>
+          <CTA type="button" onClick={() => {}}>
+            Filtry
+          </CTA>
+        </div>
       </ControlBar>
 
       <ViewContainer>
