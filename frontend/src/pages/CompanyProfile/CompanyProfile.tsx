@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { Icon } from '@iconify/react';
 import ListContainer from '../../components/Atoms/ListContainer/ListContainer';
 import ViewContainer from '../../components/Atoms/ViewContainer/ViewContainer';
 import styles from './CompanyProfile.module.css';
@@ -13,12 +14,12 @@ import CTA from '../../components/CTA/CTA';
 
 function CompanyProfile() {
   const [company, setCompany] = useState<CompaniesType[]>([]);
-  const [selectedMonth, setSelectedMonth] = useState('');
+  const [selectedMonth, setSelectedMonth] = useState<string>('');
   const params = useParams();
 
   const mockedTasks = [
     {
-      _id: 'is35c',
+      _id: 'ig35c',
       worker: 'Bartek',
       month: 'marzec',
       company: 'Aksil',
@@ -32,7 +33,7 @@ function CompanyProfile() {
       isSettled: true,
     },
     {
-      _id: 'fds32',
+      _id: 'fps32',
       worker: 'Edyta',
       month: 'wrzesień',
       company: 'Santander',
@@ -46,7 +47,7 @@ function CompanyProfile() {
       isSettled: false,
     },
     {
-      _id: '3x8a2',
+      _id: '3x8[2',
       worker: 'Edyta',
       month: 'kwiecień',
       company: 'Santander',
@@ -60,7 +61,7 @@ function CompanyProfile() {
       isSettled: true,
     },
     {
-      _id: '73x71',
+      _id: '71x71',
       worker: 'Weronika',
       month: 'kwiecień',
       company: 'Santander',
@@ -102,7 +103,7 @@ function CompanyProfile() {
       isSettled: false,
     },
     {
-      _id: '3x8a2',
+      _id: '368a2',
       worker: 'Edyta',
       month: 'kwiecień',
       company: 'Santander',
@@ -130,7 +131,7 @@ function CompanyProfile() {
       isSettled: false,
     },
     {
-      _id: 'k3px4',
+      _id: 'k3hx4',
       worker: 'Jagoda',
       month: 'październik',
       company: 'Santander',
@@ -144,7 +145,7 @@ function CompanyProfile() {
       isSettled: false,
     },
     {
-      _id: 'fds32',
+      _id: 'fss32',
       worker: 'Edyta',
       month: 'wrzesień',
       company: 'Santander',
@@ -158,7 +159,7 @@ function CompanyProfile() {
       isSettled: false,
     },
     {
-      _id: '3x8a2',
+      _id: '3d8a2',
       worker: 'Edyta',
       month: 'kwiecień',
       company: 'Santander',
@@ -172,7 +173,7 @@ function CompanyProfile() {
       isSettled: true,
     },
     {
-      _id: '73x71',
+      _id: '7lx71',
       worker: 'Weronika',
       month: 'kwiecień',
       company: 'Santander',
@@ -186,7 +187,7 @@ function CompanyProfile() {
       isSettled: false,
     },
     {
-      _id: 'k3px4',
+      _id: 'kfpx4',
       worker: 'Jagoda',
       month: 'październik',
       company: 'Santander',
@@ -200,6 +201,8 @@ function CompanyProfile() {
       isSettled: false,
     },
   ];
+
+  const totalHours = mockedTasks.reduce((acc, task) => acc + task.hours, 0);
 
   const months = useMemo(
     () => [
@@ -249,8 +252,11 @@ function CompanyProfile() {
       <ControlBar>
         <BackButton path="firmy" />
         {company.length > 0 && (
-          <div>
-            <h2>{company[0].name}</h2>
+          <div className={styles.editCompanyWrapper}>
+            <button type="button" className={styles.editCompanyButton}>
+              <h2>{company[0].name}</h2>
+            </button>
+            <Icon icon="lucide:edit" width="24" height="24" color="#f68c1e" />
           </div>
         )}
 
@@ -266,147 +272,142 @@ function CompanyProfile() {
             </option>
           ))}
         </select>
-        <input className={styles.navInput} />
+
+        <div className={styles.searchInputControl}>
+          <label htmlFor="task-search">Szukaj</label>
+          <input
+            className={styles.navInput}
+            type="text"
+            name="task-search"
+            id="task-search"
+          />
+          <div className={styles.totalHoursWrapper}>
+            <p>Suma:</p>
+            <p>{totalHours}</p>
+          </div>
+        </div>
 
         <div className={styles.controlBarBtnsWrapper}>
           <CTA type="button" onClick={() => {}}>
             Filtry
           </CTA>
         </div>
+        {/* <div className={styles.leftSide}>
+          <BackButton path="firmy" />
+          {company.length > 0 && (
+            <div className={styles.editCompanyWrapper}>
+              <button type="button" className={styles.editCompanyButton}>
+                <h2>{company[0].name}</h2>
+              </button>
+              <Icon icon="lucide:edit" width="24" height="24" color="#f68c1e" />
+            </div>
+          )}
+          <select
+            id="month-select"
+            value={selectedMonth}
+            onChange={handleChange}
+            className={styles.selectInput}
+          >
+            {months.map((month) => (
+              <option key={month} value={month}>
+                {month}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className={styles.center}>
+          <label htmlFor="task-search">Szukaj</label>
+          <input
+            className={styles.navInput}
+            type="text"
+            name="task-search"
+            id="task-search"
+          />
+          <div className={styles.totalHoursWrapper}>
+            <p>Suma:</p>
+          </div>
+        </div>
+        <div className={styles.sum}>
+          <p>{totalHours}</p>
+        </div> */}
       </ControlBar>
 
       <ViewContainer>
-        <div className={styles.containersWrapper}>
-          <div className={styles.LeftContainer}>
-            {/* <div className={styles.leftColumnTitle}>
-              <h3>Dane firmy</h3>
-            </div> */}
-            {company.length > 0 ? (
-              <div className={styles.inputsWrapper}>
-                <label htmlFor="companyName">
-                  <strong>Nazwa:</strong>
-                  <input
-                    type="text"
-                    name="companyName"
-                    id="companyName"
-                    value={company[0].name}
-                    className={styles.companyInput}
-                  />
-                </label>
-                <label htmlFor="companyMail">
-                  <strong>E-Mail:</strong>
-                  <input
-                    type="text"
-                    name="companyMail"
-                    id="companyMail"
-                    value={company[0].mail}
-                    className={styles.companyInput}
-                  />
-                </label>
-                <label htmlFor="companyNumber">
-                  <strong>Numer:</strong>
-                  <input
-                    type="text"
-                    name="companyNumber"
-                    id="companyNumber"
-                    value={company[0].phone}
-                    className={styles.companyInput}
-                  />
-                </label>
-                <label htmlFor="companyWebsite">
-                  <strong>Strona:</strong>
-                  <input
-                    type="text"
-                    name="companyWebsite"
-                    id="companyWebsite"
-                    value={company[0].website}
-                    className={styles.companyInput}
-                  />
-                </label>
+        <ListContainer>
+          <div className={styles.companyInfoBar}>
+            <div className={styles.reckoningTaskListElement}>
+              <div className={styles.reckoningTaskListElementTile}>
+                <p>ID</p>
               </div>
-            ) : (
-              <p>loading</p>
-            )}
-          </div>
-          <ListContainer>
-            <div className={styles.companyInfoBar}>
-              <div className={styles.reckoningTaskListElement}>
-                <div className={styles.reckoningTaskListElementTile}>
-                  <p>ID</p>
-                </div>
-                <div className={styles.reckoningTaskListElementTile}>
-                  <p>Pracownik</p>
-                </div>
-                <div className={styles.reckoningTaskListElementTile}>
-                  <p>Miesiąc</p>
-                </div>
+              <div className={styles.reckoningTaskListElementTile}>
+                <p>Pracownik</p>
+              </div>
+              <div className={styles.reckoningTaskListElementTile}>
+                <p>Miesiąc</p>
+              </div>
 
-                <div className={styles.reckoningTaskListElementTile}>
-                  <p>Utworzono</p>
-                </div>
-                <div className={styles.reckoningTaskListElementTile}>
-                  <p>Klient</p>
-                </div>
-                <div className={styles.reckoningTaskListElementTile}>
-                  <p>Tytuł</p>
-                </div>
-                <div className={styles.reckoningTaskListElementTile}>
-                  <p>Sum</p>
-                </div>
-                <div className={styles.reckoningTaskListElementTile}>
-                  <p>Komentarz</p>
-                </div>
-                <div className={styles.reckoningTaskListElementTile}>
-                  <p>DRUK(spec)</p>
-                </div>
-                <div className={styles.reckoningTaskListElementTile}>
-                  <p>DRUK(gdzie)</p>
-                </div>
+              <div className={styles.reckoningTaskListElementTile}>
+                <p>Utworzono</p>
+              </div>
+              <div className={styles.reckoningTaskListElementTile}>
+                <p>Klient</p>
+              </div>
+              <div className={styles.reckoningTaskListElementTile}>
+                <p>Tytuł</p>
+              </div>
+              <div className={styles.reckoningTaskListElementTile}>
+                <p>Sum</p>
+              </div>
+              <div className={styles.reckoningTaskListElementTile}>
+                <p>Komentarz</p>
+              </div>
+              <div className={styles.reckoningTaskListElementTile}>
+                <p>DRUK(spec)</p>
+              </div>
+              <div className={styles.reckoningTaskListElementTile}>
+                <p>DRUK(gdzie)</p>
               </div>
             </div>
-            <>
-              {mockedTasks.map((task) => {
-                return (
-                  <div
-                    key={task._id}
-                    className={styles.reckoningTaskListElement}
-                  >
-                    <div className={styles.reckoningTaskListElementTile}>
-                      <p>{task._id}</p>
-                    </div>
-                    <div className={styles.reckoningTaskListElementTile}>
-                      <p>{task.worker}</p>
-                    </div>
-                    <div className={styles.reckoningTaskListElementTile}>
-                      <p>{task.month}</p>
-                    </div>
-                    <div className={styles.reckoningTaskListElementTile}>
-                      <p>{task.createdAt}</p>
-                    </div>
-                    <div className={styles.reckoningTaskListElementTile}>
-                      <p>{task.client}</p>
-                    </div>
-                    <div className={styles.reckoningTaskListElementTile}>
-                      <p>{task.taskTitle}</p>
-                    </div>
-                    <div className={styles.reckoningTaskListElementTile}>
-                      <p>{task.hours}</p>
-                    </div>
-                    <div className={styles.reckoningTaskListElementTile}>
-                      <p>{task.comment}</p>
-                    </div>
-                    <div className={styles.reckoningTaskListElementTile}>
-                      <p>{task.printSpec}</p>
-                    </div>
-                    <div className={styles.reckoningTaskListElementTile}>
-                      <p>{task.printWhere}</p>
-                    </div>
+          </div>
+          <>
+            {mockedTasks.map((task) => {
+              return (
+                <div key={task._id} className={styles.reckoningTaskListElement}>
+                  <div className={styles.reckoningTaskListElementTile}>
+                    <p>{task._id}</p>
                   </div>
-                );
-              })}
-            </>
-          </ListContainer>
-        </div>
+                  <div className={styles.reckoningTaskListElementTile}>
+                    <p>{task.worker}</p>
+                  </div>
+                  <div className={styles.reckoningTaskListElementTile}>
+                    <p>{task.month}</p>
+                  </div>
+                  <div className={styles.reckoningTaskListElementTile}>
+                    <p>{task.createdAt}</p>
+                  </div>
+                  <div className={styles.reckoningTaskListElementTile}>
+                    <p>{task.client}</p>
+                  </div>
+                  <div className={styles.reckoningTaskListElementTile}>
+                    <p>{task.taskTitle}</p>
+                  </div>
+                  <div className={styles.reckoningTaskListElementTile}>
+                    <p>{task.hours}</p>
+                  </div>
+                  <div className={styles.reckoningTaskListElementTile}>
+                    <p>{task.comment}</p>
+                  </div>
+                  <div className={styles.reckoningTaskListElementTile}>
+                    <p>{task.printSpec}</p>
+                  </div>
+                  <div className={styles.reckoningTaskListElementTile}>
+                    <p>{task.printWhere}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </>
+        </ListContainer>
       </ViewContainer>
     </>
   );
