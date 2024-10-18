@@ -257,7 +257,67 @@ function CompanyProfile() {
         onClose={closeModal}
         exitAnim={exitAnim}
       >
-        <h2>modal</h2>
+        <h2>Edytuj</h2>
+        {company.length > 0 ? (
+          <div className={styles.inputsWrapper}>
+            <div className={styles.firstRow}>
+              <div>
+                <label htmlFor="companyName">
+                  <strong>Nazwa:</strong>
+                </label>
+                <input
+                  type="text"
+                  name="companyName"
+                  id="companyName"
+                  value={company[0].name}
+                  className={styles.companyInput}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="companyMail">
+                  <strong>E-Mail:</strong>
+                </label>
+                <input
+                  type="text"
+                  name="companyMail"
+                  id="companyMail"
+                  value={company[0].mail}
+                  className={styles.companyInput}
+                />
+              </div>
+            </div>
+
+            <div className={styles.secondRow}>
+              <div>
+                <label htmlFor="companyNumber">
+                  <strong>Numer:</strong>
+                </label>
+                <input
+                  type="text"
+                  name="companyNumber"
+                  id="companyNumber"
+                  value={company[0].phone}
+                  className={styles.companyInput}
+                />
+              </div>
+              <div>
+                <label htmlFor="companyWebsite">
+                  <strong>Strona:</strong>
+                </label>
+                <input
+                  type="text"
+                  name="companyWebsite"
+                  id="companyWebsite"
+                  value={company[0].website}
+                  className={styles.companyInput}
+                />
+              </div>
+            </div>
+          </div>
+        ) : (
+          <p>loading</p>
+        )}
       </ModalTemplate>
       <ControlBar>
         <div className={styles.leftSide}>
