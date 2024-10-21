@@ -14,16 +14,252 @@ import CTA from '../../components/CTA/CTA';
 import useModal from '../../hooks/useModal';
 import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplate';
 import useWindowSize from '../../hooks/useWindowSize';
+import usePagination from '../../hooks/usePagination';
+import useSort from '../../hooks/useSort';
+
+const mockedTasks = [
+  {
+    _id: 'ig35c',
+    worker: 'Bartek',
+    month: 'marzec',
+    company: 'Aksil',
+    createdAt: '2024.03.03',
+    client: 'Stachowiczk Joanna',
+    taskTitle: 'AKSIL_KATALOG_PRODUKTOW 2024',
+    hours: 19,
+    comment: 'projekt, poprawki i pliki do druku',
+    printWhere: '',
+    printSpec: '',
+    isSettled: true,
+  },
+  {
+    _id: 'fps32',
+    worker: 'Edyta',
+    month: 'wrzesień',
+    company: 'Santander',
+    createdAt: '2024.05.01',
+    client: 'Badowska Alicja',
+    taskTitle: 'Baner industry 1070x2125',
+    hours: 12,
+    comment: 'Zaliczka 12',
+    printWhere: '',
+    printSpec: '',
+    isSettled: false,
+  },
+  {
+    _id: '3x8[2',
+    worker: 'Edyta',
+    month: 'kwiecień',
+    company: 'Santander',
+    createdAt: '2024.04.08',
+    client: 'Ożóg Joanna',
+    taskTitle: 'Avik Animation 4k',
+    hours: 39,
+    comment: '',
+    printWhere: '',
+    printSpec: '',
+    isSettled: true,
+  },
+  {
+    _id: '71x71',
+    worker: 'Weronika',
+    month: 'kwiecień',
+    company: 'Santander',
+    createdAt: '2024.07.10',
+    client: 'Ożóg Joanna',
+    taskTitle: 'test data',
+    hours: 15,
+    comment: '',
+    printWhere: '',
+    printSpec: '',
+    isSettled: false,
+  },
+  {
+    _id: 'k3px4',
+    worker: 'Jagoda',
+    month: 'październik',
+    company: 'Santander',
+    createdAt: '2024.04.08',
+    client: 'Ożóg Joanna',
+    taskTitle: 'Avik Animation 4k',
+    hours: 19,
+    comment: '',
+    printWhere: '',
+    printSpec: '',
+    isSettled: false,
+  },
+  {
+    _id: 'fds32',
+    worker: 'Edyta',
+    month: 'wrzesień',
+    company: 'Santander',
+    createdAt: '2024.05.01',
+    client: 'Badowska Alicja',
+    taskTitle: 'Baner industry 1070x2125',
+    hours: 52,
+    comment: 'Zaliczka 12',
+    printWhere: '',
+    printSpec: '',
+    isSettled: false,
+  },
+  {
+    _id: '368a2',
+    worker: 'Edyta',
+    month: 'kwiecień',
+    company: 'Santander',
+    createdAt: '2024.03.08',
+    client: 'Ożóg Joanna',
+    taskTitle: 'Avik Animation 4k',
+    hours: 39,
+    comment: '',
+    printWhere: '',
+    printSpec: '',
+    isSettled: true,
+  },
+  {
+    _id: '73x71',
+    worker: 'Weronika',
+    month: 'kwiecień',
+    company: 'Santander',
+    createdAt: '2024.09.10',
+    client: 'Ożóg Joanna',
+    taskTitle: 'test data',
+    hours: 15,
+    comment: '',
+    printWhere: '',
+    printSpec: '',
+    isSettled: false,
+  },
+  {
+    _id: 'k3hx4',
+    worker: 'Jagoda',
+    month: 'październik',
+    company: 'Santander',
+    createdAt: '2024.05.08',
+    client: 'Ożóg Joanna',
+    taskTitle: 'Avik Animation 4k',
+    hours: 19,
+    comment: '',
+    printWhere: '',
+    printSpec: '',
+    isSettled: false,
+  },
+  {
+    _id: 'fss32',
+    worker: 'Edyta',
+    month: 'wrzesień',
+    company: 'Santander',
+    createdAt: '2023.02.01',
+    client: 'Badowska Alicja',
+    taskTitle: 'Baner industry 1070x2125',
+    hours: 12,
+    comment: 'Zaliczka 12',
+    printWhere: '',
+    printSpec: '',
+    isSettled: false,
+  },
+  {
+    _id: '3d8a2',
+    worker: 'Edyta',
+    month: 'kwiecień',
+    company: 'Santander',
+    createdAt: '2024.04.08',
+    client: 'Ożóg Joanna',
+    taskTitle: 'Avik Animation 4k',
+    hours: 39,
+    comment: '',
+    printWhere: '',
+    printSpec: '',
+    isSettled: true,
+  },
+  {
+    _id: '7lx71',
+    worker: 'Weronika',
+    month: 'kwiecień',
+    company: 'Santander',
+    createdAt: '2024.01.20',
+    client: 'Ożóg Joanna',
+    taskTitle: 'test data',
+    hours: 15,
+    comment: '',
+    printWhere: '',
+    printSpec: '',
+    isSettled: false,
+  },
+  {
+    _id: 'kfpx4',
+    worker: 'Jagoda',
+    month: 'październik',
+    company: 'Santander',
+    createdAt: '2023.04.08',
+    client: 'Ożóg Joanna',
+    taskTitle: 'Avik Animation 4k',
+    hours: 19,
+    comment: '',
+    printWhere: '',
+    printSpec: '',
+    isSettled: false,
+  },
+  {
+    _id: 'knpx4',
+    worker: 'Jagoda',
+    month: 'październik',
+    company: 'Santander',
+    createdAt: '2023.04.08',
+    client: 'Ożóg Joanna',
+    taskTitle: 'Avik Animation 4k',
+    hours: 19,
+    comment: '',
+    printWhere: '',
+    printSpec: '',
+    isSettled: false,
+  },
+  {
+    _id: 'kfp34',
+    worker: 'Jagoda',
+    month: 'październik',
+    company: 'Santander',
+    createdAt: '2023.04.08',
+    client: 'Ożóg Joanna',
+    taskTitle: 'Avik Animation 4k',
+    hours: 19,
+    comment: '',
+    printWhere: '',
+    printSpec: '',
+    isSettled: false,
+  },
+  {
+    _id: 'kfpv4',
+    worker: 'Jagoda',
+    month: 'październik',
+    company: 'Santander',
+    createdAt: '2023.04.08',
+    client: 'Ożóg Joanna',
+    taskTitle: 'Avik Animation 4k',
+    hours: 19,
+    comment: '',
+    printWhere: '',
+    printSpec: '',
+    isSettled: false,
+  },
+];
 
 function CompanyProfile() {
   const [company, setCompany] = useState<CompaniesType[]>([]);
   const [selectedMonth, setSelectedMonth] = useState<string>('');
-  const [sortColumn, setSortColumn] = useState('');
-  const [sortOrder, setSortOrder] = useState('asc');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(14);
   const { showModal, exitAnim, openModal, closeModal } = useModal();
   const params = useParams();
+
+  const {
+    currentPage,
+    totalPages,
+    setItemsPerPage,
+    currentTasks,
+    handleNextPage,
+    handlePreviousPage,
+  } = usePagination(mockedTasks, 14);
+
+  const { sortColumn, sortOrder, handleSortChange } = useSort(mockedTasks);
 
   const is1800 = useWindowSize('1800');
   const is1600 = useWindowSize('1600');
@@ -42,234 +278,7 @@ function CompanyProfile() {
     if (!is1800 && !is1600) {
       setItemsPerPage(14);
     }
-  }, [is1800, is1600, is1350]);
-
-  const mockedTasks = [
-    {
-      _id: 'ig35c',
-      worker: 'Bartek',
-      month: 'marzec',
-      company: 'Aksil',
-      createdAt: '2024.03.03',
-      client: 'Stachowiczk Joanna',
-      taskTitle: 'AKSIL_KATALOG_PRODUKTOW 2024',
-      hours: 19,
-      comment: 'projekt, poprawki i pliki do druku',
-      printWhere: '',
-      printSpec: '',
-      isSettled: true,
-    },
-    {
-      _id: 'fps32',
-      worker: 'Edyta',
-      month: 'wrzesień',
-      company: 'Santander',
-      createdAt: '2024.05.01',
-      client: 'Badowska Alicja',
-      taskTitle: 'Baner industry 1070x2125',
-      hours: 12,
-      comment: 'Zaliczka 12',
-      printWhere: '',
-      printSpec: '',
-      isSettled: false,
-    },
-    {
-      _id: '3x8[2',
-      worker: 'Edyta',
-      month: 'kwiecień',
-      company: 'Santander',
-      createdAt: '2024.04.08',
-      client: 'Ożóg Joanna',
-      taskTitle: 'Avik Animation 4k',
-      hours: 39,
-      comment: '',
-      printWhere: '',
-      printSpec: '',
-      isSettled: true,
-    },
-    {
-      _id: '71x71',
-      worker: 'Weronika',
-      month: 'kwiecień',
-      company: 'Santander',
-      createdAt: '2024.07.10',
-      client: 'Ożóg Joanna',
-      taskTitle: 'test data',
-      hours: 15,
-      comment: '',
-      printWhere: '',
-      printSpec: '',
-      isSettled: false,
-    },
-    {
-      _id: 'k3px4',
-      worker: 'Jagoda',
-      month: 'październik',
-      company: 'Santander',
-      createdAt: '2024.04.08',
-      client: 'Ożóg Joanna',
-      taskTitle: 'Avik Animation 4k',
-      hours: 19,
-      comment: '',
-      printWhere: '',
-      printSpec: '',
-      isSettled: false,
-    },
-    {
-      _id: 'fds32',
-      worker: 'Edyta',
-      month: 'wrzesień',
-      company: 'Santander',
-      createdAt: '2024.05.01',
-      client: 'Badowska Alicja',
-      taskTitle: 'Baner industry 1070x2125',
-      hours: 52,
-      comment: 'Zaliczka 12',
-      printWhere: '',
-      printSpec: '',
-      isSettled: false,
-    },
-    {
-      _id: '368a2',
-      worker: 'Edyta',
-      month: 'kwiecień',
-      company: 'Santander',
-      createdAt: '2024.03.08',
-      client: 'Ożóg Joanna',
-      taskTitle: 'Avik Animation 4k',
-      hours: 39,
-      comment: '',
-      printWhere: '',
-      printSpec: '',
-      isSettled: true,
-    },
-    {
-      _id: '73x71',
-      worker: 'Weronika',
-      month: 'kwiecień',
-      company: 'Santander',
-      createdAt: '2024.09.10',
-      client: 'Ożóg Joanna',
-      taskTitle: 'test data',
-      hours: 15,
-      comment: '',
-      printWhere: '',
-      printSpec: '',
-      isSettled: false,
-    },
-    {
-      _id: 'k3hx4',
-      worker: 'Jagoda',
-      month: 'październik',
-      company: 'Santander',
-      createdAt: '2024.05.08',
-      client: 'Ożóg Joanna',
-      taskTitle: 'Avik Animation 4k',
-      hours: 19,
-      comment: '',
-      printWhere: '',
-      printSpec: '',
-      isSettled: false,
-    },
-    {
-      _id: 'fss32',
-      worker: 'Edyta',
-      month: 'wrzesień',
-      company: 'Santander',
-      createdAt: '2023.02.01',
-      client: 'Badowska Alicja',
-      taskTitle: 'Baner industry 1070x2125',
-      hours: 12,
-      comment: 'Zaliczka 12',
-      printWhere: '',
-      printSpec: '',
-      isSettled: false,
-    },
-    {
-      _id: '3d8a2',
-      worker: 'Edyta',
-      month: 'kwiecień',
-      company: 'Santander',
-      createdAt: '2024.04.08',
-      client: 'Ożóg Joanna',
-      taskTitle: 'Avik Animation 4k',
-      hours: 39,
-      comment: '',
-      printWhere: '',
-      printSpec: '',
-      isSettled: true,
-    },
-    {
-      _id: '7lx71',
-      worker: 'Weronika',
-      month: 'kwiecień',
-      company: 'Santander',
-      createdAt: '2024.01.20',
-      client: 'Ożóg Joanna',
-      taskTitle: 'test data',
-      hours: 15,
-      comment: '',
-      printWhere: '',
-      printSpec: '',
-      isSettled: false,
-    },
-    {
-      _id: 'kfpx4',
-      worker: 'Jagoda',
-      month: 'październik',
-      company: 'Santander',
-      createdAt: '2023.04.08',
-      client: 'Ożóg Joanna',
-      taskTitle: 'Avik Animation 4k',
-      hours: 19,
-      comment: '',
-      printWhere: '',
-      printSpec: '',
-      isSettled: false,
-    },
-    {
-      _id: 'knpx4',
-      worker: 'Jagoda',
-      month: 'październik',
-      company: 'Santander',
-      createdAt: '2023.04.08',
-      client: 'Ożóg Joanna',
-      taskTitle: 'Avik Animation 4k',
-      hours: 19,
-      comment: '',
-      printWhere: '',
-      printSpec: '',
-      isSettled: false,
-    },
-    {
-      _id: 'kfp34',
-      worker: 'Jagoda',
-      month: 'październik',
-      company: 'Santander',
-      createdAt: '2023.04.08',
-      client: 'Ożóg Joanna',
-      taskTitle: 'Avik Animation 4k',
-      hours: 19,
-      comment: '',
-      printWhere: '',
-      printSpec: '',
-      isSettled: false,
-    },
-    {
-      _id: 'kfpv4',
-      worker: 'Jagoda',
-      month: 'październik',
-      company: 'Santander',
-      createdAt: '2023.04.08',
-      client: 'Ożóg Joanna',
-      taskTitle: 'Avik Animation 4k',
-      hours: 19,
-      comment: '',
-      printWhere: '',
-      printSpec: '',
-      isSettled: false,
-    },
-  ];
+  }, [is1800, is1600, is1350, setItemsPerPage]);
 
   const totalHours = mockedTasks.reduce((acc, task) => acc + task.hours, 0);
 
@@ -315,53 +324,6 @@ function CompanyProfile() {
         console.error('Error fetching user:', error);
       });
   }, [params.id]);
-
-  // SORTING/////////////
-
-  mockedTasks.sort((a, b) => {
-    let aVal = a[sortColumn];
-    let bVal = b[sortColumn];
-
-    if (typeof aVal && typeof bVal === 'string') {
-      return sortOrder === 'asc'
-        ? aVal.localeCompare(bVal)
-        : bVal.localeCompare(aVal);
-    }
-    if (typeof aVal && typeof bVal === 'number') {
-      return sortOrder === 'asc' ? bVal - aVal : aVal - bVal;
-    }
-
-    if (sortColumn === 'createdAt') {
-      aVal = new Date(aVal);
-      bVal = new Date(bVal);
-    }
-
-    return sortOrder === 'asc' ? aVal - bVal : bVal - aVal;
-  });
-
-  const handleSortChange = (column) => {
-    if (sortColumn === column) {
-      setSortOrder((prevOrder) => (prevOrder === 'asc' ? 'desc' : 'asc'));
-    } else {
-      setSortColumn(column);
-      setSortOrder('asc');
-    }
-  };
-
-  // PAGINATION////////////////
-  const totalItems = mockedTasks.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentTasks = mockedTasks.slice(indexOfFirstItem, indexOfLastItem);
-
-  const handleNextPage = () => {
-    setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev));
-  };
-
-  const handlePreviousPage = () => {
-    setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev));
-  };
 
   return (
     <>

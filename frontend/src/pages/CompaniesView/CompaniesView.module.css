@@ -11,6 +11,33 @@
 }
 
 .usersImgContainer {
+  width: 20%;
   display: flex;
   gap: 5px;
+}
+
+.tileElement {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.tileElement:first-child {
+  width: 8%;
+}
+
+.tileElement:nth-child(2) {
+  width: 8%;
+}
+
+.tileElement:nth-child(3) {
+  width: 20%;
+}
+
+.tileElement:nth-child(4) {
+  width: 25%;
+}
+
+.tileElement:nth-child(5) {
+  width: 3%;
 }
