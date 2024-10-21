@@ -17,6 +17,8 @@ import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplat
 function CompanyProfile() {
   const [company, setCompany] = useState<CompaniesType[]>([]);
   const [selectedMonth, setSelectedMonth] = useState<string>('');
+  const [sortColumn, setSortColumn] = useState('comment');
+  const [sortOrder, setSortOrder] = useState('asc');
   const { showModal, exitAnim, openModal, closeModal } = useModal();
   const params = useParams();
 
@@ -26,7 +28,7 @@ function CompanyProfile() {
       worker: 'Bartek',
       month: 'marzec',
       company: 'Aksil',
-      createdAt: '03.03.2024',
+      createdAt: '2024.03.03',
       client: 'Stachowiczk Joanna',
       taskTitle: 'AKSIL_KATALOG_PRODUKTOW 2024',
       hours: 19,
@@ -40,7 +42,7 @@ function CompanyProfile() {
       worker: 'Edyta',
       month: 'wrzesień',
       company: 'Santander',
-      createdAt: '05.01.2024',
+      createdAt: '2024.05.01',
       client: 'Badowska Alicja',
       taskTitle: 'Baner industry 1070x2125',
       hours: 12,
@@ -54,7 +56,7 @@ function CompanyProfile() {
       worker: 'Edyta',
       month: 'kwiecień',
       company: 'Santander',
-      createdAt: '04.08.2024',
+      createdAt: '2024.04.08',
       client: 'Ożóg Joanna',
       taskTitle: 'Avik Animation 4k',
       hours: 39,
@@ -68,7 +70,7 @@ function CompanyProfile() {
       worker: 'Weronika',
       month: 'kwiecień',
       company: 'Santander',
-      createdAt: '07.10.2024',
+      createdAt: '2024.07.10',
       client: 'Ożóg Joanna',
       taskTitle: 'test data',
       hours: 15,
@@ -82,7 +84,7 @@ function CompanyProfile() {
       worker: 'Jagoda',
       month: 'październik',
       company: 'Santander',
-      createdAt: '04.08.2024',
+      createdAt: '2024.04.08',
       client: 'Ożóg Joanna',
       taskTitle: 'Avik Animation 4k',
       hours: 19,
@@ -96,10 +98,10 @@ function CompanyProfile() {
       worker: 'Edyta',
       month: 'wrzesień',
       company: 'Santander',
-      createdAt: '05.01.2024',
+      createdAt: '2024.05.01',
       client: 'Badowska Alicja',
       taskTitle: 'Baner industry 1070x2125',
-      hours: 12,
+      hours: 52,
       comment: 'Zaliczka 12',
       printWhere: '',
       printSpec: '',
@@ -110,7 +112,7 @@ function CompanyProfile() {
       worker: 'Edyta',
       month: 'kwiecień',
       company: 'Santander',
-      createdAt: '04.08.2024',
+      createdAt: '2024.03.08',
       client: 'Ożóg Joanna',
       taskTitle: 'Avik Animation 4k',
       hours: 39,
@@ -124,7 +126,7 @@ function CompanyProfile() {
       worker: 'Weronika',
       month: 'kwiecień',
       company: 'Santander',
-      createdAt: '07.10.2024',
+      createdAt: '2024.09.10',
       client: 'Ożóg Joanna',
       taskTitle: 'test data',
       hours: 15,
@@ -138,7 +140,7 @@ function CompanyProfile() {
       worker: 'Jagoda',
       month: 'październik',
       company: 'Santander',
-      createdAt: '04.08.2024',
+      createdAt: '2024.05.08',
       client: 'Ożóg Joanna',
       taskTitle: 'Avik Animation 4k',
       hours: 19,
@@ -152,7 +154,7 @@ function CompanyProfile() {
       worker: 'Edyta',
       month: 'wrzesień',
       company: 'Santander',
-      createdAt: '05.01.2024',
+      createdAt: '2023.02.01',
       client: 'Badowska Alicja',
       taskTitle: 'Baner industry 1070x2125',
       hours: 12,
@@ -166,7 +168,7 @@ function CompanyProfile() {
       worker: 'Edyta',
       month: 'kwiecień',
       company: 'Santander',
-      createdAt: '04.08.2024',
+      createdAt: '2024.04.08',
       client: 'Ożóg Joanna',
       taskTitle: 'Avik Animation 4k',
       hours: 39,
@@ -180,7 +182,7 @@ function CompanyProfile() {
       worker: 'Weronika',
       month: 'kwiecień',
       company: 'Santander',
-      createdAt: '07.10.2024',
+      createdAt: '2024.01.20',
       client: 'Ożóg Joanna',
       taskTitle: 'test data',
       hours: 15,
@@ -194,7 +196,7 @@ function CompanyProfile() {
       worker: 'Jagoda',
       month: 'październik',
       company: 'Santander',
-      createdAt: '04.08.2024',
+      createdAt: '2023.04.08',
       client: 'Ożóg Joanna',
       taskTitle: 'Avik Animation 4k',
       hours: 19,
@@ -249,6 +251,36 @@ function CompanyProfile() {
         console.error('Error fetching user:', error);
       });
   }, [params.id]);
+
+  const sortedTasks = mockedTasks.sort((a, b) => {
+    let aVal = a[sortColumn];
+    let bVal = b[sortColumn];
+
+    if (typeof aVal && typeof bVal === 'string') {
+      return sortOrder === 'asc'
+        ? aVal.localeCompare(bVal)
+        : bVal.localeCompare(aVal);
+    }
+    if (typeof aVal && typeof bVal === 'number') {
+      return sortOrder === 'asc' ? aVal - bVal : bVal - aVal;
+    }
+
+    if (sortColumn === 'createdAt') {
+      aVal = new Date(aVal);
+      bVal = new Date(bVal);
+    }
+
+    return sortOrder === 'asc' ? aVal - bVal : bVal - aVal;
+  });
+
+  const handleSortChange = (column) => {
+    if (sortColumn === column) {
+      setSortOrder((prevOrder) => (prevOrder === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortColumn(column);
+      setSortOrder('asc');
+    }
+  };
 
   return (
     <>
@@ -323,7 +355,7 @@ function CompanyProfile() {
         <div className={styles.leftSide}>
           <BackButton path="firmy" />
           {company.length > 0 && (
-            <button type="button" className={styles.editCompanyWrapper}>
+            <div className={styles.editCompanyWrapper}>
               <button
                 type="button"
                 className={styles.editCompanyButton}
@@ -334,7 +366,7 @@ function CompanyProfile() {
                 <h2>{company[0].name}</h2>
               </button>
               <Icon icon="lucide:edit" width="24" height="24" color="#f68c1e" />
-            </button>
+            </div>
           )}
           <select
             id="month-select"
@@ -350,10 +382,11 @@ function CompanyProfile() {
           </select>
         </div>
         <div className={styles.center}>
-          <label htmlFor="task-search">Szukaj</label>
+          {/* <label htmlFor="task-search">Szukaj</label> */}
           <input
             className={styles.navInput}
             type="text"
+            placeholder="Szukaj"
             name="task-search"
             id="task-search"
           />
@@ -377,38 +410,127 @@ function CompanyProfile() {
               <div className={styles.reckoningTaskListElementTile}>
                 <p>ID</p>
               </div>
-              <div className={styles.reckoningTaskListElementTile}>
+              <div
+                className={styles.reckoningTaskListElementTile}
+                role="button"
+                tabIndex={0}
+                onClick={() => handleSortChange('worker')}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    handleSortChange('worker');
+                  }
+                }}
+              >
                 <p>Pracownik</p>
               </div>
-              <div className={styles.reckoningTaskListElementTile}>
+              <div
+                className={styles.reckoningTaskListElementTile}
+                role="button"
+                tabIndex={0}
+                onClick={() => handleSortChange('month')}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    handleSortChange('month');
+                  }
+                }}
+              >
                 <p>Miesiąc</p>
               </div>
-
-              <div className={styles.reckoningTaskListElementTile}>
+              <div
+                className={styles.reckoningTaskListElementTile}
+                role="button"
+                tabIndex={0}
+                onClick={() => handleSortChange('createdAt')}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    handleSortChange('createdAt');
+                  }
+                }}
+              >
                 <p>Utworzono</p>
               </div>
-              <div className={styles.reckoningTaskListElementTile}>
+              <div
+                className={styles.reckoningTaskListElementTile}
+                role="button"
+                tabIndex={0}
+                onClick={() => handleSortChange('client')}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    handleSortChange('client');
+                  }
+                }}
+              >
                 <p>Klient</p>
               </div>
-              <div className={styles.reckoningTaskListElementTile}>
+              <div
+                className={styles.reckoningTaskListElementTile}
+                role="button"
+                tabIndex={0}
+                onClick={() => handleSortChange('taskTitle')}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    handleSortChange('taskTitle');
+                  }
+                }}
+              >
                 <p>Tytuł</p>
               </div>
-              <div className={styles.reckoningTaskListElementTile}>
+              <div
+                className={styles.reckoningTaskListElementTile}
+                role="button"
+                tabIndex={0}
+                onClick={() => handleSortChange('hours')}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    handleSortChange('hours');
+                  }
+                }}
+              >
                 <p>Sum</p>
               </div>
-              <div className={styles.reckoningTaskListElementTile}>
+              <div
+                className={styles.reckoningTaskListElementTile}
+                role="button"
+                tabIndex={0}
+                onClick={() => handleSortChange('comment')}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    handleSortChange('comment');
+                  }
+                }}
+              >
                 <p>Komentarz</p>
               </div>
-              <div className={styles.reckoningTaskListElementTile}>
+              <div
+                className={styles.reckoningTaskListElementTile}
+                role="button"
+                tabIndex={0}
+                onClick={() => handleSortChange('printSpec')}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    handleSortChange('printSpec');
+                  }
+                }}
+              >
                 <p>DRUK(spec)</p>
               </div>
-              <div className={styles.reckoningTaskListElementTile}>
+              <div
+                className={styles.reckoningTaskListElementTile}
+                role="button"
+                tabIndex={0}
+                onClick={() => handleSortChange('printWhere')}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    handleSortChange('printWhere');
+                  }
+                }}
+              >
                 <p>DRUK(gdzie)</p>
               </div>
             </div>
           </div>
           <>
-            {mockedTasks.map((task) => {
+            {sortedTasks.map((task) => {
               return (
                 <div key={task._id} className={styles.reckoningTaskListElement}>
                   <div className={styles.reckoningTaskListElementTile}>

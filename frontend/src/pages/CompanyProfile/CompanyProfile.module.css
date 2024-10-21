@@ -90,7 +90,8 @@
   width: 60%;
   border-radius: 30px;
   border: 1px solid var(--color-navButton);
-  margin-right: 20px;
+  padding: 0 10px;
+  margin-left: 10%;
 }
 
 .summPar {
@@ -131,7 +132,7 @@
   transition: all 0.3s ease;
 }
 
-.reckoningTaskListElement:not(:first-child) {
+.reckoningTaskListElement {
   cursor: pointer;
 }
 
@@ -152,6 +153,7 @@
 .taskID,
 .taskWorker,
 .taskMonth {
+  background-color: transparent;
   width: 10%;
   height: 40px;
   text-align: center;
