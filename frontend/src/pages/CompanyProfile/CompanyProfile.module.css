@@ -132,7 +132,7 @@
   transition: all 0.3s ease;
 }
 
-.reckoningTaskListElement {
+.reckoningTaskListElement:not(:first-child) {
   cursor: pointer;
 }
 
@@ -152,7 +152,8 @@
 .reckoningTaskListElementTile,
 .taskID,
 .taskWorker,
-.taskMonth {
+.taskMonth,
+.companyInfoBarTile {
   background-color: transparent;
   width: 10%;
   height: 40px;
@@ -161,6 +162,15 @@
   text-overflow: ellipsis;
   overflow: hidden;
   border: 1px solid var(--color-shadow);
+}
+
+.companyInfoBarTile {
+  transition: all 0.3s ease;
+}
+
+.companyInfoBarTile:hover:not(:first-child) {
+  cursor: pointer;
+  color: var(--color-orange);
 }
 
 .reckoningTaskListElementTile:nth-child(1) {
@@ -193,6 +203,36 @@
 }
 .reckoningTaskListElementTile:nth-child(9) {
   width: 15%;
+}
+
+.paginationControls {
+  display: flex;
+  font-weight: bold;
+  position: absolute;
+  bottom: 5px;
+}
+
+.paginationButton {
+  background-color: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 5px;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.prevPaginationButton:hover {
+  transform: translateX(-5px);
+}
+
+.nextPaginationButton {
+  transform: rotate(180deg);
+}
+
+.nextPaginationButton:hover {
+  transform: rotate(180deg) translateX(-5px);
 }
 
 @media (max-width: 1700px) {

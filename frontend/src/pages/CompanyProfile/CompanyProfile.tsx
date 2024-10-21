@@ -13,14 +13,36 @@ import BackButton from '../../components/Atoms/BackButton/BackButton';
 import CTA from '../../components/CTA/CTA';
 import useModal from '../../hooks/useModal';
 import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplate';
+import useWindowSize from '../../hooks/useWindowSize';
 
 function CompanyProfile() {
   const [company, setCompany] = useState<CompaniesType[]>([]);
   const [selectedMonth, setSelectedMonth] = useState<string>('');
-  const [sortColumn, setSortColumn] = useState('comment');
+  const [sortColumn, setSortColumn] = useState('');
   const [sortOrder, setSortOrder] = useState('asc');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(14);
   const { showModal, exitAnim, openModal, closeModal } = useModal();
   const params = useParams();
+
+  const is1800 = useWindowSize('1800');
+  const is1600 = useWindowSize('1600');
+  const is1350 = useWindowSize('1350');
+
+  useEffect(() => {
+    if (is1350) {
+      setItemsPerPage(8);
+    }
+    if (is1600 && !is1350) {
+      setItemsPerPage(10);
+    }
+    if (is1800 && !is1600) {
+      setItemsPerPage(12);
+    }
+    if (!is1800 && !is1600) {
+      setItemsPerPage(14);
+    }
+  }, [is1800, is1600, is1350]);
 
   const mockedTasks = [
     {
@@ -205,6 +227,48 @@ function CompanyProfile() {
       printSpec: '',
       isSettled: false,
     },
+    {
+      _id: 'knpx4',
+      worker: 'Jagoda',
+      month: 'październik',
+      company: 'Santander',
+      createdAt: '2023.04.08',
+      client: 'Ożóg Joanna',
+      taskTitle: 'Avik Animation 4k',
+      hours: 19,
+      comment: '',
+      printWhere: '',
+      printSpec: '',
+      isSettled: false,
+    },
+    {
+      _id: 'kfp34',
+      worker: 'Jagoda',
+      month: 'październik',
+      company: 'Santander',
+      createdAt: '2023.04.08',
+      client: 'Ożóg Joanna',
+      taskTitle: 'Avik Animation 4k',
+      hours: 19,
+      comment: '',
+      printWhere: '',
+      printSpec: '',
+      isSettled: false,
+    },
+    {
+      _id: 'kfpv4',
+      worker: 'Jagoda',
+      month: 'październik',
+      company: 'Santander',
+      createdAt: '2023.04.08',
+      client: 'Ożóg Joanna',
+      taskTitle: 'Avik Animation 4k',
+      hours: 19,
+      comment: '',
+      printWhere: '',
+      printSpec: '',
+      isSettled: false,
+    },
   ];
 
   const totalHours = mockedTasks.reduce((acc, task) => acc + task.hours, 0);
@@ -252,7 +316,9 @@ function CompanyProfile() {
       });
   }, [params.id]);
 
-  const sortedTasks = mockedTasks.sort((a, b) => {
+  // SORTING/////////////
+
+  mockedTasks.sort((a, b) => {
     let aVal = a[sortColumn];
     let bVal = b[sortColumn];
 
@@ -262,7 +328,7 @@ function CompanyProfile() {
         : bVal.localeCompare(aVal);
     }
     if (typeof aVal && typeof bVal === 'number') {
-      return sortOrder === 'asc' ? aVal - bVal : bVal - aVal;
+      return sortOrder === 'asc' ? bVal - aVal : aVal - bVal;
     }
 
     if (sortColumn === 'createdAt') {
@@ -280,6 +346,21 @@ function CompanyProfile() {
       setSortColumn(column);
       setSortOrder('asc');
     }
+  };
+
+  // PAGINATION////////////////
+  const totalItems = mockedTasks.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentTasks = mockedTasks.slice(indexOfFirstItem, indexOfLastItem);
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev));
+  };
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev));
   };
 
   return (
@@ -407,11 +488,13 @@ function CompanyProfile() {
         <ListContainer>
           <div className={styles.companyInfoBar}>
             <div className={styles.reckoningTaskListElement}>
-              <div className={styles.reckoningTaskListElementTile}>
+              <div
+                className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
+              >
                 <p>ID</p>
               </div>
               <div
-                className={styles.reckoningTaskListElementTile}
+                className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
                 role="button"
                 tabIndex={0}
                 onClick={() => handleSortChange('worker')}
@@ -421,10 +504,13 @@ function CompanyProfile() {
                   }
                 }}
               >
-                <p>Pracownik</p>
+                <p>
+                  Pracownik{' '}
+                  {sortColumn === 'worker' && (sortOrder === 'asc' ? '↑' : '↓')}
+                </p>
               </div>
               <div
-                className={styles.reckoningTaskListElementTile}
+                className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
                 role="button"
                 tabIndex={0}
                 onClick={() => handleSortChange('month')}
@@ -434,10 +520,13 @@ function CompanyProfile() {
                   }
                 }}
               >
-                <p>Miesiąc</p>
+                <p>
+                  Miesiąc{' '}
+                  {sortColumn === 'month' && (sortOrder === 'asc' ? '↑' : '↓')}
+                </p>
               </div>
               <div
-                className={styles.reckoningTaskListElementTile}
+                className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
                 role="button"
                 tabIndex={0}
                 onClick={() => handleSortChange('createdAt')}
@@ -447,10 +536,14 @@ function CompanyProfile() {
                   }
                 }}
               >
-                <p>Utworzono</p>
+                <p>
+                  Utworzono{' '}
+                  {sortColumn === 'createdAt' &&
+                    (sortOrder === 'asc' ? '↑' : '↓')}
+                </p>
               </div>
               <div
-                className={styles.reckoningTaskListElementTile}
+                className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
                 role="button"
                 tabIndex={0}
                 onClick={() => handleSortChange('client')}
@@ -460,10 +553,13 @@ function CompanyProfile() {
                   }
                 }}
               >
-                <p>Klient</p>
+                <p>
+                  Klient{' '}
+                  {sortColumn === 'client' && (sortOrder === 'asc' ? '↑' : '↓')}
+                </p>
               </div>
               <div
-                className={styles.reckoningTaskListElementTile}
+                className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
                 role="button"
                 tabIndex={0}
                 onClick={() => handleSortChange('taskTitle')}
@@ -473,10 +569,14 @@ function CompanyProfile() {
                   }
                 }}
               >
-                <p>Tytuł</p>
+                <p>
+                  Tytuł{' '}
+                  {sortColumn === 'taskTitle' &&
+                    (sortOrder === 'asc' ? '↑' : '↓')}
+                </p>
               </div>
               <div
-                className={styles.reckoningTaskListElementTile}
+                className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
                 role="button"
                 tabIndex={0}
                 onClick={() => handleSortChange('hours')}
@@ -486,10 +586,13 @@ function CompanyProfile() {
                   }
                 }}
               >
-                <p>Sum</p>
+                <p>
+                  Sum{' '}
+                  {sortColumn === 'hours' && (sortOrder === 'asc' ? '↑' : '↓')}
+                </p>
               </div>
               <div
-                className={styles.reckoningTaskListElementTile}
+                className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
                 role="button"
                 tabIndex={0}
                 onClick={() => handleSortChange('comment')}
@@ -499,10 +602,14 @@ function CompanyProfile() {
                   }
                 }}
               >
-                <p>Komentarz</p>
+                <p>
+                  Komentarz{' '}
+                  {sortColumn === 'comment' &&
+                    (sortOrder === 'asc' ? '↑' : '↓')}
+                </p>
               </div>
               <div
-                className={styles.reckoningTaskListElementTile}
+                className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
                 role="button"
                 tabIndex={0}
                 onClick={() => handleSortChange('printSpec')}
@@ -512,10 +619,14 @@ function CompanyProfile() {
                   }
                 }}
               >
-                <p>DRUK(spec)</p>
+                <p>
+                  DRUK(spec){' '}
+                  {sortColumn === 'printSpec' &&
+                    (sortOrder === 'asc' ? '↑' : '↓')}
+                </p>
               </div>
               <div
-                className={styles.reckoningTaskListElementTile}
+                className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
                 role="button"
                 tabIndex={0}
                 onClick={() => handleSortChange('printWhere')}
@@ -525,12 +636,16 @@ function CompanyProfile() {
                   }
                 }}
               >
-                <p>DRUK(gdzie)</p>
+                <p>
+                  DRUK(gdzie){' '}
+                  {sortColumn === 'printWhere' &&
+                    (sortOrder === 'asc' ? '↑' : '↓')}
+                </p>
               </div>
             </div>
           </div>
           <>
-            {sortedTasks.map((task) => {
+            {currentTasks.map((task) => {
               return (
                 <div key={task._id} className={styles.reckoningTaskListElement}>
                   <div className={styles.reckoningTaskListElementTile}>
@@ -567,6 +682,37 @@ function CompanyProfile() {
               );
             })}
           </>
+          <div className={styles.paginationControls}>
+            <button
+              onClick={handlePreviousPage}
+              type="button"
+              disabled={currentPage === 1}
+              className={`${styles.paginationButton} ${styles.prevPaginationButton}`}
+            >
+              <Icon
+                icon="ion:arrow-back-outline"
+                color="#f68c1e"
+                width="25"
+                height="25"
+              />
+            </button>
+            <span className={styles.paginationInfo}>
+              {currentPage} z {totalPages}
+            </span>
+            <button
+              onClick={handleNextPage}
+              type="button"
+              disabled={currentPage === totalPages}
+              className={`${styles.paginationButton} ${styles.nextPaginationButton}`}
+            >
+              <Icon
+                icon="ion:arrow-back-outline"
+                color="#f68c1e"
+                width="25"
+                height="25"
+              />
+            </button>
+          </div>
         </ListContainer>
       </ViewContainer>
     </>
