@@ -1,4 +1,15 @@
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.7;
+  }
+}
+
 .userWrapper {
+  position: relative;
+
   display: flex;
   align-items: center;
   gap: 10px;
@@ -8,12 +19,33 @@
   max-width: 30px;
   max-height: 30px;
   border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.userImg:hover {
+  transform: scale(1.1);
 }
 
 .usersImgContainer {
   width: 20%;
   display: flex;
   gap: 5px;
+}
+
+.graphicName {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  top: 35px;
+  left: 10px;
+  background-color: var(--color-black);
+  opacity: 0;
+  border-radius: 5px;
+  height: 30px;
+  padding: 0px 20px;
+  color: var(--color-lighter);
+  font-size: 13px;
+  animation: appear 0.3s ease forwards;
 }
 
 .tileElement {
@@ -23,9 +55,35 @@
 }
 
 .tileElement:first-child {
-  width: 8%;
+  font-weight: 600;
 }
 
+.tileElementInfoBar,
+.usersImgContainer {
+  font-weight: 600;
+}
+
+.tileElementInfoBar:first-child {
+  width: 7%;
+}
+
+.tileElementInfoBar:nth-child(2) {
+  width: 13%;
+}
+
+.tileElementInfoBar:nth-child(3) {
+  width: 20%;
+}
+
+.tileElementInfoBar:nth-child(4) {
+  width: 15%;
+}
+
+.tileElementInfoBar:nth-child(5) {
+  width: 11%;
+}
+
+.tileElement:first-child,
 .tileElement:nth-child(2) {
   width: 8%;
 }
@@ -39,5 +97,5 @@
 }
 
 .tileElement:nth-child(5) {
-  width: 3%;
+  width: 10%;
 }

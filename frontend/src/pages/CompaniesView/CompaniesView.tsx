@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import styles from './CompaniesView.module.css';
 import ViewContainer from '../../components/Atoms/ViewContainer/ViewContainer';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
@@ -15,6 +16,9 @@ import InfoBar from '../../components/Organisms/InfoBar/InfoBar';
 function CompaniesView() {
   const [companies, setCompanies] = useState<CompaniesType[] | undefined>([]);
   const [users, setUsers] = useState([]);
+  const [isLabel, setIsLabel] = useState(false);
+  const [userLabel, setUserLabel] = useState('');
+  const [companyUserLabel, setCompanyUserLabel] = useState('');
 
   useEffect(() => {
     getAllCompanies().then((allCompanies) => {
@@ -42,23 +46,23 @@ function CompaniesView() {
       <ViewContainer>
         <ListContainer>
           <InfoBar>
-            <div className={styles.tileElement}>
+            <div className={styles.tileElementInfoBar}>
               <p>Firma</p>
             </div>
-            <div className={styles.tileElement}>
+            <div className={styles.tileElementInfoBar}>
               <p>Numer</p>
             </div>
-            <div className={styles.tileElement}>
+            <div className={styles.tileElementInfoBar}>
               <p>Email</p>
             </div>
-            <div className={styles.tileElement}>
+            <div className={styles.tileElementInfoBar}>
               <p>Strona</p>
             </div>
-            <div className={styles.tileElement}>
-              <p>Aktywne zlecenia</p>
+            <div className={styles.tileElementInfoBar}>
+              <p>Zlecenia</p>
             </div>
             <div className={styles.usersImgContainer}>
-              <p>Przypisani graficy</p>
+              <p>Graficy</p>
             </div>
           </InfoBar>
           {companies && companies.length > 0 ? (
@@ -85,16 +89,36 @@ function CompaniesView() {
                       {users.flatMap((user) => {
                         return company.teamMembers.map((companyUser) => {
                           return user._id === companyUser.workerID ? (
-                            <div
+                            <Link
                               className={styles.userWrapper}
                               key={companyUser.workerID}
+                              to={`/użytkownicy/${user._id}`}
                             >
                               <img
                                 className={styles.userImg}
                                 src={user.img}
                                 alt="user"
+                                onMouseEnter={() => {
+                                  setTimeout(() => {
+                                    setIsLabel(true);
+                                  }, 100);
+                                  setUserLabel(user.name);
+                                  setCompanyUserLabel(company.name);
+                                }}
+                                onMouseLeave={() => {
+                                  setIsLabel(false);
+                                  setUserLabel('');
+                                  setCompanyUserLabel('');
+                                }}
                               />
-                            </div>
+                              {isLabel &&
+                              companyUserLabel === company.name &&
+                              userLabel === user.name ? (
+                                <div className={styles.graphicName}>
+                                  <p>{user.name}</p>
+                                </div>
+                              ) : null}
+                            </Link>
                           ) : null;
                         });
                       })}
