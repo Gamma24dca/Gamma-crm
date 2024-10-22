@@ -12,6 +12,9 @@ import { getAllUsers } from '../../services/users-service';
 import TileWrapper from '../../components/Atoms/TileWrapper/TileWrapper';
 import SkeletonUsersLoading from '../../components/Organisms/SkeletonUsersLoading/SkeletonUsersLoading';
 import InfoBar from '../../components/Organisms/InfoBar/InfoBar';
+import CTA from '../../components/Atoms/CTA/CTA';
+import ControlBarTitle from '../../components/Atoms/ControlBar/Title/ControlBarTitle';
+import SearchInput from '../../components/Atoms/ControlBar/SearchInput/SearchInput';
 
 function CompaniesView() {
   const [companies, setCompanies] = useState<CompaniesType[] | undefined>([]);
@@ -32,14 +35,18 @@ function CompaniesView() {
   return (
     <>
       <ControlBar>
-        <h3>Firmy</h3>
-        <div>
-          <button type="button" onClick={() => {}}>
+        <ControlBarTitle>Zlecenia</ControlBarTitle>
+        <SearchInput />
+        <div className={styles.buttonsWrapper}>
+          <CTA
+            onClick={() => {
+              // openModal();
+              // clearValues();
+            }}
+          >
             Dodaj Firme
-          </button>
-          <button type="button" onClick={() => {}}>
-            Filtry
-          </button>
+          </CTA>
+          <CTA onClick={() => {}}>Filtry</CTA>
         </div>
       </ControlBar>
 

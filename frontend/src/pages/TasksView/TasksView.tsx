@@ -13,7 +13,9 @@ import AddTaskModalContent from '../../components/Organisms/AddTaskModalContent/
 import ListContainer from '../../components/Atoms/ListContainer/ListContainer';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
 import useAuth from '../../hooks/useAuth';
-import CTA from '../../components/CTA/CTA';
+import CTA from '../../components/Atoms/CTA/CTA';
+import ControlBarTitle from '../../components/Atoms/ControlBar/Title/ControlBarTitle';
+import SearchInput from '../../components/Atoms/ControlBar/SearchInput/SearchInput';
 
 function TasksView() {
   const { showModal, exitAnim, openModal, closeModal } = useModal();
@@ -97,12 +99,12 @@ function TasksView() {
         />
       </ModalTemplate>
       <ControlBar>
-        <h3 className={styles.controlBarTitle}>Zlecenia</h3>
+        <ControlBarTitle>Zlecenia</ControlBarTitle>
         <select name="widok" id="widok" className={styles.selectInput}>
           <option value="Lista">Lista</option>
           <option value="Kanban">Kanban</option>
         </select>
-        <input className={styles.navInput} />
+        <SearchInput />
         <div className={styles.buttonsWrapper}>
           <CTA
             onClick={() => {

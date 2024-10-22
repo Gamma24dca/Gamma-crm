@@ -10,7 +10,7 @@ import {
 } from '../../services/companies-service';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
 import BackButton from '../../components/Atoms/BackButton/BackButton';
-import CTA from '../../components/CTA/CTA';
+import CTA from '../../components/Atoms/CTA/CTA';
 import useModal from '../../hooks/useModal';
 import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplate';
 import useWindowSize from '../../hooks/useWindowSize';
