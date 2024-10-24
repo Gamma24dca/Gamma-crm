@@ -45,6 +45,7 @@ CompanyRouter.post(
         mail: req.body.mail,
         website: req.body.website,
         activeTasks: req.body.activeTasks,
+        teamMembers: req.body.teamMembers,
       });
       res.status(StatusCodes.ACCEPTED).json(newCompany);
     } catch (error) {

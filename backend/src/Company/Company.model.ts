@@ -25,7 +25,6 @@ export const CompanyModel = mongoose.model(
     ],
     activeTasks: {
       type: Number,
-      required: true,
     },
   }),
 );

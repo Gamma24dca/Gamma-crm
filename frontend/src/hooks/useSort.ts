@@ -40,9 +40,7 @@ const useSort = (data) => {
   return {
     sortedData,
     sortColumn,
-    setSortColumn,
     sortOrder,
-    setSortOrder,
     handleSortChange,
   };
 };

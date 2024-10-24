@@ -1,3 +1,17 @@
+@keyframes loading {
+  0% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.4;
+  }
+}
+
 .firstRow,
 .secondRow {
   display: flex;
@@ -233,6 +247,15 @@
 
 .nextPaginationButton:hover {
   transform: rotate(180deg) translateX(-5px);
+}
+
+.companyNameLoader {
+  width: 80px;
+  height: 30px;
+  background-color: var(--color-bg);
+  border-radius: 10px;
+  margin: 0 30px;
+  animation: loading 1s linear infinite;
 }
 
 @media (max-width: 1700px) {

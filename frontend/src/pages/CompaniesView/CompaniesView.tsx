@@ -45,7 +45,7 @@ function CompaniesView() {
         <p>modal</p>
       </ModalTemplate>
       <ControlBar>
-        <ControlBarTitle>Zlecenia</ControlBarTitle>
+        <ControlBarTitle>Firmy</ControlBarTitle>
         <SearchInput />
         <div className={styles.buttonsWrapper}>
           <CTA

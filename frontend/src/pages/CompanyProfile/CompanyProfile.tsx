@@ -398,7 +398,7 @@ function CompanyProfile() {
       <ControlBar>
         <div className={styles.leftSide}>
           <BackButton path="firmy" />
-          {company.length > 0 && (
+          {company.length > 0 ? (
             <div className={styles.editCompanyWrapper}>
               <button
                 type="button"
@@ -411,6 +411,8 @@ function CompanyProfile() {
               </button>
               <Icon icon="lucide:edit" width="24" height="24" color="#f68c1e" />
             </div>
+          ) : (
+            <div className={styles.companyNameLoader} />
           )}
           <select
             id="month-select"
