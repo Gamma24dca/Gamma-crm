@@ -15,6 +15,8 @@ import InfoBar from '../../components/Organisms/InfoBar/InfoBar';
 import CTA from '../../components/Atoms/CTA/CTA';
 import ControlBarTitle from '../../components/Atoms/ControlBar/Title/ControlBarTitle';
 import SearchInput from '../../components/Atoms/ControlBar/SearchInput/SearchInput';
+import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplate';
+import useModal from '../../hooks/useModal';
 
 function CompaniesView() {
   const [companies, setCompanies] = useState<CompaniesType[] | undefined>([]);
@@ -22,6 +24,7 @@ function CompaniesView() {
   const [isLabel, setIsLabel] = useState(false);
   const [userLabel, setUserLabel] = useState('');
   const [companyUserLabel, setCompanyUserLabel] = useState('');
+  const { showModal, exitAnim, openModal, closeModal } = useModal();
 
   useEffect(() => {
     getAllCompanies().then((allCompanies) => {
@@ -34,13 +37,20 @@ function CompaniesView() {
 
   return (
     <>
+      <ModalTemplate
+        isOpen={showModal}
+        onClose={closeModal}
+        exitAnim={exitAnim}
+      >
+        <p>modal</p>
+      </ModalTemplate>
       <ControlBar>
         <ControlBarTitle>Zlecenia</ControlBarTitle>
         <SearchInput />
         <div className={styles.buttonsWrapper}>
           <CTA
             onClick={() => {
-              // openModal();
+              openModal();
               // clearValues();
             }}
           >

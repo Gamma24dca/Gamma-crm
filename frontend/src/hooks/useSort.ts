@@ -1,29 +1,32 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 const useSort = (data) => {
   const [sortColumn, setSortColumn] = useState('');
   const [sortOrder, setSortOrder] = useState('asc');
 
-  data.sort((a, b) => {
-    let aVal = a[sortColumn];
-    let bVal = b[sortColumn];
+  const sortedData = useMemo(() => {
+    if (!sortColumn) return data;
+    return [...data].sort((a, b) => {
+      let aVal = a[sortColumn];
+      let bVal = b[sortColumn];
 
-    if (typeof aVal && typeof bVal === 'string') {
-      return sortOrder === 'asc'
-        ? aVal.localeCompare(bVal)
-        : bVal.localeCompare(aVal);
-    }
-    if (typeof aVal && typeof bVal === 'number') {
-      return sortOrder === 'asc' ? bVal - aVal : aVal - bVal;
-    }
+      if (typeof aVal === 'string' && typeof bVal === 'string') {
+        return sortOrder === 'asc'
+          ? aVal.localeCompare(bVal)
+          : bVal.localeCompare(aVal);
+      }
+      if (typeof aVal === 'number' && typeof bVal === 'number') {
+        return sortOrder === 'asc' ? bVal - aVal : aVal - bVal;
+      }
 
-    if (sortColumn === 'createdAt') {
-      aVal = new Date(aVal);
-      bVal = new Date(bVal);
-    }
+      if (sortColumn === 'createdAt') {
+        aVal = new Date(aVal);
+        bVal = new Date(bVal);
+      }
 
-    return sortOrder === 'asc' ? aVal - bVal : bVal - aVal;
-  });
+      return 0;
+    });
+  }, [sortColumn, sortOrder, data]);
 
   const handleSortChange = (column) => {
     if (sortColumn === column) {
@@ -35,6 +38,7 @@ const useSort = (data) => {
   };
 
   return {
+    sortedData,
     sortColumn,
     setSortColumn,
     sortOrder,

@@ -250,6 +250,9 @@ function CompanyProfile() {
   const { showModal, exitAnim, openModal, closeModal } = useModal();
   const params = useParams();
 
+  const { sortedData, sortColumn, sortOrder, handleSortChange } =
+    useSort(mockedTasks);
+
   const {
     currentPage,
     totalPages,
@@ -257,9 +260,7 @@ function CompanyProfile() {
     currentTasks,
     handleNextPage,
     handlePreviousPage,
-  } = usePagination(mockedTasks, 14);
-
-  const { sortColumn, sortOrder, handleSortChange } = useSort(mockedTasks);
+  } = usePagination(sortedData, 14);
 
   const is1800 = useWindowSize('1800');
   const is1600 = useWindowSize('1600');
