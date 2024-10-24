@@ -17,23 +17,39 @@ import ControlBarTitle from '../../components/Atoms/ControlBar/Title/ControlBarT
 import SearchInput from '../../components/Atoms/ControlBar/SearchInput/SearchInput';
 import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplate';
 import useModal from '../../hooks/useModal';
+import useCompaniesContext from '../../hooks/Context/useCompaniesContext';
+import useUsersContext from '../../hooks/Context/useUsersContext';
 
 function CompaniesView() {
-  const [companies, setCompanies] = useState<CompaniesType[] | undefined>([]);
-  const [users, setUsers] = useState([]);
+  // const [companies, setCompanies] = useState<CompaniesType[] | undefined>([]);
+  // const [users, setUsers] = useState([]);
   const [isLabel, setIsLabel] = useState(false);
   const [userLabel, setUserLabel] = useState('');
   const [companyUserLabel, setCompanyUserLabel] = useState('');
   const { showModal, exitAnim, openModal, closeModal } = useModal();
 
+  const { companies, dispatch: companiesDispatch } = useCompaniesContext();
+  const { users, dispatch: usersDispatch } = useUsersContext();
+
   useEffect(() => {
-    getAllCompanies().then((allCompanies) => {
-      setCompanies(allCompanies);
-    });
-    getAllUsers().then((allusers) => {
-      setUsers(allusers);
-    });
-  }, []);
+    try {
+      getAllCompanies().then((allCompanies) => {
+        companiesDispatch({ type: 'SET_COMPANIES', payload: allCompanies });
+      });
+    } catch (error) {
+      throw new Error(error.message);
+    }
+
+    try {
+      if (users.length === 0) {
+        getAllUsers().then((allusers) => {
+          usersDispatch({ type: 'SET_USERS', payload: allusers });
+        });
+      }
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }, [companiesDispatch, usersDispatch, users]);
 
   return (
     <>

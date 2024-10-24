@@ -7,7 +7,7 @@ import { getAllTasks } from '../../services/tasks-service';
 import ViewContainer from '../../components/Atoms/ViewContainer/ViewContainer';
 import SkeletonUsersLoading from '../../components/Organisms/SkeletonUsersLoading/SkeletonUsersLoading';
 import TileWrapper from '../../components/Atoms/TileWrapper/TileWrapper';
-import useTasksContext from '../../hooks/useTasksContext';
+import useTasksContext from '../../hooks/Context/useTasksContext';
 import InfoBar from '../../components/Organisms/InfoBar/InfoBar';
 import AddTaskModalContent from '../../components/Organisms/AddTaskModalContent/AddTaskModalContent';
 import ListContainer from '../../components/Atoms/ListContainer/ListContainer';

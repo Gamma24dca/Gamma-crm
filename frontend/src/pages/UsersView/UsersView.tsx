@@ -15,7 +15,7 @@ import inputStyle from '../../components/Atoms/Input/Input.module.css';
 import SubmitButton from '../../components/Atoms/SubmitBtn/SubmitBtn';
 import ViewContainer from '../../components/Atoms/ViewContainer/ViewContainer';
 import TilesColumnContainer from '../../components/Atoms/ListContainer/ListContainer';
-import useUsersContext from '../../hooks/useUsersContext';
+import useUsersContext from '../../hooks/Context/useUsersContext';
 import TileWrapper from '../../components/Atoms/TileWrapper/TileWrapper';
 import InfoBar from '../../components/Organisms/InfoBar/InfoBar';
 
@@ -252,6 +252,7 @@ function UsersView() {
               <p className={styles.InfoBarElement}>Tytuł</p>
             </div>
           </InfoBar>
+          {/* @ts-ignore */}
           {users.length > 0 ? (
             users.map((userItem) => {
               return (

@@ -399,14 +399,18 @@ function CompanyProfile() {
         <div className={styles.leftSide}>
           <BackButton path="firmy" />
           {company.length > 0 ? (
-            <div className={styles.editCompanyWrapper}>
-              <button
-                type="button"
-                className={styles.editCompanyButton}
-                onClick={() => {
+            <div
+              className={styles.editCompanyWrapper}
+              role="button"
+              tabIndex={0}
+              onClick={() => openModal()}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
                   openModal();
-                }}
-              >
+                }
+              }}
+            >
+              <button type="button" className={styles.editCompanyButton}>
                 <h2>{company[0].name}</h2>
               </button>
               <Icon icon="lucide:edit" width="24" height="24" color="#f68c1e" />

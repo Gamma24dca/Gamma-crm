@@ -1,8 +1,22 @@
-import { createContext, useMemo, useReducer } from 'react';
+import { createContext, useMemo, useReducer, ReactNode } from 'react';
+import { User } from '../services/users-service';
 
-export const UsersContext = createContext([]);
+type UsersStateType = {
+  users: User[];
+};
 
-export const usersReducer = (state, action) => {
+type UsersContextType = UsersStateType & {
+  dispatch: React.Dispatch<any>;
+};
+
+export const UsersContext = createContext<UsersContextType | undefined>(
+  undefined
+);
+
+export const usersReducer = (
+  state: UsersStateType,
+  action: any
+): UsersStateType => {
   switch (action.type) {
     case 'SET_USERS':
       return {
@@ -16,9 +30,7 @@ export const usersReducer = (state, action) => {
 
     case 'DELETE_USER':
       return {
-        users: state.users.filter((w) => {
-          return w._id !== action.payload._id;
-        }),
+        users: state.users.filter((w) => w._id !== action.payload._id),
       };
 
     default:
@@ -26,7 +38,7 @@ export const usersReducer = (state, action) => {
   }
 };
 
-export function UsersContextProvider({ children }) {
+export function UsersContextProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(usersReducer, {
     users: [],
   });
