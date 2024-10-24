@@ -1,8 +1,19 @@
-import { createContext, useMemo, useReducer } from 'react';
+import { createContext, ReactNode, useMemo, useReducer } from 'react';
+import { CompaniesType } from '../services/companies-service';
 
-export const CompaniesContext = createContext([]);
+type CompaniesStateType = {
+  companies: CompaniesType[];
+};
 
-export const companiesReducer = (state, action) => {
+type CompaniesContextType = CompaniesStateType & {
+  dispatch: React.Dispatch<any>;
+};
+
+export const CompaniesContext = createContext<CompaniesContextType | undefined>(
+  undefined
+);
+
+export const companiesReducer = (state: CompaniesStateType, action: any) => {
   switch (action.type) {
     case 'SET_COMPANIES':
       return { companies: action.payload };
@@ -20,7 +31,11 @@ export const companiesReducer = (state, action) => {
   }
 };
 
-export function CompaniesContextProvider({ children }) {
+export function CompaniesContextProvider({
+  children,
+}: {
+  children: ReactNode;
+}) {
   const [state, dispatch] = useReducer(companiesReducer, {
     companies: [],
   });

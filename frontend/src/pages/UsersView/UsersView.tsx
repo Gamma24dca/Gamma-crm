@@ -252,39 +252,40 @@ function UsersView() {
               <p className={styles.InfoBarElement}>Tytuł</p>
             </div>
           </InfoBar>
-          {/* @ts-ignore */}
-          {users.length > 0 ? (
-            users.map((userItem) => {
-              return (
-                <TileWrapper
-                  key={userItem._id}
-                  linkPath={`/użytkownicy/${userItem._id}`}
-                >
-                  <div className={styles.taskAuthorCreatorWrapper}>
-                    <img
-                      src={userItem.img}
-                      alt="user"
-                      className={styles.userImg}
-                    />
-                    <p>{userItem.name}</p>
-                    <p>{userItem.lastname}</p>
-                  </div>
 
-                  <div className={styles.tileContentWrapper}>
-                    <p>{userItem.job}</p>
-                  </div>
-                  <div className={styles.tileContentWrapper}>
-                    <p>{userItem.email}</p>
-                  </div>
-                  <div className={styles.tileContentWrapper}>
-                    <p>{userItem.phone}</p>
-                  </div>
-                </TileWrapper>
-              );
-            })
-          ) : (
-            <SkeletonUsersLoading />
-          )}
+          <div className={styles.usersContainer}>
+            {users.length === 0 ? (
+              <SkeletonUsersLoading />
+            ) : (
+              users.map((user) => {
+                return (
+                  <TileWrapper
+                    key={user._id}
+                    linkPath={`/użytkownicy/${user._id}`}
+                  >
+                    <div className={styles.taskAuthorCreatorWrapper}>
+                      <img
+                        src={user.img}
+                        alt="user"
+                        className={styles.userImg}
+                      />
+                      <p>{user.name}</p>
+                      <p>{user.lastname}</p>
+                    </div>
+                    <div className={styles.tileContentWrapper}>
+                      <p>{user.job}</p>
+                    </div>
+                    <div className={styles.tileContentWrapper}>
+                      <p>{user.email}</p>
+                    </div>
+                    <div className={styles.tileContentWrapper}>
+                      <p>{user.phone}</p>
+                    </div>
+                  </TileWrapper>
+                );
+              })
+            )}
+          </div>
         </TilesColumnContainer>
       </ViewContainer>
 

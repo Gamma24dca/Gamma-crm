@@ -4,10 +4,7 @@ import styles from './CompaniesView.module.css';
 import ViewContainer from '../../components/Atoms/ViewContainer/ViewContainer';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
 import ListContainer from '../../components/Atoms/ListContainer/ListContainer';
-import {
-  CompaniesType,
-  getAllCompanies,
-} from '../../services/companies-service';
+import { getAllCompanies } from '../../services/companies-service';
 import { getAllUsers } from '../../services/users-service';
 import TileWrapper from '../../components/Atoms/TileWrapper/TileWrapper';
 import SkeletonUsersLoading from '../../components/Organisms/SkeletonUsersLoading/SkeletonUsersLoading';
