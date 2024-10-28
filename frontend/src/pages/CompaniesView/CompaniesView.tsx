@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Icon } from '@iconify/react';
 import styles from './CompaniesView.module.css';
 import ViewContainer from '../../components/Atoms/ViewContainer/ViewContainer';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
@@ -16,37 +17,80 @@ import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplat
 import useModal from '../../hooks/useModal';
 import useCompaniesContext from '../../hooks/Context/useCompaniesContext';
 import useUsersContext from '../../hooks/Context/useUsersContext';
+import Form from '../../components/Atoms/Form/Form';
+import FormControl from '../../components/Atoms/FormControl/FormControl';
+import Input from '../../components/Atoms/Input/Input';
+import inputStyle from '../../components/Atoms/Input/Input.module.css';
+// import SubmitButton from '../../components/Atoms/SubmitBtn/SubmitBtn';
 
 function CompaniesView() {
-  // const [companies, setCompanies] = useState<CompaniesType[] | undefined>([]);
-  // const [users, setUsers] = useState([]);
-  const [isLabel, setIsLabel] = useState(false);
-  const [userLabel, setUserLabel] = useState('');
-  const [companyUserLabel, setCompanyUserLabel] = useState('');
+  const [labelState, setLabelState] = useState({
+    isLabel: false,
+    userLabel: '',
+    companyUserLabel: '',
+  });
+  const [selectedMember, setSelectedMember] = useState<string>('Bartek');
+  const [teamMembers, setTeamMembers] = useState([]);
   const { showModal, exitAnim, openModal, closeModal } = useModal();
-
   const { companies, dispatch: companiesDispatch } = useCompaniesContext();
   const { users, dispatch: usersDispatch } = useUsersContext();
 
-  useEffect(() => {
-    try {
-      getAllCompanies().then((allCompanies) => {
-        companiesDispatch({ type: 'SET_COMPANIES', payload: allCompanies });
-      });
-    } catch (error) {
-      throw new Error(error.message);
-    }
+  const handleMouseEnter = (user, company) => {
+    setLabelState({
+      isLabel: true,
+      userLabel: user.name,
+      companyUserLabel: company.name,
+    });
+  };
 
-    try {
-      if (users.length === 0) {
-        getAllUsers().then((allusers) => {
-          usersDispatch({ type: 'SET_USERS', payload: allusers });
-        });
+  const handleMouseLeave = () => {
+    setLabelState({ isLabel: false, userLabel: '', companyUserLabel: '' });
+  };
+
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      try {
+        const allCompanies = await getAllCompanies();
+        companiesDispatch({ type: 'SET_COMPANIES', payload: allCompanies });
+      } catch (error) {
+        console.error('Error fetching companies:', error);
       }
-    } catch (error) {
-      throw new Error(error.message);
-    }
+    };
+
+    const fetchUsers = async () => {
+      if (users.length === 0) {
+        try {
+          const allUsers = await getAllUsers();
+          usersDispatch({ type: 'SET_USERS', payload: allUsers });
+        } catch (error) {
+          console.error('Error fetching users:', error);
+        }
+      }
+    };
+
+    fetchCompanies();
+    fetchUsers();
   }, [companiesDispatch, usersDispatch, users]);
+
+  const handleMemberChange = (e) => {
+    setSelectedMember(e.target.value);
+  };
+
+  const handleAddMember = (selectedMemberValue) => {
+    const filteredUser = users.filter(
+      (user) => user.name === selectedMemberValue
+    );
+    if (teamMembers.includes(filteredUser[0])) return;
+
+    setTeamMembers((prevState) => [...filteredUser, ...prevState]);
+  };
+
+  const handleDeleteMember = (selectedMemberValue) => {
+    const filteredArray = teamMembers.filter((member) => {
+      return member._id !== selectedMemberValue._id;
+    });
+    setTeamMembers([...filteredArray]);
+  };
 
   return (
     <>
@@ -55,7 +99,121 @@ function CompaniesView() {
         onClose={closeModal}
         exitAnim={exitAnim}
       >
-        <p>modal</p>
+        <h2>Dodaj firme</h2>
+        <Form onSubmit={() => {}} isSignInView={false}>
+          <FormControl>
+            <Input
+              id="name"
+              type="name"
+              name="name"
+              placeholder="Nazwa"
+              className={`${inputStyle.input}`}
+              onChange={() => {}}
+              onBlur={() => {}}
+              value="Nazwa"
+            />
+          </FormControl>
+          <FormControl>
+            <Input
+              id="phone"
+              type="phone"
+              name="phone"
+              placeholder="Telefon"
+              className={`${inputStyle.input}`}
+              onChange={() => {}}
+              onBlur={() => {}}
+              value="Telefon"
+            />
+          </FormControl>
+          <FormControl>
+            <Input
+              id="mail"
+              type="mail"
+              name="mail"
+              placeholder="Mail"
+              className={`${inputStyle.input}`}
+              onChange={() => {}}
+              onBlur={() => {}}
+              value="Mail"
+            />
+          </FormControl>
+          <FormControl>
+            <Input
+              id="website"
+              type="website"
+              name="website"
+              placeholder="Strona"
+              className={`${inputStyle.input}`}
+              onChange={() => {}}
+              onBlur={() => {}}
+              value="Strona"
+            />
+          </FormControl>
+
+          <div className={styles.addUserWrapper}>
+            <select
+              id="user-select"
+              value={selectedMember}
+              onChange={handleMemberChange}
+              className={styles.selectInput}
+            >
+              {users.map((user) => (
+                <option key={user._id} value={user.name}>
+                  {user.name}
+                </option>
+              ))}
+            </select>
+            <button
+              type="button"
+              className={styles.addTeamMemberButton}
+              onClick={() => handleAddMember(selectedMember)}
+            >
+              <Icon
+                icon="icons8:plus"
+                color="#f68c1e"
+                width="50"
+                height="50"
+                className={styles.addNewUserBtn}
+              />
+            </button>
+          </div>
+
+          {teamMembers.length > 0 ? (
+            <div className={styles.displayMembersWrapper}>
+              {teamMembers.map((member) => {
+                return (
+                  <div key={member._id} className={styles.memberTile}>
+                    <div
+                      className={styles.deleteMemberContainer}
+                      onClick={() => handleDeleteMember(member)}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          handleDeleteMember(member);
+                        }
+                      }}
+                    >
+                      <div className={styles.deleteMember} />
+                    </div>
+                    <img
+                      src={member.img}
+                      alt="user"
+                      className={styles.userImg}
+                    />
+                    <p>{member.name}</p>
+                  </div>
+                );
+              })}
+            </div>
+          ) : null}
+
+          {/* <SubmitButton
+            disabled={true}
+            buttonContent={'Dodaj'}
+            isSignInView={false}
+          /> */}
+        </Form>
       </ModalTemplate>
       <ControlBar>
         <ControlBarTitle>Firmy</ControlBarTitle>
@@ -129,21 +287,15 @@ function CompaniesView() {
                                 src={user.img}
                                 alt="user"
                                 onMouseEnter={() => {
-                                  setTimeout(() => {
-                                    setIsLabel(true);
-                                  }, 100);
-                                  setUserLabel(user.name);
-                                  setCompanyUserLabel(company.name);
+                                  handleMouseEnter(user, company);
                                 }}
                                 onMouseLeave={() => {
-                                  setIsLabel(false);
-                                  setUserLabel('');
-                                  setCompanyUserLabel('');
+                                  handleMouseLeave();
                                 }}
                               />
-                              {isLabel &&
-                              companyUserLabel === company.name &&
-                              userLabel === user.name ? (
+                              {labelState.isLabel &&
+                              labelState.companyUserLabel === company.name &&
+                              labelState.userLabel === user.name ? (
                                 <div className={styles.graphicName}>
                                   <p>{user.name}</p>
                                 </div>
