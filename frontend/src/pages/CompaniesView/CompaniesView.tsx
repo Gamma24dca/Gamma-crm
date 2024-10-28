@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from '@iconify/react';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import styles from './CompaniesView.module.css';
 import ViewContainer from '../../components/Atoms/ViewContainer/ViewContainer';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
 import ListContainer from '../../components/Atoms/ListContainer/ListContainer';
-import { getAllCompanies } from '../../services/companies-service';
+import { addCompany, getAllCompanies } from '../../services/companies-service';
 import { getAllUsers } from '../../services/users-service';
 import TileWrapper from '../../components/Atoms/TileWrapper/TileWrapper';
 import SkeletonUsersLoading from '../../components/Organisms/SkeletonUsersLoading/SkeletonUsersLoading';
@@ -21,7 +23,14 @@ import Form from '../../components/Atoms/Form/Form';
 import FormControl from '../../components/Atoms/FormControl/FormControl';
 import Input from '../../components/Atoms/Input/Input';
 import inputStyle from '../../components/Atoms/Input/Input.module.css';
-// import SubmitButton from '../../components/Atoms/SubmitBtn/SubmitBtn';
+import SubmitButton from '../../components/Atoms/SubmitBtn/SubmitBtn';
+
+const createCompanySchema = Yup.object({
+  name: Yup.string().required('Nazwa jest wymagana'),
+  phone: Yup.string(),
+  mail: Yup.string().email('Nieprawidłowy adres email'),
+  website: Yup.string(),
+});
 
 function CompaniesView() {
   const [labelState, setLabelState] = useState({
@@ -31,13 +40,43 @@ function CompaniesView() {
   });
   const [selectedMember, setSelectedMember] = useState<string>('Bartek');
   const [teamMembers, setTeamMembers] = useState([]);
+  const [successMessage, setSuccessMessage] = useState('');
   const { showModal, exitAnim, openModal, closeModal } = useModal();
   const { companies, dispatch: companiesDispatch } = useCompaniesContext();
   const { users, dispatch: usersDispatch } = useUsersContext();
 
-  // const memberIDs = teamMembers.map((member) => {
-  //   return { workerID: member._id };
-  // });
+  const formik = useFormik({
+    initialValues: {
+      name: '',
+      phone: '',
+      mail: '',
+      website: '',
+    },
+    validationSchema: createCompanySchema,
+    onSubmit: async (values) => {
+      try {
+        const { name, phone, mail, website } = values;
+
+        const memberIDs = teamMembers.map((member) => {
+          return { workerID: member._id };
+        });
+
+        await addCompany({
+          name,
+          phone,
+          mail,
+          website,
+          teamMembers: memberIDs,
+        });
+
+        formik.resetForm(); // Reset form fields
+        setSuccessMessage('Firma dodana pomyślnie!');
+        setTeamMembers([]);
+      } catch {
+        formik.setStatus('error');
+      }
+    },
+  });
 
   useEffect(() => {
     const fetchCompanies = async () => {
@@ -96,63 +135,72 @@ function CompaniesView() {
     setTeamMembers([...filteredArray]);
   };
 
+  const clearValues = () => {
+    setSuccessMessage('');
+    setTeamMembers([]);
+  };
+
+  const formInputs = [
+    {
+      id: 'name',
+      type: 'text',
+      placeholder: 'Nazwa',
+      value: formik.values.name,
+    },
+    {
+      id: 'phone',
+      type: 'text',
+      placeholder: 'Telefon',
+      value: formik.values.phone,
+    },
+    {
+      id: 'mail',
+      type: 'email',
+      placeholder: 'Mail',
+      value: formik.values.mail,
+    },
+    {
+      id: 'website',
+      type: 'url',
+      placeholder: 'Strona',
+      value: formik.values.website,
+    },
+  ];
+
   return (
     <>
       <ModalTemplate
         isOpen={showModal}
-        onClose={closeModal}
+        onClose={() => {
+          closeModal();
+          clearValues();
+        }}
         exitAnim={exitAnim}
       >
         <h2>Dodaj firme</h2>
-        <Form onSubmit={() => {}} isSignInView={false}>
-          <FormControl>
-            <Input
-              id="name"
-              type="name"
-              name="name"
-              placeholder="Nazwa"
-              className={`${inputStyle.input}`}
-              onChange={() => {}}
-              onBlur={() => {}}
-              value="Nazwa"
-            />
-          </FormControl>
-          <FormControl>
-            <Input
-              id="phone"
-              type="phone"
-              name="phone"
-              placeholder="Telefon"
-              className={`${inputStyle.input}`}
-              onChange={() => {}}
-              onBlur={() => {}}
-              value="Telefon"
-            />
-          </FormControl>
-          <FormControl>
-            <Input
-              id="mail"
-              type="mail"
-              name="mail"
-              placeholder="Mail"
-              className={`${inputStyle.input}`}
-              onChange={() => {}}
-              onBlur={() => {}}
-              value="Mail"
-            />
-          </FormControl>
-          <FormControl>
-            <Input
-              id="website"
-              type="website"
-              name="website"
-              placeholder="Strona"
-              className={`${inputStyle.input}`}
-              onChange={() => {}}
-              onBlur={() => {}}
-              value="Strona"
-            />
-          </FormControl>
+        <Form onSubmit={formik.handleSubmit} isSignInView={false}>
+          {formik.status === 'error' && (
+            <div className={styles.error}>Tworzenie nie powiodło się</div>
+          )}
+
+          <>
+            {formInputs.map(({ id, type, placeholder, value }) => {
+              return (
+                <FormControl key={id}>
+                  <Input
+                    id={id}
+                    type={type}
+                    name={id}
+                    placeholder={placeholder}
+                    className={`${inputStyle.input}`}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={value}
+                  />
+                </FormControl>
+              );
+            })}
+          </>
 
           <div className={styles.addUserWrapper}>
             <select
@@ -181,7 +229,6 @@ function CompaniesView() {
               />
             </button>
           </div>
-
           {teamMembers.length > 0 ? (
             <div className={styles.displayMembersWrapper}>
               {teamMembers.map((member) => {
@@ -211,12 +258,12 @@ function CompaniesView() {
               })}
             </div>
           ) : null}
-
-          {/* <SubmitButton
-            disabled={true}
-            buttonContent={'Dodaj'}
+          <SubmitButton
+            disabled={formik.isSubmitting}
+            buttonContent={formik.isSubmitting ? 'Dodawanie...' : 'Dodaj'}
             isSignInView={false}
-          /> */}
+          />
+          <p className={styles.finalMessage}>{successMessage}</p>
         </Form>
       </ModalTemplate>
       <ControlBar>
