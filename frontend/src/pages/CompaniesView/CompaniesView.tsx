@@ -35,17 +35,9 @@ function CompaniesView() {
   const { companies, dispatch: companiesDispatch } = useCompaniesContext();
   const { users, dispatch: usersDispatch } = useUsersContext();
 
-  const handleMouseEnter = (user, company) => {
-    setLabelState({
-      isLabel: true,
-      userLabel: user.name,
-      companyUserLabel: company.name,
-    });
-  };
-
-  const handleMouseLeave = () => {
-    setLabelState({ isLabel: false, userLabel: '', companyUserLabel: '' });
-  };
+  // const memberIDs = teamMembers.map((member) => {
+  //   return { workerID: member._id };
+  // });
 
   useEffect(() => {
     const fetchCompanies = async () => {
@@ -71,6 +63,18 @@ function CompaniesView() {
     fetchCompanies();
     fetchUsers();
   }, [companiesDispatch, usersDispatch, users]);
+
+  const handleMouseEnter = (user, company) => {
+    setLabelState({
+      isLabel: true,
+      userLabel: user.name,
+      companyUserLabel: company.name,
+    });
+  };
+
+  const handleMouseLeave = () => {
+    setLabelState({ isLabel: false, userLabel: '', companyUserLabel: '' });
+  };
 
   const handleMemberChange = (e) => {
     setSelectedMember(e.target.value);
@@ -253,7 +257,7 @@ function CompaniesView() {
               <p>Graficy</p>
             </div>
           </InfoBar>
-          {companies && companies.length > 0 ? (
+          {companies?.length ? (
             <>
               {companies.map((company) => {
                 return (
