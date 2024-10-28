@@ -61,6 +61,10 @@ function CompaniesView() {
           return { workerID: member._id };
         });
 
+        if (companies.some((company) => company.name === name)) {
+          setSuccessMessage('Ta firma już istnieje');
+          return;
+        }
         await addCompany({
           name,
           phone,
