@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import ListContainer from '../../components/Atoms/ListContainer/ListContainer';
 import ViewContainer from '../../components/Atoms/ViewContainer/ViewContainer';
 import styles from './CompanyProfile.module.css';
 import {
   CompaniesType,
+  deleteCompany,
   getCurrentCompany,
 } from '../../services/companies-service';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
@@ -251,7 +252,9 @@ function CompanyProfile() {
   const [company, setCompany] = useState<CompaniesType[]>([]);
   const [selectedMonth, setSelectedMonth] = useState<string>('');
   const { showModal, exitAnim, openModal, closeModal } = useModal();
+  const [deleteCaptcha, setDeleteCaptcha] = useState(false);
   const params = useParams();
+  const navigate = useNavigate();
 
   const { users, dispatch } = useUsersContext();
 
@@ -346,87 +349,128 @@ function CompanyProfile() {
       });
   }, [params.id]);
 
+  const handleDeleteCompany = async (id) => {
+    await deleteCompany(id);
+    closeModal();
+    navigate('/firmy');
+  };
+
   return (
     <>
       <ModalTemplate
         isOpen={showModal}
-        onClose={closeModal}
+        onClose={() => {
+          closeModal();
+          setDeleteCaptcha(false);
+        }}
         exitAnim={exitAnim}
       >
-        <h2>Edytuj</h2>
-        {company.length > 0 ? (
-          <div className={styles.inputsWrapper}>
-            <div className={styles.firstRow}>
-              <div>
-                <label htmlFor="companyName">
-                  <strong>Nazwa:</strong>
-                </label>
-                <input
-                  type="text"
-                  name="companyName"
-                  id="companyName"
-                  value={company[0].name}
-                  className={styles.companyInput}
-                />
-              </div>
-
-              <div>
-                <label htmlFor="companyMail">
-                  <strong>E-Mail:</strong>
-                </label>
-                <input
-                  type="text"
-                  name="companyMail"
-                  id="companyMail"
-                  value={company[0].mail}
-                  className={styles.companyInput}
-                />
-              </div>
-            </div>
-
-            <div className={styles.secondRow}>
-              <div>
-                <label htmlFor="companyNumber">
-                  <strong>Numer:</strong>
-                </label>
-                <input
-                  type="text"
-                  name="companyNumber"
-                  id="companyNumber"
-                  value={company[0].phone}
-                  className={styles.companyInput}
-                />
-              </div>
-              <div>
-                <label htmlFor="companyWebsite">
-                  <strong>Strona:</strong>
-                </label>
-                <input
-                  type="text"
-                  name="companyWebsite"
-                  id="companyWebsite"
-                  value={company[0].website}
-                  className={styles.companyInput}
-                />
-              </div>
-            </div>
-            <div className={styles.displayMembersWrapper}>
-              {users.flatMap((user) => {
-                return company[0].teamMembers.map((teamMember) => {
-                  return (
-                    user._id === teamMember.workerID && (
-                      <CompanyGraphicTile
-                        member={user}
-                        handleDeleteMember={() => {}}
-                      />
-                    )
-                  );
-                });
-              })}
+        {deleteCaptcha ? (
+          <div className={styles.captchaContainer}>
+            <h2>Jesteś pewien?</h2>
+            <div className={styles.captchaButtonsWrapper}>
+              <button
+                type="button"
+                className={styles.confirmDeleteButton}
+                onClick={() => handleDeleteCompany(company[0]._id)}
+              >
+                Tak
+              </button>{' '}
+              <button
+                type="button"
+                className={styles.cancelDeleteButton}
+                onClick={() => setDeleteCaptcha(false)}
+              >
+                Anuluj
+              </button>
             </div>
           </div>
         ) : (
-          <p>loading</p>
+          <>
+            <h2>Edytuj</h2>
+            {company.length > 0 ? (
+              <div className={styles.inputsWrapper}>
+                <div className={styles.firstRow}>
+                  <div>
+                    <label htmlFor="companyName">
+                      <strong>Nazwa:</strong>
+                    </label>
+                    <input
+                      type="text"
+                      name="companyName"
+                      id="companyName"
+                      value={company[0].name}
+                      className={styles.companyInput}
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="companyMail">
+                      <strong>E-Mail:</strong>
+                    </label>
+                    <input
+                      type="text"
+                      name="companyMail"
+                      id="companyMail"
+                      value={company[0].mail}
+                      className={styles.companyInput}
+                    />
+                  </div>
+                </div>
+
+                <div className={styles.secondRow}>
+                  <div>
+                    <label htmlFor="companyNumber">
+                      <strong>Numer:</strong>
+                    </label>
+                    <input
+                      type="text"
+                      name="companyNumber"
+                      id="companyNumber"
+                      value={company[0].phone}
+                      className={styles.companyInput}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="companyWebsite">
+                      <strong>Strona:</strong>
+                    </label>
+                    <input
+                      type="text"
+                      name="companyWebsite"
+                      id="companyWebsite"
+                      value={company[0].website}
+                      className={styles.companyInput}
+                    />
+                  </div>
+                </div>
+                <div className={styles.displayMembersWrapper}>
+                  {company[0].teamMembers.length > 0 &&
+                    company[0].teamMembers.map((member) => {
+                      return (
+                        <CompanyGraphicTile
+                          key={member.workerID}
+                          member={member}
+                          handleDeleteMember={() => {}}
+                        />
+                      );
+                    })}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setDeleteCaptcha(true);
+                  }}
+                  className={styles.deleteCompanyButton}
+                >
+                  Usuń firmę
+                </button>
+              </div>
+            ) : (
+              <p>loading</p>
+            )}
+          </>
         )}
       </ModalTemplate>
       <ControlBar>

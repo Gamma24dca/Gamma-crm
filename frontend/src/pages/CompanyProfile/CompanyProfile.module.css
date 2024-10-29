@@ -42,6 +42,62 @@
   gap: 10px;
 }
 
+.deleteCompanyButton {
+  font-family: 'Montserrat';
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  color: var(--color-lighter);
+  max-width: 130px;
+  border: 1px solid #d11a2a;
+  border-radius: 10px;
+  background-color: #d11a2a;
+  padding: 10px 5px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: var(--color-lighter);
+    color: #d11a2a;
+  }
+}
+
+.captchaContainer {
+  text-align: center;
+}
+
+.captchaButtonsWrapper {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.confirmDeleteButton,
+.cancelDeleteButton {
+  cursor: pointer;
+  background-color: #d11a2a;
+  border: 1px solid #d11a2a;
+  color: var(--color-lighter);
+  font-size: 16px;
+  font-weight: 600;
+  padding: 10px 25px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: var(--color-lighter);
+    color: #d11a2a;
+  }
+}
+
+.cancelDeleteButton {
+  background-color: var(--color-orange);
+  border: 1px solid var(--color-orange);
+  &:hover {
+    color: var(--color-orange);
+  }
+}
+
 .companyInput {
   width: 90%;
   border: 0;

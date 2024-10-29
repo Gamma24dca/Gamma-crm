@@ -2,6 +2,8 @@ import { Config } from '../config';
 
 export type TeamMemberType = {
   workerID: string;
+  name: string;
+  img: string;
 };
 
 export type CompaniesType = {
@@ -93,7 +95,32 @@ export async function addCompany({ name, phone, mail, website, teamMembers }) {
   } catch (error) {
     console.error(error);
     if (Config.isDev) {
-      throw new Error('Get Companies', error.message);
+      throw new Error('Add company', error.message);
+    }
+    return null;
+  }
+}
+
+export async function deleteCompany(id) {
+  try {
+    const response = await fetch(
+      `https://gamma-crm.onrender.com/api/companies/${id}`,
+      {
+        method: 'DELETE',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    if (response.ok) {
+      return await response.json();
+    }
+    throw new Error();
+  } catch (error) {
+    console.error(error);
+    if (Config.isDev) {
+      throw new Error('Delete company', error.message);
     }
     return null;
   }

@@ -59,7 +59,7 @@ function CompaniesView() {
         const { name, phone, mail, website } = values;
 
         const memberIDs = teamMembers.map((member) => {
-          return { workerID: member._id };
+          return { workerID: member._id, name: member.name, img: member.img };
         });
 
         if (companies.some((company) => company.name === name)) {
@@ -314,39 +314,35 @@ function CompaniesView() {
                       <p>{company.activeTasks}</p>
                     </div>
                     <div className={styles.usersImgContainer}>
-                      {users.flatMap((user) => {
-                        return company.teamMembers.map((companyUser) => {
+                      {company.teamMembers.length > 0 &&
+                        company.teamMembers.map((companyUser) => {
                           return (
-                            user._id === companyUser.workerID && (
-                              <Link
-                                className={styles.userWrapper}
-                                key={companyUser.workerID}
-                                to={`/użytkownicy/${user._id}`}
-                              >
-                                <img
-                                  className={styles.userImg}
-                                  src={user.img}
-                                  alt="user"
-                                  onMouseEnter={() => {
-                                    handleMouseEnter(user, company);
-                                  }}
-                                  onMouseLeave={() => {
-                                    handleMouseLeave();
-                                  }}
-                                />
-                                {labelState.isLabel &&
-                                  labelState.companyUserLabel ===
-                                    company.name &&
-                                  labelState.userLabel === user.name && (
-                                    <div className={styles.graphicName}>
-                                      <p>{user.name}</p>
-                                    </div>
-                                  )}
-                              </Link>
-                            )
+                            <Link
+                              className={styles.userWrapper}
+                              key={companyUser.workerID}
+                              to={`/użytkownicy/${companyUser.workerID}`}
+                            >
+                              <img
+                                className={styles.userImg}
+                                src={companyUser.img}
+                                alt="user"
+                                onMouseEnter={() => {
+                                  handleMouseEnter(companyUser, company);
+                                }}
+                                onMouseLeave={() => {
+                                  handleMouseLeave();
+                                }}
+                              />
+                              {labelState.isLabel &&
+                                labelState.companyUserLabel === company.name &&
+                                labelState.userLabel === companyUser.name && (
+                                  <div className={styles.graphicName}>
+                                    <p>{companyUser.name}</p>
+                                  </div>
+                                )}
+                            </Link>
                           );
-                        });
-                      })}
+                        })}
                     </div>
                   </TileWrapper>
                 );

@@ -54,22 +54,6 @@ CompanyRouter.post(
   },
 );
 
-CompanyRouter.post(
-  '/:id/teamMembers',
-  passport.authenticate('jwt', { session: false }),
-  async (req, res) => {
-    try {
-      const teamMember = await CompanyController.addTeamMember(req.params.id, {
-        ...req.body,
-      });
-      res.status(StatusCodes.CREATED).json(teamMember);
-    } catch (error) {
-      console.error(error);
-      res.status(StatusCodes.BAD_REQUEST).json({ error });
-    }
-  },
-);
-
 CompanyRouter.patch(
   '/:id',
   passport.authenticate('jwt', { session: false }),
@@ -95,6 +79,22 @@ CompanyRouter.delete(
       res.status(StatusCodes.ACCEPTED).json(deletedTask);
     } catch (error) {
       res.status(StatusCodes.BAD_REQUEST).json({ message: error });
+    }
+  },
+);
+
+CompanyRouter.post(
+  '/:id/teamMembers',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const teamMember = await CompanyController.addTeamMember(req.params.id, {
+        ...req.body,
+      });
+      res.status(StatusCodes.CREATED).json(teamMember);
+    } catch (error) {
+      console.error(error);
+      res.status(StatusCodes.BAD_REQUEST).json({ error });
     }
   },
 );
