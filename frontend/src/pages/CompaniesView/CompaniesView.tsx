@@ -24,6 +24,7 @@ import FormControl from '../../components/Atoms/FormControl/FormControl';
 import Input from '../../components/Atoms/Input/Input';
 import inputStyle from '../../components/Atoms/Input/Input.module.css';
 import SubmitButton from '../../components/Atoms/SubmitBtn/SubmitBtn';
+import CompanyGraphicTile from '../../components/Molecules/CompanyGraphicTile/CompanyGraphicTile';
 
 const createCompanySchema = Yup.object({
   name: Yup.string().required('Nazwa jest wymagana'),
@@ -73,7 +74,7 @@ function CompaniesView() {
           teamMembers: memberIDs,
         });
 
-        formik.resetForm(); // Reset form fields
+        formik.resetForm();
         setSuccessMessage('Firma dodana pomyślnie!');
         setTeamMembers([]);
       } catch {
@@ -129,7 +130,7 @@ function CompaniesView() {
     );
     if (teamMembers.includes(filteredUser[0])) return;
 
-    setTeamMembers((prevState) => [...filteredUser, ...prevState]);
+    setTeamMembers((prevState) => [...prevState, ...filteredUser]);
   };
 
   const handleDeleteMember = (selectedMemberValue) => {
@@ -233,35 +234,19 @@ function CompaniesView() {
               />
             </button>
           </div>
-          {teamMembers.length > 0 ? (
+          {teamMembers.length > 0 && (
             <div className={styles.displayMembersWrapper}>
               {teamMembers.map((member) => {
                 return (
-                  <div key={member._id} className={styles.memberTile}>
-                    <div
-                      className={styles.deleteMemberContainer}
-                      onClick={() => handleDeleteMember(member)}
-                      role="button"
-                      tabIndex={0}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          handleDeleteMember(member);
-                        }
-                      }}
-                    >
-                      <div className={styles.deleteMember} />
-                    </div>
-                    <img
-                      src={member.img}
-                      alt="user"
-                      className={styles.userImg}
-                    />
-                    <p>{member.name}</p>
-                  </div>
+                  <CompanyGraphicTile
+                    key={member._id}
+                    member={member}
+                    handleDeleteMember={handleDeleteMember}
+                  />
                 );
               })}
             </div>
-          ) : null}
+          )}
           <SubmitButton
             disabled={formik.isSubmitting}
             buttonContent={formik.isSubmitting ? 'Dodawanie...' : 'Dodaj'}
@@ -331,32 +316,35 @@ function CompaniesView() {
                     <div className={styles.usersImgContainer}>
                       {users.flatMap((user) => {
                         return company.teamMembers.map((companyUser) => {
-                          return user._id === companyUser.workerID ? (
-                            <Link
-                              className={styles.userWrapper}
-                              key={companyUser.workerID}
-                              to={`/użytkownicy/${user._id}`}
-                            >
-                              <img
-                                className={styles.userImg}
-                                src={user.img}
-                                alt="user"
-                                onMouseEnter={() => {
-                                  handleMouseEnter(user, company);
-                                }}
-                                onMouseLeave={() => {
-                                  handleMouseLeave();
-                                }}
-                              />
-                              {labelState.isLabel &&
-                              labelState.companyUserLabel === company.name &&
-                              labelState.userLabel === user.name ? (
-                                <div className={styles.graphicName}>
-                                  <p>{user.name}</p>
-                                </div>
-                              ) : null}
-                            </Link>
-                          ) : null;
+                          return (
+                            user._id === companyUser.workerID && (
+                              <Link
+                                className={styles.userWrapper}
+                                key={companyUser.workerID}
+                                to={`/użytkownicy/${user._id}`}
+                              >
+                                <img
+                                  className={styles.userImg}
+                                  src={user.img}
+                                  alt="user"
+                                  onMouseEnter={() => {
+                                    handleMouseEnter(user, company);
+                                  }}
+                                  onMouseLeave={() => {
+                                    handleMouseLeave();
+                                  }}
+                                />
+                                {labelState.isLabel &&
+                                  labelState.companyUserLabel ===
+                                    company.name &&
+                                  labelState.userLabel === user.name && (
+                                    <div className={styles.graphicName}>
+                                      <p>{user.name}</p>
+                                    </div>
+                                  )}
+                              </Link>
+                            )
+                          );
                         });
                       })}
                     </div>

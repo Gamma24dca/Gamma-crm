@@ -28,6 +28,13 @@
   }
 }
 
+.displayMembersWrapper {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
 .inputsWrapper {
   width: 600px;
   display: flex;

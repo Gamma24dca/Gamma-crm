@@ -98,3 +98,5 @@ export async function addCompany({ name, phone, mail, website, teamMembers }) {
     return null;
   }
 }
+
+// export async function UpdateCompany(params: type) {}

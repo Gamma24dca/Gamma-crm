@@ -16,6 +16,9 @@ import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplat
 import useWindowSize from '../../hooks/useWindowSize';
 import usePagination from '../../hooks/usePagination';
 import useSort from '../../hooks/useSort';
+import useUsersContext from '../../hooks/Context/useUsersContext';
+import { getAllUsers } from '../../services/users-service';
+import CompanyGraphicTile from '../../components/Molecules/CompanyGraphicTile/CompanyGraphicTile';
 
 const mockedTasks = [
   {
@@ -250,6 +253,8 @@ function CompanyProfile() {
   const { showModal, exitAnim, openModal, closeModal } = useModal();
   const params = useParams();
 
+  const { users, dispatch } = useUsersContext();
+
   const { sortedData, sortColumn, sortOrder, handleSortChange } =
     useSort(mockedTasks);
 
@@ -309,6 +314,21 @@ function CompanyProfile() {
   const handleChange = (e) => {
     setSelectedMonth(e.target.value);
   };
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      if (users.length === 0) {
+        try {
+          const allUsers = await getAllUsers();
+          dispatch({ type: 'SET_USERS', payload: allUsers });
+        } catch (error) {
+          console.error('Error fetching users:', error);
+        }
+      }
+    };
+
+    fetchUsers();
+  }, [dispatch, users]);
 
   useEffect(() => {
     getCurrentCompany(params.id)
@@ -389,6 +409,20 @@ function CompanyProfile() {
                   className={styles.companyInput}
                 />
               </div>
+            </div>
+            <div className={styles.displayMembersWrapper}>
+              {users.flatMap((user) => {
+                return company[0].teamMembers.map((teamMember) => {
+                  return (
+                    user._id === teamMember.workerID && (
+                      <CompanyGraphicTile
+                        member={user}
+                        handleDeleteMember={() => {}}
+                      />
+                    )
+                  );
+                });
+              })}
             </div>
           </div>
         ) : (

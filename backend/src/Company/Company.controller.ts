@@ -16,17 +16,27 @@ export const CompanyController = {
     return await CompanyModel.create(company);
   },
 
-  async addTeamMember(companyID, member) {
-    const company = await CompanyController.getCompany(companyID);
-    company.teamMembers.push(member);
-    await CompanyController.updateCompany(companyID, company);
-  },
-
   async updateCompany(id, companyBody) {
     return await CompanyModel.findByIdAndUpdate(id, companyBody);
   },
 
   async deleteCompany(id) {
     return await CompanyModel.findByIdAndDelete(id);
+  },
+
+  async addTeamMember(companyID, member) {
+    const company = await CompanyController.getCompany(companyID);
+    company.teamMembers.push(member);
+    await CompanyController.updateCompany(companyID, company);
+  },
+
+  async deleteTeamMember(companyID, memberID) {
+    const company = await CompanyController.getCompany(companyID);
+    company.teamMembers = company.teamMembers.filter((member) => {
+      member.workerID !== memberID;
+    });
+    await CompanyController.updateCompany(companyID, company);
+    const updatedCompany = await CompanyController.getCompany(companyID);
+    return updatedCompany.teamMembers;
   },
 };

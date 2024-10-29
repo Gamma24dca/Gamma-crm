@@ -21,6 +21,8 @@ export const CompanyModel = mongoose.model(
     teamMembers: [
       {
         workerID: { type: String },
+        name: { type: String },
+        img: { type: String },
       },
     ],
     activeTasks: {
