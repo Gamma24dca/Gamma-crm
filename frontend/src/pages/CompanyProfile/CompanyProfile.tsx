@@ -8,7 +8,7 @@ import {
   CompaniesType,
   deleteCompany,
   getCurrentCompany,
-  // UpdateCompany,
+  UpdateCompany,
 } from '../../services/companies-service';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
 import BackButton from '../../components/Atoms/BackButton/BackButton';
@@ -250,14 +250,17 @@ const mockedTasks = [
 ];
 
 function CompanyProfile() {
-  const [company, setCompany] = useState<CompaniesType[]>([]);
+  const [formValue, setFormValue] = useState<CompaniesType>({
+    name: '',
+    phone: '',
+    mail: '',
+    teamMembers: [],
+    website: '',
+  });
   const [selectedMonth, setSelectedMonth] = useState<string>('');
   const { showModal, exitAnim, openModal, closeModal } = useModal();
   const [deleteCaptcha, setDeleteCaptcha] = useState(false);
-  // const [formValue, setFormValue] = useState({
-  //   name: 'Premio2',
-  //   mail: 'karina.olejnik@premio.pl',
-  // });
+
   const params = useParams();
   const navigate = useNavigate();
 
@@ -274,35 +277,6 @@ function CompanyProfile() {
     handleNextPage,
     handlePreviousPage,
   } = usePagination(sortedData, 14);
-
-  const is1800 = useWindowSize('1800');
-  const is1600 = useWindowSize('1600');
-  const is1350 = useWindowSize('1350');
-
-  // const handleUpdateCompany = async () => {
-  //   const response = await UpdateCompany({
-  //     id: params.id,
-  //     companyData: formValue,
-  //   });
-  //   console.log(response);
-  // };
-
-  useEffect(() => {
-    if (is1350) {
-      setItemsPerPage(8);
-    }
-    if (is1600 && !is1350) {
-      setItemsPerPage(10);
-    }
-    if (is1800 && !is1600) {
-      setItemsPerPage(12);
-    }
-    if (!is1800 && !is1600) {
-      setItemsPerPage(14);
-    }
-  }, [is1800, is1600, is1350, setItemsPerPage]);
-
-  const totalHours = mockedTasks.reduce((acc, task) => acc + task.hours, 0);
 
   const months = useMemo(
     () => [
@@ -322,14 +296,58 @@ function CompanyProfile() {
     []
   );
 
-  useEffect(() => {
-    const currentMonthIndex = new Date().getMonth();
-    setSelectedMonth(months[currentMonthIndex]);
-  }, [months]);
+  const is1800 = useWindowSize('1800');
+  const is1600 = useWindowSize('1600');
+  const is1350 = useWindowSize('1350');
+
+  const handleUpdateCompany = async () => {
+    const response = await UpdateCompany({
+      id: params.id,
+      companyData: formValue,
+    });
+    if (response !== null) {
+      closeModal();
+    }
+  };
 
   const handleChange = (e) => {
     setSelectedMonth(e.target.value);
   };
+
+  const handleDeleteCompany = async (id) => {
+    await deleteCompany(id);
+    closeModal();
+    navigate('/firmy');
+  };
+
+  const handleFormChange = (e, key) => {
+    setFormValue((prev) => ({
+      ...prev,
+      [key]: e.target.value,
+    }));
+  };
+
+  useEffect(() => {
+    if (is1350) {
+      setItemsPerPage(8);
+    }
+    if (is1600 && !is1350) {
+      setItemsPerPage(10);
+    }
+    if (is1800 && !is1600) {
+      setItemsPerPage(12);
+    }
+    if (!is1800 && !is1600) {
+      setItemsPerPage(14);
+    }
+  }, [is1800, is1600, is1350, setItemsPerPage]);
+
+  const totalHours = mockedTasks.reduce((acc, task) => acc + task.hours, 0);
+
+  useEffect(() => {
+    const currentMonthIndex = new Date().getMonth();
+    setSelectedMonth(months[currentMonthIndex]);
+  }, [months]);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -349,24 +367,22 @@ function CompanyProfile() {
   useEffect(() => {
     getCurrentCompany(params.id)
       .then((singleUserArray: CompaniesType | CompaniesType[]) => {
-        if (Array.isArray(singleUserArray)) {
-          if (singleUserArray.length > 0) {
-            setCompany(singleUserArray);
-          }
-        } else {
-          setCompany([singleUserArray]);
-        }
+        const companyData = Array.isArray(singleUserArray)
+          ? singleUserArray[0]
+          : singleUserArray;
+
+        setFormValue({
+          name: companyData?.name || '',
+          phone: companyData?.phone || '',
+          mail: companyData?.mail || '',
+          teamMembers: companyData?.teamMembers || [],
+          website: companyData?.website || '',
+        });
       })
       .catch((error) => {
         console.error('Error fetching user:', error);
       });
   }, [params.id]);
-
-  const handleDeleteCompany = async (id) => {
-    await deleteCompany(id);
-    closeModal();
-    navigate('/firmy');
-  };
 
   return (
     <>
@@ -385,7 +401,7 @@ function CompanyProfile() {
               <button
                 type="button"
                 className={styles.confirmDeleteButton}
-                onClick={() => handleDeleteCompany(company[0]._id)}
+                onClick={() => handleDeleteCompany(params.id)}
               >
                 Tak
               </button>{' '}
@@ -401,75 +417,87 @@ function CompanyProfile() {
         ) : (
           <>
             <h2>Edytuj</h2>
-            {company.length > 0 ? (
-              <div className={styles.inputsWrapper}>
-                <div className={styles.firstRow}>
-                  <div>
-                    <label htmlFor="companyName">
-                      <strong>Nazwa:</strong>
-                    </label>
-                    <input
-                      type="text"
-                      name="companyName"
-                      id="companyName"
-                      value={company[0].name}
-                      className={styles.companyInput}
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="companyMail">
-                      <strong>E-Mail:</strong>
-                    </label>
-                    <input
-                      type="text"
-                      name="companyMail"
-                      id="companyMail"
-                      value={company[0].mail}
-                      className={styles.companyInput}
-                    />
-                  </div>
+            <div className={styles.inputsWrapper}>
+              <div className={styles.firstRow}>
+                <div>
+                  <label htmlFor="companyName">
+                    <strong>Nazwa:</strong>
+                  </label>
+                  <input
+                    type="text"
+                    name="companyName"
+                    id="companyName"
+                    value={formValue.name}
+                    onChange={(e) => {
+                      handleFormChange(e, 'name');
+                    }}
+                    className={styles.companyInput}
+                  />
                 </div>
 
-                <div className={styles.secondRow}>
-                  <div>
-                    <label htmlFor="companyNumber">
-                      <strong>Numer:</strong>
-                    </label>
-                    <input
-                      type="text"
-                      name="companyNumber"
-                      id="companyNumber"
-                      value={company[0].phone}
-                      className={styles.companyInput}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="companyWebsite">
-                      <strong>Strona:</strong>
-                    </label>
-                    <input
-                      type="text"
-                      name="companyWebsite"
-                      id="companyWebsite"
-                      value={company[0].website}
-                      className={styles.companyInput}
-                    />
-                  </div>
+                <div>
+                  <label htmlFor="companyMail">
+                    <strong>E-Mail:</strong>
+                  </label>
+                  <input
+                    type="text"
+                    name="companyMail"
+                    id="companyMail"
+                    value={formValue.mail}
+                    onChange={(e) => {
+                      handleFormChange(e, 'mail');
+                    }}
+                    className={styles.companyInput}
+                  />
                 </div>
-                <div className={styles.displayMembersWrapper}>
-                  {company[0].teamMembers.length > 0 &&
-                    company[0].teamMembers.map((member) => {
-                      return (
-                        <CompanyGraphicTile
-                          key={member.workerID}
-                          member={member}
-                          handleDeleteMember={() => {}}
-                        />
-                      );
-                    })}
-                </div>
+              </div>
 
+              <div className={styles.secondRow}>
+                <div>
+                  <label htmlFor="companyNumber">
+                    <strong>Numer:</strong>
+                  </label>
+                  <input
+                    type="text"
+                    name="companyNumber"
+                    id="companyNumber"
+                    value={formValue.phone}
+                    onChange={(e) => {
+                      handleFormChange(e, 'phone');
+                    }}
+                    className={styles.companyInput}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="companyWebsite">
+                    <strong>Strona:</strong>
+                  </label>
+                  <input
+                    type="text"
+                    name="companyWebsite"
+                    id="companyWebsite"
+                    value={formValue.website}
+                    onChange={(e) => {
+                      handleFormChange(e, 'website');
+                    }}
+                    className={styles.companyInput}
+                  />
+                </div>
+              </div>
+              <div className={styles.displayMembersWrapper}>
+                {formValue.teamMembers.length > 0 &&
+                  formValue.teamMembers.map((member) => {
+                    return (
+                      <CompanyGraphicTile
+                        key={member.workerID}
+                        member={member}
+                        handleDeleteMember={() => {}}
+                      />
+                    );
+                  })}
+              </div>
+
+              <div className={styles.optionButtonsWrapper}>
                 <button
                   type="button"
                   onClick={() => {
@@ -479,25 +507,24 @@ function CompanyProfile() {
                 >
                   Usuń firmę
                 </button>
-                {/* <button
+                <button
                   type="button"
                   onClick={() => {
                     handleUpdateCompany();
                   }}
+                  className={styles.editButton}
                 >
                   Edytuj
-                </button> */}
+                </button>
               </div>
-            ) : (
-              <p>loading</p>
-            )}
+            </div>
           </>
         )}
       </ModalTemplate>
       <ControlBar>
         <div className={styles.leftSide}>
           <BackButton path="firmy" />
-          {company.length > 0 ? (
+          {formValue.name ? (
             <div
               className={styles.editCompanyWrapper}
               role="button"
@@ -510,7 +537,7 @@ function CompanyProfile() {
               }}
             >
               <button type="button" className={styles.editCompanyButton}>
-                <h2>{company[0].name}</h2>
+                <h2>{formValue.name}</h2>
               </button>
               <Icon icon="lucide:edit" width="24" height="24" color="#f68c1e" />
             </div>

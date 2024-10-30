@@ -12,7 +12,7 @@ export type CompaniesType = {
   phone: string;
   mail: string;
   website: string;
-  activeTasks: number;
+  activeTasks?: number;
   teamMembers: TeamMemberType[];
 };
 
@@ -145,7 +145,7 @@ export async function UpdateCompany({ id, companyData }) {
       }
     );
 
-    console.log(companyData);
+    console.log(formData);
 
     if (response.ok) {
       return await response.json();
