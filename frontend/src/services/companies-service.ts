@@ -116,7 +116,7 @@ export async function deleteCompany(id) {
     if (response.ok) {
       return await response.json();
     }
-    throw new Error();
+    throw new Error(`${response.status} ${response.statusText}`);
   } catch (error) {
     console.error(error);
     if (Config.isDev) {
@@ -126,4 +126,35 @@ export async function deleteCompany(id) {
   }
 }
 
-// export async function UpdateCompany(params: type) {}
+export async function UpdateCompany({ id, companyData }) {
+  const formData = {
+    id,
+    ...companyData,
+  };
+
+  try {
+    const response = await fetch(
+      `https://gamma-crm.onrender.com/api/companies/${id}`,
+      {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      }
+    );
+
+    console.log(companyData);
+
+    if (response.ok) {
+      return await response.json();
+    }
+  } catch (error) {
+    console.error(error);
+    if (Config.isDev) {
+      throw new Error('Update company', error.message);
+    }
+    return null;
+  }
+}

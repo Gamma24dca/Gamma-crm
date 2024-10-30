@@ -40,7 +40,7 @@ app.get('/', (req, res) => {
 var corsOptions = {
   origin: ['https://gamma-crm-frontend.onrender.com', 'http://localhost:5173'],
   default: 'https://gamma-crm-frontend.onrender.com',
-  methods: 'GET,POST,PUT,DELETE',
+  methods: 'GET,POST,PUT,PATCH,DELETE',
   credentials: true,
   optionsSuccessStatus: 200,
 };

@@ -8,6 +8,7 @@ import {
   CompaniesType,
   deleteCompany,
   getCurrentCompany,
+  // UpdateCompany,
 } from '../../services/companies-service';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
 import BackButton from '../../components/Atoms/BackButton/BackButton';
@@ -253,6 +254,10 @@ function CompanyProfile() {
   const [selectedMonth, setSelectedMonth] = useState<string>('');
   const { showModal, exitAnim, openModal, closeModal } = useModal();
   const [deleteCaptcha, setDeleteCaptcha] = useState(false);
+  // const [formValue, setFormValue] = useState({
+  //   name: 'Premio2',
+  //   mail: 'karina.olejnik@premio.pl',
+  // });
   const params = useParams();
   const navigate = useNavigate();
 
@@ -273,6 +278,14 @@ function CompanyProfile() {
   const is1800 = useWindowSize('1800');
   const is1600 = useWindowSize('1600');
   const is1350 = useWindowSize('1350');
+
+  // const handleUpdateCompany = async () => {
+  //   const response = await UpdateCompany({
+  //     id: params.id,
+  //     companyData: formValue,
+  //   });
+  //   console.log(response);
+  // };
 
   useEffect(() => {
     if (is1350) {
@@ -466,6 +479,14 @@ function CompanyProfile() {
                 >
                   Usuń firmę
                 </button>
+                {/* <button
+                  type="button"
+                  onClick={() => {
+                    handleUpdateCompany();
+                  }}
+                >
+                  Edytuj
+                </button> */}
               </div>
             ) : (
               <p>loading</p>
