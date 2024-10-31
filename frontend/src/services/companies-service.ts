@@ -1,10 +1,5 @@
 import { Config } from '../config';
-
-export type TeamMemberType = {
-  workerID: string;
-  name: string;
-  img: string;
-};
+import { User } from './users-service';
 
 export type CompaniesType = {
   _id?: string;
@@ -13,7 +8,7 @@ export type CompaniesType = {
   mail: string;
   website: string;
   activeTasks?: number;
-  teamMembers: TeamMemberType[];
+  teamMembers: User[];
 };
 
 export async function getAllCompanies(): Promise<CompaniesType[] | null> {

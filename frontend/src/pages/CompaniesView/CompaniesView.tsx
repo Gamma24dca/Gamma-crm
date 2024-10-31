@@ -298,8 +298,8 @@ function CompaniesView() {
                           return (
                             <Link
                               className={styles.userWrapper}
-                              key={companyUser.workerID}
-                              to={`/użytkownicy/${companyUser.workerID}`}
+                              key={companyUser._id}
+                              to={`/użytkownicy/${companyUser._id}`}
                             >
                               <img
                                 className={styles.userImg}

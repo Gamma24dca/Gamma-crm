@@ -466,7 +466,7 @@ function CompanyProfile() {
                   formValue.teamMembers.map((member) => {
                     return (
                       <CompanyGraphicTile
-                        key={member.workerID}
+                        key={member._id}
                         member={member}
                         handleDeleteMember={() => {}}
                       />
