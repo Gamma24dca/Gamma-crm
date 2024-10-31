@@ -33,7 +33,7 @@ export const CompanyController = {
   async deleteTeamMember(companyID, memberID) {
     const company = await CompanyController.getCompany(companyID);
     company.teamMembers = company.teamMembers.filter((member) => {
-      member.workerID !== memberID;
+      member._id !== memberID;
     });
     await CompanyController.updateCompany(companyID, company);
     const updatedCompany = await CompanyController.getCompany(companyID);
