@@ -18,9 +18,8 @@ import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplat
 import useWindowSize from '../../hooks/useWindowSize';
 import usePagination from '../../hooks/usePagination';
 import useSort from '../../hooks/useSort';
-import useUsersContext from '../../hooks/Context/useUsersContext';
-import { getAllUsers } from '../../services/users-service';
 import CompanyGraphicTile from '../../components/Molecules/CompanyGraphicTile/CompanyGraphicTile';
+// import SelectUser from '../../components/Molecules/SelectUser/SelectUser';
 
 const mockedTasks = [
   {
@@ -260,15 +259,11 @@ function CompanyProfile() {
   const [selectedMonth, setSelectedMonth] = useState<string>('');
   const { showModal, exitAnim, openModal, closeModal } = useModal();
   const [deleteCaptcha, setDeleteCaptcha] = useState(false);
-
   const params = useParams();
   const navigate = useNavigate();
 
-  const { users, dispatch } = useUsersContext();
-
   const { sortedData, sortColumn, sortOrder, handleSortChange } =
     useSort(mockedTasks);
-
   const {
     currentPage,
     totalPages,
@@ -300,6 +295,8 @@ function CompanyProfile() {
   const is1600 = useWindowSize('1600');
   const is1350 = useWindowSize('1350');
 
+  const totalHours = mockedTasks.reduce((acc, task) => acc + task.hours, 0);
+
   const handleUpdateCompany = async () => {
     const response = await UpdateCompany({
       id: params.id,
@@ -310,7 +307,7 @@ function CompanyProfile() {
     }
   };
 
-  const handleChange = (e) => {
+  const handleMonthChange = (e) => {
     setSelectedMonth(e.target.value);
   };
 
@@ -342,41 +339,20 @@ function CompanyProfile() {
     }
   }, [is1800, is1600, is1350, setItemsPerPage]);
 
-  const totalHours = mockedTasks.reduce((acc, task) => acc + task.hours, 0);
-
   useEffect(() => {
     const currentMonthIndex = new Date().getMonth();
     setSelectedMonth(months[currentMonthIndex]);
   }, [months]);
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      if (users.length === 0) {
-        try {
-          const allUsers = await getAllUsers();
-          dispatch({ type: 'SET_USERS', payload: allUsers });
-        } catch (error) {
-          console.error('Error fetching users:', error);
-        }
-      }
-    };
-
-    fetchUsers();
-  }, [dispatch, users]);
-
-  useEffect(() => {
     getCurrentCompany(params.id)
-      .then((singleUserArray: CompaniesType | CompaniesType[]) => {
-        const companyData = Array.isArray(singleUserArray)
-          ? singleUserArray[0]
-          : singleUserArray;
-
+      .then((singleUserArray: CompaniesType) => {
         setFormValue({
-          name: companyData?.name || '',
-          phone: companyData?.phone || '',
-          mail: companyData?.mail || '',
-          teamMembers: companyData?.teamMembers || [],
-          website: companyData?.website || '',
+          name: singleUserArray.name || '',
+          phone: singleUserArray.phone || '',
+          mail: singleUserArray.mail || '',
+          teamMembers: singleUserArray.teamMembers || [],
+          website: singleUserArray.website || '',
         });
       })
       .catch((error) => {
@@ -484,6 +460,7 @@ function CompanyProfile() {
                   />
                 </div>
               </div>
+
               <div className={styles.displayMembersWrapper}>
                 {formValue.teamMembers.length > 0 &&
                   formValue.teamMembers.map((member) => {
@@ -501,20 +478,20 @@ function CompanyProfile() {
                 <button
                   type="button"
                   onClick={() => {
-                    setDeleteCaptcha(true);
-                  }}
-                  className={styles.deleteCompanyButton}
-                >
-                  Usuń firmę
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
                     handleUpdateCompany();
                   }}
                   className={styles.editButton}
                 >
                   Edytuj
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setDeleteCaptcha(true);
+                  }}
+                  className={styles.deleteCompanyButton}
+                >
+                  Usuń firmę
                 </button>
               </div>
             </div>
@@ -547,7 +524,7 @@ function CompanyProfile() {
           <select
             id="month-select"
             value={selectedMonth}
-            onChange={handleChange}
+            onChange={handleMonthChange}
             className={styles.selectInput}
           >
             {months.map((month) => (

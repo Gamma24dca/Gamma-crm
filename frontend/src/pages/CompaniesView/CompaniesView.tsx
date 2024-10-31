@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Icon } from '@iconify/react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import styles from './CompaniesView.module.css';
@@ -25,6 +24,7 @@ import Input from '../../components/Atoms/Input/Input';
 import inputStyle from '../../components/Atoms/Input/Input.module.css';
 import SubmitButton from '../../components/Atoms/SubmitBtn/SubmitBtn';
 import CompanyGraphicTile from '../../components/Molecules/CompanyGraphicTile/CompanyGraphicTile';
+import SelectUser from '../../components/Molecules/SelectUser/SelectUser';
 
 const createCompanySchema = Yup.object({
   name: Yup.string().required('Nazwa jest wymagana'),
@@ -58,8 +58,8 @@ function CompaniesView() {
       try {
         const { name, phone, mail, website } = values;
 
-        const memberIDs = teamMembers.map((member) => {
-          return { workerID: member._id, name: member.name, img: member.img };
+        const memberObject = teamMembers.map((member) => {
+          return member;
         });
 
         if (companies.some((company) => company.name === name)) {
@@ -71,7 +71,7 @@ function CompaniesView() {
           phone,
           mail,
           website,
-          teamMembers: memberIDs,
+          teamMembers: memberObject,
         });
 
         formik.resetForm();
@@ -128,6 +128,7 @@ function CompaniesView() {
     const filteredUser = users.filter(
       (user) => user.name === selectedMemberValue
     );
+    console.log(teamMembers, filteredUser[0]);
     if (teamMembers.includes(filteredUser[0])) return;
 
     setTeamMembers((prevState) => [...prevState, ...filteredUser]);
@@ -206,34 +207,12 @@ function CompaniesView() {
               );
             })}
           </>
-
-          <div className={styles.addUserWrapper}>
-            <select
-              id="user-select"
-              value={selectedMember}
-              onChange={handleMemberChange}
-              className={styles.selectInput}
-            >
-              {users.map((user) => (
-                <option key={user._id} value={user.name}>
-                  {user.name}
-                </option>
-              ))}
-            </select>
-            <button
-              type="button"
-              className={styles.addTeamMemberButton}
-              onClick={() => handleAddMember(selectedMember)}
-            >
-              <Icon
-                icon="icons8:plus"
-                color="#f68c1e"
-                width="50"
-                height="50"
-                className={styles.addNewUserBtn}
-              />
-            </button>
-          </div>
+          <SelectUser
+            users={users}
+            selectedMember={selectedMember}
+            handleMemberChange={handleMemberChange}
+            handleAddMember={handleAddMember}
+          />
           {teamMembers.length > 0 && (
             <div className={styles.displayMembersWrapper}>
               {teamMembers.map((member) => {

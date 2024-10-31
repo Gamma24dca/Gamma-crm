@@ -20,9 +20,31 @@ export const CompanyModel = mongoose.model(
     },
     teamMembers: [
       {
-        workerID: { type: String },
-        name: { type: String },
-        img: { type: String },
+        _id: {
+          type: String,
+        },
+        name: {
+          type: String,
+        },
+        lastname: {
+          type: String,
+        },
+        email: {
+          type: String,
+          unique: true,
+        },
+        phone: {
+          type: Number,
+        },
+        password: {
+          type: String,
+        },
+        job: {
+          type: String,
+        },
+        img: {
+          type: String,
+        },
       },
     ],
     activeTasks: {

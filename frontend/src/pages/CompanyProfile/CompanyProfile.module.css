@@ -28,6 +28,10 @@
   }
 }
 
+.secondRow {
+  margin-bottom: 30px;
+}
+
 .displayMembersWrapper {
   margin-top: 20px;
   display: flex;
@@ -76,6 +80,7 @@
 }
 
 .captchaContainer {
+  padding: 50px 100px;
   text-align: center;
 }
 
