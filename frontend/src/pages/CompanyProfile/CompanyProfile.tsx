@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import ListContainer from '../../components/Atoms/ListContainer/ListContainer';
@@ -8,19 +8,16 @@ import {
   CompaniesType,
   deleteCompany,
   getCurrentCompany,
-  UpdateCompany,
 } from '../../services/companies-service';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
-import BackButton from '../../components/Atoms/BackButton/BackButton';
-import CTA from '../../components/Atoms/CTA/CTA';
 import useModal from '../../hooks/useModal';
 import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplate';
 import useWindowSize from '../../hooks/useWindowSize';
 import usePagination from '../../hooks/usePagination';
 import useSort from '../../hooks/useSort';
-import CompanyGraphicTile from '../../components/Molecules/CompanyGraphicTile/CompanyGraphicTile';
-import useSelectUser from '../../hooks/useSelectUser';
-import SelectUser from '../../components/Molecules/SelectUser/SelectUser';
+import UpdateCompanyModalContent from '../../components/Organisms/UpdateCompanyModalContent/UpdateCompanyModalContent';
+import Captcha from '../../components/Molecules/Captcha/Captcha';
+import CompanyProfileControlBar from '../../components/Organisms/CompanyProfileControlBar/CompanyProfileControlBar';
 
 const mockedTasks = [
   {
@@ -250,11 +247,10 @@ const mockedTasks = [
 ];
 
 function CompanyProfile() {
-  const [currentCompanyName, setCurrentCompanyName] = useState('');
-  const [selectedMonth, setSelectedMonth] = useState<string>('');
+  const [company, setCompany] = useState<CompaniesType>();
   const { showModal, exitAnim, openModal, closeModal } = useModal();
   const [deleteCaptcha, setDeleteCaptcha] = useState(false);
-  const params = useParams();
+
   const navigate = useNavigate();
 
   const { sortedData, sortColumn, sortOrder, handleSortChange } =
@@ -269,66 +265,30 @@ function CompanyProfile() {
     handlePreviousPage,
   } = usePagination(sortedData, 14);
 
-  const {
-    users,
-    formValue,
-    setFormValue,
-    handleAddMember,
-    handleDeleteMember,
-    handleMemberChange,
-    selectedMember,
-  } = useSelectUser();
-
-  const months = useMemo(
-    () => [
-      'Styczeń',
-      'Luty',
-      'Marzec',
-      'Kwiecień',
-      'Maj',
-      'Czerwiec',
-      'Lipiec',
-      'Sierpień',
-      'Wrzesień',
-      'Październik',
-      'Listopad',
-      'Grudzień',
-    ],
-    []
-  );
+  const params = useParams();
 
   const is1800 = useWindowSize('1800');
   const is1600 = useWindowSize('1600');
   const is1350 = useWindowSize('1350');
 
-  const totalHours = mockedTasks.reduce((acc, task) => acc + task.hours, 0);
+  const fetchCompanyData = useCallback(() => {
+    getCurrentCompany(params.id)
+      .then((currentCompany: CompaniesType) => {
+        setCompany(currentCompany);
+      })
+      .catch((error) => {
+        console.error('Error fetching company:', error);
+      });
+  }, [params.id]);
 
-  const handleUpdateCompany = async () => {
-    const response = await UpdateCompany({
-      id: params.id,
-      companyData: formValue,
-    });
-    if (response !== null) {
-      closeModal();
-      setCurrentCompanyName(formValue.name);
-    }
-  };
-
-  const handleMonthChange = (e) => {
-    setSelectedMonth(e.target.value);
-  };
+  useEffect(() => {
+    fetchCompanyData();
+  }, [fetchCompanyData]);
 
   const handleDeleteCompany = async (id) => {
     await deleteCompany(id);
     closeModal();
     navigate('/firmy');
-  };
-
-  const handleFormChange = (e, key) => {
-    setFormValue((prev) => ({
-      ...prev,
-      [key]: e.target.value,
-    }));
   };
 
   useEffect(() => {
@@ -346,28 +306,6 @@ function CompanyProfile() {
     }
   }, [is1800, is1600, is1350, setItemsPerPage]);
 
-  useEffect(() => {
-    const currentMonthIndex = new Date().getMonth();
-    setSelectedMonth(months[currentMonthIndex]);
-  }, [months]);
-
-  useEffect(() => {
-    getCurrentCompany(params.id)
-      .then((currentCompany: CompaniesType) => {
-        setFormValue({
-          name: currentCompany.name || '',
-          phone: currentCompany.phone || '',
-          mail: currentCompany.mail || '',
-          teamMembers: currentCompany.teamMembers || [],
-          website: currentCompany.website || '',
-        });
-        setCurrentCompanyName(currentCompany.name);
-      })
-      .catch((error) => {
-        console.error('Error fetching user:', error);
-      });
-  }, [params.id, setFormValue]);
-
   return (
     <>
       <ModalTemplate
@@ -379,196 +317,29 @@ function CompanyProfile() {
         exitAnim={exitAnim}
       >
         {deleteCaptcha ? (
-          <div className={styles.captchaContainer}>
-            <h2>Jesteś pewien?</h2>
-            <div className={styles.captchaButtonsWrapper}>
-              <button
-                type="button"
-                className={styles.confirmDeleteButton}
-                onClick={() => handleDeleteCompany(params.id)}
-              >
-                Tak
-              </button>{' '}
-              <button
-                type="button"
-                className={styles.cancelDeleteButton}
-                onClick={() => setDeleteCaptcha(false)}
-              >
-                Anuluj
-              </button>
-            </div>
-          </div>
+          <Captcha
+            handleDeleteCompany={handleDeleteCompany}
+            setDeleteCaptcha={setDeleteCaptcha}
+            params={params}
+          />
         ) : (
           <>
             <h2>Edytuj</h2>
-            <div className={styles.inputsWrapper}>
-              <div className={styles.firstRow}>
-                <div>
-                  <label htmlFor="companyName">
-                    <strong>Nazwa:</strong>
-                  </label>
-                  <input
-                    type="text"
-                    name="companyName"
-                    id="companyName"
-                    value={formValue.name}
-                    onChange={(e) => {
-                      handleFormChange(e, 'name');
-                    }}
-                    className={styles.companyInput}
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="companyMail">
-                    <strong>E-Mail:</strong>
-                  </label>
-                  <input
-                    type="text"
-                    name="companyMail"
-                    id="companyMail"
-                    value={formValue.mail}
-                    onChange={(e) => {
-                      handleFormChange(e, 'mail');
-                    }}
-                    className={styles.companyInput}
-                  />
-                </div>
-              </div>
-
-              <div className={styles.secondRow}>
-                <div>
-                  <label htmlFor="companyNumber">
-                    <strong>Numer:</strong>
-                  </label>
-                  <input
-                    type="text"
-                    name="companyNumber"
-                    id="companyNumber"
-                    value={formValue.phone}
-                    onChange={(e) => {
-                      handleFormChange(e, 'phone');
-                    }}
-                    className={styles.companyInput}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="companyWebsite">
-                    <strong>Strona:</strong>
-                  </label>
-                  <input
-                    type="text"
-                    name="companyWebsite"
-                    id="companyWebsite"
-                    value={formValue.website}
-                    onChange={(e) => {
-                      handleFormChange(e, 'website');
-                    }}
-                    className={styles.companyInput}
-                  />
-                </div>
-              </div>
-
-              <SelectUser
-                users={users}
-                selectedMember={selectedMember}
-                handleMemberChange={handleMemberChange}
-                handleAddMember={handleAddMember}
-              />
-
-              <div className={styles.displayMembersWrapper}>
-                {formValue.teamMembers.length > 0 &&
-                  formValue.teamMembers.map((member) => {
-                    return (
-                      <CompanyGraphicTile
-                        key={member._id}
-                        member={member}
-                        handleDeleteMember={handleDeleteMember}
-                      />
-                    );
-                  })}
-              </div>
-
-              <div className={styles.optionButtonsWrapper}>
-                <button
-                  type="button"
-                  onClick={() => {
-                    handleUpdateCompany();
-                  }}
-                  className={styles.editButton}
-                >
-                  Edytuj
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setDeleteCaptcha(true);
-                  }}
-                  className={styles.deleteCompanyButton}
-                >
-                  Usuń firmę
-                </button>
-              </div>
-            </div>
+            <UpdateCompanyModalContent
+              currentCompany={company}
+              closeModal={closeModal}
+              openCaptcha={setDeleteCaptcha}
+              refreshCompanyData={fetchCompanyData}
+            />
           </>
         )}
       </ModalTemplate>
       <ControlBar>
-        <div className={styles.leftSide}>
-          <BackButton path="firmy" />
-          {currentCompanyName ? (
-            <div
-              className={styles.editCompanyWrapper}
-              role="button"
-              tabIndex={0}
-              onClick={() => openModal()}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  openModal();
-                }
-              }}
-            >
-              <button type="button" className={styles.editCompanyButton}>
-                <h2>{currentCompanyName}</h2>
-              </button>
-              <Icon icon="lucide:edit" width="24" height="24" color="#f68c1e" />
-            </div>
-          ) : (
-            <div className={styles.companyNameLoader} />
-          )}
-          <select
-            id="month-select"
-            value={selectedMonth}
-            onChange={handleMonthChange}
-            className={styles.selectInput}
-          >
-            {months.map((month) => (
-              <option key={month} value={month}>
-                {month}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className={styles.center}>
-          {/* <label htmlFor="task-search">Szukaj</label> */}
-          <input
-            className={styles.navInput}
-            type="text"
-            placeholder="Szukaj"
-            name="task-search"
-            id="task-search"
-          />
-
-          <p className={styles.summPar}>Suma:</p>
-        </div>
-        <div className={styles.totalHoursContainer}>
-          <p>{totalHours}</p>
-        </div>
-        <div className={styles.controlBarBtnsWrapper}>
-          <CTA type="button" onClick={() => {}}>
-            Filtry
-          </CTA>
-        </div>
+        <CompanyProfileControlBar
+          company={company}
+          openModal={openModal}
+          tasks={mockedTasks}
+        />
       </ControlBar>
 
       <ViewContainer>

@@ -1,0 +1,29 @@
+.error {
+  font-size: 1rem;
+  color: var(--color-orange);
+  animation: appear 0.7s;
+  margin: 0;
+}
+
+.errorBorder {
+  animation: appear 0.7s;
+  border-radius: 0.5rem;
+  border: 0.3rem solid var(--color-orange);
+  width: 25rem;
+  height: 3.5rem;
+  font-size: 20px;
+  font-weight: 500;
+  padding-left: 0.5rem;
+}
+
+.displayMembersWrapper {
+  max-width: 400px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.finalMessage {
+  position: absolute;
+  bottom: 0;
+}

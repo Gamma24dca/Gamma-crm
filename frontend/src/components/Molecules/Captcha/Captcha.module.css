@@ -1,0 +1,37 @@
+.captchaContainer {
+  padding: 50px 100px;
+  text-align: center;
+}
+
+.captchaButtonsWrapper {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.confirmDeleteButton,
+.cancelDeleteButton {
+  cursor: pointer;
+  background-color: #d11a2a;
+  border: 1px solid #d11a2a;
+  color: var(--color-lighter);
+  font-size: 16px;
+  font-weight: 600;
+  padding: 10px 25px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: var(--color-lighter);
+    color: #d11a2a;
+  }
+}
+
+.cancelDeleteButton {
+  background-color: var(--color-orange);
+  border: 1px solid var(--color-orange);
+  &:hover {
+    color: var(--color-orange);
+  }
+}

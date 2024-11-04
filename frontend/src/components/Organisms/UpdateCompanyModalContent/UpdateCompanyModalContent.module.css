@@ -1,0 +1,132 @@
+@keyframes loading {
+  0% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.4;
+  }
+}
+
+.firstRow,
+.secondRow {
+  display: flex;
+  width: 100%;
+
+  div {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    label {
+      text-align: center;
+    }
+  }
+}
+
+.secondRow {
+  margin-bottom: 30px;
+}
+
+.displayMembersWrapper {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.inputsWrapper {
+  width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.deleteCompanyButton,
+.editButton {
+  font-family: 'Montserrat';
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  color: var(--color-lighter);
+  max-width: 130px;
+  border: 1px solid #d11a2a;
+  border-radius: 10px;
+  background-color: #d11a2a;
+  padding: 10px 15px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: var(--color-lighter);
+    color: #d11a2a;
+  }
+}
+
+.editButton {
+  background-color: var(--color-orange);
+  border: 1px solid var(--color-orange);
+}
+
+.optionButtonsWrapper {
+  margin-top: 30px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.companyInput {
+  width: 90%;
+  border: 0;
+  border-bottom: 2px solid gray;
+  outline: 0;
+  font-size: 14px;
+  padding: 7px 0;
+  background: transparent;
+}
+
+.leftSide {
+  display: flex;
+  align-items: center;
+  width: 24.5%;
+}
+
+.editCompanyWrapper {
+  background-color: transparent;
+  border: none;
+  margin: 0 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-self: center;
+  gap: 5px;
+}
+
+.editCompanyWrapper:hover h2 {
+  color: var(--color-orange);
+}
+
+.editCompanyButton {
+  width: fit-content;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+
+  h2 {
+    transition: all 0.3s ease;
+  }
+}
+
+@media (max-width: 1700px) {
+  .inputsWrapper {
+    font-size: 14px;
+  }
+
+  .companyInput {
+    font-size: 12px;
+  }
+}
