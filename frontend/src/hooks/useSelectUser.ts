@@ -1,11 +1,18 @@
 import { useEffect, useState } from 'react';
 import useUsersContext from './Context/useUsersContext';
 import { getAllUsers } from '../services/users-service';
+import { CompaniesType } from '../services/companies-service';
 
 const useSelectUser = () => {
   const { users, dispatch } = useUsersContext();
   const [selectedMember, setSelectedMember] = useState<string>('Bartek');
-  const [teamMembers, setTeamMembers] = useState([]);
+  const [formValue, setFormValue] = useState<CompaniesType>({
+    name: '',
+    phone: '',
+    mail: '',
+    teamMembers: [],
+    website: '',
+  });
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -30,21 +37,29 @@ const useSelectUser = () => {
     const filteredUser = users.filter(
       (user) => user.name === selectedMemberValue
     );
-    console.log(teamMembers, filteredUser[0]);
-    if (teamMembers.includes(filteredUser[0])) return;
+    console.log(formValue.teamMembers, filteredUser[0]);
+    if (formValue.teamMembers.includes(filteredUser[0])) return;
 
-    setTeamMembers((prevState) => [...prevState, ...filteredUser]);
+    setFormValue((prevState) => ({
+      ...prevState,
+      teamMembers: [...prevState.teamMembers, ...filteredUser],
+    }));
   };
 
   const handleDeleteMember = (selectedMemberValue) => {
-    const filteredArray = teamMembers.filter((member) => {
+    const filteredArray = formValue.teamMembers.filter((member) => {
       return member._id !== selectedMemberValue._id;
     });
-    setTeamMembers([...filteredArray]);
+    setFormValue((prevState) => ({
+      ...prevState,
+      teamMembers: [...filteredArray],
+    }));
   };
 
   return {
     users,
+    formValue,
+    setFormValue,
     handleAddMember,
     handleDeleteMember,
     handleMemberChange,

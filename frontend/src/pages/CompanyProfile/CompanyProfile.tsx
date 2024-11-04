@@ -19,7 +19,8 @@ import useWindowSize from '../../hooks/useWindowSize';
 import usePagination from '../../hooks/usePagination';
 import useSort from '../../hooks/useSort';
 import CompanyGraphicTile from '../../components/Molecules/CompanyGraphicTile/CompanyGraphicTile';
-// import SelectUser from '../../components/Molecules/SelectUser/SelectUser';
+import useSelectUser from '../../hooks/useSelectUser';
+import SelectUser from '../../components/Molecules/SelectUser/SelectUser';
 
 const mockedTasks = [
   {
@@ -249,13 +250,6 @@ const mockedTasks = [
 ];
 
 function CompanyProfile() {
-  const [formValue, setFormValue] = useState<CompaniesType>({
-    name: '',
-    phone: '',
-    mail: '',
-    teamMembers: [],
-    website: '',
-  });
   const [selectedMonth, setSelectedMonth] = useState<string>('');
   const { showModal, exitAnim, openModal, closeModal } = useModal();
   const [deleteCaptcha, setDeleteCaptcha] = useState(false);
@@ -264,6 +258,7 @@ function CompanyProfile() {
 
   const { sortedData, sortColumn, sortOrder, handleSortChange } =
     useSort(mockedTasks);
+
   const {
     currentPage,
     totalPages,
@@ -272,6 +267,16 @@ function CompanyProfile() {
     handleNextPage,
     handlePreviousPage,
   } = usePagination(sortedData, 14);
+
+  const {
+    users,
+    formValue,
+    setFormValue,
+    handleAddMember,
+    handleDeleteMember,
+    handleMemberChange,
+    selectedMember,
+  } = useSelectUser();
 
   const months = useMemo(
     () => [
@@ -346,19 +351,19 @@ function CompanyProfile() {
 
   useEffect(() => {
     getCurrentCompany(params.id)
-      .then((singleUserArray: CompaniesType) => {
+      .then((currentCompany: CompaniesType) => {
         setFormValue({
-          name: singleUserArray.name || '',
-          phone: singleUserArray.phone || '',
-          mail: singleUserArray.mail || '',
-          teamMembers: singleUserArray.teamMembers || [],
-          website: singleUserArray.website || '',
+          name: currentCompany.name || '',
+          phone: currentCompany.phone || '',
+          mail: currentCompany.mail || '',
+          teamMembers: currentCompany.teamMembers || [],
+          website: currentCompany.website || '',
         });
       })
       .catch((error) => {
         console.error('Error fetching user:', error);
       });
-  }, [params.id]);
+  }, [params.id, setFormValue]);
 
   return (
     <>
@@ -461,6 +466,13 @@ function CompanyProfile() {
                 </div>
               </div>
 
+              <SelectUser
+                users={users}
+                selectedMember={selectedMember}
+                handleMemberChange={handleMemberChange}
+                handleAddMember={handleAddMember}
+              />
+
               <div className={styles.displayMembersWrapper}>
                 {formValue.teamMembers.length > 0 &&
                   formValue.teamMembers.map((member) => {
@@ -468,7 +480,7 @@ function CompanyProfile() {
                       <CompanyGraphicTile
                         key={member._id}
                         member={member}
-                        handleDeleteMember={() => {}}
+                        handleDeleteMember={handleDeleteMember}
                       />
                     );
                   })}
