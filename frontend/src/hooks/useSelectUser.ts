@@ -37,8 +37,10 @@ const useSelectUser = () => {
     const filteredUser = users.filter(
       (user) => user.name === selectedMemberValue
     );
-    console.log(formValue.teamMembers, filteredUser[0]);
-    if (formValue.teamMembers.includes(filteredUser[0])) return;
+    const isUserInArray = formValue.teamMembers.some(
+      (user) => user._id === filteredUser[0]._id
+    );
+    if (isUserInArray) return;
 
     setFormValue((prevState) => ({
       ...prevState,

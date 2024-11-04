@@ -250,6 +250,7 @@ const mockedTasks = [
 ];
 
 function CompanyProfile() {
+  const [currentCompanyName, setCurrentCompanyName] = useState('');
   const [selectedMonth, setSelectedMonth] = useState<string>('');
   const { showModal, exitAnim, openModal, closeModal } = useModal();
   const [deleteCaptcha, setDeleteCaptcha] = useState(false);
@@ -309,6 +310,7 @@ function CompanyProfile() {
     });
     if (response !== null) {
       closeModal();
+      setCurrentCompanyName(formValue.name);
     }
   };
 
@@ -359,6 +361,7 @@ function CompanyProfile() {
           teamMembers: currentCompany.teamMembers || [],
           website: currentCompany.website || '',
         });
+        setCurrentCompanyName(currentCompany.name);
       })
       .catch((error) => {
         console.error('Error fetching user:', error);
@@ -513,7 +516,7 @@ function CompanyProfile() {
       <ControlBar>
         <div className={styles.leftSide}>
           <BackButton path="firmy" />
-          {formValue.name ? (
+          {currentCompanyName ? (
             <div
               className={styles.editCompanyWrapper}
               role="button"
@@ -526,7 +529,7 @@ function CompanyProfile() {
               }}
             >
               <button type="button" className={styles.editCompanyButton}>
-                <h2>{formValue.name}</h2>
+                <h2>{currentCompanyName}</h2>
               </button>
               <Icon icon="lucide:edit" width="24" height="24" color="#f68c1e" />
             </div>
