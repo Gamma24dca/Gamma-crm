@@ -140,8 +140,6 @@ export async function UpdateCompany({ id, companyData }) {
       }
     );
 
-    console.log(formData);
-
     if (response.ok) {
       return await response.json();
     }
@@ -151,5 +149,28 @@ export async function UpdateCompany({ id, companyData }) {
       throw new Error('Update company', error.message);
     }
     return null;
+  }
+}
+
+export async function SearchCompany(query) {
+  try {
+    const response = await fetch(
+      `http://localhost:5000/api/companies/search/${query}`,
+      {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    if (response.ok) {
+      return await response.json();
+    }
+  } catch (error) {
+    console.error(error);
+    if (Config.isDev) {
+      throw new Error('Update company', error.message);
+    }
   }
 }

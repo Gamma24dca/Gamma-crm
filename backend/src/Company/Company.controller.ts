@@ -39,4 +39,29 @@ export const CompanyController = {
     const updatedCompany = await CompanyController.getCompany(companyID);
     return updatedCompany.teamMembers;
   },
+
+  async companySearch(query) {
+    const companies = await CompanyController.getCompanies();
+
+    console.log(query);
+
+    if (!query) {
+      return companies;
+    }
+
+    const filteredCompanies = companies.filter((company) => {
+      return (
+        company.name.toLowerCase().includes(query) ||
+        company.phone.includes(query) ||
+        company.mail.toLowerCase().includes(query) ||
+        company.teamMembers.some(
+          (member) =>
+            member.name.toLowerCase().includes(query) ||
+            member.lastname.toLowerCase().includes(query),
+        )
+      );
+    });
+
+    return filteredCompanies;
+  },
 };

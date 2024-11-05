@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
-import { getAllCompanies } from '../../services/companies-service';
+import {
+  getAllCompanies,
+  // SearchCompany,
+} from '../../services/companies-service';
 import styles from './CompaniesView.module.css';
 import ViewContainer from '../../components/Atoms/ViewContainer/ViewContainer';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
@@ -18,9 +21,23 @@ import CompanyTile from '../../components/Organisms/CompanyTile/CompanyTile';
 
 function CompaniesView() {
   const [successMessage, setSuccessMessage] = useState('');
+  // const [searchQuery, setSearchQuery] = useState('ma');
+  // const [matchingCompanies, setMatchingCompanies] = useState();
   const { showModal, exitAnim, openModal, closeModal } = useModal();
   const { companies, dispatch } = useCompaniesContext();
   const { setFormValue } = useSelectUser();
+
+  // const handleSearchQuery = (e) => {
+  //   setSearchQuery(e.target.value);
+  // };
+
+  // useEffect(() => {
+  //   SearchCompany(searchQuery).then((matchedCompanies) => {
+  //     setMatchingCompanies(matchedCompanies);
+  //   });
+  // }, [searchQuery]);
+
+  // console.log(matchingCompanies, searchQuery);
 
   useEffect(() => {
     const fetchCompanies = async () => {

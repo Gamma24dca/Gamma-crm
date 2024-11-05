@@ -8,8 +8,8 @@ function BackButton({ path }) {
       <Icon
         icon="ion:arrow-back-outline"
         color="#f68c1e"
-        width="40"
-        height="40"
+        width="35"
+        height="35"
       />
     </Link>
   );
