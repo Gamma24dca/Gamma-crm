@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
+import debounce from 'lodash.debounce';
 import {
   getAllCompanies,
-  // SearchCompany,
+  SearchCompany,
 } from '../../services/companies-service';
 import styles from './CompaniesView.module.css';
 import ViewContainer from '../../components/Atoms/ViewContainer/ViewContainer';
@@ -21,23 +22,26 @@ import CompanyTile from '../../components/Organisms/CompanyTile/CompanyTile';
 
 function CompaniesView() {
   const [successMessage, setSuccessMessage] = useState('');
-  // const [searchQuery, setSearchQuery] = useState('ma');
-  // const [matchingCompanies, setMatchingCompanies] = useState();
+  const [searchQuery, setSearchQuery] = useState('all');
+  const [matchingCompanies, setMatchingCompanies] = useState();
   const { showModal, exitAnim, openModal, closeModal } = useModal();
   const { companies, dispatch } = useCompaniesContext();
   const { setFormValue } = useSelectUser();
 
-  // const handleSearchQuery = (e) => {
-  //   setSearchQuery(e.target.value);
-  // };
+  const handleSearchQuery = (e) => {
+    setSearchQuery(e.target.value);
+  };
 
-  // useEffect(() => {
-  //   SearchCompany(searchQuery).then((matchedCompanies) => {
-  //     setMatchingCompanies(matchedCompanies);
-  //   });
-  // }, [searchQuery]);
+  useEffect(() => {
+    const fetchSearchedCompanies = debounce(async () => {
+      await SearchCompany(searchQuery).then((matchedCompanies) => {
+        setMatchingCompanies(matchedCompanies);
+      });
+    }, 500);
+    fetchSearchedCompanies();
+  }, [searchQuery]);
 
-  // console.log(matchingCompanies, searchQuery);
+  console.log(matchingCompanies, searchQuery);
 
   useEffect(() => {
     const fetchCompanies = async () => {
@@ -79,7 +83,11 @@ function CompaniesView() {
       </ModalTemplate>
       <ControlBar>
         <ControlBarTitle>Firmy</ControlBarTitle>
-        <SearchInput />
+        <SearchInput
+          onChange={(e) => {
+            handleSearchQuery(e);
+          }}
+        />
         <div className={styles.buttonsWrapper}>
           <CTA
             onClick={() => {

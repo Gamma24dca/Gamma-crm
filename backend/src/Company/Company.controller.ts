@@ -43,21 +43,23 @@ export const CompanyController = {
   async companySearch(query) {
     const companies = await CompanyController.getCompanies();
 
-    console.log(query);
+    if (!query || query.trim() === '') {
+      return companies;
+    }
 
-    if (!query) {
+    if (query === 'all') {
       return companies;
     }
 
     const filteredCompanies = companies.filter((company) => {
       return (
-        company.name.toLowerCase().includes(query) ||
+        company.name.toLowerCase().includes(query.toLowerCase()) ||
         company.phone.includes(query) ||
-        company.mail.toLowerCase().includes(query) ||
+        company.mail.toLowerCase().includes(query.toLowerCase()) ||
         company.teamMembers.some(
           (member) =>
-            member.name.toLowerCase().includes(query) ||
-            member.lastname.toLowerCase().includes(query),
+            member.name.toLowerCase().includes(query.toLowerCase()) ||
+            member.lastname.toLowerCase().includes(query.toLowerCase()),
         )
       );
     });

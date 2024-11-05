@@ -115,19 +115,17 @@ CompanyRouter.delete(
 );
 
 CompanyRouter.get(
-  '/search/:query',
+  '/search/:query?',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try {
-      const query = req.params.query;
-      if (!query) {
-        const allCompanies = await CompanyController.getCompanies();
-        res.json(allCompanies);
-      }
+      console.log('Query parameter:', req.params.query);
+      const query = req.params.query || '';
       const searchResult = await CompanyController.companySearch(query);
       res.status(StatusCodes.ACCEPTED).json(searchResult);
     } catch (error) {
-      res.status(StatusCodes.BAD_GATEWAY).json({ message: error });
+      console.error('Error', error.message);
+      res.status(StatusCodes.BAD_GATEWAY).json({ message: error.message });
     }
   },
 );
