@@ -58,7 +58,7 @@ function CompaniesView() {
     isOpen,
     getMenuProps,
     getInputProps,
-    // highlightedIndex,
+    highlightedIndex,
     getItemProps,
   } = useCombobox({
     items: matchingCompanies,
@@ -126,9 +126,24 @@ function CompaniesView() {
           {isOpen &&
             matchingCompanies.map((item, index) => {
               return (
-                <p {...getItemProps({ item, index })} key={item._id}>
-                  {item.name}
-                </p>
+                <div key={item._id}>
+                  {highlightedIndex === index ? (
+                    <p
+                      {...getItemProps({ item, index })}
+                      className={styles.highlightedCompanyItem}
+                    >
+                      {item.name}
+                    </p>
+                  ) : (
+                    <p
+                      {...getItemProps({ item, index })}
+                      key={item._id}
+                      className={styles.companyItem}
+                    >
+                      {item.name}
+                    </p>
+                  )}
+                </div>
               );
             })}
         </div>

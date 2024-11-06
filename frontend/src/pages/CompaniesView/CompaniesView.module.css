@@ -28,6 +28,14 @@
   padding: 10px 20px;
 }
 
+.companyItem {
+  color: black;
+}
+
+.highlightedCompanyItem {
+  color: red;
+}
+
 .tileElementInfoBar,
 .usersImgContainer {
   font-weight: 600;
