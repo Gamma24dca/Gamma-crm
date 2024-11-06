@@ -149,7 +149,7 @@ function UpdateCompanyModalContent({
           }}
           className={styles.editButton}
         >
-          Edytuj
+          Zapisz
         </button>
         <button
           type="button"

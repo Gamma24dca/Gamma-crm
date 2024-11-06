@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useCombobox } from 'downshift';
 import debounce from 'lodash.debounce';
 import {
   getAllCompanies,
@@ -12,7 +13,7 @@ import SkeletonUsersLoading from '../../components/Organisms/SkeletonUsersLoadin
 import InfoBar from '../../components/Organisms/InfoBar/InfoBar';
 import CTA from '../../components/Atoms/CTA/CTA';
 import ControlBarTitle from '../../components/Atoms/ControlBar/Title/ControlBarTitle';
-import SearchInput from '../../components/Atoms/ControlBar/SearchInput/SearchInput';
+// import SearchInput from '../../components/Atoms/ControlBar/SearchInput/SearchInput';
 import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplate';
 import useModal from '../../hooks/useModal';
 import useCompaniesContext from '../../hooks/Context/useCompaniesContext';
@@ -22,26 +23,47 @@ import CompanyTile from '../../components/Organisms/CompanyTile/CompanyTile';
 
 function CompaniesView() {
   const [successMessage, setSuccessMessage] = useState('');
-  const [searchQuery, setSearchQuery] = useState('all');
-  const [matchingCompanies, setMatchingCompanies] = useState();
+  // const [searchQuery, setSearchQuery] = useState('all');
+  const [matchingCompanies, setMatchingCompanies] = useState([]);
   const { showModal, exitAnim, openModal, closeModal } = useModal();
   const { companies, dispatch } = useCompaniesContext();
   const { setFormValue } = useSelectUser();
 
-  const handleSearchQuery = (e) => {
-    setSearchQuery(e.target.value);
-  };
+  // const handleSearchQuery = (e) => {
+  //   setSearchQuery(e.target.value);
+  // };
 
-  useEffect(() => {
-    const fetchSearchedCompanies = debounce(async () => {
-      await SearchCompany(searchQuery).then((matchedCompanies) => {
-        setMatchingCompanies(matchedCompanies);
-      });
-    }, 500);
-    fetchSearchedCompanies();
-  }, [searchQuery]);
+  // useEffect(() => {
+  //   const fetchSearchedCompanies = debounce(async () => {
+  //     await SearchCompany(searchQuery).then((matchedCompanies) => {
+  //       setMatchingCompanies(matchedCompanies);
+  //     });
+  //   }, 500);
+  //   fetchSearchedCompanies();
+  // }, [searchQuery]);
 
-  console.log(matchingCompanies, searchQuery);
+  // console.log(matchingCompanies, searchQuery);
+
+  const getMatchingCompanies = debounce(async ({ inputValue }) => {
+    if (!inputValue) {
+      setMatchingCompanies([]);
+      return;
+    }
+    const matchedCompanies = await SearchCompany(inputValue);
+    console.log(matchedCompanies, inputValue);
+    setMatchingCompanies(matchedCompanies);
+  }, 300);
+
+  const {
+    isOpen,
+    getMenuProps,
+    getInputProps,
+    // highlightedIndex,
+    getItemProps,
+  } = useCombobox({
+    items: matchingCompanies,
+    onInputValueChange: getMatchingCompanies,
+  });
 
   useEffect(() => {
     const fetchCompanies = async () => {
@@ -83,11 +105,33 @@ function CompaniesView() {
       </ModalTemplate>
       <ControlBar>
         <ControlBarTitle>Firmy</ControlBarTitle>
-        <SearchInput
-          onChange={(e) => {
-            handleSearchQuery(e);
-          }}
+        {/* <SearchInput
+          // onChange={(e) => {
+          //   handleSearchQuery(e);
+          // }}
+          name="Search"
+          id="Search"
+          placeholder="Szukaj"
+          {...getInputProps()}
+        /> */}
+        <input
+          type="text"
+          name="Search"
+          id="Search"
+          placeholder="Szukaj"
+          className={styles.input}
+          {...getInputProps()}
         />
+        <div {...getMenuProps()}>
+          {isOpen &&
+            matchingCompanies.map((item, index) => {
+              return (
+                <p {...getItemProps({ item, index })} key={item._id}>
+                  {item.name}
+                </p>
+              );
+            })}
+        </div>
         <div className={styles.buttonsWrapper}>
           <CTA
             onClick={() => {
