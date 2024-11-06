@@ -122,7 +122,7 @@ function CompaniesView() {
           className={styles.input}
           {...getInputProps()}
         />
-        <div {...getMenuProps()}>
+        <div className={styles.searchResultContainer} {...getMenuProps()}>
           {isOpen &&
             matchingCompanies.map((item, index) => {
               return (
