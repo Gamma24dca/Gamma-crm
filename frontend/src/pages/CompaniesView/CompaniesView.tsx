@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useCombobox } from 'downshift';
+import { Link, useNavigate } from 'react-router-dom';
 import debounce from 'lodash.debounce';
 import {
   getAllCompanies,
@@ -23,36 +24,27 @@ import CompanyTile from '../../components/Organisms/CompanyTile/CompanyTile';
 
 function CompaniesView() {
   const [successMessage, setSuccessMessage] = useState('');
-  // const [searchQuery, setSearchQuery] = useState('all');
   const [matchingCompanies, setMatchingCompanies] = useState([]);
   const { showModal, exitAnim, openModal, closeModal } = useModal();
   const { companies, dispatch } = useCompaniesContext();
   const { setFormValue } = useSelectUser();
-
-  // const handleSearchQuery = (e) => {
-  //   setSearchQuery(e.target.value);
-  // };
-
-  // useEffect(() => {
-  //   const fetchSearchedCompanies = debounce(async () => {
-  //     await SearchCompany(searchQuery).then((matchedCompanies) => {
-  //       setMatchingCompanies(matchedCompanies);
-  //     });
-  //   }, 500);
-  //   fetchSearchedCompanies();
-  // }, [searchQuery]);
-
-  // console.log(matchingCompanies, searchQuery);
+  const latestInputValue = useRef('');
+  const navigate = useNavigate();
 
   const getMatchingCompanies = debounce(async ({ inputValue }) => {
-    if (!inputValue) {
-      setMatchingCompanies([]);
-      return;
+    if (inputValue !== latestInputValue.current) return;
+
+    try {
+      const matchedCompanies = await SearchCompany(inputValue);
+      console.log(matchedCompanies, inputValue);
+      if (inputValue === latestInputValue.current) {
+        setMatchingCompanies(matchedCompanies);
+      }
+    } catch (error) {
+      console.error('Error fetching matching companies:', error.message);
     }
-    const matchedCompanies = await SearchCompany(inputValue);
-    console.log(matchedCompanies, inputValue);
-    setMatchingCompanies(matchedCompanies);
-  }, 300);
+    if (!inputValue) setMatchingCompanies([]);
+  }, 200);
 
   const {
     isOpen,
@@ -62,7 +54,17 @@ function CompaniesView() {
     getItemProps,
   } = useCombobox({
     items: matchingCompanies,
-    onInputValueChange: getMatchingCompanies,
+    onInputValueChange: ({ inputValue }) => {
+      latestInputValue.current = inputValue;
+      getMatchingCompanies({ inputValue });
+    },
+    onSelectedItemChange: ({ selectedItem }) => {
+      console.log(selectedItem);
+      if (selectedItem) {
+        navigate(`/firmy/${selectedItem._id}`);
+      }
+    },
+    itemToString: (item) => (item ? item.name : ''),
   });
 
   useEffect(() => {
@@ -114,19 +116,29 @@ function CompaniesView() {
           placeholder="Szukaj"
           {...getInputProps()}
         /> */}
-        <input
-          type="text"
-          name="Search"
-          id="Search"
-          placeholder="Szukaj"
-          className={styles.input}
-          {...getInputProps()}
-        />
-        <div className={styles.searchResultContainer} {...getMenuProps()}>
-          {isOpen &&
-            matchingCompanies.map((item, index) => {
-              return (
-                <div key={item._id}>
+
+        <div className={styles.searchContainer}>
+          <input
+            type="text"
+            name="Search"
+            id="Search"
+            placeholder="Szukaj"
+            className={styles.input}
+            {...getInputProps()}
+          />
+          <div
+            {...getMenuProps()}
+            className={isOpen ? styles.searchResultContainer : styles.hidden}
+            aria-label="results"
+          >
+            {isOpen &&
+              matchingCompanies.map((item, index) => (
+                <Link
+                  to={`/firmy/${item._id}`}
+                  key={item._id}
+                  className={styles.searchedCompanyItem}
+                  onClick={(e) => e.stopPropagation()}
+                >
                   {highlightedIndex === index ? (
                     <p
                       {...getItemProps({ item, index })}
@@ -137,16 +149,16 @@ function CompaniesView() {
                   ) : (
                     <p
                       {...getItemProps({ item, index })}
-                      key={item._id}
                       className={styles.companyItem}
                     >
                       {item.name}
                     </p>
                   )}
-                </div>
-              );
-            })}
+                </Link>
+              ))}
+          </div>
         </div>
+
         <div className={styles.buttonsWrapper}>
           <CTA
             onClick={() => {

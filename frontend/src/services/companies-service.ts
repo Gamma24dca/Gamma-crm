@@ -154,6 +154,9 @@ export async function UpdateCompany({ id, companyData }) {
 
 export async function SearchCompany(query) {
   try {
+    if (!query) {
+      return [];
+    }
     const response = await fetch(
       `https://gamma-crm.onrender.com/api/companies/search/${query}`,
       {
