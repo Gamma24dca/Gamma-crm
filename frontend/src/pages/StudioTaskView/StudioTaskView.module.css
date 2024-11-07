@@ -1,0 +1,57 @@
+.buttonsWrapper {
+  margin-right: 3%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.columnsWrapper {
+  width: 90%;
+  display: flex;
+  justify-content: center;
+  gap: 5%;
+}
+.taskColumnContainer {
+  width: 300px;
+  max-height: 75vh;
+}
+.taskColumn {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 300px;
+  height: 90%;
+  outline: dashed;
+  outline-color: var(--color-navButton);
+  outline-width: 2px;
+  border-radius: 10px;
+}
+
+.columnTitleWrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.columnTitleMark,
+.columnTitleMarkToDo,
+.columnTitleMarkInProgress,
+.columnTitleMarkSent {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: aqua;
+}
+.columnTitleMarkToDo {
+  background-color: var(--color-orange);
+}
+
+.columnTitleMarkInProgress {
+  background-color: var(--color-navButton);
+}
+
+.columnTitleMarkSent {
+  background-color: lightgreen;
+}
