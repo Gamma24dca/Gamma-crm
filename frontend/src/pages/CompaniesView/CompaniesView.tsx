@@ -128,7 +128,11 @@ function CompaniesView() {
           />
           <div
             {...getMenuProps()}
-            className={isOpen ? styles.searchResultContainer : styles.hidden}
+            className={
+              isOpen && matchingCompanies.length > 0
+                ? styles.searchResultContainer
+                : styles.hidden
+            }
             aria-label="results"
           >
             {isOpen &&
