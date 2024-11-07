@@ -13,7 +13,6 @@
   gap: 5%;
 }
 .taskColumnContainer {
-  width: 300px;
   max-height: 75vh;
 }
 .taskColumn {
@@ -21,8 +20,9 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  width: 300px;
+  width: 350px;
   height: 90%;
+  padding: 20px 0;
   outline: dashed;
   outline-color: var(--color-navButton);
   outline-width: 2px;
@@ -54,4 +54,11 @@
 
 .columnTitleMarkSent {
   background-color: lightgreen;
+}
+
+.task {
+  background-color: var(--color-lighter);
+  width: 80%;
+  border-radius: 5px;
+  padding: 0 20px;
 }
