@@ -12,7 +12,7 @@ import styles from './StudioTaskView.module.css';
 //     title: 'Leaflet Design',
 //     client: 'Shell',
 //     clientPerson: 'Anna Kowalska',
-//     status: 'In Progress',
+//     status: 'W trakcie',
 //     author: [
 //       {
 //         _id: '65608b6b1ad0aa5b987a8452',
@@ -60,7 +60,7 @@ import styles from './StudioTaskView.module.css';
 //     title: 'Annual Report 2024',
 //     client: 'Goodyear',
 //     clientPerson: 'Piotr Nowakowski',
-//     status: 'To Do',
+//     status: 'Do zrobienia',
 //     author: [
 //       {
 //         _id: '65608b6b1ad0aa5b987a8453',
@@ -109,7 +109,7 @@ import styles from './StudioTaskView.module.css';
 //     title: 'Website Redesign',
 //     client: 'Axa',
 //     clientPerson: 'Elżbieta Kamińska',
-//     status: 'Completed',
+//     status: 'Wysłane',
 //     author: [
 //       {
 //         _id: '65608b6b1ad0aa5b987a8454',
@@ -156,6 +156,25 @@ import styles from './StudioTaskView.module.css';
 //   },
 // ];
 
+const colums = [
+  {
+    class: 'columnTitleMark',
+    title: 'Na później',
+  },
+  {
+    class: 'columnTitleMarkToDo',
+    title: 'Do zrobienia',
+  },
+  {
+    class: 'columnTitleMarkInProgress',
+    title: 'W trakcie',
+  },
+  {
+    class: 'columnTitleMarkSent',
+    title: 'Wysłane',
+  },
+];
+
 function StudioTaskView() {
   return (
     <>
@@ -170,7 +189,7 @@ function StudioTaskView() {
 
       <ViewContainer>
         <div className={styles.columnsWrapper}>
-          <div className={styles.taskColumnContainer}>
+          {/* <div className={styles.taskColumnContainer}>
             <div className={styles.columnTitleWrapper}>
               <div className={styles.columnTitleMark} />
               <h4>Na później</h4>
@@ -214,7 +233,22 @@ function StudioTaskView() {
                 <p>task</p>
               </div>
             </div>
-          </div>
+          </div> */}
+          {colums.map((column) => {
+            return (
+              <div className={styles.taskColumnContainer} key={column.class}>
+                <div className={styles.columnTitleWrapper}>
+                  <div className={styles.columnTitleMarkSent} />
+                  <h4>{column.title}</h4>
+                </div>
+                <div className={styles.taskColumn}>
+                  <div className={styles.task}>
+                    <p>task</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </ViewContainer>
     </>
