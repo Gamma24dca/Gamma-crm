@@ -109,7 +109,7 @@ const mockedTasks = [
     title: 'Website Redesign',
     client: 'Axa',
     clientPerson: 'Elżbieta Kamińska',
-    status: 'Wysłane',
+    status: 'Do zrobienia',
     author: [
       {
         _id: '65608b6b1ad0aa5b987a8454',
@@ -190,14 +190,19 @@ function StudioTaskView() {
       <ViewContainer>
         <div className={styles.columnsWrapper}>
           {colums.map((column) => {
-            console.log(column.class);
             return (
               <div className={styles.taskColumnContainer} key={column.class}>
                 <div className={styles.columnTitleWrapper}>
-                  <div className={` ${styles[`${column.class}`]}`} />
+                  <div className={`${styles[`${column.class}`]}`} />
                   <h4>{column.title}</h4>
                 </div>
-                <div className={styles.taskColumn}>
+                <div
+                  className={`${styles.taskColumn} ${
+                    mockedTasks.some((task) => task.status === column.title)
+                      ? ''
+                      : styles.taskColumnBorder
+                  }`}
+                >
                   {mockedTasks.map((task) => {
                     return (
                       task.status === column.title && (
