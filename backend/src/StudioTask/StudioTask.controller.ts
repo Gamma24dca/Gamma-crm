@@ -11,10 +11,9 @@ export const StudioTaskController = {
     return studioTask;
   },
 
-  async addStudioTask(body) {
-    await StudioTaskModel.validate(body);
-    const newStudioTask = await StudioTaskModel.create(body);
-    return newStudioTask;
+  async addStudioTask(studioTask) {
+    await StudioTaskModel.validate(studioTask);
+    return await StudioTaskModel.create(studioTask);
   },
 
   async updateStudioTask(id, body) {

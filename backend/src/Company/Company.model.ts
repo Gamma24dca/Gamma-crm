@@ -31,7 +31,6 @@ export const CompanyModel = mongoose.model(
         },
         email: {
           type: String,
-          unique: true,
         },
         phone: {
           type: Number,

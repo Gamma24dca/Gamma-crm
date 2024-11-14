@@ -54,33 +54,32 @@ export const StudioTaskModel = mongoose.model(
     TaskType: {
       type: String,
     },
-    participants: {
-      type: [
-        {
-          _id: {
-            type: String,
-          },
-          name: {
-            type: String,
-          },
-          lastname: {
-            type: String,
-          },
-          email: {
-            type: String,
-          },
-          phone: {
-            type: Number,
-          },
-          job: {
-            type: String,
-          },
-          img: {
-            type: String,
-          },
+    participants: [
+      {
+        _id: {
+          type: String,
         },
-      ],
-    },
+        name: {
+          type: String,
+        },
+        lastname: {
+          type: String,
+        },
+        email: {
+          type: String,
+          unique: true,
+        },
+        phone: {
+          type: Number,
+        },
+        job: {
+          type: String,
+        },
+        img: {
+          type: String,
+        },
+      },
+    ],
     description: {
       type: String,
     },

@@ -39,7 +39,7 @@ StudioTaskRouter.post(
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try {
-      const newStudioTask = StudioTaskController.addStudioTask({
+      const newStudioTask = await StudioTaskController.addStudioTask({
         searchID: req.body.searchID,
         title: req.body.title,
         client: req.body.client,
