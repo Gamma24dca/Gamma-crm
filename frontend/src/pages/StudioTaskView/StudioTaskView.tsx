@@ -4,6 +4,7 @@ import ControlBarTitle from '../../components/Atoms/ControlBar/Title/ControlBarT
 import CTA from '../../components/Atoms/CTA/CTA';
 // import ListContainer from '../../components/Atoms/ListContainer/ListContainer';
 import ViewContainer from '../../components/Atoms/ViewContainer/ViewContainer';
+import UsersDisplay from '../../components/Organisms/UsersDisplay/UsersDisplay';
 // import InfoBar from '../../components/Organisms/InfoBar/InfoBar';
 import styles from './StudioTaskView.module.css';
 
@@ -27,31 +28,37 @@ const mockedTasks = [
     TaskType: 'Marketing',
     participants: [
       {
-        _id: '67059fb0dcfe272f6b1f1bb3',
-        name: 'Joanna',
-        lastname: 'Nowak',
-        email: 'joanna.nowak@gamma24.pl',
-        phone: 501234567,
-        job: 'Designer',
-        img: 'https://res.cloudinary.com/dpktrptfr/image/upload/v1679038450/AboutPage/Gamma_Joanna-min.jpg',
+        _id: '65608c451ad0aa5b987a8483',
+        name: 'Elżbieta',
+        lastname: 'Ciebień',
+        email: 'elzbieta.ciebien@gamma24.pl',
+        phone: 123456789,
+        job: 'Creative director',
+        img: 'https://res.cloudinary.com/dpktrptfr/image/upload/v1685627514/AboutPage/Gamma_Ela-min_xa19ip.jpg',
       },
       {
         _id: '655f423bf7ce6ff8c9b4f308',
-        name: 'Adam',
+        name: 'Weronika',
         lastname: 'Wisniewski',
         email: 'adam.wisniewski@gamma24.pl',
         phone: 502345678,
         job: 'Content Specialist',
-        img: 'https://res.cloudinary.com/dpktrptfr/image/upload/v1679038451/AboutPage/Gamma_Adam-min.jpg',
+        img: 'https://res.cloudinary.com/dpktrptfr/image/upload/v1679038451/AboutPage/Gamma_Wera-min.jpg',
       },
     ],
     description: 'Design a promotional leaflet for Shell’s new product line.',
     subtasks: [
       {
         content: 'Finalize layout design',
+        done: false,
       },
       {
         content: 'Send for client review',
+        done: true,
+      },
+      {
+        content: 'testestest',
+        done: true,
       },
     ],
     deadline: '25.11.2024',
@@ -76,21 +83,21 @@ const mockedTasks = [
     participants: [
       {
         _id: '67059fb0dcfe272f6b1f1bb4',
-        name: 'Jan',
+        name: 'Bartek',
         lastname: 'Bialy',
         email: 'jan.bialy@gamma24.pl',
         phone: 503456789,
         job: 'Data Analyst',
-        img: 'https://res.cloudinary.com/dpktrptfr/image/upload/v1679038453/AboutPage/Gamma_Jan-min.jpg',
+        img: 'https://res.cloudinary.com/dpktrptfr/image/upload/v1679038453/AboutPage/Gamma_Bartek-min.jpg',
       },
       {
         _id: '655f423bf7ce6ff8c9b4f309',
-        name: 'Kasia',
+        name: 'Dawid',
         lastname: 'Nowak',
         email: 'kasia.nowak@gamma24.pl',
         phone: 504567890,
         job: 'Editor',
-        img: 'https://res.cloudinary.com/dpktrptfr/image/upload/v1679038454/AboutPage/Gamma_Kasia-min.jpg',
+        img: 'https://res.cloudinary.com/dpktrptfr/image/upload/v1679038454/AboutPage/Gamma_Dawid-min.jpg',
       },
     ],
     description:
@@ -98,9 +105,11 @@ const mockedTasks = [
     subtasks: [
       {
         content: 'Collect financial data',
+        done: false,
       },
       {
         content: 'Prepare visualizations and charts',
+        done: false,
       },
     ],
     deadline: '15.12.2024',
@@ -125,21 +134,21 @@ const mockedTasks = [
     participants: [
       {
         _id: '67059fb0dcfe272f6b1f1bb5',
-        name: 'Paulina',
+        name: 'Edyta',
         lastname: 'Radzka',
         email: 'paulina.radzka@gamma24.pl',
         phone: 506789012,
         job: 'Frontend Developer',
-        img: 'https://res.cloudinary.com/dpktrptfr/image/upload/v1679038456/AboutPage/Gamma_Paulina-min.jpg',
+        img: 'https://res.cloudinary.com/dpktrptfr/image/upload/v1679038456/AboutPage/Gamma_Edyta-min.jpg',
       },
       {
         _id: '655f423bf7ce6ff8c9b4f310',
-        name: 'Tomasz',
+        name: 'Jurek',
         lastname: 'Nowicki',
         email: 'tomasz.nowicki@gamma24.pl',
         phone: 507890123,
         job: 'UX Designer',
-        img: 'https://res.cloudinary.com/dpktrptfr/image/upload/v1679038457/AboutPage/Gamma_Tomasz-min.jpg',
+        img: 'https://res.cloudinary.com/dpktrptfr/image/upload/v1679038457/AboutPage/Gamma_Jerzy-min.jpg',
       },
     ],
     description:
@@ -147,9 +156,11 @@ const mockedTasks = [
     subtasks: [
       {
         content: 'Finalize wireframes',
+        done: true,
       },
       {
         content: 'Implement responsive design',
+        done: true,
       },
     ],
     deadline: '30.10.2024',
@@ -204,11 +215,26 @@ function StudioTaskView() {
                   }`}
                 >
                   {mockedTasks.map((task) => {
+                    const subtasksLength = task.subtasks.length;
+
                     return (
                       task.status === column.title && (
                         <div className={styles.task}>
-                          <p>{task.client}</p>
-                          <p>{task.description}</p>
+                          <p
+                            className={`${styles.clientName} ${
+                              styles[`${task.client}`]
+                            }`}
+                          >
+                            {task.client}
+                          </p>
+                          <p>{task.title}</p>
+                          <div className={styles.userDisplayWrapper}>
+                            <UsersDisplay
+                              data={task}
+                              usersArray={task.participants}
+                            />
+                          </div>
+                          <span>{subtasksLength}</span>
                         </div>
                       )
                     );
