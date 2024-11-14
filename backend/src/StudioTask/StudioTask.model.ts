@@ -67,7 +67,6 @@ export const StudioTaskModel = mongoose.model(
         },
         email: {
           type: String,
-          unique: true,
         },
         phone: {
           type: Number,
