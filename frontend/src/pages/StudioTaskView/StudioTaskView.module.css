@@ -62,6 +62,8 @@
 }
 
 .task {
+  font-size: 15px;
+  position: relative;
   cursor: pointer;
   background-color: var(--color-lighter);
   width: 80%;
@@ -102,7 +104,21 @@
 }
 
 .userDisplayWrapper {
-  width: 100%;
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+}
+
+.subtasksCountWrapper {
+  font-size: 11px;
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  gap: 5px;
+}
+
+.searchID {
+  font-size: 11px;
+  position: absolute;
+  top: 10px;
+  right: 20px;
 }

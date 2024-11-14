@@ -1,3 +1,4 @@
+import { Icon } from '@iconify/react';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
 import SearchInput from '../../components/Atoms/ControlBar/SearchInput/SearchInput';
 import ControlBarTitle from '../../components/Atoms/ControlBar/Title/ControlBarTitle';
@@ -119,17 +120,16 @@ const mockedTasks = [
     client: 'Axa',
     clientPerson: 'Elżbieta Kamińska',
     status: 'Do zrobienia',
-    author: [
-      {
-        _id: '65608b6b1ad0aa5b987a8454',
-        name: 'Dawid',
-        lastname: 'Cichy',
-        email: 'dawid.cichy@gamma24.pl',
-        phone: 505678901,
-        job: 'Lead Developer',
-        img: 'https://res.cloudinary.com/dpktrptfr/image/upload/v1679038455/AboutPage/Gamma_Dawid-min.jpg',
-      },
-    ],
+    author: {
+      _id: '65608b6b1ad0aa5b987a8454',
+      name: 'Dawid',
+      lastname: 'Cichy',
+      email: 'dawid.cichy@gamma24.pl',
+      phone: 505678901,
+      job: 'Lead Developer',
+      img: 'https://res.cloudinary.com/dpktrptfr/image/upload/v1679038455/AboutPage/Gamma_Dawid-min.jpg',
+    },
+
     TaskType: 'Web Development',
     participants: [
       {
@@ -186,6 +186,10 @@ const colums = [
   },
 ];
 
+function generateFourDigitRandom() {
+  return Math.floor(1000 + Math.random() * 9000);
+}
+
 function StudioTaskView() {
   return (
     <>
@@ -216,6 +220,14 @@ function StudioTaskView() {
                 >
                   {mockedTasks.map((task) => {
                     const subtasksLength = task.subtasks.length;
+                    const searchID = generateFourDigitRandom();
+                    let doneSubtasks = 0;
+
+                    task.subtasks.forEach((subtask) => {
+                      if (subtask.done) {
+                        doneSubtasks += 1;
+                      }
+                    });
 
                     return (
                       task.status === column.title && (
@@ -227,6 +239,7 @@ function StudioTaskView() {
                           >
                             {task.client}
                           </p>
+                          <span className={styles.searchID}>{searchID}</span>
                           <p>{task.title}</p>
                           <div className={styles.userDisplayWrapper}>
                             <UsersDisplay
@@ -234,7 +247,17 @@ function StudioTaskView() {
                               usersArray={task.participants}
                             />
                           </div>
-                          <span>{subtasksLength}</span>
+                          <div className={styles.subtasksCountWrapper}>
+                            <Icon
+                              icon="material-symbols:task-alt"
+                              width="12"
+                              height="12"
+                            />
+                            <div>
+                              <span>{doneSubtasks}/</span>
+                              <span>{subtasksLength}</span>
+                            </div>
+                          </div>
                         </div>
                       )
                     );

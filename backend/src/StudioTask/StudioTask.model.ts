@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { UserModel } from '../User/User.model';
 
 export const StudioTaskModel = mongoose.model(
   'StudioTask',
@@ -25,23 +26,15 @@ export const StudioTaskModel = mongoose.model(
       required: true,
     },
     author: {
-      type: String,
+      type: UserModel,
       required: true,
-    },
-    authorName: {
-      type: String,
-      required: true,
-    },
-    authorAvatar: {
-      type: String,
-      // required: true,
     },
     // For Example Druk, Szwalnia, Mulimedia, social media
     TaskType: {
       type: String,
     },
     participants: {
-      type: Array,
+      type: [{ type: UserModel }],
     },
     description: {
       type: String,
@@ -49,6 +42,7 @@ export const StudioTaskModel = mongoose.model(
     subtasks: [
       {
         content: { type: String },
+        done: { type: Boolean },
       },
     ],
     deadline: {

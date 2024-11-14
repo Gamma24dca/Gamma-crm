@@ -55,6 +55,7 @@
   color: var(--color-lighter);
   font-size: 13px;
   animation: appear 0.3s ease forwards;
+  z-index: 3;
 }
 
 .usersImgContainer {
