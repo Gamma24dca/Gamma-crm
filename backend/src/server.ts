@@ -10,6 +10,7 @@ import { AuthRouter } from './Auth/Auth.router';
 import { UserRouter } from './User/User.router';
 import { TaskRouter } from './Tasks/Task.router';
 import { CompanyRouter } from './Company/Company.router';
+import { StudioTaskRouter } from './StudioTask/StudioTask.router';
 
 const app = express();
 
@@ -53,4 +54,5 @@ app.use('/api/auth', AuthRouter);
 app.use('/api/users', UserRouter);
 app.use('/api/tasks', TaskRouter);
 app.use('/api/companies', CompanyRouter);
+app.use('/api/studiotasks', StudioTaskRouter);
 app.get('/api/status', (_, res) => res.status(200).json({ ok: true }));

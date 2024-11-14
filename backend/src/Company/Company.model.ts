@@ -36,9 +36,6 @@ export const CompanyModel = mongoose.model(
         phone: {
           type: Number,
         },
-        password: {
-          type: String,
-        },
         job: {
           type: String,
         },

@@ -1,13 +1,12 @@
 import mongoose from 'mongoose';
-import { UserModel } from '../User/User.model';
 
 export const StudioTaskModel = mongoose.model(
   'StudioTask',
   new mongoose.Schema({
-    // Four random unic digits generated in front
     searchID: {
       type: Number,
       required: true,
+      unique: true,
     },
     title: {
       type: String,
@@ -26,15 +25,61 @@ export const StudioTaskModel = mongoose.model(
       required: true,
     },
     author: {
-      type: UserModel,
-      required: true,
+      _id: {
+        type: String,
+      },
+      name: {
+        type: String,
+      },
+      lastname: {
+        type: String,
+      },
+      email: {
+        type: String,
+      },
+      phone: {
+        type: Number,
+      },
+      password: {
+        type: String,
+      },
+      job: {
+        type: String,
+      },
+      img: {
+        type: String,
+      },
     },
     // For Example Druk, Szwalnia, Mulimedia, social media
     TaskType: {
       type: String,
     },
     participants: {
-      type: [{ type: UserModel }],
+      type: [
+        {
+          _id: {
+            type: String,
+          },
+          name: {
+            type: String,
+          },
+          lastname: {
+            type: String,
+          },
+          email: {
+            type: String,
+          },
+          phone: {
+            type: Number,
+          },
+          job: {
+            type: String,
+          },
+          img: {
+            type: String,
+          },
+        },
+      ],
     },
     description: {
       type: String,

@@ -239,7 +239,7 @@ function StudioTaskView() {
                           >
                             {task.client}
                           </p>
-                          <span className={styles.searchID}>{searchID}</span>
+                          <span className={styles.searchID}>#{searchID}</span>
                           <p>{task.title}</p>
                           <div className={styles.userDisplayWrapper}>
                             <UsersDisplay
