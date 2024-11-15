@@ -19,6 +19,7 @@ export type StudioTaskTypes = {
   description: string;
   subtasks: Subtask[];
   deadline: string;
+  startDate: string;
 };
 
 export async function getAllStudioTasks() {

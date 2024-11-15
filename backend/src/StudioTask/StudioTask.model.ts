@@ -88,6 +88,10 @@ export const StudioTaskModel = mongoose.model(
         done: { type: Boolean },
       },
     ],
+    startDate: {
+      type: Date,
+      required: true,
+    },
     deadline: {
       type: Date,
     },

@@ -50,6 +50,10 @@ export const TaskModel = mongoose.model(
       type: String,
       required: true,
     },
+    startDate: {
+      type: Date,
+      required: true,
+    },
     deadline: {
       type: Date,
       required: true,

@@ -33,6 +33,15 @@ function generateSearchID() {
   return Math.floor(1000 + Math.random() * 9000);
 }
 
+function DateFormatter({ dateString }) {
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('pl-PL', { day: '2-digit', month: 'short' });
+  };
+
+  return <div className={styles.date}>{formatDate(dateString)}</div>;
+}
+
 function StudioTaskView() {
   const { studioTasks, dispatch } = useStudioTasksContext();
 
@@ -85,7 +94,7 @@ function StudioTaskView() {
 
                     return (
                       task.status === column.title && (
-                        <div className={styles.task}>
+                        <div className={styles.task} key={task._id}>
                           <p
                             className={`${styles.clientName} ${
                               styles[`${task.client}`]
@@ -100,6 +109,22 @@ function StudioTaskView() {
                               data={task}
                               usersArray={task.participants}
                             />
+                          </div>
+                          <div className={styles.datesWrapper}>
+                            {/* {task.startDate && (
+                              <DateFormatter dateString={task.startDate} />
+                            )}
+                            <span>-</span>
+                            {task.deadline && (
+                              <DateFormatter dateString={task.deadline} />
+                            )} */}
+                            {task.deadline && task.startDate ? (
+                              <>
+                                <DateFormatter dateString={task.startDate} />
+                                <span>&nbsp;-&nbsp;</span>
+                                <DateFormatter dateString={task.deadline} />
+                              </>
+                            ) : null}
                           </div>
                           <div className={styles.subtasksCountWrapper}>
                             <Icon

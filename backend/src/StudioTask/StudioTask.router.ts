@@ -51,6 +51,7 @@ StudioTaskRouter.post(
         description: req.body.description,
         subtasks: req.body.subtasks,
         deadline: req.body.deadline,
+        startDate: req.body.startDate,
       });
       res.status(StatusCodes.ACCEPTED).json(newStudioTask);
     } catch (error) {
