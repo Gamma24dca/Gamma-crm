@@ -7,7 +7,7 @@ export const StudioTaskController = {
   },
 
   async getStudioTask(id) {
-    const studioTask = StudioTaskModel.findById(id).exec();
+    const studioTask = await StudioTaskModel.findById(id).exec();
     return studioTask;
   },
 
