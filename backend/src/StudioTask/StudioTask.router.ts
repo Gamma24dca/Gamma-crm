@@ -53,7 +53,38 @@ StudioTaskRouter.post(
         deadline: req.body.deadline,
         startDate: req.body.startDate,
       });
-      res.status(StatusCodes.ACCEPTED).json(newStudioTask);
+      res.status(StatusCodes.CREATED).json(newStudioTask);
+    } catch (error) {
+      console.error(error);
+      res.status(StatusCodes.BAD_REQUEST).json({ message: error });
+    }
+  },
+);
+
+StudioTaskRouter.patch(
+  '/:id',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const updatedStudioTask = await StudioTaskController.updateStudioTask(
+        req.params.id,
+        { ...req.body },
+      );
+      res.status(StatusCodes.ACCEPTED).json(updatedStudioTask);
+    } catch (error) {
+      console.error(error);
+      res.status(StatusCodes.BAD_REQUEST).json({ message: error });
+    }
+  },
+);
+
+StudioTaskRouter.delete(
+  '/:id',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      await StudioTaskController.deleteStudioTask(req.params.id);
+      res.status(StatusCodes.ACCEPTED);
     } catch (error) {
       console.error(error);
       res.status(StatusCodes.BAD_REQUEST).json({ message: error });

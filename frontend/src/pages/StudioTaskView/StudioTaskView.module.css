@@ -136,7 +136,13 @@
 
 .datesWrapper {
   display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 11px;
   position: absolute;
   right: 50%;
+}
+
+.noDates {
+  transform: translateY(-10px);
 }

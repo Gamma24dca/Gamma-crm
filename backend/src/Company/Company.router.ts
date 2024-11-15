@@ -83,36 +83,36 @@ CompanyRouter.delete(
   },
 );
 
-CompanyRouter.post(
-  '/:id/teamMembers',
-  passport.authenticate('jwt', { session: false }),
-  async (req, res) => {
-    try {
-      const teamMember = await CompanyController.addTeamMember(req.params.id, {
-        ...req.body,
-      });
-      res.status(StatusCodes.CREATED).json(teamMember);
-    } catch (error) {
-      console.error(error);
-      res.status(StatusCodes.BAD_REQUEST).json({ error });
-    }
-  },
-);
+// CompanyRouter.post(
+//   '/:id/teamMembers',
+//   passport.authenticate('jwt', { session: false }),
+//   async (req, res) => {
+//     try {
+//       const teamMember = await CompanyController.addTeamMember(req.params.id, {
+//         ...req.body,
+//       });
+//       res.status(StatusCodes.CREATED).json(teamMember);
+//     } catch (error) {
+//       console.error(error);
+//       res.status(StatusCodes.BAD_REQUEST).json({ error });
+//     }
+//   },
+// );
 
-CompanyRouter.delete(
-  '/:companyID/teamMembers/:workerID',
-  passport.authenticate('jwt', { session: false }),
-  async (req, res) => {
-    try {
-      const companyID = req.params.companyID;
-      const workerID = req.params.workerID;
-      await CompanyController.deleteTeamMember(companyID, workerID);
-      res.status(StatusCodes.NO_CONTENT).json({});
-    } catch (error) {
-      res.status(StatusCodes.BAD_REQUEST).json({ message: error });
-    }
-  },
-);
+// CompanyRouter.delete(
+//   '/:companyID/teamMembers/:workerID',
+//   passport.authenticate('jwt', { session: false }),
+//   async (req, res) => {
+//     try {
+//       const companyID = req.params.companyID;
+//       const workerID = req.params.workerID;
+//       await CompanyController.deleteTeamMember(companyID, workerID);
+//       res.status(StatusCodes.NO_CONTENT).json({});
+//     } catch (error) {
+//       res.status(StatusCodes.BAD_REQUEST).json({ message: error });
+//     }
+//   },
+// );
 
 CompanyRouter.get(
   '/search/:query?',

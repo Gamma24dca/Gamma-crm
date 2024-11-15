@@ -9,6 +9,8 @@ import UsersDisplay from '../../components/Organisms/UsersDisplay/UsersDisplay';
 import styles from './StudioTaskView.module.css';
 import useStudioTasksContext from '../../hooks/Context/useStudioTasksContext';
 import { getAllStudioTasks } from '../../services/studio-tasks-service';
+import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplate';
+import useModal from '../../hooks/useModal';
 
 const colums = [
   {
@@ -29,9 +31,9 @@ const colums = [
   },
 ];
 
-function generateSearchID() {
-  return Math.floor(1000 + Math.random() * 9000);
-}
+// function generateSearchID() {
+//   return Math.floor(1000 + Math.random() * 9000);
+// }
 
 function DateFormatter({ dateString }) {
   const formatDate = (dateStr) => {
@@ -43,6 +45,8 @@ function DateFormatter({ dateString }) {
 }
 
 function StudioTaskView() {
+  const { showModal, exitAnim, openModal, closeModal } = useModal();
+
   const { studioTasks, dispatch } = useStudioTasksContext();
 
   useEffect(() => {
@@ -56,11 +60,26 @@ function StudioTaskView() {
 
   return (
     <>
+      <ModalTemplate
+        isOpen={showModal}
+        onClose={() => {
+          closeModal();
+        }}
+        exitAnim={exitAnim}
+      >
+        <p>modal</p>
+      </ModalTemplate>
       <ControlBar>
         <ControlBarTitle>Zlecenia</ControlBarTitle>
         <SearchInput />
         <div className={styles.buttonsWrapper}>
-          <CTA onClick={() => {}}>Nowe zlecenie</CTA>
+          <CTA
+            onClick={() => {
+              openModal();
+            }}
+          >
+            Nowe zlecenie
+          </CTA>
           <CTA onClick={() => {}}>Filtry</CTA>
         </div>
       </ControlBar>
@@ -83,7 +102,7 @@ function StudioTaskView() {
                 >
                   {studioTasks.map((task) => {
                     const subtasksLength = task.subtasks.length;
-                    const searchID = generateSearchID();
+                    // const searchID = generateSearchID();
                     let doneSubtasks = 0;
 
                     task.subtasks.forEach((subtask) => {
@@ -102,7 +121,9 @@ function StudioTaskView() {
                           >
                             {task.client}
                           </p>
-                          <span className={styles.searchID}>#{searchID}</span>
+                          <span className={styles.searchID}>
+                            #{task.searchID}
+                          </span>
                           <p>{task.title}</p>
                           <div className={styles.userDisplayWrapper}>
                             <UsersDisplay
@@ -111,20 +132,15 @@ function StudioTaskView() {
                             />
                           </div>
                           <div className={styles.datesWrapper}>
-                            {/* {task.startDate && (
-                              <DateFormatter dateString={task.startDate} />
-                            )}
-                            <span>-</span>
-                            {task.deadline && (
-                              <DateFormatter dateString={task.deadline} />
-                            )} */}
                             {task.deadline && task.startDate ? (
                               <>
                                 <DateFormatter dateString={task.startDate} />
                                 <span>&nbsp;-&nbsp;</span>
                                 <DateFormatter dateString={task.deadline} />
                               </>
-                            ) : null}
+                            ) : (
+                              <p className={styles.noDates}>Brak dat</p>
+                            )}
                           </div>
                           <div className={styles.subtasksCountWrapper}>
                             <Icon
