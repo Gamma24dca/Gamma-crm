@@ -25,7 +25,9 @@ StudioTaskRouter.get(
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try {
-      const studioTask = StudioTaskController.getStudioTask(req.params.id);
+      const studioTask = await StudioTaskController.getStudioTask(
+        req.params.id,
+      );
       res.status(StatusCodes.ACCEPTED).json(studioTask);
     } catch (error) {
       console.error(error);
