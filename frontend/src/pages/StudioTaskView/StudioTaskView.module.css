@@ -79,10 +79,7 @@
   }
 }
 
-.clientName,
-.Goodyear,
-.Axa,
-.Shell {
+.clientName {
   width: fit-content;
   font-size: 12px;
   font-weight: 600;
@@ -101,6 +98,14 @@
 
 .Shell {
   background-color: #ffc600;
+}
+
+.Premio {
+  background-color: #002855;
+}
+
+.Santander {
+  background-color: #ec0000;
 }
 
 .userDisplayWrapper {

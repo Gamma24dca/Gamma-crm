@@ -1,0 +1,53 @@
+import { createContext, ReactNode, useReducer, useMemo } from 'react';
+import { StudioTaskTypes } from '../services/studio-tasks-service';
+
+type StudioTaskStateType = {
+  studioTasks: StudioTaskTypes[];
+};
+
+type StudioTaskContextType = StudioTaskStateType & {
+  dispatch: React.Dispatch<any>;
+};
+
+export const StudioTasksContext = createContext<
+  StudioTaskContextType | undefined
+>(undefined);
+
+export const studioTasksReducer = (state: StudioTaskStateType, action: any) => {
+  switch (action.type) {
+    case 'SET_STUDIOTASKS':
+      return { studioTasks: action.payload };
+    case 'CREATE_STUDIOTASK':
+      return { studioTasks: [action.payload, ...state.studioTasks] };
+    case 'DELETE_STUDIOTASK':
+      return {
+        studioTasks: state.studioTasks.filter(
+          (studioTask) => studioTask._id !== action.payload.id
+        ),
+      };
+
+    default:
+      return state;
+  }
+};
+
+export function StudioTasksContextProvider({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  const [state, dispatch] = useReducer(studioTasksReducer, {
+    studioTasks: [],
+  });
+
+  const contextValue = useMemo(
+    () => ({ ...state, dispatch }),
+    [state, dispatch]
+  );
+
+  return (
+    <StudioTasksContext.Provider value={contextValue}>
+      {children}
+    </StudioTasksContext.Provider>
+  );
+}

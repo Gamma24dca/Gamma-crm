@@ -7,6 +7,7 @@ type Subtask = {
 };
 
 export type StudioTaskTypes = {
+  _id?: string;
   searchID: number;
   title: string;
   client: string;
@@ -22,13 +23,16 @@ export type StudioTaskTypes = {
 
 export async function getAllStudioTasks() {
   try {
-    const response = await fetch('/api/studiotasks', {
-      method: 'GET',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    const response = await fetch(
+      'https://gamma-crm.onrender.com/api/studiotasks',
+      {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
     if (response.ok) {
       return await response.json();
     }

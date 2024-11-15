@@ -7,6 +7,7 @@ import App from './pages/App/App';
 import { UsersContextProvider } from './context/UsersContext';
 import TasksContextProvder from './context/TasksContext';
 import { CompaniesContextProvider } from './context/CompaniesContext';
+import { StudioTasksContextProvider } from './context/StudioTasksContext';
 
 // If you want deploy site to static cdn, use Hashrouter instead
 
@@ -14,13 +15,15 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter>
       <UserProvider>
-        <CompaniesContextProvider>
-          <TasksContextProvder>
-            <UsersContextProvider>
-              <App />
-            </UsersContextProvider>
-          </TasksContextProvder>
-        </CompaniesContextProvider>
+        <StudioTasksContextProvider>
+          <CompaniesContextProvider>
+            <TasksContextProvder>
+              <UsersContextProvider>
+                <App />
+              </UsersContextProvider>
+            </TasksContextProvder>
+          </CompaniesContextProvider>
+        </StudioTasksContextProvider>
       </UserProvider>
     </BrowserRouter>
   </React.StrictMode>

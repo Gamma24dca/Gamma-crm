@@ -1,171 +1,14 @@
+import { useEffect } from 'react';
 import { Icon } from '@iconify/react';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
 import SearchInput from '../../components/Atoms/ControlBar/SearchInput/SearchInput';
 import ControlBarTitle from '../../components/Atoms/ControlBar/Title/ControlBarTitle';
 import CTA from '../../components/Atoms/CTA/CTA';
-// import ListContainer from '../../components/Atoms/ListContainer/ListContainer';
 import ViewContainer from '../../components/Atoms/ViewContainer/ViewContainer';
 import UsersDisplay from '../../components/Organisms/UsersDisplay/UsersDisplay';
-// import InfoBar from '../../components/Organisms/InfoBar/InfoBar';
 import styles from './StudioTaskView.module.css';
-
-const mockedTasks = [
-  {
-    title: 'Leaflet Design',
-    client: 'Shell',
-    clientPerson: 'Anna Kowalska',
-    status: 'W trakcie',
-    author: [
-      {
-        _id: '65608b6b1ad0aa5b987a8452',
-        name: 'Marek',
-        lastname: 'Kowal',
-        email: 'marek.kowal@gamma24.pl',
-        phone: 512345678,
-        job: 'Project Manager',
-        img: 'https://res.cloudinary.com/dpktrptfr/image/upload/v1679038449/AboutPage/Gamma_Marek-min.jpg',
-      },
-    ],
-    TaskType: 'Marketing',
-    participants: [
-      {
-        _id: '65608c451ad0aa5b987a8483',
-        name: 'Elżbieta',
-        lastname: 'Ciebień',
-        email: 'elzbieta.ciebien@gamma24.pl',
-        phone: 123456789,
-        job: 'Creative director',
-        img: 'https://res.cloudinary.com/dpktrptfr/image/upload/v1685627514/AboutPage/Gamma_Ela-min_xa19ip.jpg',
-      },
-      {
-        _id: '655f423bf7ce6ff8c9b4f308',
-        name: 'Weronika',
-        lastname: 'Wisniewski',
-        email: 'adam.wisniewski@gamma24.pl',
-        phone: 502345678,
-        job: 'Content Specialist',
-        img: 'https://res.cloudinary.com/dpktrptfr/image/upload/v1679038451/AboutPage/Gamma_Wera-min.jpg',
-      },
-    ],
-    description: 'Design a promotional leaflet for Shell’s new product line.',
-    subtasks: [
-      {
-        content: 'Finalize layout design',
-        done: false,
-      },
-      {
-        content: 'Send for client review',
-        done: true,
-      },
-      {
-        content: 'testestest',
-        done: true,
-      },
-    ],
-    deadline: '25.11.2024',
-  },
-  {
-    title: 'Annual Report 2024',
-    client: 'Goodyear',
-    clientPerson: 'Piotr Nowakowski',
-    status: 'Do zrobienia',
-    author: [
-      {
-        _id: '65608b6b1ad0aa5b987a8453',
-        name: 'Monika',
-        lastname: 'Lis',
-        email: 'monika.lis@gamma24.pl',
-        phone: 513456789,
-        job: 'Coordinator',
-        img: 'https://res.cloudinary.com/dpktrptfr/image/upload/v1679038452/AboutPage/Gamma_Monika-min.jpg',
-      },
-    ],
-    TaskType: 'Corporate',
-    participants: [
-      {
-        _id: '67059fb0dcfe272f6b1f1bb4',
-        name: 'Bartek',
-        lastname: 'Bialy',
-        email: 'jan.bialy@gamma24.pl',
-        phone: 503456789,
-        job: 'Data Analyst',
-        img: 'https://res.cloudinary.com/dpktrptfr/image/upload/v1679038453/AboutPage/Gamma_Bartek-min.jpg',
-      },
-      {
-        _id: '655f423bf7ce6ff8c9b4f309',
-        name: 'Dawid',
-        lastname: 'Nowak',
-        email: 'kasia.nowak@gamma24.pl',
-        phone: 504567890,
-        job: 'Editor',
-        img: 'https://res.cloudinary.com/dpktrptfr/image/upload/v1679038454/AboutPage/Gamma_Dawid-min.jpg',
-      },
-    ],
-    description:
-      'Compile and design the annual report for Goodyear’s fiscal year 2024.',
-    subtasks: [
-      {
-        content: 'Collect financial data',
-        done: false,
-      },
-      {
-        content: 'Prepare visualizations and charts',
-        done: false,
-      },
-    ],
-    deadline: '15.12.2024',
-  },
-  {
-    title: 'Website Redesign',
-    client: 'Axa',
-    clientPerson: 'Elżbieta Kamińska',
-    status: 'Do zrobienia',
-    author: {
-      _id: '65608b6b1ad0aa5b987a8454',
-      name: 'Dawid',
-      lastname: 'Cichy',
-      email: 'dawid.cichy@gamma24.pl',
-      phone: 505678901,
-      job: 'Lead Developer',
-      img: 'https://res.cloudinary.com/dpktrptfr/image/upload/v1679038455/AboutPage/Gamma_Dawid-min.jpg',
-    },
-
-    TaskType: 'Web Development',
-    participants: [
-      {
-        _id: '67059fb0dcfe272f6b1f1bb5',
-        name: 'Edyta',
-        lastname: 'Radzka',
-        email: 'paulina.radzka@gamma24.pl',
-        phone: 506789012,
-        job: 'Frontend Developer',
-        img: 'https://res.cloudinary.com/dpktrptfr/image/upload/v1679038456/AboutPage/Gamma_Edyta-min.jpg',
-      },
-      {
-        _id: '655f423bf7ce6ff8c9b4f310',
-        name: 'Jurek',
-        lastname: 'Nowicki',
-        email: 'tomasz.nowicki@gamma24.pl',
-        phone: 507890123,
-        job: 'UX Designer',
-        img: 'https://res.cloudinary.com/dpktrptfr/image/upload/v1679038457/AboutPage/Gamma_Jerzy-min.jpg',
-      },
-    ],
-    description:
-      'Complete overhaul of the Axa corporate website to improve UX and accessibility.',
-    subtasks: [
-      {
-        content: 'Finalize wireframes',
-        done: true,
-      },
-      {
-        content: 'Implement responsive design',
-        done: true,
-      },
-    ],
-    deadline: '30.10.2024',
-  },
-];
+import useStudioTasksContext from '../../hooks/Context/useStudioTasksContext';
+import { getAllStudioTasks } from '../../services/studio-tasks-service';
 
 const colums = [
   {
@@ -186,11 +29,22 @@ const colums = [
   },
 ];
 
-function generateFourDigitRandom() {
+function generateSearchID() {
   return Math.floor(1000 + Math.random() * 9000);
 }
 
 function StudioTaskView() {
+  const { studioTasks, dispatch } = useStudioTasksContext();
+
+  useEffect(() => {
+    const fetchAllStudioTasks = async () => {
+      const AllStudioTasks = await getAllStudioTasks();
+      dispatch({ type: 'SET_STUDIOTASKS', payload: AllStudioTasks });
+    };
+
+    fetchAllStudioTasks();
+  }, [dispatch]);
+
   return (
     <>
       <ControlBar>
@@ -213,14 +67,14 @@ function StudioTaskView() {
                 </div>
                 <div
                   className={`${styles.taskColumn} ${
-                    mockedTasks.some((task) => task.status === column.title)
+                    studioTasks.some((task) => task.status === column.title)
                       ? ''
                       : styles.taskColumnBorder
                   }`}
                 >
-                  {mockedTasks.map((task) => {
+                  {studioTasks.map((task) => {
                     const subtasksLength = task.subtasks.length;
-                    const searchID = generateFourDigitRandom();
+                    const searchID = generateSearchID();
                     let doneSubtasks = 0;
 
                     task.subtasks.forEach((subtask) => {
