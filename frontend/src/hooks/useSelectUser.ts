@@ -34,7 +34,6 @@ const useSelectUser = () => {
   // };
 
   const handleAddMember = (selectedMemberValue) => {
-    console.log(selectedMemberValue);
     const filteredUser = users.filter(
       (user) => user.name === selectedMemberValue
     );

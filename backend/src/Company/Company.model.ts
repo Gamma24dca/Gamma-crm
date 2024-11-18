@@ -18,6 +18,11 @@ export const CompanyModel = mongoose.model(
     website: {
       type: String,
     },
+    clientPerson: [
+      {
+        name: { type: String },
+      },
+    ],
     teamMembers: [
       {
         _id: {

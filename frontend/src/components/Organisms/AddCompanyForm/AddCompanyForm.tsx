@@ -10,6 +10,7 @@ import Form from '../../Atoms/Form/Form';
 import useSelectUser from '../../../hooks/useSelectUser';
 import { addCompany } from '../../../services/companies-service';
 import inputStyle from '../../Atoms/Input/Input.module.css';
+import ClientSelect from '../../Molecules/ClientSelect/ClientSelect';
 
 const createCompanySchema = Yup.object({
   name: Yup.string().required('Nazwa jest wymagana'),
@@ -25,8 +26,6 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
     setFormValue,
     handleAddMember,
     handleDeleteMember,
-    // handleMemberChange,
-    // selectedMember,
   } = useSelectUser();
 
   const formik = useFormik({
@@ -124,12 +123,7 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
         })}
       </>
 
-      <SelectUser
-        users={users}
-        // selectedMember={selectedMember}
-        // handleMemberChange={handleMemberChange}
-        handleAddMember={handleAddMember}
-      />
+      <SelectUser users={users} handleAddMember={handleAddMember} />
       {formValue.teamMembers.length > 0 && (
         <div className={styles.displayMembersWrapper}>
           {formValue.teamMembers.map((member) => {
@@ -143,6 +137,7 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
           })}
         </div>
       )}
+      <ClientSelect />
       <SubmitButton
         disabled={formik.isSubmitting}
         buttonContent={formik.isSubmitting ? 'Dodawanie...' : 'Dodaj'}
