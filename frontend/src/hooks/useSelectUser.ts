@@ -5,7 +5,7 @@ import { CompaniesType } from '../services/companies-service';
 
 const useSelectUser = () => {
   const { users, dispatch } = useUsersContext();
-  const [selectedMember, setSelectedMember] = useState<string>('Bartek');
+  // const [selectedMember, setSelectedMember] = useState<string>('Bartek');
   const [formValue, setFormValue] = useState<CompaniesType>({
     name: '',
     phone: '',
@@ -29,11 +29,12 @@ const useSelectUser = () => {
     fetchUsers();
   }, [dispatch, users]);
 
-  const handleMemberChange = (e) => {
-    setSelectedMember(e.target.value);
-  };
+  // const handleMemberChange = (e) => {
+  //   setSelectedMember(e.target.value);
+  // };
 
   const handleAddMember = (selectedMemberValue) => {
+    console.log(selectedMemberValue);
     const filteredUser = users.filter(
       (user) => user.name === selectedMemberValue
     );
@@ -64,8 +65,8 @@ const useSelectUser = () => {
     setFormValue,
     handleAddMember,
     handleDeleteMember,
-    handleMemberChange,
-    selectedMember,
+    // handleMemberChange,
+    // selectedMember,
   };
 };
 

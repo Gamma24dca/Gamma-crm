@@ -25,8 +25,8 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
     setFormValue,
     handleAddMember,
     handleDeleteMember,
-    handleMemberChange,
-    selectedMember,
+    // handleMemberChange,
+    // selectedMember,
   } = useSelectUser();
 
   const formik = useFormik({
@@ -96,13 +96,11 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
       value: formik.values.website,
     },
   ];
-
   return (
     <Form onSubmit={formik.handleSubmit} isSignInView={false}>
       {formik.status === 'error' && (
         <div className={styles.error}>Tworzenie nie powiodło się</div>
       )}
-
       <>
         {formInputs.map(({ id, type, placeholder, value }) => {
           return (
@@ -128,8 +126,8 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
 
       <SelectUser
         users={users}
-        selectedMember={selectedMember}
-        handleMemberChange={handleMemberChange}
+        // selectedMember={selectedMember}
+        // handleMemberChange={handleMemberChange}
         handleAddMember={handleAddMember}
       />
       {formValue.teamMembers.length > 0 && (
@@ -145,7 +143,6 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
           })}
         </div>
       )}
-
       <SubmitButton
         disabled={formik.isSubmitting}
         buttonContent={formik.isSubmitting ? 'Dodawanie...' : 'Dodaj'}

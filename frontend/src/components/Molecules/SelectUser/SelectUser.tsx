@@ -1,27 +1,36 @@
-import { Icon } from '@iconify/react';
+// import { Icon } from '@iconify/react';
+
 import styles from './SelectUser.module.css';
 
 function SelectUser({
   users,
-  selectedMember,
-  handleMemberChange,
+  // selectedMember,
+  // handleMemberChange,
   handleAddMember,
 }) {
   return (
     <div className={styles.addUserWrapper}>
       <select
         id="user-select"
-        value={selectedMember}
-        onChange={handleMemberChange}
+        // value={selectedMember}
+        onChange={(e) => {
+          // handleMemberChange(e);
+          handleAddMember(e.target.value);
+        }}
         className={styles.selectInput}
       >
-        {users.map((user) => (
-          <option key={user._id} value={user.name}>
-            {user.name}
-          </option>
-        ))}
+        <option value="">Przypisz grafika</option>
+
+        {users.map((user) => {
+          return (
+            <option key={user._id} value={user.name}>
+              {user.name}
+            </option>
+          );
+        })}
       </select>
-      <button
+
+      {/* <button
         type="button"
         className={styles.addTeamMemberButton}
         onClick={() => handleAddMember(selectedMember)}
@@ -33,7 +42,7 @@ function SelectUser({
           height="50"
           className={styles.addNewUserBtn}
         />
-      </button>
+      </button> */}
     </div>
   );
 }
