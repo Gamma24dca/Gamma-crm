@@ -20,8 +20,6 @@ function UpdateCompanyModalContent({
     setFormValue,
     handleAddMember,
     handleDeleteMember,
-    handleMemberChange,
-    selectedMember,
   } = useSelectUser();
 
   useEffect(() => {
@@ -121,12 +119,7 @@ function UpdateCompanyModalContent({
         </div>
       </div>
 
-      <SelectUser
-        users={users}
-        selectedMember={selectedMember}
-        handleMemberChange={handleMemberChange}
-        handleAddMember={handleAddMember}
-      />
+      <SelectUser users={users} handleAddMember={handleAddMember} />
 
       <div className={styles.displayMembersWrapper}>
         {formValue.teamMembers.length > 0 &&

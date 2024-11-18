@@ -1,5 +1,7 @@
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { KeyboardEventHandler, useState } from 'react';
+import CreatableSelect from 'react-select/creatable';
 import styles from './AddCompanyForm.module.css';
 import FormControl from '../../Atoms/FormControl/FormControl';
 import Input from '../../Atoms/Input/Input';
@@ -10,7 +12,6 @@ import Form from '../../Atoms/Form/Form';
 import useSelectUser from '../../../hooks/useSelectUser';
 import { addCompany } from '../../../services/companies-service';
 import inputStyle from '../../Atoms/Input/Input.module.css';
-import ClientSelect from '../../Molecules/ClientSelect/ClientSelect';
 
 const createCompanySchema = Yup.object({
   name: Yup.string().required('Nazwa jest wymagana'),
@@ -19,7 +20,23 @@ const createCompanySchema = Yup.object({
   website: Yup.string(),
 });
 
+const components = {
+  DropdownIndicator: null,
+};
+
+interface Option {
+  readonly label: string;
+  readonly value: string;
+}
+
+const createOption = (label: string) => ({
+  label,
+  value: label,
+});
+
 function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
+  const [inputValue, setInputValue] = useState('');
+  const [value, setValue] = useState<readonly Option[]>([]);
   const {
     users,
     formValue,
@@ -27,6 +44,20 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
     handleAddMember,
     handleDeleteMember,
   } = useSelectUser();
+
+  const handleKeyDown: KeyboardEventHandler = (event) => {
+    if (!inputValue) return;
+    switch (event.key) {
+      case 'Enter':
+      case 'Tab':
+        setValue((prev) => [...prev, createOption(inputValue)]);
+        setInputValue('');
+        event.preventDefault();
+        break;
+      default:
+        null;
+    }
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -49,11 +80,18 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
           return;
         }
 
+        const clientsObject = value.map((client) => ({
+          name: client.label,
+        }));
+
+        console.log(clientsObject);
+
         await addCompany({
           name,
           phone,
           mail,
           website,
+          clientPerson: clientsObject,
           teamMembers: memberObject,
         });
 
@@ -80,19 +118,19 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
       id: 'phone',
       type: 'text',
       placeholder: 'Telefon',
-      value: formik.values.phone,
+      inValue: formik.values.phone,
     },
     {
       id: 'mail',
       type: 'email',
       placeholder: 'Mail',
-      value: formik.values.mail,
+      inValue: formik.values.mail,
     },
     {
       id: 'website',
       type: 'url',
       placeholder: 'Strona',
-      value: formik.values.website,
+      inValue: formik.values.website,
     },
   ];
   return (
@@ -101,7 +139,7 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
         <div className={styles.error}>Tworzenie nie powiodło się</div>
       )}
       <>
-        {formInputs.map(({ id, type, placeholder, value }) => {
+        {formInputs.map(({ id, type, placeholder, inValue }) => {
           return (
             <FormControl key={id}>
               <Input
@@ -116,13 +154,25 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
                 }
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={value}
+                value={inValue}
               />
             </FormControl>
           );
         })}
       </>
 
+      <CreatableSelect
+        components={components}
+        inputValue={inputValue}
+        isClearable
+        isMulti
+        menuIsOpen={false}
+        onChange={(newValue) => setValue(newValue)}
+        onInputChange={(newValue) => setInputValue(newValue)}
+        onKeyDown={handleKeyDown}
+        placeholder="Wpisz Imię i nazwisko klienta"
+        value={value}
+      />
       <SelectUser users={users} handleAddMember={handleAddMember} />
       {formValue.teamMembers.length > 0 && (
         <div className={styles.displayMembersWrapper}>
@@ -137,7 +187,6 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
           })}
         </div>
       )}
-      <ClientSelect />
       <SubmitButton
         disabled={formik.isSubmitting}
         buttonContent={formik.isSubmitting ? 'Dodawanie...' : 'Dodaj'}

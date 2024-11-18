@@ -5,13 +5,13 @@ import { CompaniesType } from '../services/companies-service';
 
 const useSelectUser = () => {
   const { users, dispatch } = useUsersContext();
-  // const [selectedMember, setSelectedMember] = useState<string>('Bartek');
   const [formValue, setFormValue] = useState<CompaniesType>({
     name: '',
     phone: '',
     mail: '',
     teamMembers: [],
     website: '',
+    clientPerson: [],
   });
 
   useEffect(() => {
@@ -28,10 +28,6 @@ const useSelectUser = () => {
 
     fetchUsers();
   }, [dispatch, users]);
-
-  // const handleMemberChange = (e) => {
-  //   setSelectedMember(e.target.value);
-  // };
 
   const handleAddMember = (selectedMemberValue) => {
     const filteredUser = users.filter(
@@ -64,8 +60,6 @@ const useSelectUser = () => {
     setFormValue,
     handleAddMember,
     handleDeleteMember,
-    // handleMemberChange,
-    // selectedMember,
   };
 };
 

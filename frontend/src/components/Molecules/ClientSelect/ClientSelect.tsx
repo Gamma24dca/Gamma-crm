@@ -19,8 +19,6 @@ export default function ClientSelect() {
   const [inputValue, setInputValue] = useState('');
   const [value, setValue] = useState<readonly Option[]>([]);
 
-  console.log(value);
-
   const handleKeyDown: KeyboardEventHandler = (event) => {
     if (!inputValue) return;
     switch (event.key) {

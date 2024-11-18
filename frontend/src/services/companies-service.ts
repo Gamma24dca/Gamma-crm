@@ -1,12 +1,18 @@
 import { Config } from '../config';
 import { User } from './users-service';
 
+type ClientPerson = {
+  value: string;
+  label: string;
+};
+
 export type CompaniesType = {
   _id?: string;
   name: string;
   phone: string;
   mail: string;
   website: string;
+  clientPerson: ClientPerson[];
   activeTasks?: number;
   teamMembers: User[];
 };
@@ -60,12 +66,20 @@ export async function getCurrentCompany(id): Promise<CompaniesType | null> {
   }
 }
 
-export async function addCompany({ name, phone, mail, website, teamMembers }) {
+export async function addCompany({
+  name,
+  phone,
+  mail,
+  website,
+  clientPerson,
+  teamMembers,
+}) {
   const formData = {
     name,
     phone,
     mail,
     website,
+    clientPerson,
     teamMembers,
   };
 
