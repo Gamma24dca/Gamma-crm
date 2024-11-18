@@ -28,6 +28,7 @@ function UpdateCompanyModalContent({
       phone: currentCompany.phone || '',
       mail: currentCompany.mail || '',
       teamMembers: currentCompany.teamMembers || [],
+      clientPerson: currentCompany.clientPerson || [],
       website: currentCompany.website || '',
     });
   }, [currentCompany, setFormValue]);

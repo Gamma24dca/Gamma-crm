@@ -172,6 +172,7 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
         onKeyDown={handleKeyDown}
         placeholder="Wpisz Imię i nazwisko klienta"
         value={value}
+        className={styles.clientsInput}
       />
       <SelectUser users={users} handleAddMember={handleAddMember} />
       {formValue.teamMembers.length > 0 && (
