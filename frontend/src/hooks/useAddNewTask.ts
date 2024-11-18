@@ -98,7 +98,6 @@ const useAddNewTask = () => {
       setIsLoading(false);
     } finally {
       setIsLoading(false);
-
       setShowFinalMessage(true);
       // dispatch({
       //   type: 'ADD_TASK',

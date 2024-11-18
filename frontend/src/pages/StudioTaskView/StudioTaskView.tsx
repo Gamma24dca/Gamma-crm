@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Icon } from '@iconify/react';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
 import SearchInput from '../../components/Atoms/ControlBar/SearchInput/SearchInput';
@@ -8,9 +8,17 @@ import ViewContainer from '../../components/Atoms/ViewContainer/ViewContainer';
 import UsersDisplay from '../../components/Organisms/UsersDisplay/UsersDisplay';
 import styles from './StudioTaskView.module.css';
 import useStudioTasksContext from '../../hooks/Context/useStudioTasksContext';
-import { getAllStudioTasks } from '../../services/studio-tasks-service';
+import {
+  addStudioTask,
+  getAllStudioTasks,
+} from '../../services/studio-tasks-service';
 import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplate';
 import useModal from '../../hooks/useModal';
+// import useSelectUser from '../../hooks/useSelectUser';
+// import useAuth from '../../hooks/useAuth';
+import Loader from '../../components/Molecules/Loader/Loader';
+import useCompaniesContext from '../../hooks/Context/useCompaniesContext';
+import { getAllCompanies } from '../../services/companies-service';
 
 const colums = [
   {
@@ -31,9 +39,24 @@ const colums = [
   },
 ];
 
-// function generateSearchID() {
-//   return Math.floor(1000 + Math.random() * 9000);
-// }
+function generateSearchID() {
+  return Math.floor(1000 + Math.random() * 9000);
+}
+
+// const createCompanySchema = Yup.object({
+//   searchID: Yup.string().required('Wymagane'),
+//   title: Yup.string().required('Nazwa jest wymagana'),
+//   client: Yup.string(),
+//   clientPerson: Yup.string(),
+//   status: Yup.string(),
+//   author: Yup.object(),
+//   taskType: Yup.string(),
+//   participants: Yup.array(),
+//   description: Yup.string(),
+//   subtasks: Yup.array(),
+//   deadline: Yup.date(),
+//   startDate: Yup.date(),
+// });
 
 function DateFormatter({ dateString }) {
   const formatDate = (dateStr) => {
@@ -46,8 +69,140 @@ function DateFormatter({ dateString }) {
 
 function StudioTaskView() {
   const { showModal, exitAnim, openModal, closeModal } = useModal();
-
   const { studioTasks, dispatch } = useStudioTasksContext();
+  const { companies, dispatch: companiesDispatch } = useCompaniesContext();
+  const [formData, setFormData] = useState({
+    title: '',
+    client: '',
+    clientPerson: '',
+    status: '',
+    author: {},
+    taskType: '',
+    participants: [],
+    description: '',
+    subtasks: [],
+    deadline: '',
+    startDate: '',
+  });
+  const [loadingState, setLoadingState] = useState({
+    isLoading: false,
+    isFinalMessage: false,
+    finalMessage: '',
+  });
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      if (companies.length === 0) {
+        try {
+          const allCompanies = await getAllCompanies();
+          companiesDispatch({ type: 'SET_COMPANIES', payload: allCompanies });
+        } catch (error) {
+          console.error('Error fetching users:', error);
+        }
+      }
+    };
+
+    fetchUsers();
+  }, [companiesDispatch, companies]);
+
+  // const { user } = useAuth();
+
+  // const {
+  //   users,
+  //   formValue,
+  //   setFormValue,
+  //   handleAddMember,
+  //   handleDeleteMember,
+  //   handleMemberChange,
+  //   selectedMember,
+  // } = useSelectUser();
+
+  const handleFormChange = (e, key) => {
+    setFormData((prev) => ({
+      ...prev,
+      [key]: e.target.value,
+    }));
+  };
+
+  const handleLoadingStateChange = (key, val) => {
+    setLoadingState((prev) => ({
+      ...prev,
+      [key]: val,
+    }));
+  };
+
+  const createTaskHandler = async () => {
+    try {
+      handleLoadingStateChange('isLoading', true);
+      const searchID = generateSearchID();
+      const response = await addStudioTask({
+        searchID,
+        title: formData.title,
+        client: formData.client,
+        clientPerson: 'Magdalena ożóg',
+        status: 'Do zrobienia',
+        author: {
+          _id: '655f4a55f7ce6ff8c9b4f383',
+          name: 'Dawid',
+          lastname: 'Pietruszewski',
+          email: 'dawid3.pietruszewski@gamma24.pl',
+          phone: 531099779,
+          job: 'Developer',
+          img: 'https://res.cloudinary.com/dpktrptfr/image/upload/v1683719306/AboutPage/Gamma_Dawid-min.jpg',
+        },
+        taskType: 'digital',
+        participants: [
+          {
+            _id: '672a17729df774cf83b094ad',
+            name: 'Kamil',
+            lastname: 'Mika',
+            email: 'kamil3.mika@gamma24.pl',
+            phone: 531099779,
+            job: 'Grafik',
+            img: 'https://res.cloudinary.com/dpktrptfr/image/upload/v1683719307/AboutPage/Gamma_Kamil-min.jpg',
+          },
+          {
+            _id: '655f423bf7ce6ff8c9b4f307',
+            name: 'Bartek',
+            lastname: 'Szyfner',
+            email: 'bartek.szyfner@gamma24.pl',
+            phone: 531099779,
+            job: 'Grafik',
+            img: 'https://res.cloudinary.com/dpktrptfr/image/upload/v1683719307/AboutPage/Gamma_Bartek-min.jpg',
+          },
+        ],
+        description: 'studio task test model',
+        subtasks: [
+          {
+            content: 'test subtask',
+            done: false,
+          },
+          {
+            content: 'test subtask 2',
+            done: true,
+          },
+          {
+            content: 'test subtask 2',
+            done: true,
+          },
+        ],
+        deadline: '2023-12-07T10:24:14.128Z',
+        startDate: 'Fri Nov 15 2024 11:08:25 GMT+0100',
+      });
+
+      if (response !== null) {
+        handleLoadingStateChange('finalMessage', 'Zlecenie utworzone!');
+      } else {
+        handleLoadingStateChange('finalMessage', 'Coś poszło nie tak :(');
+      }
+    } catch (error) {
+      console.log(error);
+      handleLoadingStateChange('isLoading', false);
+    } finally {
+      handleLoadingStateChange('isLoading', false);
+      handleLoadingStateChange('isFinalMessage', true);
+    }
+  };
 
   useEffect(() => {
     const fetchAllStudioTasks = async () => {
@@ -67,7 +222,42 @@ function StudioTaskView() {
         }}
         exitAnim={exitAnim}
       >
-        <p>modal</p>
+        <div>
+          <h2>Utwórz zlecenie</h2>
+          {loadingState.isLoading ? (
+            <div className={styles.loaderWrapper}>
+              <Loader />
+            </div>
+          ) : (
+            <div>
+              <input
+                type="text"
+                name="Title"
+                id="Title"
+                value={formData.title}
+                onChange={(e) => handleFormChange(e, 'title')}
+              />
+              <select
+                name="companies"
+                id="companies"
+                onChange={(e) => handleFormChange(e, 'client')}
+              >
+                <option value="">Wybierz firme</option>
+                {companies.map((company) => {
+                  return (
+                    <option key={company._id} value={company.name}>
+                      {company.name}
+                    </option>
+                  );
+                })}
+              </select>
+              <button type="button" onClick={createTaskHandler}>
+                Dodaj
+              </button>
+              <p>{loadingState.finalMessage}</p>
+            </div>
+          )}
+        </div>
       </ModalTemplate>
       <ControlBar>
         <ControlBarTitle>Zlecenia</ControlBarTitle>
@@ -102,7 +292,7 @@ function StudioTaskView() {
                 >
                   {studioTasks.map((task) => {
                     const subtasksLength = task.subtasks.length;
-                    // const searchID = generateSearchID();
+
                     let doneSubtasks = 0;
 
                     task.subtasks.forEach((subtask) => {
