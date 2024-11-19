@@ -15,10 +15,10 @@ import {
 import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplate';
 import useModal from '../../hooks/useModal';
 // import useSelectUser from '../../hooks/useSelectUser';
-// import useAuth from '../../hooks/useAuth';
 import Loader from '../../components/Molecules/Loader/Loader';
 import useCompaniesContext from '../../hooks/Context/useCompaniesContext';
 import { getAllCompanies } from '../../services/companies-service';
+import useAuth from '../../hooks/useAuth';
 
 const colums = [
   {
@@ -105,7 +105,7 @@ function StudioTaskView() {
     fetchUsers();
   }, [companiesDispatch, companies]);
 
-  // const { user } = useAuth();
+  const { user } = useAuth();
 
   // const {
   //   users,
@@ -139,18 +139,10 @@ function StudioTaskView() {
         searchID,
         title: formData.title,
         client: formData.client,
-        clientPerson: 'Magdalena ożóg',
-        status: 'Do zrobienia',
-        author: {
-          _id: '655f4a55f7ce6ff8c9b4f383',
-          name: 'Dawid',
-          lastname: 'Pietruszewski',
-          email: 'dawid3.pietruszewski@gamma24.pl',
-          phone: 531099779,
-          job: 'Developer',
-          img: 'https://res.cloudinary.com/dpktrptfr/image/upload/v1683719306/AboutPage/Gamma_Dawid-min.jpg',
-        },
-        taskType: 'digital',
+        clientPerson: formData.clientPerson,
+        status: formData.status,
+        author: user[0],
+        taskType: formData.taskType,
         participants: [
           {
             _id: '672a17729df774cf83b094ad',
@@ -251,6 +243,49 @@ function StudioTaskView() {
                   );
                 })}
               </select>
+              <select
+                name="client-person"
+                id="client-person"
+                onChange={(e) => handleFormChange(e, 'clientPerson')}
+              >
+                <option value="">Wybierz klienta</option>
+                {formData.client.length > 0 &&
+                  companies.map((company) => {
+                    if (company.name === formData.client) {
+                      return company.clientPerson.map((cp) => {
+                        return (
+                          <option key={cp.value} value={cp.label}>
+                            {cp.label}
+                          </option>
+                        );
+                      });
+                    }
+                    return null;
+                  })}
+              </select>
+              <select
+                name="status"
+                id="status"
+                onChange={(e) => handleFormChange(e, 'status')}
+              >
+                <option value="">Status</option>
+                <option value="Na później">Na później</option>
+                <option value="Do zrobienia">Do zrobienia</option>
+                <option value="W trakcie">W trakcie</option>
+                <option value="Wysłane">Wysłane</option>
+              </select>
+              <select
+                name="task-type"
+                id="task-type"
+                onChange={(e) => handleFormChange(e, 'taskType')}
+              >
+                <option value="">Rodzaj zlecenia</option>
+                <option value="Kreacja">Kreacja</option>
+                <option value="Druk">Druk</option>
+                <option value="Multimedia">Multimedia</option>
+                <option value="Gadżety">Gadżety</option>
+                <option value="Szwalnia">Szwalnia</option>
+              </select>
               <button type="button" onClick={createTaskHandler}>
                 Dodaj
               </button>
@@ -304,13 +339,19 @@ function StudioTaskView() {
                     return (
                       task.status === column.title && (
                         <div className={styles.task} key={task._id}>
-                          <p
-                            className={`${styles.clientName} ${
-                              styles[`${task.client}`]
-                            }`}
-                          >
-                            {task.client}
-                          </p>
+                          <div className={styles.clientInfoWrapper}>
+                            <p
+                              className={`${styles.clientName} ${
+                                styles[`${task.client}`]
+                              }`}
+                            >
+                              {task.client}
+                            </p>
+                            <p className={`${styles.clientPerson}`}>
+                              {task.clientPerson}
+                            </p>
+                          </div>
+
                           <span className={styles.searchID}>
                             #{task.searchID}
                           </span>

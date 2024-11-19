@@ -131,12 +131,14 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
         })}
       </>
 
-      <ClientSelect
-        value={formValue.clientPerson}
-        setValue={setFormValue}
-        inputValue={clientInputValue}
-        setInputValue={setClientInputValue}
-      />
+      <div className={styles.clientSelectWrapper}>
+        <ClientSelect
+          value={formValue.clientPerson}
+          setValue={setFormValue}
+          inputValue={clientInputValue}
+          setInputValue={setClientInputValue}
+        />
+      </div>
 
       <SelectUser users={users} handleAddMember={handleAddMember} />
       {formValue.teamMembers.length > 0 && (

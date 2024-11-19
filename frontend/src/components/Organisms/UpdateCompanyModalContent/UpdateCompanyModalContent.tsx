@@ -148,20 +148,20 @@ function UpdateCompanyModalContent({
         <button
           type="button"
           onClick={() => {
-            handleUpdateCompany();
-          }}
-          className={styles.editButton}
-        >
-          Zapisz
-        </button>
-        <button
-          type="button"
-          onClick={() => {
             openCaptcha(true);
           }}
           className={styles.deleteCompanyButton}
         >
           Usuń firmę
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            handleUpdateCompany();
+          }}
+          className={styles.editButton}
+        >
+          Zapisz
         </button>
       </div>
     </div>

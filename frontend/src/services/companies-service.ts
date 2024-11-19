@@ -2,6 +2,7 @@ import { Config } from '../config';
 import { User } from './users-service';
 
 type ClientPerson = {
+  id?: string;
   value: string;
   label: string;
 };

@@ -11,6 +11,15 @@ const createOption = (label: string) => ({
   value: label,
 });
 
+const customStyles = {
+  control: (provided) => ({
+    ...provided,
+    borderRadius: '10px',
+    border: '1px solid #c4c4c4',
+    cursor: 'pointer',
+  }),
+};
+
 export default function ClientSelect({
   value,
   inputValue,
@@ -53,6 +62,7 @@ export default function ClientSelect({
       placeholder="Wpisz Imię i nazwisko klienta"
       value={value}
       className={styles.clientsInput}
+      styles={customStyles}
     />
   );
 }
