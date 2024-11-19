@@ -22,7 +22,11 @@ export default function ClientSelect({
     switch (event.key) {
       case 'Enter':
       case 'Tab':
-        setValue((prev) => [...prev, createOption(inputValue)]);
+        setValue((prevState) => ({
+          ...prevState,
+          clientPerson: [...prevState.clientPerson, createOption(inputValue)],
+        }));
+        // setValue((prev) => [...prev, createOption(inputValue)]);
         setInputValue('');
         event.preventDefault();
         break;
@@ -31,8 +35,6 @@ export default function ClientSelect({
     }
   };
 
-  console.log(value);
-
   return (
     <CreatableSelect
       components={components}
@@ -40,7 +42,12 @@ export default function ClientSelect({
       isClearable
       isMulti
       menuIsOpen={false}
-      onChange={(newValue) => setValue(newValue)}
+      onChange={(newValue) =>
+        setValue((prev) => ({
+          ...prev,
+          clientPerson: newValue,
+        }))
+      }
       onInputChange={(newValue) => setInputValue(newValue)}
       onKeyDown={handleKeyDown}
       placeholder="Wpisz Imię i nazwisko klienta"

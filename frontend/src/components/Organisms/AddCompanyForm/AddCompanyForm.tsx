@@ -11,7 +11,6 @@ import useSelectUser from '../../../hooks/useSelectUser';
 import { addCompany } from '../../../services/companies-service';
 import inputStyle from '../../Atoms/Input/Input.module.css';
 import ClientSelect from '../../Molecules/ClientSelect/ClientSelect';
-import useSelectClient from '../../../hooks/useSelectClient';
 
 const createCompanySchema = Yup.object({
   name: Yup.string().required('Nazwa jest wymagana'),
@@ -21,13 +20,14 @@ const createCompanySchema = Yup.object({
 });
 
 function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
-  const { value, inputValue, setInputValue, setValue } = useSelectClient();
   const {
     users,
     formValue,
     setFormValue,
     handleAddMember,
     handleDeleteMember,
+    clientInputValue,
+    setClientInputValue,
   } = useSelectUser();
 
   const formik = useFormik({
@@ -46,8 +46,9 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
           return member;
         });
 
-        const clientsObject = value.map((client) => ({
-          name: client.label,
+        const clientsObject = formValue.clientPerson.map((client) => ({
+          label: client.label,
+          value: client.value,
         }));
 
         if (companies.some((company) => company.name === name)) {
@@ -131,10 +132,10 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
       </>
 
       <ClientSelect
-        value={value}
-        setValue={setValue}
-        inputValue={inputValue}
-        setInputValue={setInputValue}
+        value={formValue.clientPerson}
+        setValue={setFormValue}
+        inputValue={clientInputValue}
+        setInputValue={setClientInputValue}
       />
 
       <SelectUser users={users} handleAddMember={handleAddMember} />

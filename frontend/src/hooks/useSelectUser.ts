@@ -4,6 +4,7 @@ import { getAllUsers } from '../services/users-service';
 import { CompaniesType } from '../services/companies-service';
 
 const useSelectUser = () => {
+  const [clientInputValue, setClientInputValue] = useState('');
   const { users, dispatch } = useUsersContext();
   const [formValue, setFormValue] = useState<CompaniesType>({
     name: '',
@@ -60,6 +61,8 @@ const useSelectUser = () => {
     setFormValue,
     handleAddMember,
     handleDeleteMember,
+    clientInputValue,
+    setClientInputValue,
   };
 };
 
