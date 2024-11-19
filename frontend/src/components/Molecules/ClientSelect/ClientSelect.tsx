@@ -1,24 +1,22 @@
-import { KeyboardEventHandler, useState } from 'react';
+import { KeyboardEventHandler } from 'react';
 import CreatableSelect from 'react-select/creatable';
+import styles from './ClientSelect.module.css';
 
 const components = {
   DropdownIndicator: null,
 };
-
-interface Option {
-  readonly label: string;
-  readonly value: string;
-}
 
 const createOption = (label: string) => ({
   label,
   value: label,
 });
 
-export default function ClientSelect() {
-  const [inputValue, setInputValue] = useState('');
-  const [value, setValue] = useState<readonly Option[]>([]);
-
+export default function ClientSelect({
+  value,
+  inputValue,
+  setInputValue,
+  setValue,
+}) {
   const handleKeyDown: KeyboardEventHandler = (event) => {
     if (!inputValue) return;
     switch (event.key) {
@@ -33,6 +31,8 @@ export default function ClientSelect() {
     }
   };
 
+  console.log(value);
+
   return (
     <CreatableSelect
       components={components}
@@ -45,6 +45,7 @@ export default function ClientSelect() {
       onKeyDown={handleKeyDown}
       placeholder="Wpisz Imię i nazwisko klienta"
       value={value}
+      className={styles.clientsInput}
     />
   );
 }

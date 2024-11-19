@@ -10,6 +10,7 @@ import TaskProfile from '../TaskProfile/TaskProfile';
 import CompaniesView from '../CompaniesView/CompaniesView';
 import CompanyProfile from '../CompanyProfile/CompanyProfile';
 import StudioTaskView from '../StudioTaskView/StudioTaskView';
+import TasksView from '../TasksView/TasksView';
 
 function App() {
   const { user } = useAuth();
@@ -27,6 +28,7 @@ function App() {
         <Route path="/zlecenia/:id" element={<TaskProfile />} />
         <Route path="/firmy" element={<CompaniesView />} />
         <Route path="/firmy/:id" element={<CompanyProfile />} />
+        <Route path="/magazyn" element={<TasksView />} />
       </Routes>
     </MainTemplate>
   ) : (

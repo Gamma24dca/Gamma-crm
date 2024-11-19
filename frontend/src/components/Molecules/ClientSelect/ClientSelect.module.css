@@ -1,0 +1,13 @@
+.clientsInput {
+  background-color: #fff;
+  width: 100%;
+  max-width: 410px;
+  border-radius: 10px;
+  color: #787878;
+  font-size: 16px;
+  font-weight: 500;
+
+  input {
+    height: 45px;
+  }
+}

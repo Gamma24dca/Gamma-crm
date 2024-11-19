@@ -5,6 +5,8 @@ import { UpdateCompany } from '../../../services/companies-service';
 import CompanyGraphicTile from '../../Molecules/CompanyGraphicTile/CompanyGraphicTile';
 import SelectUser from '../../Molecules/SelectUser/SelectUser';
 import styles from './UpdateCompanyModalContent.module.css';
+import ClientSelect from '../../Molecules/ClientSelect/ClientSelect';
+import useSelectClient from '../../../hooks/useSelectClient';
 
 function UpdateCompanyModalContent({
   currentCompany,
@@ -13,6 +15,8 @@ function UpdateCompanyModalContent({
   refreshCompanyData,
 }) {
   const params = useParams();
+
+  const { value, inputValue, setInputValue, setValue } = useSelectClient();
 
   const {
     users,
@@ -23,6 +27,15 @@ function UpdateCompanyModalContent({
   } = useSelectUser();
 
   useEffect(() => {
+    const sanitizedClientPersons = (currentCompany.clientPerson || []).map(
+      (person, index) => ({
+        label: person.label || person.name || `Person ${index + 1}`,
+        value: person.value || person.id || `person-${index}`,
+      })
+    );
+
+    // console.log(sanitizedClientPersons);
+    console.log(currentCompany.clientPerson);
     setFormValue({
       name: currentCompany.name || '',
       phone: currentCompany.phone || '',
@@ -31,7 +44,8 @@ function UpdateCompanyModalContent({
       clientPerson: currentCompany.clientPerson || [],
       website: currentCompany.website || '',
     });
-  }, [currentCompany, setFormValue]);
+    setValue(sanitizedClientPersons);
+  }, [currentCompany, setFormValue, setValue]);
 
   const handleFormChange = (e, key) => {
     setFormValue((prev) => ({
@@ -50,6 +64,8 @@ function UpdateCompanyModalContent({
       refreshCompanyData();
     }
   };
+
+  console.log(formValue.clientPerson);
 
   return (
     <div className={styles.inputsWrapper}>
@@ -120,6 +136,12 @@ function UpdateCompanyModalContent({
         </div>
       </div>
 
+      <ClientSelect
+        value={value}
+        setValue={setValue}
+        inputValue={inputValue}
+        setInputValue={setInputValue}
+      />
       <SelectUser users={users} handleAddMember={handleAddMember} />
 
       <div className={styles.displayMembersWrapper}>

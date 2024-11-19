@@ -20,7 +20,8 @@ export const CompanyModel = mongoose.model(
     },
     clientPerson: [
       {
-        name: { type: String },
+        label: { type: String },
+        value: { type: String },
       },
     ],
     teamMembers: [

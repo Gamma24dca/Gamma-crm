@@ -1,7 +1,5 @@
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { KeyboardEventHandler, useState } from 'react';
-import CreatableSelect from 'react-select/creatable';
 import styles from './AddCompanyForm.module.css';
 import FormControl from '../../Atoms/FormControl/FormControl';
 import Input from '../../Atoms/Input/Input';
@@ -12,6 +10,8 @@ import Form from '../../Atoms/Form/Form';
 import useSelectUser from '../../../hooks/useSelectUser';
 import { addCompany } from '../../../services/companies-service';
 import inputStyle from '../../Atoms/Input/Input.module.css';
+import ClientSelect from '../../Molecules/ClientSelect/ClientSelect';
+import useSelectClient from '../../../hooks/useSelectClient';
 
 const createCompanySchema = Yup.object({
   name: Yup.string().required('Nazwa jest wymagana'),
@@ -20,23 +20,8 @@ const createCompanySchema = Yup.object({
   website: Yup.string(),
 });
 
-const components = {
-  DropdownIndicator: null,
-};
-
-interface Option {
-  readonly label: string;
-  readonly value: string;
-}
-
-const createOption = (label: string) => ({
-  label,
-  value: label,
-});
-
 function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
-  const [inputValue, setInputValue] = useState('');
-  const [value, setValue] = useState<readonly Option[]>([]);
+  const { value, inputValue, setInputValue, setValue } = useSelectClient();
   const {
     users,
     formValue,
@@ -44,20 +29,6 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
     handleAddMember,
     handleDeleteMember,
   } = useSelectUser();
-
-  const handleKeyDown: KeyboardEventHandler = (event) => {
-    if (!inputValue) return;
-    switch (event.key) {
-      case 'Enter':
-      case 'Tab':
-        setValue((prev) => [...prev, createOption(inputValue)]);
-        setInputValue('');
-        event.preventDefault();
-        break;
-      default:
-        null;
-    }
-  };
 
   const formik = useFormik({
     initialValues: {
@@ -75,16 +46,14 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
           return member;
         });
 
-        if (companies.some((company) => company.name === name)) {
-          handleSuccesMessage('Ta firma już istnieje');
-          return;
-        }
-
         const clientsObject = value.map((client) => ({
           name: client.label,
         }));
 
-        console.log(clientsObject);
+        if (companies.some((company) => company.name === name)) {
+          handleSuccesMessage('Ta firma już istnieje');
+          return;
+        }
 
         await addCompany({
           name,
@@ -161,19 +130,13 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
         })}
       </>
 
-      <CreatableSelect
-        components={components}
-        inputValue={inputValue}
-        isClearable
-        isMulti
-        menuIsOpen={false}
-        onChange={(newValue) => setValue(newValue)}
-        onInputChange={(newValue) => setInputValue(newValue)}
-        onKeyDown={handleKeyDown}
-        placeholder="Wpisz Imię i nazwisko klienta"
+      <ClientSelect
         value={value}
-        className={styles.clientsInput}
+        setValue={setValue}
+        inputValue={inputValue}
+        setInputValue={setInputValue}
       />
+
       <SelectUser users={users} handleAddMember={handleAddMember} />
       {formValue.teamMembers.length > 0 && (
         <div className={styles.displayMembersWrapper}>
