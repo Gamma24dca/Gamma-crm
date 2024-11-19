@@ -18,6 +18,7 @@ import useSort from '../../hooks/useSort';
 import UpdateCompanyModalContent from '../../components/Organisms/UpdateCompanyModalContent/UpdateCompanyModalContent';
 import Captcha from '../../components/Molecules/Captcha/Captcha';
 import CompanyProfileControlBar from '../../components/Organisms/CompanyProfileControlBar/CompanyProfileControlBar';
+import useCompaniesContext from '../../hooks/Context/useCompaniesContext';
 
 const mockedTasks = [
   {
@@ -251,6 +252,8 @@ function CompanyProfile() {
   const { showModal, exitAnim, openModal, closeModal } = useModal();
   const [deleteCaptcha, setDeleteCaptcha] = useState(false);
 
+  const { dispatch } = useCompaniesContext();
+
   const navigate = useNavigate();
 
   const { sortedData, sortColumn, sortOrder, handleSortChange } =
@@ -287,6 +290,7 @@ function CompanyProfile() {
 
   const handleDeleteCompany = async (id) => {
     await deleteCompany(id);
+    dispatch({ type: 'DELETE_COMPANY', payload: company });
     closeModal();
     navigate('/firmy');
   };

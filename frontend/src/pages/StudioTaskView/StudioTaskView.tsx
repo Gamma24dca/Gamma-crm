@@ -184,6 +184,7 @@ function StudioTaskView() {
 
       if (response !== null) {
         handleLoadingStateChange('finalMessage', 'Zlecenie utworzone!');
+        dispatch({ type: 'CREATE_STUDIOTASK', payload: response });
       } else {
         handleLoadingStateChange('finalMessage', 'Coś poszło nie tak :(');
       }

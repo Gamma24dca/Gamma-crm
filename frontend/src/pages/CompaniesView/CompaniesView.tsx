@@ -36,7 +36,6 @@ function CompaniesView() {
 
     try {
       const matchedCompanies = await SearchCompany(inputValue);
-      console.log(matchedCompanies, inputValue);
       if (inputValue === latestInputValue.current) {
         setMatchingCompanies(matchedCompanies);
       }
