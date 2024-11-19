@@ -11,6 +11,7 @@ import useSelectUser from '../../../hooks/useSelectUser';
 import { addCompany } from '../../../services/companies-service';
 import inputStyle from '../../Atoms/Input/Input.module.css';
 import ClientSelect from '../../Molecules/ClientSelect/ClientSelect';
+import useCompaniesContext from '../../../hooks/Context/useCompaniesContext';
 
 const createCompanySchema = Yup.object({
   name: Yup.string().required('Nazwa jest wymagana'),
@@ -29,6 +30,7 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
     clientInputValue,
     setClientInputValue,
   } = useSelectUser();
+  const { dispatch } = useCompaniesContext();
 
   const formik = useFormik({
     initialValues: {
@@ -56,7 +58,7 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
           return;
         }
 
-        await addCompany({
+        const response = await addCompany({
           name,
           phone,
           mail,
@@ -64,6 +66,10 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
           clientPerson: clientsObject,
           teamMembers: memberObject,
         });
+
+        if (response !== null) {
+          dispatch({ type: 'CREATE_COMPANY', payload: response });
+        }
 
         formik.resetForm();
         handleSuccesMessage('Firma dodana pomyślnie!');
