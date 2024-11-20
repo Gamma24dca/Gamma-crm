@@ -93,7 +93,7 @@ export const StudioTaskModel = mongoose.model(
       required: true,
     },
     deadline: {
-      type: Date,
+      type: String,
     },
   }),
 );

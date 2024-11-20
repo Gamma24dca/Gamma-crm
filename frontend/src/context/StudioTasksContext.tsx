@@ -18,7 +18,7 @@ export const studioTasksReducer = (state: StudioTaskStateType, action: any) => {
     case 'SET_STUDIOTASKS':
       return { studioTasks: action.payload };
     case 'CREATE_STUDIOTASK':
-      return { studioTasks: [action.payload, ...state.studioTasks] };
+      return { studioTasks: [...state.studioTasks, action.payload] };
     case 'DELETE_STUDIOTASK':
       return {
         studioTasks: state.studioTasks.filter(

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Icon } from '@iconify/react';
+import Calendar from 'react-calendar';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
 import SearchInput from '../../components/Atoms/ControlBar/SearchInput/SearchInput';
 import ControlBarTitle from '../../components/Atoms/ControlBar/Title/ControlBarTitle';
@@ -14,11 +15,13 @@ import {
 } from '../../services/studio-tasks-service';
 import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplate';
 import useModal from '../../hooks/useModal';
-// import useSelectUser from '../../hooks/useSelectUser';
+import useSelectUser from '../../hooks/useSelectUser';
 import Loader from '../../components/Molecules/Loader/Loader';
 import useCompaniesContext from '../../hooks/Context/useCompaniesContext';
 import { getAllCompanies } from '../../services/companies-service';
 import useAuth from '../../hooks/useAuth';
+import SelectUser from '../../components/Molecules/SelectUser/SelectUser';
+import CompanyGraphicTile from '../../components/Molecules/CompanyGraphicTile/CompanyGraphicTile';
 
 const colums = [
   {
@@ -40,7 +43,7 @@ const colums = [
 ];
 
 function generateSearchID() {
-  return Math.floor(1000 + Math.random() * 9000);
+  return Math.floor(100000 + Math.random() * 900000);
 }
 
 // const createCompanySchema = Yup.object({
@@ -67,23 +70,25 @@ function DateFormatter({ dateString }) {
   return <div className={styles.date}>{formatDate(dateString)}</div>;
 }
 
+const initialTaskObject = {
+  title: '',
+  client: '',
+  clientPerson: '',
+  status: '',
+  author: {},
+  taskType: '',
+  participants: [],
+  description: '',
+  subtasks: [],
+  deadline: '',
+  startDate: '',
+};
+
 function StudioTaskView() {
   const { showModal, exitAnim, openModal, closeModal } = useModal();
   const { studioTasks, dispatch } = useStudioTasksContext();
   const { companies, dispatch: companiesDispatch } = useCompaniesContext();
-  const [formData, setFormData] = useState({
-    title: '',
-    client: '',
-    clientPerson: '',
-    status: '',
-    author: {},
-    taskType: '',
-    participants: [],
-    description: '',
-    subtasks: [],
-    deadline: '',
-    startDate: '',
-  });
+
   const [loadingState, setLoadingState] = useState({
     isLoading: false,
     isFinalMessage: false,
@@ -107,18 +112,19 @@ function StudioTaskView() {
 
   const { user } = useAuth();
 
-  // const {
-  //   users,
-  //   formValue,
-  //   setFormValue,
-  //   handleAddMember,
-  //   handleDeleteMember,
-  //   handleMemberChange,
-  //   selectedMember,
-  // } = useSelectUser();
+  const {
+    users,
+    formValue,
+    setFormValue,
+    handleAddMember,
+    handleDeleteMember,
+  } = useSelectUser({
+    initialValue: initialTaskObject,
+    objectKey: 'participants',
+  });
 
   const handleFormChange = (e, key) => {
-    setFormData((prev) => ({
+    setFormValue((prev) => ({
       ...prev,
       [key]: e.target.value,
     }));
@@ -135,35 +141,17 @@ function StudioTaskView() {
     try {
       handleLoadingStateChange('isLoading', true);
       const searchID = generateSearchID();
+      const currentDate = new Date();
       const response = await addStudioTask({
         searchID,
-        title: formData.title,
-        client: formData.client,
-        clientPerson: formData.clientPerson,
-        status: formData.status,
+        title: formValue.title,
+        client: formValue.client,
+        clientPerson: formValue.clientPerson,
+        status: formValue.status,
         author: user[0],
-        taskType: formData.taskType,
-        participants: [
-          {
-            _id: '672a17729df774cf83b094ad',
-            name: 'Kamil',
-            lastname: 'Mika',
-            email: 'kamil3.mika@gamma24.pl',
-            phone: 531099779,
-            job: 'Grafik',
-            img: 'https://res.cloudinary.com/dpktrptfr/image/upload/v1683719307/AboutPage/Gamma_Kamil-min.jpg',
-          },
-          {
-            _id: '655f423bf7ce6ff8c9b4f307',
-            name: 'Bartek',
-            lastname: 'Szyfner',
-            email: 'bartek.szyfner@gamma24.pl',
-            phone: 531099779,
-            job: 'Grafik',
-            img: 'https://res.cloudinary.com/dpktrptfr/image/upload/v1683719307/AboutPage/Gamma_Bartek-min.jpg',
-          },
-        ],
-        description: 'studio task test model',
+        taskType: formValue.taskType,
+        participants: formValue.participants,
+        description: formValue.description,
         subtasks: [
           {
             content: 'test subtask',
@@ -178,8 +166,8 @@ function StudioTaskView() {
             done: true,
           },
         ],
-        deadline: '2023-12-07T10:24:14.128Z',
-        startDate: 'Fri Nov 15 2024 11:08:25 GMT+0100',
+        deadline: formValue.deadline,
+        startDate: currentDate,
       });
 
       if (response !== null) {
@@ -189,7 +177,7 @@ function StudioTaskView() {
         handleLoadingStateChange('finalMessage', 'Coś poszło nie tak :(');
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       handleLoadingStateChange('isLoading', false);
     } finally {
       handleLoadingStateChange('isLoading', false);
@@ -227,7 +215,8 @@ function StudioTaskView() {
                 type="text"
                 name="Title"
                 id="Title"
-                value={formData.title}
+                placeholder="Tytuł"
+                value={formValue.title}
                 onChange={(e) => handleFormChange(e, 'title')}
               />
               <select
@@ -250,9 +239,9 @@ function StudioTaskView() {
                 onChange={(e) => handleFormChange(e, 'clientPerson')}
               >
                 <option value="">Wybierz klienta</option>
-                {formData.client.length > 0 &&
+                {formValue.client.length > 0 &&
                   companies.map((company) => {
-                    if (company.name === formData.client) {
+                    if (company.name === formValue.client) {
                       return company.clientPerson.map((cp) => {
                         return (
                           <option key={cp.value} value={cp.label}>
@@ -287,6 +276,40 @@ function StudioTaskView() {
                 <option value="Gadżety">Gadżety</option>
                 <option value="Szwalnia">Szwalnia</option>
               </select>
+              <input
+                type="text"
+                name="Description"
+                id="Description"
+                placeholder="Opis"
+                value={formValue.description}
+                onChange={(e) => handleFormChange(e, 'description')}
+              />
+
+              <SelectUser users={users} handleAddMember={handleAddMember} />
+              {formValue.participants.length > 0 && (
+                <div className={styles.displayMembersWrapper}>
+                  {formValue.participants.map((member) => {
+                    return (
+                      <CompanyGraphicTile
+                        key={member._id}
+                        member={member}
+                        handleDeleteMember={handleDeleteMember}
+                      />
+                    );
+                  })}
+                </div>
+              )}
+              <Calendar
+                value={formValue.deadline}
+                onChange={(e) => {
+                  setFormValue((prev) => ({
+                    ...prev,
+                    deadline: e.toString(),
+                  }));
+                }}
+                locale="pl-PL"
+              />
+
               <button type="button" onClick={createTaskHandler}>
                 Dodaj
               </button>
@@ -329,6 +352,7 @@ function StudioTaskView() {
                   {studioTasks.map((task) => {
                     const subtasksLength = task.subtasks.length;
 
+                    // keep this value in useState
                     let doneSubtasks = 0;
 
                     task.subtasks.forEach((subtask) => {
@@ -337,13 +361,20 @@ function StudioTaskView() {
                       }
                     });
 
+                    const taskClass =
+                      task.participants.length > 4
+                        ? styles.taskHigher
+                        : styles.task;
+
+                    const companyClass = task.client.split(' ').join('');
+
                     return (
                       task.status === column.title && (
-                        <div className={styles.task} key={task._id}>
+                        <div className={taskClass} key={task._id}>
                           <div className={styles.clientInfoWrapper}>
                             <p
                               className={`${styles.clientName} ${
-                                styles[`${task.client}`]
+                                styles[`${companyClass}`]
                               }`}
                             >
                               {task.client}
@@ -356,7 +387,7 @@ function StudioTaskView() {
                           <span className={styles.searchID}>
                             #{task.searchID}
                           </span>
-                          <p>{task.title}</p>
+                          <p className={styles.taskTitle}>{task.title}</p>
                           <div className={styles.userDisplayWrapper}>
                             <UsersDisplay
                               data={task}
