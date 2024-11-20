@@ -35,7 +35,7 @@
 }
 
 .userWrapper {
-  position: relative;
+  position: relative; /* Establish positioning context for label */
   display: flex;
   align-items: center;
   gap: 10px;
@@ -43,10 +43,10 @@
 
 .graphicName {
   position: absolute;
-  display: flex;
-  align-items: center;
   top: 35px;
   left: 10px;
+  display: flex;
+  align-items: center;
   background-color: var(--color-black);
   opacity: 0;
   border-radius: 5px;

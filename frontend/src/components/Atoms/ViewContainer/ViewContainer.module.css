@@ -1,4 +1,5 @@
 .viewContainer {
+  position: relative;
   width: 87%;
   height: 90.5%;
   display: flex;
