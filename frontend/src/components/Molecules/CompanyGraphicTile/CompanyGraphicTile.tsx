@@ -5,12 +5,12 @@ function CompanyGraphicTile({ member, handleDeleteMember }) {
     <div className={styles.memberTile}>
       <div
         className={styles.deleteMemberContainer}
-        onClick={() => handleDeleteMember(member)}
+        onClick={() => handleDeleteMember(member._id)}
         role="button"
         tabIndex={0}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
-            handleDeleteMember(member);
+            handleDeleteMember(member._id);
           }
         }}
       >

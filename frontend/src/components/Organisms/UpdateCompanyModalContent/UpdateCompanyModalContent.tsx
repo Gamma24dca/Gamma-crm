@@ -7,6 +7,15 @@ import SelectUser from '../../Molecules/SelectUser/SelectUser';
 import styles from './UpdateCompanyModalContent.module.css';
 import ClientSelect from '../../Molecules/ClientSelect/ClientSelect';
 
+const initialCompanyObject = {
+  name: '',
+  phone: '',
+  mail: '',
+  teamMembers: [],
+  website: '',
+  clientPerson: [],
+};
+
 function UpdateCompanyModalContent({
   currentCompany,
   closeModal,
@@ -23,7 +32,10 @@ function UpdateCompanyModalContent({
     handleDeleteMember,
     clientInputValue,
     setClientInputValue,
-  } = useSelectUser();
+  } = useSelectUser({
+    initialValue: initialCompanyObject,
+    objectKey: 'teamMembers',
+  });
 
   useEffect(() => {
     setFormValue({

@@ -22,12 +22,24 @@ import useSelectUser from '../../hooks/useSelectUser';
 import AddCompanyForm from '../../components/Organisms/AddCompanyForm/AddCompanyForm';
 import CompanyTile from '../../components/Organisms/CompanyTile/CompanyTile';
 
+const initialCompanyObject = {
+  name: '',
+  phone: '',
+  mail: '',
+  teamMembers: [],
+  website: '',
+  clientPerson: [],
+};
+
 function CompaniesView() {
   const [successMessage, setSuccessMessage] = useState('');
   const [matchingCompanies, setMatchingCompanies] = useState([]);
   const { showModal, exitAnim, openModal, closeModal } = useModal();
   const { companies, dispatch } = useCompaniesContext();
-  const { setFormValue } = useSelectUser();
+  const { setFormValue } = useSelectUser({
+    initialValue: initialCompanyObject,
+    objectKey: 'teamMembers',
+  });
   const latestInputValue = useRef('');
   const navigate = useNavigate();
 
@@ -58,7 +70,6 @@ function CompaniesView() {
       getMatchingCompanies({ inputValue });
     },
     onSelectedItemChange: ({ selectedItem }) => {
-      console.log(selectedItem);
       if (selectedItem) {
         navigate(`/firmy/${selectedItem._id}`);
       }

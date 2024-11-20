@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react';
 import useUsersContext from './Context/useUsersContext';
 import { getAllUsers } from '../services/users-service';
-import { CompaniesType } from '../services/companies-service';
 
-const useSelectUser = () => {
+type UseSelectUserProps<T> = {
+  initialValue: T;
+  objectKey: keyof T;
+};
+
+const useSelectUser = <T>({
+  initialValue,
+  objectKey,
+}: UseSelectUserProps<T>) => {
   const [clientInputValue, setClientInputValue] = useState('');
   const { users, dispatch } = useUsersContext();
-  const [formValue, setFormValue] = useState<CompaniesType>({
-    name: '',
-    phone: '',
-    mail: '',
-    teamMembers: [],
-    website: '',
-    clientPerson: [],
-  });
+  const [formValue, setFormValue] = useState<T>(initialValue);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -30,29 +30,35 @@ const useSelectUser = () => {
     fetchUsers();
   }, [dispatch, users]);
 
-  const handleAddMember = (selectedMemberValue) => {
-    const filteredUser = users.filter(
-      (user) => user.name === selectedMemberValue
-    );
-    const isUserInArray = formValue.teamMembers.some(
-      (user) => user._id === filteredUser[0]._id
-    );
-    if (isUserInArray) return;
+  const handleAddMember = (userId: string) => {
+    const userToAdd = users.find((user) => user._id === userId);
+    if (!userToAdd) return;
 
-    setFormValue((prevState) => ({
-      ...prevState,
-      teamMembers: [...prevState.teamMembers, ...filteredUser],
-    }));
+    setFormValue((prev) => {
+      const participants = (prev[objectKey] as any[]) || [];
+      const isAlreadyAdded = participants.some(
+        (participant) => participant._id === userId
+      );
+
+      if (isAlreadyAdded) return prev;
+
+      return {
+        ...prev,
+        [objectKey]: [...participants, userToAdd],
+      };
+    });
   };
 
-  const handleDeleteMember = (selectedMemberValue) => {
-    const filteredArray = formValue.teamMembers.filter((member) => {
-      return member._id !== selectedMemberValue._id;
+  const handleDeleteMember = (userId: string) => {
+    setFormValue((prev) => {
+      const participants = (prev[objectKey] as any[]) || [];
+      return {
+        ...prev,
+        [objectKey]: participants.filter(
+          (participant) => participant._id !== userId
+        ),
+      };
     });
-    setFormValue((prevState) => ({
-      ...prevState,
-      teamMembers: [...filteredArray],
-    }));
   };
 
   return {

@@ -20,6 +20,15 @@ const createCompanySchema = Yup.object({
   website: Yup.string(),
 });
 
+const initialCompanyObject = {
+  name: '',
+  phone: '',
+  mail: '',
+  teamMembers: [],
+  website: '',
+  clientPerson: [],
+};
+
 function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
   const {
     users,
@@ -29,7 +38,10 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
     handleDeleteMember,
     clientInputValue,
     setClientInputValue,
-  } = useSelectUser();
+  } = useSelectUser({
+    initialValue: initialCompanyObject,
+    objectKey: 'teamMembers',
+  });
   const { dispatch } = useCompaniesContext();
 
   const formik = useFormik({

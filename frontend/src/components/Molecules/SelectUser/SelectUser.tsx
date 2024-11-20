@@ -20,10 +20,9 @@ function SelectUser({
         className={styles.selectInput}
       >
         <option value="">Przypisz grafika</option>
-
         {users.map((user) => {
           return (
-            <option key={user._id} value={user.name}>
+            <option key={user._id} value={user._id}>
               {user.name}
             </option>
           );
