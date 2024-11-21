@@ -16,6 +16,10 @@ const sideNavButtons = [
     icon: 'fluent:tasks-app-24-regular',
   },
   {
+    name: 'rozliczenie',
+    icon: 'icon-park-solid:excel',
+  },
+  {
     name: 'firmy',
     icon: 'clarity:building-line',
   },
