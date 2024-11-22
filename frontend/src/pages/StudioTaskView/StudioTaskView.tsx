@@ -370,7 +370,11 @@ function StudioTaskView() {
 
                     return (
                       task.status === column.title && (
-                        <div className={taskClass} key={task._id}>
+                        <div
+                          draggable="true"
+                          className={taskClass}
+                          key={task._id}
+                        >
                           <div className={styles.clientInfoWrapper}>
                             <p
                               className={`${styles.clientName} ${

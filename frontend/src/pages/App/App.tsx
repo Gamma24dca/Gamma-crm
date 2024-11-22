@@ -11,6 +11,7 @@ import CompaniesView from '../CompaniesView/CompaniesView';
 import CompanyProfile from '../CompanyProfile/CompanyProfile';
 import StudioTaskView from '../StudioTaskView/StudioTaskView';
 import TasksView from '../TasksView/TasksView';
+import ReckoningView from '../ReckoningView/ReckoningView';
 
 function App() {
   const { user } = useAuth();
@@ -26,6 +27,7 @@ function App() {
         <Route path="/użytkownicy/:id" element={<UserProfile />} />
         <Route path="/zlecenia" element={<StudioTaskView />} />
         <Route path="/zlecenia/:id" element={<TaskProfile />} />
+        <Route path="/rozliczenie" element={<ReckoningView />} />
         <Route path="/firmy" element={<CompaniesView />} />
         <Route path="/firmy/:id" element={<CompanyProfile />} />
         <Route path="/magazyn" element={<TasksView />} />
