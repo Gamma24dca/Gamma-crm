@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Icon } from '@iconify/react';
-import { DndContext, useDroppable } from '@dnd-kit/core';
-
 import Calendar from 'react-calendar';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
 import SearchInput from '../../components/Atoms/ControlBar/SearchInput/SearchInput';
@@ -24,7 +22,6 @@ import { getAllCompanies } from '../../services/companies-service';
 import useAuth from '../../hooks/useAuth';
 import SelectUser from '../../components/Molecules/SelectUser/SelectUser';
 import CompanyGraphicTile from '../../components/Molecules/CompanyGraphicTile/CompanyGraphicTile';
-import DraggableCard from '../../components/Molecules/DraggableCard/DraggableCard';
 
 const colums = [
   {
@@ -91,23 +88,6 @@ function StudioTaskView() {
   const { showModal, exitAnim, openModal, closeModal } = useModal();
   const { studioTasks, dispatch } = useStudioTasksContext();
   const { companies, dispatch: companiesDispatch } = useCompaniesContext();
-  const [isDropped, setIsDropped] = useState(false);
-
-  function handleDragEnd(event) {
-    if (event.over && event.over.id === 'droppable') {
-      setIsDropped(true);
-    }
-  }
-
-  const draggableMarkup = <DraggableCard>Przeciągnij</DraggableCard>;
-
-  const { isOver, setNodeRef } = useDroppable({
-    id: 'droppable',
-  });
-
-  const style = {
-    color: isOver ? 'green' : undefined,
-  };
 
   const [loadingState, setLoadingState] = useState({
     isLoading: false,
@@ -352,110 +332,102 @@ function StudioTaskView() {
           <CTA onClick={() => {}}>Filtry</CTA>
         </div>
       </ControlBar>
+
       <ViewContainer>
         <div className={styles.columnsWrapper}>
-          <DndContext onDragEnd={(e) => handleDragEnd(e)}>
-            {colums.map((column) => {
-              return (
+          {colums.map((column) => {
+            return (
+              <div className={styles.taskColumnContainer} key={column.class}>
+                <div className={styles.columnTitleWrapper}>
+                  <div className={`${styles[`${column.class}`]}`} />
+                  <h4>{column.title}</h4>
+                </div>
                 <div
-                  ref={setNodeRef}
-                  style={style}
-                  className={styles.taskColumnContainer}
-                  key={column.class}
+                  className={`${styles.taskColumn} ${
+                    studioTasks.some((task) => task.status === column.title)
+                      ? ''
+                      : styles.taskColumnBorder
+                  }`}
                 >
-                  <div className={styles.columnTitleWrapper}>
-                    <div className={`${styles[`${column.class}`]}`} />
-                    <h4>{column.title}</h4>
-                  </div>
-                  <div
-                    className={`${styles.taskColumn} ${
-                      studioTasks.some((task) => task.status === column.title)
-                        ? ''
-                        : styles.taskColumnBorder
-                    }`}
-                  >
-                    {studioTasks.map((task) => {
-                      const subtasksLength = task.subtasks.length;
+                  {studioTasks.map((task) => {
+                    const subtasksLength = task.subtasks.length;
 
-                      // keep this value in useState
-                      let doneSubtasks = 0;
+                    // keep this value in useState
+                    let doneSubtasks = 0;
 
-                      task.subtasks.forEach((subtask) => {
-                        if (subtask.done) {
-                          doneSubtasks += 1;
-                        }
-                      });
+                    task.subtasks.forEach((subtask) => {
+                      if (subtask.done) {
+                        doneSubtasks += 1;
+                      }
+                    });
 
-                      const taskClass =
-                        task.participants.length > 4
-                          ? styles.taskHigher
-                          : styles.task;
+                    const taskClass =
+                      task.participants.length > 4
+                        ? styles.taskHigher
+                        : styles.task;
 
-                      const companyClass = task.client.split(' ').join('');
+                    const companyClass = task.client.split(' ').join('');
 
-                      return (
-                        task.status === column.title && (
-                          <div
-                            draggable="true"
-                            className={taskClass}
-                            key={task._id}
-                          >
-                            {!isDropped ? draggableMarkup : null}
+                    return (
+                      task.status === column.title && (
+                        <div
+                          draggable="true"
+                          className={taskClass}
+                          key={task._id}
+                        >
+                          <div className={styles.clientInfoWrapper}>
+                            <p
+                              className={`${styles.clientName} ${
+                                styles[`${companyClass}`]
+                              }`}
+                            >
+                              {task.client}
+                            </p>
+                            <p className={`${styles.clientPerson}`}>
+                              {task.clientPerson}
+                            </p>
+                          </div>
 
-                            <div className={styles.clientInfoWrapper}>
-                              <p
-                                className={`${styles.clientName} ${
-                                  styles[`${companyClass}`]
-                                }`}
-                              >
-                                {task.client}
-                              </p>
-                              <p className={`${styles.clientPerson}`}>
-                                {task.clientPerson}
-                              </p>
-                            </div>
-
-                            <span className={styles.searchID}>
-                              #{task.searchID}
-                            </span>
-                            <p className={styles.taskTitle}>{task.title}</p>
-                            <div className={styles.userDisplayWrapper}>
-                              <UsersDisplay
-                                data={task}
-                                usersArray={task.participants}
-                              />
-                            </div>
-                            <div className={styles.datesWrapper}>
-                              {task.deadline && task.startDate ? (
-                                <>
-                                  <DateFormatter dateString={task.startDate} />
-                                  <span>&nbsp;-&nbsp;</span>
-                                  <DateFormatter dateString={task.deadline} />
-                                </>
-                              ) : (
-                                <p className={styles.noDates}>Brak dat</p>
-                              )}
-                            </div>
-                            <div className={styles.subtasksCountWrapper}>
-                              <Icon
-                                icon="material-symbols:task-alt"
-                                width="12"
-                                height="12"
-                              />
-                              <div>
-                                <span>{doneSubtasks}/</span>
-                                <span>{subtasksLength}</span>
-                              </div>
+                          <span className={styles.searchID}>
+                            #{task.searchID}
+                          </span>
+                          <p className={styles.taskTitle}>{task.title}</p>
+                          <div className={styles.userDisplayWrapper}>
+                            <UsersDisplay
+                              data={task}
+                              usersArray={task.participants}
+                            />
+                          </div>
+                          <div className={styles.datesWrapper}>
+                            {task.deadline && task.startDate ? (
+                              <>
+                                <DateFormatter dateString={task.startDate} />
+                                <span>&nbsp;-&nbsp;</span>
+                                <DateFormatter dateString={task.deadline} />
+                              </>
+                            ) : (
+                              <p className={styles.noDates}>Brak dat</p>
+                            )}
+                          </div>
+                          <div className={styles.subtasksCountWrapper}>
+                            <Icon
+                              icon="material-symbols:task-alt"
+                              width="12"
+                              height="12"
+                            />
+                            <div>
+                              <span>{doneSubtasks}/</span>
+                              <span>{subtasksLength}</span>
                             </div>
                           </div>
-                        )
-                      );
-                    })}
-                  </div>
+                        </div>
+                      )
+                    );
+                  })}
                 </div>
-              );
-            })}
-          </DndContext>
+              </div>
+            );
+          })}
         </div>
       </ViewContainer>
     </>
