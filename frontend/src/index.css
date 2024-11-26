@@ -149,3 +149,16 @@ select {
   justify-content: center;
   align-items: center;
 }
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar:horizontal {
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-orange);
+  border-radius: 10px;
+}
