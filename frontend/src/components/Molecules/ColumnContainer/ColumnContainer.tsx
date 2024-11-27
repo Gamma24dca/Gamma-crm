@@ -60,7 +60,14 @@ function DroppableColumn({
       >
         delete
       </button>
-      <div onClick={() => setEditMode(true)}>
+      <div
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') setEditMode(true);
+        }}
+        onClick={() => setEditMode(true)}
+      >
         {!editMode && col.title}
         {editMode && (
           <input

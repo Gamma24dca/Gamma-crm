@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom';
 import {
   DndContext,
   DragEndEvent,
@@ -12,7 +13,6 @@ import { arrayMove, SortableContext } from '@dnd-kit/sortable';
 import DroppableColumn from '../../components/Molecules/ColumnContainer/ColumnContainer';
 import styles from './StudioTaskView.module.css';
 import { Column, Id } from '../../types';
-import { createPortal } from 'react-dom';
 import useStudioTasksContext from '../../hooks/Context/useStudioTasksContext';
 import { getAllStudioTasks } from '../../services/studio-tasks-service';
 
@@ -109,16 +109,16 @@ function StudioTaskView() {
 
     if (activeColumnId === overColumnId) return;
 
-    setColumns((columns) => {
-      const activeColumnIndex = columns.findIndex(
-        (col) => col.id == activeColumnId
+    setColumns((newColumns) => {
+      const activeColumnIndex = newColumns.findIndex(
+        (col) => col.id === activeColumnId
       );
 
-      const overColumnIndex = columns.findIndex(
-        (col) => col.id == overColumnId
+      const overColumnIndex = newColumns.findIndex(
+        (col) => col.id === overColumnId
       );
 
-      return arrayMove(columns, activeColumnIndex, overColumnIndex);
+      return arrayMove(newColumns, activeColumnIndex, overColumnIndex);
     });
   }
 
