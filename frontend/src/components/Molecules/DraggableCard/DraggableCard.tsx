@@ -9,9 +9,9 @@ function DraggableCard({ task }) {
     listeners,
     transform,
     transition,
-    // isDragging,
+    isDragging,
   } = useSortable({
-    id: task.id,
+    id: task._id,
     data: {
       type: 'Task',
       task,
@@ -22,6 +22,12 @@ function DraggableCard({ task }) {
     transition,
     transform: CSS.Translate.toString(transform),
   };
+
+  if (isDragging) {
+    return (
+      <div className={styles.draggedTask} ref={setNodeRef} style={style} />
+    );
+  }
 
   return (
     <div

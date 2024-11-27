@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useSortable } from '@dnd-kit/sortable';
+import { useMemo, useState } from 'react';
+import { SortableContext, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { ColumnComp } from '../../../types';
 import styles from './ColumnContainer.module.css';
@@ -34,15 +34,19 @@ function DroppableColumn({
     transform: CSS.Translate.toString(transform),
   };
 
+  const filteredTasks = tasks.filter(
+    (studioTasks) => studioTasks.status === col.title
+  );
+  const tasksId = useMemo(
+    () => filteredTasks.map((task) => task._id),
+    [filteredTasks]
+  );
+
   if (isDragging) {
     return (
       <div className={styles.draggedColumn} ref={setNodeRef} style={style} />
     );
   }
-
-  const filteredTasks = tasks.filter(
-    (studioTasks) => studioTasks.status === col.title
-  );
 
   return (
     <div
@@ -86,10 +90,12 @@ function DroppableColumn({
       </div>
 
       <div className={styles.tasksWrapper}>
-        {tasks.length !== 0 &&
-          filteredTasks.map((task) => {
-            return <DraggableCard task={task} key={task._id} />;
-          })}
+        <SortableContext items={tasksId}>
+          {tasks.length !== 0 &&
+            filteredTasks.map((task) => {
+              return <DraggableCard task={task} key={task._id} />;
+            })}
+        </SortableContext>
       </div>
     </div>
   );

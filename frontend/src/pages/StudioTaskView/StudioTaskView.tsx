@@ -2,6 +2,7 @@ import { createPortal } from 'react-dom';
 import {
   DndContext,
   DragEndEvent,
+  DragOverEvent,
   DragOverlay,
   DragStartEvent,
   PointerSensor,
@@ -14,7 +15,11 @@ import DroppableColumn from '../../components/Molecules/ColumnContainer/ColumnCo
 import styles from './StudioTaskView.module.css';
 import { Column, Id } from '../../types';
 import useStudioTasksContext from '../../hooks/Context/useStudioTasksContext';
-import { getAllStudioTasks } from '../../services/studio-tasks-service';
+import {
+  getAllStudioTasks,
+  StudioTaskTypes,
+} from '../../services/studio-tasks-service';
+import DraggableCard from '../../components/Molecules/DraggableCard/DraggableCard';
 
 const initialColumns = [
   {
@@ -60,6 +65,7 @@ function StudioTaskView() {
   const [columns, setColumns] = useState<Column[]>(initialColumns);
   const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
   const [activeColumn, setActiveColumn] = useState<Column | null>(null);
+  const [activeTask, setActiveTask] = useState<StudioTaskTypes | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -99,9 +105,15 @@ function StudioTaskView() {
     if (event.active.data.current?.type === 'Column') {
       setActiveColumn(event.active.data.current.col);
     }
+
+    if (event.active.data.current?.type === 'Task') {
+      setActiveTask(event.active.data.current.task);
+    }
   }
 
   function onDragEnd(event: DragEndEvent) {
+    setActiveColumn(null);
+    setActiveTask(null);
     const { active, over } = event;
     if (!over) return;
     const activeColumnId = active.id;
@@ -122,12 +134,62 @@ function StudioTaskView() {
     });
   }
 
+  function onDragOver(event: DragOverEvent) {
+    const { active, over } = event;
+    if (!over) return;
+    const activeId = active.id;
+    const overId = over.id;
+
+    if (activeId === overId) return;
+
+    const isActiveTask = active.data.current?.type === 'Task';
+    const isOverTask = over.data.current?.type === 'Task';
+
+    if (!isActiveTask) return;
+
+    if (isActiveTask && isOverTask) {
+      const activeTaskIndex = studioTasks.findIndex(
+        (tas) => tas._id === activeId
+      );
+      const overTaskIndex = studioTasks.findIndex((tas) => tas._id === overId);
+
+      if (
+        studioTasks[activeTaskIndex].status !==
+        studioTasks[overTaskIndex].status
+      ) {
+        studioTasks[activeTaskIndex].status = studioTasks[overTaskIndex].status;
+      }
+      dispatch({
+        type: 'SET_STUDIOTASKS',
+        payload: arrayMove(studioTasks, activeTaskIndex, overTaskIndex),
+      });
+    }
+
+    const isOverAColumn = over.data.current?.type === 'Column';
+
+    if (isActiveTask && isOverAColumn) {
+      const activeTaskIndex = studioTasks.findIndex(
+        (tas) => tas._id === activeId
+      );
+
+      const overTitle = over.data.current?.col.title;
+
+      studioTasks[activeTaskIndex].status = overTitle;
+
+      dispatch({
+        type: 'SET_STUDIOTASKS',
+        payload: arrayMove(studioTasks, activeTaskIndex, activeTaskIndex),
+      });
+    }
+  }
+
   return (
     <div className={styles.kanbanView}>
       <DndContext
+        sensors={sensors}
         onDragStart={(e) => onDragStart(e)}
         onDragEnd={onDragEnd}
-        sensors={sensors}
+        onDragOver={onDragOver}
       >
         <SortableContext items={columnsId}>
           {columns.map((col) => {
@@ -162,6 +224,7 @@ function StudioTaskView() {
                 tasks={studioTasks}
               />
             )}
+            {activeTask && <DraggableCard task={activeTask} />}
           </DragOverlay>,
           document.body
         )}

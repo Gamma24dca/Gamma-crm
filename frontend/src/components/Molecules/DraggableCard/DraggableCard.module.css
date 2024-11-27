@@ -1,9 +1,12 @@
-.taskCardContainer {
+.taskCardContainer,
+.draggedTask {
   font-size: 15px;
   position: relative;
   cursor: pointer;
   background-color: var(--color-lighter);
   width: 80%;
+  min-width: 150px;
+  min-height: 50px;
   border-radius: 10px;
   padding: 0 20px 10px 20px;
   box-shadow: 0 0px 3px var(--color-shadow);
@@ -13,4 +16,8 @@
   &:hover {
     border: 1px solid var(--color-orange);
   }
+}
+
+.draggedTask {
+  border: 1px solid var(--color-orange);
 }
