@@ -19,7 +19,7 @@ function DraggableCard({ task }) {
   });
 
   const style = {
-    transition,
+    transition: transition || 'transform 200ms ease',
     transform: CSS.Translate.toString(transform),
   };
 

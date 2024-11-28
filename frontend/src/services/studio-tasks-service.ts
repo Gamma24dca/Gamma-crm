@@ -99,3 +99,34 @@ export async function addStudioTask({
     return null;
   }
 }
+
+export async function UpdateStudioTask({ id, studioTaskData }) {
+  const formData = {
+    id,
+    ...studioTaskData,
+  };
+
+  try {
+    const response = await fetch(
+      `https://gamma-crm.onrender.com/api/studiotasks/${id}`,
+      {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      }
+    );
+
+    if (response.ok) {
+      return await response.json();
+    }
+  } catch (error) {
+    console.error(error);
+    if (Config.isDev) {
+      throw new Error('Update studio task', error.message);
+    }
+    return null;
+  }
+}

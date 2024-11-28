@@ -10,7 +10,5 @@ export type Column = {
 
 export type ColumnComp = {
   col: Column;
-  deleteColumn: (id: Id) => void;
-  updateColumn: (id: Id, e: string) => void;
   tasks: StudioTaskTypes[];
 };

@@ -5,19 +5,23 @@ import {
   DragOverEvent,
   DragOverlay,
   DragStartEvent,
+  KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
+  // closestCorners,
 } from '@dnd-kit/core';
-import { useEffect, useMemo, useState } from 'react';
-import { arrayMove, SortableContext } from '@dnd-kit/sortable';
+import { debounce } from 'lodash';
+import { useCallback, useEffect, useState } from 'react';
+import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import DroppableColumn from '../../components/Molecules/ColumnContainer/ColumnContainer';
 import styles from './StudioTaskView.module.css';
-import { Column, Id } from '../../types';
+import { Column } from '../../types';
 import useStudioTasksContext from '../../hooks/Context/useStudioTasksContext';
 import {
   getAllStudioTasks,
   StudioTaskTypes,
+  UpdateStudioTask,
 } from '../../services/studio-tasks-service';
 import DraggableCard from '../../components/Molecules/DraggableCard/DraggableCard';
 
@@ -63,15 +67,21 @@ function StudioTaskView() {
   }, [dispatch, studioTasks]);
 
   const [columns, setColumns] = useState<Column[]>(initialColumns);
-  const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
   const [activeColumn, setActiveColumn] = useState<Column | null>(null);
   const [activeTask, setActiveTask] = useState<StudioTaskTypes | null>(null);
+
+  // const [currentStatus, setCurrentStatus] = useState({
+  //   status: '',
+  // });
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
         distance: 3,
       },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
     })
   );
 
@@ -88,18 +98,35 @@ function StudioTaskView() {
     setColumns((prevColumns) => [...prevColumns, columnToAdd]);
   }
 
-  function deleteColumn(id: Id) {
-    const filteredColumns = columns.filter((col) => col.id !== id);
-    setColumns(filteredColumns);
-  }
+  // async function handleUpdateTaskStatus(id, status) {
+  //   try {
+  //     await UpdateStudioTask({
+  //       id,
+  //       studioTaskData: status,
+  //     });
+  //     console.log(`Task ${id} updated successfully with status:`, status);
+  //   } catch (error) {
+  //     console.error(`Failed to update task ${id} with status:`, error);
+  //   }
+  // }
 
-  function updateColumn(id: Id, title: string) {
-    const newColumn = columns.map((col) => {
-      if (col.id !== id) return col;
-      return { ...col, title };
-    });
-    setColumns(newColumn);
-  }
+  const debouncedUpdateTaskStatus = useCallback(
+    debounce((id, status) => {
+      console.log(`Task ${id} updated successfully with status:`, status);
+
+      UpdateStudioTask({
+        id,
+        studioTaskData: status,
+      });
+    }, 300),
+    []
+  );
+
+  // useEffect(() => {
+  //   if (activeTask && currentStatus.status) {
+  //     handleUpdateTaskStatus(activeTask._id, currentStatus);
+  //   }
+  // }, [currentStatus, activeTask]);
 
   function onDragStart(event: DragStartEvent) {
     if (event.active.data.current?.type === 'Column') {
@@ -112,26 +139,43 @@ function StudioTaskView() {
   }
 
   function onDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+
     setActiveColumn(null);
     setActiveTask(null);
-    const { active, over } = event;
+
     if (!over) return;
-    const activeColumnId = active.id;
-    const overColumnId = over.id;
 
-    if (activeColumnId === overColumnId) return;
+    const isTask = active.data.current?.type === 'Task';
+    const isColumn = over.data.current?.type === 'Column';
 
-    setColumns((newColumns) => {
-      const activeColumnIndex = newColumns.findIndex(
-        (col) => col.id === activeColumnId
+    if (isTask && isColumn) {
+      const activeId = active.id;
+      const overTitle = over.data.current?.col.title;
+
+      if (!overTitle) return;
+
+      const activeTaskIndex = studioTasks.findIndex(
+        (task) => task._id === activeId
       );
 
-      const overColumnIndex = newColumns.findIndex(
-        (col) => col.id === overColumnId
-      );
+      const updatedTask = {
+        ...studioTasks[activeTaskIndex],
+        status: overTitle,
+      };
 
-      return arrayMove(newColumns, activeColumnIndex, overColumnIndex);
-    });
+      // Move the task to the new column and set it to the last position
+      const updatedTasks = studioTasks
+        .filter((task) => task._id !== activeId) // Remove task from current position
+        .concat(updatedTask); // Add it to the end of the list (or desired position)
+
+      dispatch({
+        type: 'SET_STUDIOTASKS',
+        payload: updatedTasks,
+      });
+
+      debouncedUpdateTaskStatus(activeId, { status: overTitle });
+    }
   }
 
   function onDragOver(event: DragOverEvent) {
@@ -159,6 +203,7 @@ function StudioTaskView() {
       ) {
         studioTasks[activeTaskIndex].status = studioTasks[overTaskIndex].status;
       }
+
       dispatch({
         type: 'SET_STUDIOTASKS',
         payload: arrayMove(studioTasks, activeTaskIndex, overTaskIndex),
@@ -172,14 +217,25 @@ function StudioTaskView() {
         (tas) => tas._id === activeId
       );
 
+      if (!over.data.current?.col?.title) {
+        console.warn('Invalid column data during drag over.');
+        return;
+      }
+
       const overTitle = over.data.current?.col.title;
 
       studioTasks[activeTaskIndex].status = overTitle;
+
+      // console.log(overTitle);
+      // setCurrentStatus({
+      //   status: over.data.current?.col.title,
+      // });
 
       dispatch({
         type: 'SET_STUDIOTASKS',
         payload: arrayMove(studioTasks, activeTaskIndex, activeTaskIndex),
       });
+      debouncedUpdateTaskStatus(activeId, { status: overTitle });
     }
   }
 
@@ -187,23 +243,14 @@ function StudioTaskView() {
     <div className={styles.kanbanView}>
       <DndContext
         sensors={sensors}
+        // collisionDetection={closestCorners}
         onDragStart={(e) => onDragStart(e)}
         onDragEnd={onDragEnd}
         onDragOver={onDragOver}
       >
-        <SortableContext items={columnsId}>
-          {columns.map((col) => {
-            return (
-              <DroppableColumn
-                col={col}
-                deleteColumn={deleteColumn}
-                updateColumn={updateColumn}
-                key={col.id}
-                tasks={studioTasks}
-              />
-            );
-          })}
-        </SortableContext>
+        {columns.map((col) => {
+          return <DroppableColumn col={col} key={col.id} tasks={studioTasks} />;
+        })}
 
         <button
           type="button"
@@ -217,12 +264,7 @@ function StudioTaskView() {
         {createPortal(
           <DragOverlay>
             {activeColumn && (
-              <DroppableColumn
-                col={activeColumn}
-                deleteColumn={deleteColumn}
-                updateColumn={updateColumn}
-                tasks={studioTasks}
-              />
+              <DroppableColumn col={activeColumn} tasks={studioTasks} />
             )}
             {activeTask && <DraggableCard task={activeTask} />}
           </DragOverlay>,
