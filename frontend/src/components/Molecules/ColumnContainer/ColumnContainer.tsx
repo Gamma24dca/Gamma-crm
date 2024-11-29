@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext } from '@dnd-kit/sortable';
 import { ColumnComp } from '../../../types';
@@ -6,13 +6,14 @@ import styles from './ColumnContainer.module.css';
 import DraggableCard from '../DraggableCard/DraggableCard';
 
 function DroppableColumn({ col, tasks }: ColumnComp) {
-  const filteredTasks = tasks.filter(
-    (studioTasks) => studioTasks.status === col.title
+  const filteredTasks = useMemo(
+    () => tasks.filter((studioTasks) => studioTasks.status === col.title),
+    [tasks, col.title]
   );
-  const tasksId = useMemo(
-    () => filteredTasks.map((task) => task._id),
-    [filteredTasks]
-  );
+  // const tasksId = useMemo(
+  //   () => filteredTasks.map((task) => task._id),
+  //   [filteredTasks]
+  // );
 
   const { setNodeRef } = useDroppable({
     id: col.id,
@@ -26,15 +27,14 @@ function DroppableColumn({ col, tasks }: ColumnComp) {
     <div className={styles.columnContainer} ref={setNodeRef}>
       <div className={styles.tasksWrapper}>
         <p>{col.title}</p>
-        <SortableContext items={tasksId}>
-          {tasks.length !== 0 &&
-            filteredTasks.map((task) => {
-              return <DraggableCard task={task} key={task._id} />;
-            })}
+        <SortableContext items={filteredTasks.map((task) => task._id)}>
+          {filteredTasks.map((task) => (
+            <DraggableCard task={task} key={task._id} />
+          ))}
         </SortableContext>
       </div>
     </div>
   );
 }
 
-export default DroppableColumn;
+export default React.memo(DroppableColumn);

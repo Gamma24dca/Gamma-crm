@@ -1,5 +1,7 @@
 import { createPortal } from 'react-dom';
 import {
+  closestCenter,
+  closestCorners,
   DndContext,
   DragEndEvent,
   DragOverEvent,
@@ -7,6 +9,7 @@ import {
   DragStartEvent,
   KeyboardSensor,
   PointerSensor,
+  rectIntersection,
   useSensor,
   useSensors,
   // closestCorners,
@@ -24,6 +27,7 @@ import {
   UpdateStudioTask,
 } from '../../services/studio-tasks-service';
 import DraggableCard from '../../components/Molecules/DraggableCard/DraggableCard';
+import { User } from '../../services/users-service';
 
 const initialColumns = [
   {
@@ -45,6 +49,101 @@ const initialColumns = [
     class: 'columnTitleMarkSent',
     title: 'Wysłane',
     id: 4,
+  },
+];
+
+const posts = [
+  {
+    id: 0,
+    title: 'Post 1',
+    content: 'lorem ipsum dolor sit amet',
+    status: 'draft',
+    index: 0,
+  },
+  {
+    id: 1,
+    title: 'Post 2',
+    content: 'consectetur adipiscing elit',
+    status: 'to_review',
+    index: 0,
+  },
+  {
+    id: 2,
+    title: 'Post 3',
+    content:
+      'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+    status: 'published',
+    index: 0,
+  },
+  {
+    id: 3,
+    title: 'Post 4',
+    content: 'Ut enim ad minim veniam',
+    status: 'to_publish',
+    index: 0,
+  },
+  {
+    id: 4,
+    title: 'Post 5',
+    content:
+      'quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat',
+    status: 'draft',
+    index: 1,
+  },
+  {
+    id: 5,
+    title: 'Post 6',
+    content:
+      'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur',
+    status: 'draft',
+    index: 2,
+  },
+  {
+    id: 6,
+    title: 'Post 7',
+    content:
+      'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum',
+    status: 'to_be_fixed',
+    index: 0,
+  },
+  {
+    id: 7,
+    title: 'Post 8',
+    content: 'Sed ut perspiciatis unde',
+    status: 'published',
+    index: 1,
+  },
+  {
+    id: 8,
+    title: 'Post 9',
+    content:
+      'iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam',
+    status: 'published',
+    index: 2,
+  },
+  {
+    id: 9,
+    title: 'Post 10',
+    content:
+      'eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo',
+    status: 'to_review',
+    index: 1,
+  },
+  {
+    id: 10,
+    title: 'Post 11',
+    content:
+      'Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit',
+    status: 'to_publish',
+    index: 1,
+  },
+  {
+    id: 11,
+    title: 'Post 12',
+    content:
+      'sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt',
+    status: 'to_review',
+    index: 2,
   },
 ];
 
@@ -70,9 +169,71 @@ function StudioTaskView() {
   const [activeColumn, setActiveColumn] = useState<Column | null>(null);
   const [activeTask, setActiveTask] = useState<StudioTaskTypes | null>(null);
 
-  // const [currentStatus, setCurrentStatus] = useState({
-  //   status: '',
-  // });
+  type Subtask = {
+    content: string;
+    done: boolean;
+  };
+
+  interface Post {
+    _id?: string;
+    searchID: number;
+    title: string;
+    client: string;
+    clientPerson: string;
+    status: string;
+    index: number;
+    author: Omit<User, 'password'>;
+    taskType: string;
+    participants: Omit<User, 'password'>[];
+    description: string;
+    subtasks: Subtask[];
+    deadline: string;
+    startDate: Date;
+  }
+
+  const statuses: Post['status'][] = [
+    'na_później',
+    'do_zrobienia',
+    'w_trakcie',
+    'wysłane',
+  ];
+
+  const statusNames: Record<Post['status'], string> = {
+    na_później: 'Na później',
+    do_zrobienia: 'Do zrobienia',
+    w_trakcie: 'W trakcie',
+    wysłane: 'Wysłane',
+  };
+
+  type PostsByStatus = Record<Post['status'], Post[]>;
+
+  const getPostsByStatus = (unorderedPosts: Post[]) => {
+    console.log(unorderedPosts);
+    if (unorderedPosts.length > 0) {
+      const postsByStatus: PostsByStatus = unorderedPosts.reduce(
+        (acc, post) => {
+          // acc[post.status].push(post);
+          // return acc;
+          console.log(acc, post);
+        }
+        // statuses.reduce(
+        //   (obj, status) => ({ ...obj, [status]: [] }),
+        //   {} as PostsByStatus
+        // )
+      );
+      // order each column by index
+      // statuses.forEach((status) => {
+      //   postsByStatus[status] = postsByStatus[status].sort(
+      //     (recordA: Post, recordB: Post) => recordA.index - recordB.index
+      //   );
+      // });
+      // return postsByStatus;
+    }
+  };
+
+  // console.log(studioTasks);
+
+  // getPostsByStatus(studioTasks);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -98,35 +259,21 @@ function StudioTaskView() {
     setColumns((prevColumns) => [...prevColumns, columnToAdd]);
   }
 
-  // async function handleUpdateTaskStatus(id, status) {
-  //   try {
-  //     await UpdateStudioTask({
-  //       id,
-  //       studioTaskData: status,
-  //     });
-  //     console.log(`Task ${id} updated successfully with status:`, status);
-  //   } catch (error) {
-  //     console.error(`Failed to update task ${id} with status:`, error);
-  //   }
-  // }
-
   const debouncedUpdateTaskStatus = useCallback(
-    debounce((id, status) => {
-      console.log(`Task ${id} updated successfully with status:`, status);
-
-      UpdateStudioTask({
-        id,
-        studioTaskData: status,
-      });
+    debounce(async (id, status) => {
+      try {
+        console.log(`Updating task ${id} with status:`, status);
+        await UpdateStudioTask({
+          id,
+          studioTaskData: status,
+        });
+        console.log(`Task ${id} updated successfully`);
+      } catch (error) {
+        console.error(`Failed to update task ${id}:`, error);
+      }
     }, 300),
     []
   );
-
-  // useEffect(() => {
-  //   if (activeTask && currentStatus.status) {
-  //     handleUpdateTaskStatus(activeTask._id, currentStatus);
-  //   }
-  // }, [currentStatus, activeTask]);
 
   function onDragStart(event: DragStartEvent) {
     if (event.active.data.current?.type === 'Column') {
@@ -140,102 +287,101 @@ function StudioTaskView() {
 
   function onDragEnd(event: DragEndEvent) {
     const { active, over } = event;
-
-    setActiveColumn(null);
-    setActiveTask(null);
-
     if (!over) return;
 
-    const isTask = active.data.current?.type === 'Task';
-    const isColumn = over.data.current?.type === 'Column';
+    const activeId = active.id;
+    const overId = over.id;
 
-    if (isTask && isColumn) {
-      const activeId = active.id;
-      const overTitle = over.data.current?.col.title;
+    // Find the active and over tasks
+    const activeTaskIndex = studioTasks.findIndex(
+      (task) => task._id === activeId
+    );
+    const activeTaskN = studioTasks[activeTaskIndex];
+    const overTaskIndex = studioTasks.findIndex((task) => task._id === overId);
+    const overTask = studioTasks[overTaskIndex];
 
-      if (!overTitle) return;
+    const updatedTasks = [...studioTasks];
 
-      const activeTaskIndex = studioTasks.findIndex(
-        (task) => task._id === activeId
+    // Check if the task is dropped on a column or another task
+    if (over.data.current?.type === 'Column') {
+      // Dropped into a column, append to the end of the column
+      const targetColumn = over.data.current.col;
+      const targetTasks = studioTasks.filter(
+        (task) => task.status === targetColumn.title
       );
 
-      const updatedTask = {
-        ...studioTasks[activeTaskIndex],
-        status: overTitle,
-      };
+      // Remove from original position
+      updatedTasks.splice(activeTaskIndex, 1);
 
-      // Move the task to the new column and set it to the last position
-      const updatedTasks = studioTasks
-        .filter((task) => task._id !== activeId) // Remove task from current position
-        .concat(updatedTask); // Add it to the end of the list (or desired position)
+      // Update task's status
+      activeTaskN.status = targetColumn.title;
 
-      dispatch({
-        type: 'SET_STUDIOTASKS',
-        payload: updatedTasks,
-      });
+      // Add to the end of the target column
+      const newIndex =
+        studioTasks.indexOf(targetTasks[targetTasks.length - 1]) + 1 ||
+        updatedTasks.length;
+      updatedTasks.splice(newIndex, 0, activeTaskN);
+    } else if (over.data.current?.type === 'Task') {
+      // Dropped onto another task
+      const sameColumn = activeTaskN.status === overTask.status;
 
-      debouncedUpdateTaskStatus(activeId, { status: overTitle });
+      if (sameColumn) {
+        // Handle intra-column reordering
+        const reorderedTasks = arrayMove(
+          updatedTasks,
+          activeTaskIndex,
+          overTaskIndex
+        );
+        dispatch({
+          type: 'SET_STUDIOTASKS',
+          payload: reorderedTasks,
+        });
+        return;
+      }
+
+      // Inter-column movement
+      const targetColumn = overTask.status;
+
+      // Remove from original position
+      updatedTasks.splice(activeTaskIndex, 1);
+
+      // Update task's status
+      activeTaskN.status = targetColumn;
+
+      // Insert above the hovered task
+      const insertionIndex = overTaskIndex;
+      updatedTasks.splice(insertionIndex, 0, activeTaskN);
     }
+
+    // Update state with reordered tasks
+    dispatch({
+      type: 'SET_STUDIOTASKS',
+      payload: updatedTasks,
+    });
+
+    // Persist the changes
+    debouncedUpdateTaskStatus(activeId, { status: activeTaskN.status });
   }
 
   function onDragOver(event: DragOverEvent) {
     const { active, over } = event;
     if (!over) return;
+
     const activeId = active.id;
     const overId = over.id;
 
     if (activeId === overId) return;
 
-    const isActiveTask = active.data.current?.type === 'Task';
-    const isOverTask = over.data.current?.type === 'Task';
-
-    if (!isActiveTask) return;
-
-    if (isActiveTask && isOverTask) {
-      const activeTaskIndex = studioTasks.findIndex(
-        (tas) => tas._id === activeId
-      );
-      const overTaskIndex = studioTasks.findIndex((tas) => tas._id === overId);
-
-      if (
-        studioTasks[activeTaskIndex].status !==
-        studioTasks[overTaskIndex].status
-      ) {
-        studioTasks[activeTaskIndex].status = studioTasks[overTaskIndex].status;
-      }
-
-      dispatch({
-        type: 'SET_STUDIOTASKS',
-        payload: arrayMove(studioTasks, activeTaskIndex, overTaskIndex),
-      });
-    }
-
     const isOverAColumn = over.data.current?.type === 'Column';
 
-    if (isActiveTask && isOverAColumn) {
-      const activeTaskIndex = studioTasks.findIndex(
-        (tas) => tas._id === activeId
-      );
-
-      if (!over.data.current?.col?.title) {
-        console.warn('Invalid column data during drag over.');
-        return;
+    if (isOverAColumn) {
+      const overColumn = over.data.current.col;
+      console.log(`Task is over column: ${overColumn.title}`);
+    } else {
+      const isOverTask = over.data.current?.type === 'Task';
+      if (isOverTask) {
+        console.log(`Task is over task ID: ${overId}`);
       }
-
-      const overTitle = over.data.current?.col.title;
-
-      studioTasks[activeTaskIndex].status = overTitle;
-
-      // console.log(overTitle);
-      // setCurrentStatus({
-      //   status: over.data.current?.col.title,
-      // });
-
-      dispatch({
-        type: 'SET_STUDIOTASKS',
-        payload: arrayMove(studioTasks, activeTaskIndex, activeTaskIndex),
-      });
-      debouncedUpdateTaskStatus(activeId, { status: overTitle });
     }
   }
 
@@ -243,10 +389,10 @@ function StudioTaskView() {
     <div className={styles.kanbanView}>
       <DndContext
         sensors={sensors}
-        // collisionDetection={closestCorners}
-        onDragStart={(e) => onDragStart(e)}
-        onDragEnd={onDragEnd}
+        // collisionDetection={closestCorners} // Updated for better accuracy
+        onDragStart={onDragStart}
         onDragOver={onDragOver}
+        onDragEnd={onDragEnd}
       >
         {columns.map((col) => {
           return <DroppableColumn col={col} key={col.id} tasks={studioTasks} />;

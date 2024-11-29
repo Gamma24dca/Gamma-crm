@@ -13,6 +13,7 @@ export type StudioTaskTypes = {
   client: string;
   clientPerson: string;
   status: string;
+  index: number;
   author: Omit<User, 'password'>;
   taskType: string;
   participants: Omit<User, 'password'>[];
