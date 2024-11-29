@@ -24,6 +24,10 @@ export const StudioTaskModel = mongoose.model(
       type: String,
       required: true,
     },
+    index: {
+      type: Number,
+      required: true,
+    },
     author: {
       _id: {
         type: String,

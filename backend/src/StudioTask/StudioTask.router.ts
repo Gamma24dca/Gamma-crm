@@ -47,6 +47,7 @@ StudioTaskRouter.post(
         client: req.body.client,
         clientPerson: req.body.clientPerson,
         status: req.body.status,
+        index: req.body.index,
         author: req.body.author,
         taskType: req.body.taskType,
         participants: req.body.participants,
