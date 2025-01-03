@@ -1,38 +1,34 @@
-import React, { useMemo } from 'react';
-import { useDroppable } from '@dnd-kit/core';
-import { SortableContext } from '@dnd-kit/sortable';
-import { ColumnComp } from '../../../types';
-import styles from './ColumnContainer.module.css';
+import React from 'react';
+import { Droppable } from '@hello-pangea/dnd';
 import DraggableCard from '../DraggableCard/DraggableCard';
+import styles from './ColumnContainer.module.css';
+import { StudioTaskTypes } from '../../../services/studio-tasks-service';
+import { statusNames } from '../../../statuses';
 
-function DroppableColumn({ col, tasks }: ColumnComp) {
-  const filteredTasks = useMemo(
-    () => tasks.filter((studioTasks) => studioTasks.status === col.title),
-    [tasks, col.title]
-  );
-  // const tasksId = useMemo(
-  //   () => filteredTasks.map((task) => task._id),
-  //   [filteredTasks]
-  // );
-
-  const { setNodeRef } = useDroppable({
-    id: col.id,
-    data: {
-      type: 'Column',
-      col,
-    },
-  });
-
+function DroppableColumn({
+  status,
+  tasks,
+}: {
+  status: StudioTaskTypes['status'];
+  tasks: StudioTaskTypes[];
+}) {
   return (
-    <div className={styles.columnContainer} ref={setNodeRef}>
-      <div className={styles.tasksWrapper}>
-        <p>{col.title}</p>
-        <SortableContext items={filteredTasks.map((task) => task._id)}>
-          {filteredTasks.map((task) => (
-            <DraggableCard task={task} key={task._id} />
-          ))}
-        </SortableContext>
-      </div>
+    <div>
+      <p>{statusNames[status]}</p>
+      <Droppable droppableId={status}>
+        {(droppableProvided) => (
+          <div
+            ref={droppableProvided.innerRef}
+            {...droppableProvided.droppableProps}
+            className={styles.columnContainer}
+          >
+            {tasks.map((task, index) => (
+              <DraggableCard key={task._id} task={task} index={index} />
+            ))}
+            {droppableProvided.placeholder}
+          </div>
+        )}
+      </Droppable>
     </div>
   );
 }

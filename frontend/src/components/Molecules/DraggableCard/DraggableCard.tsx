@@ -1,44 +1,38 @@
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import { Draggable } from '@hello-pangea/dnd';
 import styles from './DraggableCard.module.css';
+import { StudioTaskTypes } from '../../../services/studio-tasks-service';
 
-function DraggableCard({ task }) {
-  const {
-    setNodeRef,
-    attributes,
-    listeners,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({
-    id: task._id,
-    data: {
-      type: 'Task',
-      task,
-    },
-  });
-
-  const style = {
-    transition,
-    transform: CSS.Translate.toString(transform),
-  };
-
-  if (isDragging) {
-    return (
-      <div className={styles.draggedTask} ref={setNodeRef} style={style} />
-    );
-  }
-
+function DraggableCard({
+  task,
+  index,
+}: {
+  task: StudioTaskTypes;
+  index: number;
+}) {
   return (
-    <div
-      className={styles.taskCardContainer}
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-    >
-      <p>{task.title}</p>
-    </div>
+    <Draggable draggableId={String(task._id)} index={index}>
+      {(provided, snapshot) => (
+        <div
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          ref={provided.innerRef}
+          style={{
+            opacity: snapshot.isDragging ? 0.9 : 1,
+            transform: snapshot.isDragging ? 'scale(0.9)' : '',
+          }}
+          className={styles.taskCardContainer}
+        >
+          <div
+            style={{
+              opacity: snapshot.isDragging ? 0.9 : 1,
+              transform: snapshot.isDragging ? 'rotate(-2deg)' : '',
+            }}
+          >
+            {task.searchID}
+          </div>
+        </div>
+      )}
+    </Draggable>
   );
 }
 
