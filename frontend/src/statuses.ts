@@ -48,13 +48,13 @@ export const updateTaskStatus = async (source, destination) => {
   // console.log(source, destination);
   const studioTasks = await getAllStudioTasks();
 
-  console.log(studioTasks);
   const tasksByStatus = getTasksByStatus(studioTasks);
 
   if (source.status === destination.status) {
     // moving post inside the same column
 
     const columnTasks = tasksByStatus[source.status];
+    console.log(columnTasks);
     const destinationIndex = destination.index ?? columnTasks.length + 1;
 
     if (source.index > destinationIndex) {
@@ -88,7 +88,6 @@ export const updateTaskStatus = async (source, destination) => {
       // src   dest
       //  ------>
       // [4, 7, 23, 5]
-      console.log('moved down');
 
       await Promise.all([
         // for all posts between source.index and destinationIndex, decrease the index
@@ -142,4 +141,48 @@ export const updateTaskStatus = async (source, destination) => {
       studioTaskData: { index: destinationIndex, status: destination.status },
     }),
   ]);
+};
+
+export const updateTaskStatusLocal = (
+  sourceTask: StudioTaskTypes,
+  source: { status: StudioTaskTypes['status']; index: number },
+  destination: {
+    status: StudioTaskTypes['status'];
+    index?: number;
+  },
+  tasksByStatus: TasksByStatus
+) => {
+  if (!destination) return tasksByStatus; // Drop outside does nothing
+
+  if (source.status === destination.status) {
+    // Copy the source column to avoid mutating the original
+    const column = [...tasksByStatus[source.status]];
+    column.splice(source.index, 1);
+    column.splice(destination.index ?? column.length, 0, sourceTask);
+
+    return {
+      ...tasksByStatus,
+      [destination.status]: column,
+    };
+  } else {
+    // Copy both source and destination columns
+    const sourceColumn = [...tasksByStatus[source.status]];
+    const destinationColumn = [...tasksByStatus[destination.status]];
+
+    // Remove the task from the source column
+    sourceColumn.splice(source.index, 1);
+
+    // Add the task to the destination column
+    destinationColumn.splice(
+      destination.index ?? destinationColumn.length,
+      0,
+      sourceTask
+    );
+
+    return {
+      ...tasksByStatus,
+      [source.status]: sourceColumn,
+      [destination.status]: destinationColumn,
+    };
+  }
 };
