@@ -160,6 +160,8 @@ function StudioTaskView() {
   const onDragEnd: OnDragEndResponder = (result) => {
     const { destination, source } = result;
 
+    console.log('dest:', destination, 'source:', source);
+
     if (!destination) {
       return;
     }
@@ -174,7 +176,7 @@ function StudioTaskView() {
     const sourceStatus = source.droppableId as StudioTaskTypes['status'];
     const destinationStatus =
       destination.droppableId as StudioTaskTypes['status'];
-    const sourcePost = tasksByStatus[sourceStatus][source.index]!;
+    const sourceTask = tasksByStatus[sourceStatus][source.index]!;
     const destinationPost = tasksByStatus[destinationStatus][
       destination.index
     ] ?? {
@@ -185,7 +187,7 @@ function StudioTaskView() {
     // compute local state change synchronously
     setTasksByStatus(
       updateTasksStatusLocal(
-        sourcePost,
+        sourceTask,
         { status: sourceStatus, index: source.index },
         { status: destinationStatus, index: destination.index },
         tasksByStatus
@@ -194,7 +196,7 @@ function StudioTaskView() {
 
     // trigger the mutation to persist the changes
     mutation.mutateAsync({
-      source: sourcePost,
+      source: sourceTask,
       destination: destinationPost,
     });
   };
@@ -216,10 +218,8 @@ function StudioTaskView() {
   );
 }
 
-export default StudioTaskView;
-
 const updateTasksStatusLocal = (
-  sourcePost: StudioTaskTypes,
+  sourceTask: StudioTaskTypes,
   source: { status: StudioTaskTypes['status']; index: number },
   destination: {
     status: StudioTaskTypes['status'];
@@ -231,7 +231,7 @@ const updateTasksStatusLocal = (
     // moving deal inside the same column
     const column = tasksByStatus[source.status];
     column.splice(source.index, 1);
-    column.splice(destination.index ?? column.length + 1, 0, sourcePost);
+    column.splice(destination.index ?? column.length + 1, 0, sourceTask);
     return {
       ...tasksByStatus,
       [destination.status]: column,
@@ -244,7 +244,7 @@ const updateTasksStatusLocal = (
   destinationColumn.splice(
     destination.index ?? destinationColumn.length + 1,
     0,
-    sourcePost
+    sourceTask
   );
   return {
     ...tasksByStatus,
@@ -252,3 +252,5 @@ const updateTasksStatusLocal = (
     [destination.status]: destinationColumn,
   };
 };
+
+export default StudioTaskView;

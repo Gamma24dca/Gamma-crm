@@ -14,7 +14,7 @@ function DroppableColumn({
 }) {
   return (
     <div>
-      <p>{statusNames[status]}</p>
+      <p className={styles.statusName}>{statusNames[status]}</p>
       <Droppable droppableId={status}>
         {(droppableProvided) => (
           <div

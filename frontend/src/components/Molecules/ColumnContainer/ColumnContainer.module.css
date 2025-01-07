@@ -22,3 +22,8 @@
   flex-direction: column;
   gap: 15px;
 }
+
+.statusName { 
+  color:  #828fa3;
+  font-weight: 600;
+}
