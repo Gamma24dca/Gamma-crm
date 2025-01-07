@@ -8,3 +8,6 @@
   overflow-y: hidden;
   padding: 0 40px;
 }
+.columnsWrapper {
+  display: flex;
+}

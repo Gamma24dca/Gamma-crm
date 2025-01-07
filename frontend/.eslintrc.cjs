@@ -44,6 +44,7 @@ module.exports = {
     'react/prop-types': 'off',
     'react/jsx-no-bind': 'off',
     'jsx-a11y/no-autofocus': 'off',
+    'no-else-return': 'off',
 
     'react/jsx-filename-extension': [
       1,
