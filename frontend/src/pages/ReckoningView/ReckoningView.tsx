@@ -12,6 +12,7 @@ import useStudioTasksContext from '../../hooks/Context/useStudioTasksContext';
 import {
   addStudioTask,
   getAllStudioTasks,
+  StudioTaskTypes,
 } from '../../services/studio-tasks-service';
 import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplate';
 import useModal from '../../hooks/useModal';
@@ -22,6 +23,7 @@ import { getAllCompanies } from '../../services/companies-service';
 import useAuth from '../../hooks/useAuth';
 import SelectUser from '../../components/Molecules/SelectUser/SelectUser';
 import CompanyGraphicTile from '../../components/Molecules/CompanyGraphicTile/CompanyGraphicTile';
+import { statuses, statusNames } from '../../statuses';
 
 const colums = [
   {
@@ -71,10 +73,12 @@ function DateFormatter({ dateString }) {
 }
 
 const initialTaskObject = {
+  searchID: 0,
   title: '',
   client: '',
   clientPerson: '',
   status: '',
+  index: 1,
   author: {},
   taskType: '',
   participants: [],
@@ -118,7 +122,7 @@ function StudioTaskView() {
     setFormValue,
     handleAddMember,
     handleDeleteMember,
-  } = useSelectUser({
+  } = useSelectUser<StudioTaskTypes>({
     initialValue: initialTaskObject,
     objectKey: 'participants',
   });
@@ -142,12 +146,15 @@ function StudioTaskView() {
       handleLoadingStateChange('isLoading', true);
       const searchID = generateSearchID();
       const currentDate = new Date();
+      const statusValue: StudioTaskTypes['status'] =
+        formValue.status as StudioTaskTypes['status'];
       const response = await addStudioTask({
         searchID,
         title: formValue.title,
         client: formValue.client,
         clientPerson: formValue.clientPerson,
-        status: formValue.status,
+        status: statusValue,
+        index: 1,
         author: user[0],
         taskType: formValue.taskType,
         participants: formValue.participants,
@@ -259,10 +266,11 @@ function StudioTaskView() {
                 onChange={(e) => handleFormChange(e, 'status')}
               >
                 <option value="">Status</option>
-                <option value="Na później">Na później</option>
-                <option value="Do zrobienia">Do zrobienia</option>
-                <option value="W trakcie">W trakcie</option>
-                <option value="Wysłane">Wysłane</option>
+                {statuses.map((status) => (
+                  <option key={status} value={status}>
+                    {statusNames[status]}
+                  </option>
+                ))}
               </select>
               <select
                 name="task-type"
@@ -369,7 +377,7 @@ function StudioTaskView() {
                     const companyClass = task.client.split(' ').join('');
 
                     return (
-                      task.status === column.title && (
+                      statusNames[task.status] === column.title && (
                         <div
                           draggable="true"
                           className={taskClass}
