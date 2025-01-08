@@ -17,6 +17,7 @@
 }
 
 .InfoBarElement {
+  color: var(--color-title);
   font-weight: 600;
   font-size: 16px;
   text-overflow: ellipsis;

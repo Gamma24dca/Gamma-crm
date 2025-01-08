@@ -9,5 +9,8 @@
   padding: 0 40px;
 }
 .columnsWrapper {
+  height: 100%;
+  width: 80%;
   display: flex;
+padding: 5% 0 0 4%;
 }

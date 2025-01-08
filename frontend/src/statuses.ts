@@ -23,10 +23,10 @@ export type TasksByStatus = Record<
   StudioTaskTypes[]
 >;
 
-export const getTasksByStatus = (unorderedPosts: StudioTaskTypes[]) => {
-  const postsByStatus: TasksByStatus = unorderedPosts.reduce(
-    (acc, post) => {
-      acc[post.status].push(post);
+export const getTasksByStatus = (unorderedTasks: StudioTaskTypes[]) => {
+  const tasksByStatus: TasksByStatus = unorderedTasks.reduce(
+    (acc, task) => {
+      acc[task.status].push(task);
       return acc;
     },
     statuses.reduce(
@@ -34,109 +34,115 @@ export const getTasksByStatus = (unorderedPosts: StudioTaskTypes[]) => {
       {} as TasksByStatus
     )
   );
-  // order each column by index
   statuses.forEach((status) => {
-    postsByStatus[status] = postsByStatus[status].sort(
+    tasksByStatus[status] = tasksByStatus[status].sort(
       (recordA: StudioTaskTypes, recordB: StudioTaskTypes) =>
         recordA.index - recordB.index
     );
   });
-  return postsByStatus;
+  return tasksByStatus;
 };
 
 export const updateTaskStatus = async (source, destination) => {
-  // console.log(source, destination);
   const studioTasks = await getAllStudioTasks();
 
   const tasksByStatus = getTasksByStatus(studioTasks);
+  console.log('source:', source, 'destination:', destination);
 
+  // inside same column
   if (source.status === destination.status) {
-    // moving post inside the same column
-
     const columnTasks = tasksByStatus[source.status];
-    console.log(columnTasks);
-    const destinationIndex = destination.index ?? columnTasks.length + 1;
+    const destinationIndex = destination.index
+      ? destination.index
+      : columnTasks.length + 1;
 
-    if (source.index > destinationIndex) {
-      // post moved up, eg
-      // dest   src
-      //  <------
-      // [4, 7, 23, 5]
+    if (source.index > destination.index) {
+      console.log('moved up');
 
-      await Promise.all([
-        // for all posts between destinationIndex and source.index, increase the index
-        ...columnTasks
+      await UpdateStudioTask({
+        id: destination._id,
+        studioTaskData: { index: destinationIndex + 1 },
+      });
+      await UpdateStudioTask({
+        id: source._id,
+        studioTaskData: { index: destinationIndex },
+      });
+      console.log(
+        'FILTERED',
+        columnTasks.filter(
+          (task) => task.index >= destinationIndex && task.index < source.index
+        )
+      );
+
+      await Promise.all(
+        columnTasks
           .filter(
             (task) =>
               task.index >= destinationIndex && task.index < source.index
           )
-          .map((task) =>
-            UpdateStudioTask({
-              id: task._id,
-              studioTaskData: { index: task.index + 1 },
-            })
-          ),
-        // for the post that was moved, update its index
+          .map(async (underTask) => {
+            console.log(underTask.title, 'Added +1 to index');
+            return UpdateStudioTask({
+              id: underTask._id,
+              studioTaskData: { index: underTask.index + 1 },
+            });
+          })
+      );
 
-        UpdateStudioTask({
-          id: source._id,
-          studioTaskData: { index: destinationIndex },
-        }),
-      ]);
-    } else {
-      // post moved down, e.g
-      // src   dest
-      //  ------>
-      // [4, 7, 23, 5]
-
-      await Promise.all([
-        // for all posts between source.index and destinationIndex, decrease the index
-        ...columnTasks
-          .filter(
-            (post) =>
-              post.index <= destinationIndex && post.index > source.index
-          )
-          .map((task) =>
-            UpdateStudioTask({
-              id: task._id,
-              studioTaskData: { index: task.index - 1 },
-            })
-          ),
-        // for the post that was moved, update its index
-        UpdateStudioTask({
-          id: source._id,
-          studioTaskData: { index: destinationIndex },
-        }),
-      ]);
+      return;
     }
+    console.log('moved down');
+    await UpdateStudioTask({
+      id: destination._id,
+      studioTaskData: { index: destination.index - 1 },
+    });
+    await UpdateStudioTask({
+      id: source._id,
+      studioTaskData: { index: destination.index },
+    });
+
+    await Promise.all(
+      columnTasks
+        .filter(
+          (task) => task.index <= destinationIndex && task.index > source.index
+        )
+        .map(async (underTask) => {
+          console.log(underTask.title, ' -1 to index');
+          return UpdateStudioTask({
+            id: underTask._id,
+            studioTaskData: { index: underTask.index - 1 },
+          });
+        })
+    );
+
+    return;
   }
-  // moving post across columns
+
+  // moving task across columns
   const sourceColumn = tasksByStatus[source.status];
   const destinationColumn = tasksByStatus[destination.status];
   const destinationIndex = destination.index ?? destinationColumn.length + 1;
 
   await Promise.all([
-    // decrease index on the posts after the source index in the source columns
     ...sourceColumn
       .filter((task) => task.index > source.index)
-      .map((task) =>
+      .map(async (task) =>
         UpdateStudioTask({
           id: task._id,
           studioTaskData: { index: task.index - 1 },
         })
       ),
-    // increase index on the tasks after the destination index in the destination columns
+
     ...destinationColumn
       .filter((task) => task.index >= destinationIndex)
-      .map((task) =>
+      .map(async (task) =>
         UpdateStudioTask({
           id: task._id,
           studioTaskData: { index: task.index + 1 },
         })
       ),
-    // change the dragged post to take the destination index and column
 
-    UpdateStudioTask({
+    await UpdateStudioTask({
       id: source._id,
       studioTaskData: { index: destinationIndex, status: destination.status },
     }),
@@ -168,6 +174,13 @@ export const updateTaskStatusLocal = (
     // Copy both source and destination columns
     const sourceColumn = [...tasksByStatus[source.status]];
     const destinationColumn = [...tasksByStatus[destination.status]];
+
+    // if (destinationColumn[0].index === 1) {
+    //   const updatedDestinationColumn = destinationColumn.map((columnTask) => {
+    //     return { ...columnTask, index: columnTask.index - 1 };
+    //   });
+    //   console.log('łeeeee', updatedDestinationColumn);
+    // }
 
     // Remove the task from the source column
     sourceColumn.splice(source.index, 1);

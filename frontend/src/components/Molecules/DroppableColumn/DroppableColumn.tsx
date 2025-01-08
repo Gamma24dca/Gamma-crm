@@ -11,7 +11,11 @@ function DroppableColumn({ status, tasks }) {
           <div
             ref={droppableProvided.innerRef}
             {...droppableProvided.droppableProps}
-            className={snapshot.isDraggingOver ? ' isDraggingOver' : ''}
+            className={`${
+              snapshot.isDraggingOver
+                ? styles.draggedColumn
+                : styles.columnContainer
+            }`}
           >
             <p className={styles.statusName}>{statusNames[status]}</p>
             {tasks.map((task, index) => {

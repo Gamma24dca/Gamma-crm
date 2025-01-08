@@ -13,7 +13,7 @@ function DraggableCard({ task, index }) {
           <div
             style={{
               opacity: snapshot.isDragging ? 0.9 : 1,
-              transform: snapshot.isDragging ? 'rotate(-2deg)' : '',
+              transform: snapshot.isDragging ? 'scale(0.95)' : '',
             }}
             className={styles.taskCardContainer}
           >

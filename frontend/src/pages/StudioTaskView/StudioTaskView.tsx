@@ -34,13 +34,13 @@ function StudioTaskView() {
       if (studioTasks) {
         const newTasksByStatus = getTasksByStatus(studioTasks);
         if (!isEqual(newTasksByStatus, tasksByStatus)) {
-          setTasksByStatus({ ...newTasksByStatus }); // Ensure a new object reference
+          setTasksByStatus({ ...newTasksByStatus });
         }
       }
     };
 
     fetchTasks();
-  }, [dispatch, studioTasks]); // Removed tasksByStatus to avoid overwriting local changes
+  }, [dispatch, studioTasks]);
 
   const mutation = useMutation<
     void,
@@ -61,13 +61,13 @@ function StudioTaskView() {
   const onDragEnd: OnDragEndResponder = (result) => {
     const { destination, source } = result;
 
-    if (!destination) return; // Task was dropped outside any droppable area
+    if (!destination) return;
 
     if (
       destination.droppableId === source.droppableId &&
       destination.index === source.index
     ) {
-      return; // Task dropped in the same position
+      return;
     }
 
     const sourceStatus = source.droppableId as StudioTaskTypes['status'];
@@ -89,8 +89,7 @@ function StudioTaskView() {
     );
 
     // console.log('Updated tasksByStatus:', updatedTasks);
-    setTasksByStatus({ ...updatedTasks }); // Ensure new object reference
-
+    setTasksByStatus({ ...updatedTasks });
     // console.log('dest task', destinationTask);
 
     mutation.mutateAsync({

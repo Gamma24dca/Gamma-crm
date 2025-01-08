@@ -88,6 +88,7 @@
 .tileElementInfoBar,
 .usersImgContainer {
   font-weight: 600;
+  color: var(--color-title)
 }
 
 .tileElementInfoBar:first-child {
