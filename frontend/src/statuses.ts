@@ -152,7 +152,7 @@ export const updateTaskStatusLocal = (
   },
   tasksByStatus: TasksByStatus
 ) => {
-  if (!destination) return tasksByStatus; // Drop outside does nothing
+  if (!destination) return tasksByStatus;
 
   if (source.status === destination.status) {
     // Copy the source column to avoid mutating the original

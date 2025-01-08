@@ -56,6 +56,8 @@ function StudioTaskView() {
     },
   });
 
+  console.log(tasksByStatus);
+
   const onDragEnd: OnDragEndResponder = (result) => {
     const { destination, source } = result;
 
