@@ -56,6 +56,8 @@ export const updateTaskStatus = async (source, destination) => {
       ? destination.index
       : columnTasks.length + 1;
 
+    // Try if columnTasks[0] > 1 increse by +2
+
     if (source.index > destination.index) {
       console.log('moved up');
 
