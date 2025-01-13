@@ -13,5 +13,14 @@
   width: 80%;
   display: flex;
   gap: 15px;
-  padding: 5% 0 0 4%;
+  justify-content: center;
+  padding: 1% 0 0 4%;
+}
+
+.buttonsWrapper {
+  margin-right: 3%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
 }

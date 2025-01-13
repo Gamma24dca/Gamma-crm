@@ -223,19 +223,19 @@
   transform: translateY(-10px);
 }
 
-@media (max-width: 1150px) {
+@media (max-width: 1300px) {
   .task,
   .taskHigher {
-    min-width: none;
-    max-width: 50px;
+    width: 50%;
+    min-width: 150px;
   }
 
   .datesWrapper {
-    right: 45%;
+    right: 30%;
   }
 
   .clientName,
   .clientPerson {
-    max-width: 50px;
+    max-width: 30px;
   }
 }
