@@ -58,6 +58,7 @@ function StudioTaskView() {
   const { studioTasks, dispatch } = useStudioTasksContext();
   const { companies, dispatch: companiesDispatch } = useCompaniesContext();
   const [tasksByStatus, setTasksByStatus] = useState(getTasksByStatus([]));
+  const [isDragAllowed, setIsDragAllowed] = useState(true);
   const { showModal, exitAnim, openModal, closeModal } = useModal();
   const [loadingState, setLoadingState] = useState({
     isLoading: false,
@@ -194,46 +195,60 @@ function StudioTaskView() {
     },
   });
 
-  console.log(tasksByStatus);
+  console.log('tasks:', tasksByStatus);
 
   const onDragEnd: OnDragEndResponder = (result) => {
+    if (!isDragAllowed) return;
+
     const { destination, source } = result;
 
     if (!destination) return;
 
-    if (
-      destination.droppableId === source.droppableId &&
-      destination.index === source.index
-    ) {
-      return;
+    setIsDragAllowed(false);
+    console.log('dragging disabled');
+
+    try {
+      if (
+        destination.droppableId === source.droppableId &&
+        destination.index === source.index
+      ) {
+        return;
+      }
+
+      const sourceStatus = source.droppableId as StudioTaskTypes['status'];
+      const destinationStatus =
+        destination.droppableId as StudioTaskTypes['status'];
+      const sourceTask = tasksByStatus[sourceStatus][source.index];
+      const destinationTask = tasksByStatus[destinationStatus][
+        destination.index
+      ] ?? {
+        status: destinationStatus,
+        index: undefined,
+      };
+
+      const updatedTasks = updateTaskStatusLocal(
+        sourceTask,
+        { status: sourceStatus, index: source.index },
+        { status: destinationStatus, index: destination.index },
+        tasksByStatus
+      );
+
+      // console.log('Updated tasksByStatus:', updatedTasks);
+      setTasksByStatus({ ...updatedTasks });
+      // console.log('dest task', destinationTask);
+
+      mutation.mutateAsync({
+        source: sourceTask,
+        destination: destinationTask,
+      });
+    } catch (error) {
+      console.error('Error handling drag and drop', error);
+    } finally {
+      setTimeout(() => {
+        setIsDragAllowed(true);
+        console.log('dragging enabled');
+      }, 300);
     }
-
-    const sourceStatus = source.droppableId as StudioTaskTypes['status'];
-    const destinationStatus =
-      destination.droppableId as StudioTaskTypes['status'];
-    const sourceTask = tasksByStatus[sourceStatus][source.index];
-    const destinationTask = tasksByStatus[destinationStatus][
-      destination.index
-    ] ?? {
-      status: destinationStatus,
-      index: undefined,
-    };
-
-    const updatedTasks = updateTaskStatusLocal(
-      sourceTask,
-      { status: sourceStatus, index: source.index },
-      { status: destinationStatus, index: destination.index },
-      tasksByStatus
-    );
-
-    // console.log('Updated tasksByStatus:', updatedTasks);
-    setTasksByStatus({ ...updatedTasks });
-    // console.log('dest task', destinationTask);
-
-    mutation.mutateAsync({
-      source: sourceTask,
-      destination: destinationTask,
-    });
   };
 
   return (
@@ -281,6 +296,7 @@ function StudioTaskView() {
                 key={status}
                 status={status}
                 tasks={tasksByStatus[status]}
+                isDragAllowed={isDragAllowed}
               />
             );
           })}

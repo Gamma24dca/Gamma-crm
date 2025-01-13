@@ -3,7 +3,7 @@ import styles from './DroppableColumn.module.css';
 import DraggableCard from '../DraggableCard/DraggableCard';
 import { statusNames } from '../../../statuses';
 
-function DroppableColumn({ status, tasks }) {
+function DroppableColumn({ status, tasks, isDragAllowed }) {
   return (
     <div className={styles.columnWrapper}>
       <p className={styles.statusName}>{statusNames[status]}</p>
@@ -33,6 +33,7 @@ function DroppableColumn({ status, tasks }) {
                     task={task}
                     index={index}
                     doneSubtasks={doneSubtasks}
+                    isDragAllowed={isDragAllowed}
                   />
                 );
               })}

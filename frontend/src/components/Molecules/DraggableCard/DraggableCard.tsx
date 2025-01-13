@@ -4,21 +4,28 @@ import styles from './DraggableCard.module.css';
 import UsersDisplay from '../../Organisms/UsersDisplay/UsersDisplay';
 import DateFormatter from '../../../utils/dateFormatter';
 
-function DraggableCard({ task, index, doneSubtasks = 0 }) {
+function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
   const taskClass =
     task.participants.length > 4 ? styles.taskHigher : styles.task;
+
+  const dragDisabledClass = isDragAllowed ? '' : styles.dragDisabled;
 
   const companyClass = task.client.split(' ').join('');
 
   const subtasksLength = task.subtasks.length;
 
   return (
-    <Draggable draggableId={String(task._id)} index={index}>
+    <Draggable
+      draggableId={String(task._id)}
+      index={index}
+      isDragDisabled={!isDragAllowed}
+    >
       {(provided, snapshot) => (
         <div
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           ref={provided.innerRef}
+          className={dragDisabledClass}
         >
           <div
             style={{
