@@ -1,14 +1,21 @@
+.columnWrapper {
+  margin: 0 auto;
+  width: 20%;
+  height: 70vh;
+  max-width: 400px;
+  min-width: 250px;
+}
+
 .columnContainer,
 .draggedColumn {
-  margin: 0 auto;
   border: 1px solid var(--color-navButton);
   border-radius: 10px;
-  width: 20%;
-  min-width: 250px;
-  height: 500px;
+  height: 100%;
+  overflow-y: scroll;
+
   display: flex;
   flex-direction: column;
-  align-items: center;
+  gap: 15px;
   padding: 20px 10px;
 }
 
@@ -17,13 +24,7 @@
   border: 1px solid var(--color-orange);
 }
 
-.tasksWrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.statusName { 
-  color:  #828fa3;
+.statusName {
+  color: #828fa3;
   font-weight: 600;
 }

@@ -5,27 +5,43 @@ import { statusNames } from '../../../statuses';
 
 function DroppableColumn({ status, tasks }) {
   return (
-    <Droppable droppableId={status}>
-      {(droppableProvided, snapshot) => {
-        return (
-          <div
-            ref={droppableProvided.innerRef}
-            {...droppableProvided.droppableProps}
-            className={`${
-              snapshot.isDraggingOver
-                ? styles.draggedColumn
-                : styles.columnContainer
-            }`}
-          >
-            <p className={styles.statusName}>{statusNames[status]}</p>
-            {tasks.map((task, index) => {
-              return <DraggableCard key={task._id} task={task} index={index} />;
-            })}
-            {droppableProvided.placeholder}
-          </div>
-        );
-      }}
-    </Droppable>
+    <div className={styles.columnWrapper}>
+      <p className={styles.statusName}>{statusNames[status]}</p>
+      <Droppable droppableId={status}>
+        {(droppableProvided, snapshot) => {
+          return (
+            <div
+              ref={droppableProvided.innerRef}
+              {...droppableProvided.droppableProps}
+              className={`${
+                snapshot.isDraggingOver
+                  ? styles.draggedColumn
+                  : styles.columnContainer
+              }`}
+            >
+              {tasks.map((task, index) => {
+                let doneSubtasks = 0;
+
+                task.subtasks.forEach((subtask) => {
+                  if (subtask.done) {
+                    doneSubtasks += 1;
+                  }
+                });
+                return (
+                  <DraggableCard
+                    key={task._id}
+                    task={task}
+                    index={index}
+                    doneSubtasks={doneSubtasks}
+                  />
+                );
+              })}
+              {droppableProvided.placeholder}
+            </div>
+          );
+        }}
+      </Droppable>
+    </div>
   );
 }
 
