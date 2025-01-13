@@ -115,13 +115,17 @@ function StudioTaskView() {
       const currentDate = new Date();
       const statusValue: StudioTaskTypes['status'] =
         formValue.status as StudioTaskTypes['status'];
+
+      const indexOfNewTask =
+        tasksByStatus[statusValue][tasksByStatus[statusValue].length - 1]
+          .index + 1;
       const response = await addStudioTask({
         searchID,
         title: formValue.title,
         client: formValue.client,
         clientPerson: formValue.clientPerson,
         status: statusValue,
-        index: tasksByStatus[statusValue].length + 1,
+        index: indexOfNewTask,
         author: user[0],
         taskType: formValue.taskType,
         participants: formValue.participants,

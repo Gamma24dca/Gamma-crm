@@ -123,7 +123,9 @@ export const updateTaskStatus = async (source, destination) => {
   // moving task across columns
   const sourceColumn = tasksByStatus[source.status];
   const destinationColumn = tasksByStatus[destination.status];
-  const destinationIndex = destination.index ?? destinationColumn.length + 1;
+  const destinationIndex =
+    destination.index ??
+    destinationColumn[destinationColumn.length - 1].index + 1;
 
   await Promise.all([
     ...sourceColumn
