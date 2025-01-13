@@ -27,6 +27,20 @@ function DroppableColumn({ status, tasks, isDragAllowed }) {
                     doneSubtasks += 1;
                   }
                 });
+
+                // return task.participants.map((partTas) => {
+                //   return (
+                //     partTas._id === '655f423bf7ce6ff8c9b4f307' && (
+                //       <DraggableCard
+                //         key={task._id}
+                //         task={task}
+                //         index={index}
+                //         doneSubtasks={doneSubtasks}
+                //         isDragAllowed={isDragAllowed}
+                //       />
+                //     )
+                //   );
+                // });
                 return (
                   <DraggableCard
                     key={task._id}
