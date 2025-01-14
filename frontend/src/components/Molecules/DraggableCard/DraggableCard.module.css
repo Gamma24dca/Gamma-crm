@@ -220,7 +220,7 @@
 }
 
 .noDates {
-  transform: translate(-20px,-10px);
+  transform: translate(-20px, -10px);
 }
 
 .dragDisabled {
@@ -242,5 +242,33 @@
   .clientName,
   .clientPerson {
     max-width: 30px;
+  }
+}
+
+.skeletonWrapper {
+  margin: 0 auto;
+}
+
+.taskSkeleton {
+  position: relative;
+  background-color: var(--color-border);
+  width: 80%;
+  min-width: 200px;
+  min-height: 80px;
+  border-radius: 10px;
+  box-shadow: 0 0px 3px var(--color-shadow);
+  animation: load 1s infinite forwards;
+}
+
+@keyframes load {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 1;
   }
 }

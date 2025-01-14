@@ -1,16 +1,7 @@
 import { useEffect, useState } from 'react';
-import { DragDropContext, OnDragEndResponder } from '@hello-pangea/dnd';
 import { isEqual } from 'lodash';
-import { useMutation } from 'react-query';
 import styles from './StudioTaskView.module.css';
-import {
-  getTasksByStatus,
-  statuses,
-  statusNames,
-  updateTaskStatus,
-  updateTaskStatusLocal,
-} from '../../statuses';
-import DroppableColumn from '../../components/Molecules/DroppableColumn/DroppableColumn';
+import { getTasksByStatus, statuses, statusNames } from '../../statuses';
 import useStudioTasksContext from '../../hooks/Context/useStudioTasksContext';
 import {
   addStudioTask,
@@ -29,6 +20,8 @@ import useAuth from '../../hooks/useAuth';
 import generateSearchID from '../../utils/generateSearchId';
 import useCompaniesContext from '../../hooks/Context/useCompaniesContext';
 import { getAllCompanies } from '../../services/companies-service';
+import Select from '../../components/Atoms/Select/Select';
+import KanbanView from '../../components/Organisms/KanbanView/KanbanView';
 
 const initialTaskObject: StudioTaskTypes = {
   searchID: 0,
@@ -54,11 +47,13 @@ const initialTaskObject: StudioTaskTypes = {
   startDate: new Date(),
 };
 
+const viewOptions = ['Aktywne', 'Archiwum'];
+
 function StudioTaskView() {
+  const [viewVariable, setViewVariable] = useState('Aktywne');
   const { studioTasks, dispatch } = useStudioTasksContext();
   const { companies, dispatch: companiesDispatch } = useCompaniesContext();
   const [tasksByStatus, setTasksByStatus] = useState(getTasksByStatus([]));
-  const [isDragAllowed, setIsDragAllowed] = useState(true);
   const { showModal, exitAnim, openModal, closeModal } = useModal();
   const [loadingState, setLoadingState] = useState({
     isLoading: false,
@@ -69,7 +64,7 @@ function StudioTaskView() {
   const { user } = useAuth();
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchCompanies = async () => {
       if (companies.length === 0) {
         try {
           const allCompanies = await getAllCompanies();
@@ -80,7 +75,7 @@ function StudioTaskView() {
       }
     };
 
-    fetchUsers();
+    fetchCompanies();
   }, [companiesDispatch, companies]);
 
   const {
@@ -106,6 +101,10 @@ function StudioTaskView() {
       ...prev,
       [key]: e.target.value,
     }));
+  };
+
+  const handleViewChange = (e) => {
+    setViewVariable(e.target.value);
   };
 
   const createTaskHandler = async () => {
@@ -185,76 +184,6 @@ function StudioTaskView() {
     fetchTasks();
   }, [dispatch, studioTasks]);
 
-  const mutation = useMutation<
-    void,
-    Error,
-    {
-      source: StudioTaskTypes;
-      destination: { status: StudioTaskTypes['status']; index?: number };
-    }
-  >(({ source, destination }) => updateTaskStatus(source, destination), {
-    onSettled: async () => {
-      const allStudioTasks = await getAllStudioTasks();
-      dispatch({ type: 'SET_STUDIOTASKS', payload: allStudioTasks });
-    },
-  });
-
-  console.log('tasks:', tasksByStatus);
-
-  const onDragEnd: OnDragEndResponder = (result) => {
-    if (!isDragAllowed) return;
-
-    const { destination, source } = result;
-
-    if (!destination) return;
-
-    setIsDragAllowed(false);
-    console.log('dragging disabled');
-
-    try {
-      if (
-        destination.droppableId === source.droppableId &&
-        destination.index === source.index
-      ) {
-        return;
-      }
-
-      const sourceStatus = source.droppableId as StudioTaskTypes['status'];
-      const destinationStatus =
-        destination.droppableId as StudioTaskTypes['status'];
-      const sourceTask = tasksByStatus[sourceStatus][source.index];
-      const destinationTask = tasksByStatus[destinationStatus][
-        destination.index
-      ] ?? {
-        status: destinationStatus,
-        index: undefined,
-      };
-
-      const updatedTasks = updateTaskStatusLocal(
-        sourceTask,
-        { status: sourceStatus, index: source.index },
-        { status: destinationStatus, index: destination.index },
-        tasksByStatus
-      );
-
-      // console.log('Updated tasksByStatus:', updatedTasks);
-      setTasksByStatus({ ...updatedTasks });
-      // console.log('dest task', destinationTask);
-
-      mutation.mutateAsync({
-        source: sourceTask,
-        destination: destinationTask,
-      });
-    } catch (error) {
-      console.error('Error handling drag and drop', error);
-    } finally {
-      setTimeout(() => {
-        setIsDragAllowed(true);
-        console.log('dragging enabled');
-      }, 300);
-    }
-  };
-
   return (
     <>
       <ModalTemplate
@@ -280,6 +209,12 @@ function StudioTaskView() {
       </ModalTemplate>
       <ControlBar>
         <ControlBarTitle>Zlecenia</ControlBarTitle>
+
+        <Select
+          value={viewVariable}
+          handleValueChange={handleViewChange}
+          optionData={viewOptions}
+        />
         <SearchInput />
         <div className={styles.buttonsWrapper}>
           <CTA
@@ -292,20 +227,8 @@ function StudioTaskView() {
           <CTA onClick={() => {}}>Filtry</CTA>
         </div>
       </ControlBar>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <div className={styles.columnsWrapper}>
-          {statuses.map((status) => {
-            return (
-              <DroppableColumn
-                key={status}
-                status={status}
-                tasks={tasksByStatus[status]}
-                isDragAllowed={isDragAllowed}
-              />
-            );
-          })}
-        </div>
-      </DragDropContext>
+
+      {viewVariable === 'Aktywne' ? <KanbanView /> : <p>Lista archiwum</p>}
     </>
   );
 }

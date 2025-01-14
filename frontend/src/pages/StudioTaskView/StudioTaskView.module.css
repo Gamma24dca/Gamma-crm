@@ -8,14 +8,7 @@
   overflow-y: hidden;
   padding: 0 40px;
 }
-.columnsWrapper {
-  height: 100%;
-  width: 80%;
-  display: flex;
-  gap: 15px;
-  justify-content: center;
-  padding: 1% 0 0 4%;
-}
+
 
 .buttonsWrapper {
   margin-right: 3%;
