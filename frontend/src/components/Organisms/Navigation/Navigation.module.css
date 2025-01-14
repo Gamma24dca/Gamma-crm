@@ -32,7 +32,7 @@
 }
 
 .workerWrapper {
-  color: var(--color-navButton);
+  color: var(--color-title);
   height: 80%;
   display: flex;
   gap: 15px;
@@ -60,7 +60,7 @@
 
 .name {
   font-size: 18px;
-  color: var(--color-navButton);
+  color: var(--color-title);
 }
 .job {
   font-size: 14px;

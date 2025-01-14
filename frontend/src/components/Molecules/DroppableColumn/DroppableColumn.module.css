@@ -10,9 +10,8 @@
 .draggedColumn {
   border: 1px solid var(--color-navButton);
   border-radius: 10px;
-  height: 100%;
+  height: 95%;
   overflow-y: scroll;
-
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -25,6 +24,6 @@
 }
 
 .statusName {
-  color: #828fa3;
+  color: var(--color-title);
   font-weight: 600;
 }
