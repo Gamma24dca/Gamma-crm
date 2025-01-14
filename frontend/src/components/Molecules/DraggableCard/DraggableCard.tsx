@@ -16,70 +16,61 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
   const subtasksLength = task.subtasks.length;
 
   return (
-    // {task ? }
-    task ? (
-      <Draggable
-        draggableId={String(task._id)}
-        index={index}
-        isDragDisabled={!isDragAllowed}
-      >
-        {(provided, snapshot) => (
+    <Draggable
+      draggableId={String(task._id)}
+      index={index}
+      isDragDisabled={!isDragAllowed}
+    >
+      {(provided, snapshot) => (
+        <div
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          ref={provided.innerRef}
+          className={dragDisabledClass}
+        >
           <div
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}
-            ref={provided.innerRef}
-            className={dragDisabledClass}
+            style={{
+              opacity: snapshot.isDragging ? 0.9 : 1,
+              transform: snapshot.isDragging ? 'scale(0.95)' : '',
+            }}
+            className={taskClass}
           >
-            <div
-              style={{
-                opacity: snapshot.isDragging ? 0.9 : 1,
-                transform: snapshot.isDragging ? 'scale(0.95)' : '',
-              }}
-              className={taskClass}
-            >
-              <div className={styles.clientInfoWrapper}>
-                <p
-                  className={`${styles.clientName} ${
-                    styles[`${companyClass}`]
-                  }`}
-                >
-                  {task.client}
-                </p>
-                <p className={`${styles.clientPerson}`}>{task.clientPerson}</p>
-              </div>
+            <div className={styles.clientInfoWrapper}>
+              <p
+                className={`${styles.clientName} ${styles[`${companyClass}`]}`}
+              >
+                {task.client}
+              </p>
+              <p className={`${styles.clientPerson}`}>{task.clientPerson}</p>
+            </div>
 
-              <span className={styles.searchID}>#{task.searchID}</span>
-              <p className={styles.taskTitle}>{task.title}</p>
-              <div className={styles.userDisplayWrapper}>
-                <UsersDisplay data={task} usersArray={task.participants} />
-              </div>
-              <div className={styles.datesWrapper}>
-                {task.deadline && task.startDate ? (
-                  <>
-                    <DateFormatter dateString={task.startDate} />
-                    <span>&nbsp;-&nbsp;</span>
-                    <DateFormatter dateString={task.deadline} />
-                  </>
-                ) : (
-                  <p className={styles.noDates}>Brak dat</p>
-                )}
-              </div>
-              <div className={styles.subtasksCountWrapper}>
-                <Icon icon="material-symbols:task-alt" width="12" height="12" />
-                <div>
-                  <span>{doneSubtasks}/</span>
-                  <span>{subtasksLength}</span>
-                </div>
+            <span className={styles.searchID}>#{task.searchID}</span>
+            <p className={styles.taskTitle}>{task.title}</p>
+            <div className={styles.userDisplayWrapper}>
+              <UsersDisplay data={task} usersArray={task.participants} />
+            </div>
+            <div className={styles.datesWrapper}>
+              {task.deadline && task.startDate ? (
+                <>
+                  <DateFormatter dateString={task.startDate} />
+                  <span>&nbsp;-&nbsp;</span>
+                  <DateFormatter dateString={task.deadline} />
+                </>
+              ) : (
+                <p className={styles.noDates}>Brak dat</p>
+              )}
+            </div>
+            <div className={styles.subtasksCountWrapper}>
+              <Icon icon="material-symbols:task-alt" width="12" height="12" />
+              <div>
+                <span>{doneSubtasks}/</span>
+                <span>{subtasksLength}</span>
               </div>
             </div>
           </div>
-        )}
-      </Draggable>
-    ) : (
-      <div className={styles.skeletonWrapper}>
-        <div className={styles.taskSkeleton} />
-      </div>
-    )
+        </div>
+      )}
+    </Draggable>
   );
 }
 
