@@ -2,7 +2,7 @@ import { StudioTaskModel } from './StudioTask.model';
 
 export const StudioTaskController = {
   async getStudioTasks() {
-    const studioTasks = StudioTaskModel.find().sort({ index: 1 }).exec();
+    const studioTasks = await StudioTaskModel.find().sort({ index: 1 }).exec();
     return studioTasks;
   },
 
