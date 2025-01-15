@@ -134,3 +134,27 @@ export async function UpdateStudioTask({ id, studioTaskData }) {
     return null;
   }
 }
+
+export async function deleteTask(id: string) {
+  try {
+    const response = await fetch(
+      `https://gamma-crm.onrender.com/api/studiotasks/${id}`,
+      {
+        method: 'DELETE',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    if (response.ok) {
+      return await response.json();
+    }
+    return null;
+  } catch (error) {
+    if (Config.isDev) {
+      throw new Error('Delete studio task', error.message);
+    }
+    return null;
+  }
+}

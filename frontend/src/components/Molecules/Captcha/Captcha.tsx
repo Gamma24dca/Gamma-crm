@@ -1,6 +1,7 @@
 import styles from './Captcha.module.css';
 
-function Captcha({ handleDeleteCompany, setDeleteCaptcha, params }) {
+function Captcha({ handleDeleteCompany, setDeleteCaptcha, id }) {
+  console.log(id);
   return (
     <div className={styles.captchaContainer}>
       <h2>Jesteś pewien?</h2>
@@ -8,7 +9,7 @@ function Captcha({ handleDeleteCompany, setDeleteCaptcha, params }) {
         <button
           type="button"
           className={styles.confirmDeleteButton}
-          onClick={() => handleDeleteCompany(params.id)}
+          onClick={() => handleDeleteCompany(id)}
         >
           Tak
         </button>{' '}

@@ -75,7 +75,7 @@ function KanbanView() {
     },
   });
 
-  console.log('tasks:', tasksByStatus);
+  // console.log('tasks:', tasksByStatus);
 
   const onDragEnd: OnDragEndResponder = (result) => {
     if (!isDragAllowed) return;

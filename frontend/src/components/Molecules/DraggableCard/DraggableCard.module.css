@@ -253,3 +253,27 @@
     right: 20px;
   }
 }
+
+/* ///////Modal/////// */
+
+.modalContainer {
+  display: flex;
+  width: 30vw;
+}
+
+.infoColumn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 70%;
+}
+
+.actionColumn {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
