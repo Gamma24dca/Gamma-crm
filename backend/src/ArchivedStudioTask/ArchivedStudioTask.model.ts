@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
-export const StudioTaskModel = mongoose.model(
-  'StudioTask',
+export const ArchivedStudioTaskModel = mongoose.model(
+  'ArchivedStudioTask',
   new mongoose.Schema({
     searchID: {
       type: Number,
