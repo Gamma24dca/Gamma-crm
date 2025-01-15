@@ -13,6 +13,7 @@ export const ArchivedStudioTaskController = {
     return ArchivedStudioTask;
   },
   async addArchivedStudioTask(ArchivedStudioTask) {
+    console.log(ArchivedStudioTask);
     await ArchivedStudioTaskModel.validate(ArchivedStudioTask);
     const newArchivedStudioTask =
       await ArchivedStudioTaskModel.create(ArchivedStudioTask);

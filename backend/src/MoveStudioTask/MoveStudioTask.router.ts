@@ -12,18 +12,20 @@ MoveStudioTaskRouter.post(
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try {
-      const sourceStudioTask = StudioTaskController.getStudioTask(
+      const sourceStudioTask = await StudioTaskController.getStudioTask(
         req.params.id,
       );
+      console.log('SOURCE TASK!!!:', sourceStudioTask);
       if (!sourceStudioTask) {
         return res
           .status(StatusCodes.NOT_FOUND)
           .json({ message: 'Document not found' });
       }
       const targetStudioTask =
-        await ArchivedStudioTaskController.addArchivedStudioTask(
-          sourceStudioTask,
-        );
+        await ArchivedStudioTaskController.addArchivedStudioTask({
+          ...sourceStudioTask.toObject(), // Convert to plain object to avoid model-related issues
+          __v: undefined, // Remove version field to prevent conflicts
+        });
 
       await StudioTaskController.deleteStudioTask(req.params.id);
 

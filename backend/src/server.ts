@@ -59,4 +59,4 @@ app.use('/api/companies', CompanyRouter);
 app.use('/api/studiotasks', StudioTaskRouter);
 app.use('/api/archivedstudiotasks', ArchivedStudioTaskRouter);
 app.use('/api/move-studiotask', MoveStudioTaskRouter);
-app.get('/api/status', (_, res) => res.status(200).json({ ok: true }));
+app.get('/api/status', (req, res) => res.status(200).json({ ok: true }));
