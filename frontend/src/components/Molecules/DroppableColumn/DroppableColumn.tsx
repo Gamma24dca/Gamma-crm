@@ -3,7 +3,7 @@ import styles from './DroppableColumn.module.css';
 import DraggableCard from '../DraggableCard/DraggableCard';
 import { statusNames } from '../../../statuses';
 
-function DroppableColumn({ status, tasks, isDragAllowed }) {
+function DroppableColumn({ status, tasks, isDragAllowed, isLoading }) {
   return (
     <div className={styles.columnWrapper}>
       <p className={styles.statusName}>{statusNames[status]}</p>
@@ -19,7 +19,8 @@ function DroppableColumn({ status, tasks, isDragAllowed }) {
                   : styles.columnContainer
               }`}
             >
-              {tasks.length > 0 ? (
+              {!isLoading ? (
+                tasks.length > 0 &&
                 tasks.map((task, index) => {
                   let doneSubtasks = 0;
 
@@ -54,9 +55,6 @@ function DroppableColumn({ status, tasks, isDragAllowed }) {
                 })
               ) : (
                 <>
-                  <div className={styles.skeletonWrapper}>
-                    <div className={styles.taskSkeleton} />
-                  </div>
                   <div className={styles.skeletonWrapper}>
                     <div className={styles.taskSkeleton} />
                   </div>

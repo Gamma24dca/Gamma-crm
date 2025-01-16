@@ -1,5 +1,5 @@
 .navWrapper {
-  width: 100vw;
+  /* width: 100vw; */
   height: 90px;
   border-bottom: 1px solid var(--color-border);
   background-color: var(--color-lighter);
@@ -9,7 +9,7 @@
   justify-content: center;
   align-items: center;
   gap: 52%;
-  transform: translateX(-150px);
+  /* transform: translateX(-150px); */
 }
 
 .signOutBtn {
@@ -74,14 +74,14 @@
 
 @media (max-width: 1600px) {
   .navWrapper {
-    gap: 10%;
-    transform: translateX(-100px);
+    gap: 45%;
+    /* transform: translateX(-100px); */
   }
 }
 
 @media (max-width: 1250px) {
   .navWrapper {
-    gap: 5%;
-    transform: translateX(-100px);
+    gap: 15%;
+    /* transform: translateX(-100px); */
   }
 }

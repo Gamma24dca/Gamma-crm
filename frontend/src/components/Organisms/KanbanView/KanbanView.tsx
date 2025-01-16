@@ -23,6 +23,7 @@ function KanbanView() {
   const { companies, dispatch: companiesDispatch } = useCompaniesContext();
   const [tasksByStatus, setTasksByStatus] = useState(getTasksByStatus([]));
   const [isDragAllowed, setIsDragAllowed] = useState(true);
+  const [isStudioTasksLoading, setIsStudioTasksLoading] = useState(true);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -43,14 +44,18 @@ function KanbanView() {
     const fetchTasks = async () => {
       if (studioTasks.length === 0) {
         try {
+          setIsStudioTasksLoading(true);
           const allStudioTasks = await getAllStudioTasks();
           dispatch({ type: 'SET_STUDIOTASKS', payload: allStudioTasks });
         } catch (error) {
           console.error('Error fetching tasks:', error);
+        } finally {
+          setIsStudioTasksLoading(false);
         }
       }
 
       if (studioTasks) {
+        setIsStudioTasksLoading(false);
         const newTasksByStatus = getTasksByStatus(studioTasks);
         if (!isEqual(newTasksByStatus, tasksByStatus)) {
           setTasksByStatus({ ...newTasksByStatus });
@@ -141,6 +146,7 @@ function KanbanView() {
               status={status}
               tasks={tasksByStatus[status]}
               isDragAllowed={isDragAllowed}
+              isLoading={isStudioTasksLoading}
             />
           );
         })}
