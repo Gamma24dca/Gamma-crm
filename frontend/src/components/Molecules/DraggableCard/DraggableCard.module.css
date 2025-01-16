@@ -229,7 +229,7 @@
   pointer-events: none;
 }
 
-@media (max-width: 1400px) {
+@media (max-width: 1550px) {
   .task,
   .taskHigher {
     width: 50%;

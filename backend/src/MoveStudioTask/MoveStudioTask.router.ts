@@ -15,7 +15,6 @@ MoveStudioTaskRouter.post(
       const sourceStudioTask = await StudioTaskController.getStudioTask(
         req.params.id,
       );
-      console.log('SOURCE TASK!!!:', sourceStudioTask);
       if (!sourceStudioTask) {
         return res
           .status(StatusCodes.NOT_FOUND)
@@ -23,8 +22,8 @@ MoveStudioTaskRouter.post(
       }
       const targetStudioTask =
         await ArchivedStudioTaskController.addArchivedStudioTask({
-          ...sourceStudioTask.toObject(), // Convert to plain object to avoid model-related issues
-          __v: undefined, // Remove version field to prevent conflicts
+          ...sourceStudioTask.toObject(),
+          __v: undefined,
         });
 
       await StudioTaskController.deleteStudioTask(req.params.id);

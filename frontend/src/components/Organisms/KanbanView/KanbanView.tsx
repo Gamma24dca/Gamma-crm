@@ -80,7 +80,7 @@ function KanbanView() {
     },
   });
 
-  // console.log('tasks:', tasksByStatus);
+  console.log('tasks:', tasksByStatus);
 
   const onDragEnd: OnDragEndResponder = (result) => {
     if (!isDragAllowed) return;
@@ -119,6 +119,7 @@ function KanbanView() {
       );
 
       // console.log('Updated tasksByStatus:', updatedTasks);
+
       setTasksByStatus({ ...updatedTasks });
       // console.log('dest task', destinationTask);
 

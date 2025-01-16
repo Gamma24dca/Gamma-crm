@@ -22,6 +22,7 @@ import useCompaniesContext from '../../hooks/Context/useCompaniesContext';
 import { getAllCompanies } from '../../services/companies-service';
 import Select from '../../components/Atoms/Select/Select';
 import KanbanView from '../../components/Organisms/KanbanView/KanbanView';
+import ArchivedListView from '../../components/Organisms/ArchivedListView/ArchivedListView';
 
 const initialTaskObject: StudioTaskTypes = {
   searchID: 0,
@@ -115,9 +116,15 @@ function StudioTaskView() {
       const statusValue: StudioTaskTypes['status'] =
         formValue.status as StudioTaskTypes['status'];
 
-      const indexOfNewTask =
-        tasksByStatus[statusValue][tasksByStatus[statusValue].length - 1]
-          .index + 1;
+      let indexOfNewTask;
+      if (tasksByStatus[statusValue].length > 0) {
+        indexOfNewTask =
+          tasksByStatus[statusValue][tasksByStatus[statusValue].length - 1]
+            .index + 1;
+      }
+      if (tasksByStatus[statusValue].length === 0) {
+        indexOfNewTask = tasksByStatus[statusValue].length + 1;
+      }
       const response = await addStudioTask({
         searchID,
         title: formValue.title,
@@ -149,6 +156,8 @@ function StudioTaskView() {
 
       if (response !== null) {
         handleLoadingStateChange('finalMessage', 'Zlecenie utworzone!');
+        setFormValue(initialTaskObject);
+
         dispatch({ type: 'CREATE_STUDIOTASK', payload: response });
       } else {
         handleLoadingStateChange('finalMessage', 'Coś poszło nie tak :(');
@@ -190,6 +199,8 @@ function StudioTaskView() {
         isOpen={showModal}
         onClose={() => {
           closeModal();
+          handleLoadingStateChange('isFinalMessage', false);
+          setFormValue(initialTaskObject);
         }}
         exitAnim={exitAnim}
       >
@@ -228,7 +239,7 @@ function StudioTaskView() {
         </div>
       </ControlBar>
 
-      {viewVariable === 'Aktywne' ? <KanbanView /> : <p>Lista archiwum</p>}
+      {viewVariable === 'Aktywne' ? <KanbanView /> : <ArchivedListView />}
     </>
   );
 }

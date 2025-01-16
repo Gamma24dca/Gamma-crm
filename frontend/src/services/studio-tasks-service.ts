@@ -78,7 +78,7 @@ export async function addStudioTask({
     deadline,
     startDate,
   };
-  console.log(formData);
+
   try {
     const response = await fetch(
       'https://gamma-crm.onrender.com/api/studiotasks',
