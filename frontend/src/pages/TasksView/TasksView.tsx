@@ -8,7 +8,7 @@ import ViewContainer from '../../components/Atoms/ViewContainer/ViewContainer';
 import SkeletonUsersLoading from '../../components/Organisms/SkeletonUsersLoading/SkeletonUsersLoading';
 import TileWrapper from '../../components/Atoms/TileWrapper/TileWrapper';
 import useTasksContext from '../../hooks/Context/useTasksContext';
-import InfoBar from '../../components/Organisms/InfoBar/InfoBar';
+import InfoBar from '../../components/Atoms/InfoBar/InfoBar';
 import AddTaskModalContent from '../../components/Organisms/AddTaskModalContent/AddTaskModalContent';
 import ListContainer from '../../components/Atoms/ListContainer/ListContainer';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';

@@ -7,7 +7,7 @@ import UsersDisplay from '../UsersDisplay/UsersDisplay';
 import styles from './ArchivedListView.module.css';
 import TileWrapper from '../../Atoms/TileWrapper/TileWrapper';
 import SkeletonUsersLoading from '../SkeletonUsersLoading/SkeletonUsersLoading';
-import InfoBar from '../InfoBar/InfoBar';
+import InfoBar from '../../Atoms/InfoBar/InfoBar';
 
 function ArchivedListView() {
   const [archivedStudioTasks, setArchivedStudioTasks] = useState([]);
@@ -32,23 +32,28 @@ function ArchivedListView() {
     <ViewContainer>
       <ListContainer>
         <InfoBar>
-          <div className={styles.tileElementInfoBar}>
-            <p>Firma</p>
-          </div>
-          <div className={styles.tileElementInfoBar}>
-            <p>Numer</p>
-          </div>
-          <div className={styles.tileElementInfoBar}>
-            <p>Email</p>
-          </div>
-          <div className={styles.tileElementInfoBar}>
-            <p>Strona</p>
-          </div>
-          <div className={styles.tileElementInfoBar}>
-            <p>Zlecenia</p>
-          </div>
-          <div className={styles.usersImgContainer}>
-            <p>Graficy</p>
+          <div className={styles.infoBarContainer}>
+            <div className={styles.tileElementInfoBar}>
+              <p>ID</p>
+            </div>
+            <div className={styles.tileElementInfoBar}>
+              <p>Utworzono</p>
+            </div>
+            <div className={styles.tileElementInfoBar}>
+              <p>Autor</p>
+            </div>
+            <div className={styles.tileElementInfoBar}>
+              <p>Tytuł</p>
+            </div>
+            <div className={styles.tileElementInfoBar}>
+              <p>Firma</p>
+            </div>
+            <div className={styles.tileElementInfoBar}>
+              <p>Klient</p>
+            </div>
+            <div className={styles.usersImgContainer}>
+              <p>Graficy</p>
+            </div>
           </div>
         </InfoBar>
         {isLoading ? (
@@ -59,29 +64,40 @@ function ArchivedListView() {
               {archivedStudioTasks.map((studioTask) => {
                 return (
                   <TileWrapper key={studioTask._id}>
-                    <div>
-                      <p>{studioTask.searchID}</p>
-                    </div>
-                    <div>
-                      <DateFormatter dateString={studioTask.startDate} />
-                    </div>
-                    <div>
-                      <p>{studioTask.title}</p>
-                    </div>
-                    <div>
-                      <p>{studioTask.client}</p>
-                    </div>
-                    <div>
-                      <p>{studioTask.clientPerson}</p>
-                    </div>
-                    <div>
-                      <UsersDisplay
-                        data={studioTask}
-                        usersArray={studioTask.participants}
-                      />
-                    </div>
-                    <div>
-                      <button type="button">Przywróć</button>
+                    <div className={styles.tileContainer}>
+                      <div className={styles.taskID}>
+                        <p>{studioTask.searchID}</p>
+                      </div>
+                      <div className={styles.createdAt}>
+                        <DateFormatter dateString={studioTask.startDate} />
+                      </div>
+                      <div className={styles.authorImgContainer}>
+                        <img
+                          className={styles.authorImg}
+                          src={studioTask.author.img}
+                          alt=""
+                        />
+                      </div>
+                      <div className={styles.title}>
+                        <p>{studioTask.title}</p>
+                      </div>
+                      <div className={styles.client}>
+                        <p>{studioTask.client}</p>
+                      </div>
+                      <div className={styles.clientPerson}>
+                        <p>{studioTask.clientPerson}</p>
+                      </div>
+                      <div className={styles.participants}>
+                        <UsersDisplay
+                          data={studioTask}
+                          usersArray={studioTask.participants}
+                        />
+                      </div>
+                      <div className={styles.restoreButtonContainer}>
+                        <button className={styles.restoreButton} type="button">
+                          Przywróć
+                        </button>
+                      </div>
                     </div>
                   </TileWrapper>
                 );

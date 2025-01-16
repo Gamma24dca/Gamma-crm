@@ -11,7 +11,7 @@ import ViewContainer from '../../components/Atoms/ViewContainer/ViewContainer';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
 import ListContainer from '../../components/Atoms/ListContainer/ListContainer';
 import SkeletonUsersLoading from '../../components/Organisms/SkeletonUsersLoading/SkeletonUsersLoading';
-import InfoBar from '../../components/Organisms/InfoBar/InfoBar';
+import InfoBar from '../../components/Atoms/InfoBar/InfoBar';
 import CTA from '../../components/Atoms/CTA/CTA';
 import ControlBarTitle from '../../components/Atoms/ControlBar/Title/ControlBarTitle';
 // import SearchInput from '../../components/Atoms/ControlBar/SearchInput/SearchInput';

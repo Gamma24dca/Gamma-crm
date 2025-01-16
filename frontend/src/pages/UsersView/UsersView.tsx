@@ -17,7 +17,7 @@ import ViewContainer from '../../components/Atoms/ViewContainer/ViewContainer';
 import TilesColumnContainer from '../../components/Atoms/ListContainer/ListContainer';
 import useUsersContext from '../../hooks/Context/useUsersContext';
 import TileWrapper from '../../components/Atoms/TileWrapper/TileWrapper';
-import InfoBar from '../../components/Organisms/InfoBar/InfoBar';
+import InfoBar from '../../components/Atoms/InfoBar/InfoBar';
 
 const createUserSchema = Yup.object({
   name: Yup.string().required('Imie jest wymagane'),
