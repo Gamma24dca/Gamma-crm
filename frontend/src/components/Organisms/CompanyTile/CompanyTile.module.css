@@ -8,6 +8,7 @@
 }
 
 .tileElement {
+  color: var(--color-title);
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -20,7 +21,7 @@
 .userImg {
   max-width: 30px;
   max-height: 30px;
-  border-radius: 50%;
+  border-radius: 100%;
   transition: all 0.3s ease;
 }
 

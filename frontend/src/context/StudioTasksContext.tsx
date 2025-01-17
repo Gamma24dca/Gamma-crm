@@ -22,7 +22,7 @@ export const studioTasksReducer = (state: StudioTaskStateType, action: any) => {
     case 'DELETE_STUDIOTASK':
       return {
         studioTasks: state.studioTasks.filter(
-          (studioTask) => studioTask._id !== action.payload.id
+          (studioTask) => studioTask._id !== action.payload._id
         ),
       };
 

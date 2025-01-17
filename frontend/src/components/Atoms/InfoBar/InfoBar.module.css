@@ -17,6 +17,7 @@
   min-height: 30px;
   margin-bottom: 0px;
   transform: translateX(110px);
+  font-weight: 600;
 }
 
 .separator {

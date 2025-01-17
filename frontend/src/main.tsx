@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import './index.css';
 import UserProvider from './providers/UserProvider';
 import App from './pages/App/App';
@@ -11,20 +12,24 @@ import { StudioTasksContextProvider } from './context/StudioTasksContext';
 
 // If you want deploy site to static cdn, use Hashrouter instead
 
+const queryClient = new QueryClient();
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter>
-      <UserProvider>
-        <StudioTasksContextProvider>
-          <CompaniesContextProvider>
-            <TasksContextProvder>
-              <UsersContextProvider>
-                <App />
-              </UsersContextProvider>
-            </TasksContextProvder>
-          </CompaniesContextProvider>
-        </StudioTasksContextProvider>
-      </UserProvider>
+      <QueryClientProvider client={queryClient}>
+        <UserProvider>
+          <StudioTasksContextProvider>
+            <CompaniesContextProvider>
+              <TasksContextProvder>
+                <UsersContextProvider>
+                  <App />
+                </UsersContextProvider>
+              </TasksContextProvder>
+            </CompaniesContextProvider>
+          </StudioTasksContextProvider>
+        </UserProvider>
+      </QueryClientProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

@@ -42,6 +42,10 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
     'react/prop-types': 'off',
+    'react/jsx-no-bind': 'off',
+    'jsx-a11y/no-autofocus': 'off',
+    'no-else-return': 'off',
+    'react-hooks/exhaustive-deps': 'off',
 
     'react/jsx-filename-extension': [
       1,
