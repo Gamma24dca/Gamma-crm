@@ -239,7 +239,11 @@ function StudioTaskView() {
         </div>
       </ControlBar>
 
-      {viewVariable === 'Aktywne' ? <KanbanView /> : <ArchivedListView />}
+      {viewVariable === 'Aktywne' ? (
+        <KanbanView />
+      ) : (
+        <ArchivedListView activeGroupedTasks={tasksByStatus} />
+      )}
     </>
   );
 }

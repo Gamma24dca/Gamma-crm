@@ -52,3 +52,7 @@
     color: var(--color-orange);
   }
 }
+
+.title {
+  font-weight: 600;
+}

@@ -74,3 +74,32 @@ export async function archiveStudioTask(id: string) {
     return null;
   }
 }
+
+export async function unarchiveStudioTask({ id, index }) {
+  const formData = {
+    index,
+  };
+  try {
+    const response = await fetch(
+      `http://localhost:5001/api/unarchive-sudiotask/${id}`,
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      }
+    );
+    if (response.ok) {
+      return await response.json();
+    }
+    throw new Error(`${response.status} ${response.statusText}`);
+  } catch (error) {
+    if (Config.isDev) {
+      throw new Error('Archive task', error.mesage);
+    }
+    console.error(error.mesage);
+    return null;
+  }
+}

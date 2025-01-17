@@ -9,6 +9,7 @@ import useModal from '../../../hooks/useModal';
 import { deleteTask } from '../../../services/studio-tasks-service';
 import useStudioTasksContext from '../../../hooks/Context/useStudioTasksContext';
 import Captcha from '../Captcha/Captcha';
+import { archiveStudioTask } from '../../../services/archived-studio-tasks-service';
 
 function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
   const { showModal, exitAnim, openModal, closeModal } = useModal();
@@ -28,6 +29,12 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
     dispatch({ type: 'DELETE_STUDIOTASK', payload: task });
     closeModal();
     await deleteTask(id);
+  };
+
+  const handleArchiveTask = async (id) => {
+    dispatch({ type: 'DELETE_STUDIOTASK', payload: task });
+    closeModal();
+    await archiveStudioTask(id);
   };
 
   return (
@@ -55,7 +62,9 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
               <button type="button" onClick={() => setDeleteCaptcha(true)}>
                 Usuń zlecenie
               </button>
-              <button type="button">Zarchiwizuj</button>
+              <button onClick={() => handleArchiveTask(task._id)} type="button">
+                Zarchiwizuj
+              </button>
             </div>
           </div>
         )}

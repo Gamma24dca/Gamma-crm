@@ -12,7 +12,10 @@ import { TaskRouter } from './Tasks/Task.router';
 import { CompanyRouter } from './Company/Company.router';
 import { StudioTaskRouter } from './StudioTask/StudioTask.router';
 import { ArchivedStudioTaskRouter } from './ArchivedStudioTask/ArchivedStudioTask.router';
-import { MoveStudioTaskRouter } from './MoveStudioTask/MoveStudioTask.router';
+import {
+  MoveStudioTaskRouter,
+  unArchiveStudioTaskRouter,
+} from './MoveStudioTask/MoveStudioTask.router';
 
 const app = express();
 
@@ -59,4 +62,5 @@ app.use('/api/companies', CompanyRouter);
 app.use('/api/studiotasks', StudioTaskRouter);
 app.use('/api/archivedstudiotasks', ArchivedStudioTaskRouter);
 app.use('/api/move-studiotask', MoveStudioTaskRouter);
+app.use('/api/unarchive-sudiotask', unArchiveStudioTaskRouter);
 app.get('/api/status', (req, res) => res.status(200).json({ ok: true }));

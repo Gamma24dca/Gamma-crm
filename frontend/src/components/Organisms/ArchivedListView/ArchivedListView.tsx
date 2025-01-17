@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import ListContainer from '../../Atoms/ListContainer/ListContainer';
 import ViewContainer from '../../Atoms/ViewContainer/ViewContainer';
-import { getAllArchivedStudioTasks } from '../../../services/archived-studio-tasks-service';
+import {
+  getAllArchivedStudioTasks,
+  unarchiveStudioTask,
+} from '../../../services/archived-studio-tasks-service';
 import DateFormatter from '../../../utils/dateFormatter';
 import UsersDisplay from '../UsersDisplay/UsersDisplay';
 import styles from './ArchivedListView.module.css';
@@ -9,7 +12,7 @@ import TileWrapper from '../../Atoms/TileWrapper/TileWrapper';
 import SkeletonUsersLoading from '../SkeletonUsersLoading/SkeletonUsersLoading';
 import InfoBar from '../../Atoms/InfoBar/InfoBar';
 
-function ArchivedListView() {
+function ArchivedListView({ activeGroupedTasks }) {
   const [archivedStudioTasks, setArchivedStudioTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -28,6 +31,15 @@ function ArchivedListView() {
 
     fetchArchivedStudioTasks();
   }, []);
+
+  const handleUnarchiveStudioTask = async (task) => {
+    const taskColumn = activeGroupedTasks[task.status];
+    const taskColumnLength = taskColumn.length;
+    const lastItemOfColumnIndex = taskColumn[taskColumnLength - 1].index;
+
+    await unarchiveStudioTask({ id: task._id, index: lastItemOfColumnIndex });
+  };
+
   return (
     <ViewContainer>
       <ListContainer>
@@ -94,7 +106,13 @@ function ArchivedListView() {
                         />
                       </div>
                       <div className={styles.restoreButtonContainer}>
-                        <button className={styles.restoreButton} type="button">
+                        <button
+                          onClick={() => {
+                            handleUnarchiveStudioTask(studioTask);
+                          }}
+                          className={styles.restoreButton}
+                          type="button"
+                        >
                           Przywróć
                         </button>
                       </div>
