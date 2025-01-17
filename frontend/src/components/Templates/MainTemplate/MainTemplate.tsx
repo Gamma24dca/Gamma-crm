@@ -7,7 +7,7 @@ function MainTemplate({ children }: ChildrenProps) {
   return (
     <div className={styles.mainWrapper}>
       <SideNavigation />
-      <div>
+      <div className={styles.restContentWrapper}>
         <Navigation />
         {children}
       </div>

@@ -1,0 +1,58 @@
+.authorImg {
+  max-width: 30px;
+  max-height: 30px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.infoBarContainer {
+  padding-left: 3%;
+  width: 90%;
+  display: grid;
+  grid-template-columns: 0.3fr 0.75fr 0.6fr 0.8fr 1fr 0.8fr 1.5fr 0.5fr;
+  grid-template-rows: 1fr;
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+  align-items: center;
+}
+
+.usersImgContainer {
+  text-align: center;
+}
+
+.tileContainer {
+  padding-left: 3%;
+  width: 90%;
+  display: grid;
+  grid-template-columns: 0.5fr 0.7fr 0.5fr 1fr repeat(2, 1fr) 1.5fr 0.5fr;
+  grid-template-rows: 1fr;
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+  align-items: center;
+}
+
+.participants {
+  display: flex;
+  justify-content: center;
+}
+
+.restoreButton {
+  cursor: pointer;
+  padding: 8px 15px;
+  border: 1px solid var(--color-orange);
+  background-color: var(--color-orange);
+  border-radius: 20px;
+  color: var(--color-lighter);
+  font-family: Montserrat;
+  font-weight: 600;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: var(--color-bg);
+    color: var(--color-orange);
+  }
+}
+
+.title {
+  font-weight: 600;
+}

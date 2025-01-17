@@ -9,6 +9,7 @@
   --color-orange: #f68c1e;
   --color-navButton: #828fa3;
   --color-border: #e4ebfa;
+  --color-title: #030136;
 
   font-family: Montserrat, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -31,11 +32,11 @@ body {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  display: flex;
-  place-items: center;
+  /* display: flex;
+  place-items: center; */
   min-width: 320px;
-  min-height: 100vh;
-  overflow: hidden;
+  /* min-height: 100vh; */
+  /* overflow: hidden; */
 }
 
 h1 {
@@ -148,4 +149,17 @@ select {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar:horizontal {
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-orange);
+  border-radius: 10px;
 }

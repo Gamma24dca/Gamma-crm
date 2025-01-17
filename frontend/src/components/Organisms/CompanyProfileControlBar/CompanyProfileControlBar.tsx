@@ -3,6 +3,7 @@ import { Icon } from '@iconify/react';
 import BackButton from '../../Atoms/BackButton/BackButton';
 import styles from './CompanyProfileControlBar.module.css';
 import CTA from '../../Atoms/CTA/CTA';
+import Select from '../../Atoms/Select/Select';
 
 const months = [
   'Styczeń',
@@ -58,7 +59,7 @@ function CompanyProfileControlBar({ company, openModal, tasks }) {
         ) : (
           <div className={styles.companyNameLoader} />
         )}
-        <select
+        {/* <select
           id="month-select"
           value={selectedMonth}
           onChange={handleMonthChange}
@@ -69,7 +70,12 @@ function CompanyProfileControlBar({ company, openModal, tasks }) {
               {month}
             </option>
           ))}
-        </select>
+        </select> */}
+        <Select
+          value={selectedMonth}
+          handleValueChange={handleMonthChange}
+          optionData={months}
+        />
       </div>
       <div className={styles.center}>
         <input

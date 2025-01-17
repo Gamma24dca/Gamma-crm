@@ -1,7 +1,6 @@
 .viewContainer {
   position: relative;
-  width: 87%;
-  height: 90.5%;
+  width: 100%;
   display: flex;
   margin-top: 20px;
   justify-content: center;

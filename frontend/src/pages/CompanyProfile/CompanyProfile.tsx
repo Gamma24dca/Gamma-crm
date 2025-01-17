@@ -269,6 +269,7 @@ function CompanyProfile() {
   } = usePagination(sortedData, 14);
 
   const params = useParams();
+  const companyID = params.id;
 
   const is1800 = useWindowSize('1800');
   const is1600 = useWindowSize('1600');
@@ -324,7 +325,7 @@ function CompanyProfile() {
           <Captcha
             handleDeleteCompany={handleDeleteCompany}
             setDeleteCaptcha={setDeleteCaptcha}
-            params={params}
+            id={companyID}
           />
         ) : (
           <>
