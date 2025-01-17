@@ -229,6 +229,39 @@
   pointer-events: none;
 }
 
+.subtaskContainer {
+  display: flex;
+  gap: 10px;
+}
+
+.modalDateContainer {
+  display: flex;
+}
+
+.clientContainer {
+  display: flex;
+  gap: 15px;
+}
+
+.modalCompanyBatch,
+.modalClientBatch {
+  width: fit-content;
+  font-size: 12px;
+  font-weight: 600;
+  height: 20px;
+  color: var(--color-lighter);
+  padding: 2px 15px;
+  border-radius: 20px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.modalClientBatch {
+  background-color: var(--color-navButton);
+}
 @media (max-width: 1550px) {
   .task,
   .taskHigher {
@@ -262,11 +295,14 @@
 }
 
 .infoColumn {
+  background-color: var(--color-bg);
+  border-radius: 15px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 70%;
+  padding: 20px 10px;
 }
 
 .actionColumn {

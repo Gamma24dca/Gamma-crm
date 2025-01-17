@@ -11,33 +11,43 @@ import styles from './ArchivedListView.module.css';
 import TileWrapper from '../../Atoms/TileWrapper/TileWrapper';
 import SkeletonUsersLoading from '../SkeletonUsersLoading/SkeletonUsersLoading';
 import InfoBar from '../../Atoms/InfoBar/InfoBar';
+import useStudioTasksContext from '../../../hooks/Context/useStudioTasksContext';
 
-function ArchivedListView({ activeGroupedTasks }) {
+function ArchivedListView({ activeGroupedTasks, setViewVariable }) {
   const [archivedStudioTasks, setArchivedStudioTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const { dispatch } = useStudioTasksContext();
+
+  const fetchArchivedStudioTasks = async () => {
+    try {
+      setIsLoading(true);
+      const response = await getAllArchivedStudioTasks();
+      setArchivedStudioTasks(response);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchArchivedStudioTasks = async () => {
-      try {
-        setIsLoading(true);
-        const response = await getAllArchivedStudioTasks();
-        setArchivedStudioTasks(response);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchArchivedStudioTasks();
   }, []);
 
   const handleUnarchiveStudioTask = async (task) => {
     const taskColumn = activeGroupedTasks[task.status];
     const taskColumnLength = taskColumn.length;
-    const lastItemOfColumnIndex = taskColumn[taskColumnLength - 1].index;
+    const lastItemOfColumnIndex = taskColumn[taskColumnLength - 1].index + 1;
 
-    await unarchiveStudioTask({ id: task._id, index: lastItemOfColumnIndex });
+    const response = await unarchiveStudioTask({
+      id: task._id,
+      index: lastItemOfColumnIndex,
+    });
+    dispatch({ type: 'CREATE_STUDIOTASK', payload: response });
+
+    fetchArchivedStudioTasks();
+
+    setViewVariable('Aktywne');
   };
 
   return (
