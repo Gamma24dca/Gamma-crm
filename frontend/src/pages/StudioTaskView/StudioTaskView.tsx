@@ -242,7 +242,10 @@ function StudioTaskView() {
       {viewVariable === 'Aktywne' ? (
         <KanbanView />
       ) : (
-        <ArchivedListView activeGroupedTasks={tasksByStatus} />
+        <ArchivedListView
+          activeGroupedTasks={tasksByStatus}
+          setViewVariable={setViewVariable}
+        />
       )}
     </>
   );

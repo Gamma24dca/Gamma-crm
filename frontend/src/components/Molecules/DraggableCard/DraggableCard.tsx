@@ -53,20 +53,64 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
             id={task._id}
           />
         ) : (
-          <div className={styles.modalContainer}>
-            <div className={styles.infoColumn}>
-              <p>{task.title}</p>
-              <p>{task.description}</p>
+          <>
+            <h3>Edytuj</h3>
+            <div className={styles.modalContainer}>
+              <div className={styles.infoColumn}>
+                <p>{task.title}</p>
+                <UsersDisplay data={task} usersArray={task.participants} />
+                <div className={styles.clientContainer}>
+                  <p
+                    className={`${styles.modalCompanyBatch} ${
+                      styles[`${companyClass}`]
+                    }`}
+                  >
+                    {task.client}
+                  </p>
+                  <p className={styles.modalClientBatch}>{task.clientPerson}</p>
+                </div>
+                <div className={styles.modalDateContainer}>
+                  {task.deadline && task.startDate ? (
+                    <>
+                      <DateFormatter dateString={task.startDate} />
+                      <span>&nbsp;-&nbsp;</span>
+                      <DateFormatter dateString={task.deadline} />
+                    </>
+                  ) : (
+                    <p className={styles.noDates}>Brak dat</p>
+                  )}
+                </div>
+                <p>{task.description}</p>
+                {task.subtasks.map((subtask) => {
+                  return (
+                    <div key={subtask._id} className={styles.subtaskContainer}>
+                      <input type="checkbox" checked={subtask.done} />
+                      <p>{subtask.content}</p>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className={styles.actionColumn}>
+                <button type="button" onClick={() => setDeleteCaptcha(true)}>
+                  Usuń zlecenie
+                </button>
+                <button
+                  onClick={() => handleArchiveTask(task._id)}
+                  type="button"
+                >
+                  Zarchiwizuj
+                </button>
+
+                <button type="button">Członkowie</button>
+                <select>
+                  <option value="Firma">Firma</option>
+                </select>
+                <select>
+                  <option value="Klient">Klient</option>
+                </select>
+              </div>
             </div>
-            <div className={styles.actionColumn}>
-              <button type="button" onClick={() => setDeleteCaptcha(true)}>
-                Usuń zlecenie
-              </button>
-              <button onClick={() => handleArchiveTask(task._id)} type="button">
-                Zarchiwizuj
-              </button>
-            </div>
-          </div>
+          </>
         )}
       </ModalTemplate>
       <Draggable
