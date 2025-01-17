@@ -81,7 +81,7 @@ export async function unarchiveStudioTask({ id, index }) {
   };
   try {
     const response = await fetch(
-      `http://localhost:5001/api/unarchive-sudiotask/${id}`,
+      `https://gamma-crm.onrender.com/api/unarchive-sudiotask/${id}`,
       {
         method: 'POST',
         credentials: 'include',
