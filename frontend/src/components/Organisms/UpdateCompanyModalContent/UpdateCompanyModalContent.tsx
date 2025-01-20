@@ -134,7 +134,6 @@ function UpdateCompanyModalContent({
           />
         </div>
       </div>
-
       <ClientSelect
         value={formValue.clientPerson}
         setValue={setFormValue}

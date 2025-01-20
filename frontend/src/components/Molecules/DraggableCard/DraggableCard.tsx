@@ -6,15 +6,37 @@ import UsersDisplay from '../../Organisms/UsersDisplay/UsersDisplay';
 import DateFormatter from '../../../utils/dateFormatter';
 import ModalTemplate from '../../Templates/ModalTemplate/ModalTemplate';
 import useModal from '../../../hooks/useModal';
-import { deleteTask } from '../../../services/studio-tasks-service';
+import {
+  deleteTask,
+  getAllStudioTasks,
+  UpdateStudioTask,
+} from '../../../services/studio-tasks-service';
 import useStudioTasksContext from '../../../hooks/Context/useStudioTasksContext';
 import Captcha from '../Captcha/Captcha';
 import { archiveStudioTask } from '../../../services/archived-studio-tasks-service';
+import useSelectUser from '../../../hooks/useSelectUser';
+
+// const initialTaskObject = {
+//   searchID: 0,
+//   title: '',
+//   client: '',
+//   clientPerson: '',
+//   status: '',
+//   index: 0,
+//   author: {},
+//   participants: [],
+//   description: '',
+//   subtasks: [],
+//   startDate: ' ',
+//   deadline: '',
+// };
 
 function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
   const { showModal, exitAnim, openModal, closeModal } = useModal();
   const [deleteCaptcha, setDeleteCaptcha] = useState(false);
   const { dispatch } = useStudioTasksContext();
+  // const [isEditing, setIsEditing] = useState(false);
+  const [isSelectOpen, setIsSelectOpen] = useState(false);
 
   const taskClass =
     task.participants.length > 4 ? styles.taskHigher : styles.task;
@@ -37,6 +59,37 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
     await archiveStudioTask(id);
   };
 
+  const {
+    users,
+    formValue,
+    setFormValue,
+    handleAddMember,
+    handleDeleteMember,
+    // clientInputValue,
+    // setClientInputValue,
+  } = useSelectUser({
+    initialValue: task,
+    objectKey: 'participants',
+  });
+
+  const handleFormChange = (e, key) => {
+    setFormValue((prev) => ({
+      ...prev,
+      [key]: e.target.value,
+    }));
+  };
+
+  const handleBlur = async () => {
+    // setIsEditing(false);
+    try {
+      await UpdateStudioTask({ id: task._id, studioTaskData: formValue });
+      const res = await getAllStudioTasks();
+      dispatch({ type: 'SET_STUDIOTASKS', payload: res });
+    } catch (error) {
+      console.error('Error saving value:', error);
+    }
+  };
+
   return (
     <>
       <ModalTemplate
@@ -57,7 +110,18 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
             <h3>Edytuj</h3>
             <div className={styles.modalContainer}>
               <div className={styles.infoColumn}>
-                <p>{task.title}</p>
+                {/* <p>{task.title}</p> */}
+                <input
+                  type="text"
+                  name="taskTitle"
+                  id="taskTitle"
+                  onChange={(e) => {
+                    handleFormChange(e, 'title');
+                  }}
+                  onBlur={handleBlur}
+                  // onClick={}
+                  value={formValue.title}
+                />
                 <UsersDisplay data={task} usersArray={task.participants} />
                 <div className={styles.clientContainer}>
                   <p
@@ -80,7 +144,17 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
                     <p className={styles.noDates}>Brak dat</p>
                   )}
                 </div>
-                <p>{task.description}</p>
+                <input
+                  type="text"
+                  name="taskTitle"
+                  id="taskTitle"
+                  onChange={(e) => {
+                    handleFormChange(e, 'description');
+                  }}
+                  onBlur={handleBlur}
+                  // onClick={}
+                  value={formValue.description}
+                />
                 {task.subtasks.map((subtask) => {
                   return (
                     <div key={subtask._id} className={styles.subtaskContainer}>
@@ -91,6 +165,51 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
                 })}
               </div>
               <div className={styles.actionColumn}>
+                <button
+                  type="button"
+                  className={styles.openSelectButton}
+                  onClick={() => {
+                    setIsSelectOpen((prev) => !prev);
+                  }}
+                >
+                  <div className={styles.labelWrapper}>
+                    <p className={styles.buttonLabel}>Przypisz ludzi</p>
+                    <Icon
+                      icon="material-symbols:keyboard-arrow-down-rounded"
+                      width="24"
+                      height="24"
+                    />
+                  </div>
+
+                  {isSelectOpen && (
+                    <div className={styles.selectContainer}>
+                      {users.map((user) => {
+                        const isUserChecked = task.participants.some(
+                          (participant) => participant._id === user._id
+                        );
+                        return (
+                          <div key={user._id} className={styles.userWrapper}>
+                            <input
+                              type="checkbox"
+                              checked={isUserChecked}
+                              onChange={() => {
+                                if (isUserChecked) {
+                                  handleDeleteMember(user._id);
+                                } else {
+                                  console.log(
+                                    handleAddMember(user._id),
+                                    formValue
+                                  );
+                                }
+                              }}
+                            />
+                            <p>{user.name}</p>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </button>
                 <button type="button" onClick={() => setDeleteCaptcha(true)}>
                   Usuń zlecenie
                 </button>
@@ -101,7 +220,6 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
                   Zarchiwizuj
                 </button>
 
-                <button type="button">Członkowie</button>
                 <select>
                   <option value="Firma">Firma</option>
                 </select>

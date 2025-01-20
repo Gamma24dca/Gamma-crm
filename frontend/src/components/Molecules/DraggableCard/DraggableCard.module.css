@@ -313,3 +313,56 @@
   justify-content: center;
   gap: 20px;
 }
+
+.userWrapper {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.openSelectButton {
+  font-family: Montserrat;
+  width: 130px;
+  height: 30px;
+  font-size: 13px;
+  border-radius: 30px;
+  border: 1px solid var(--color-navButton);
+  text-align: center;
+  background-color: transparent;
+  cursor: pointer;
+  position: relative;
+}
+
+.labelWrapper {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.buttonLabel {
+  padding: 0;
+  margin: 0;
+}
+
+.selectContainer {
+  top: 35px;
+  left: 0px;
+  position: absolute;
+  background-color: var(--color-bg);
+  max-height: 200px;
+  overflow-y: scroll;
+  border-radius: 15px;
+  padding: 10px 20px;
+  animation: appear 0.3s ease forwards;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
