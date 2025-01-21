@@ -9,12 +9,14 @@ import useModal from '../../../hooks/useModal';
 import {
   deleteTask,
   getAllStudioTasks,
+  StudioTaskTypes,
   UpdateStudioTask,
 } from '../../../services/studio-tasks-service';
 import useStudioTasksContext from '../../../hooks/Context/useStudioTasksContext';
 import Captcha from '../Captcha/Captcha';
 import { archiveStudioTask } from '../../../services/archived-studio-tasks-service';
 import useSelectUser from '../../../hooks/useSelectUser';
+import useCompaniesContext from '../../../hooks/Context/useCompaniesContext';
 
 // const initialTaskObject = {
 //   searchID: 0,
@@ -35,8 +37,10 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
   const { showModal, exitAnim, openModal, closeModal } = useModal();
   const [deleteCaptcha, setDeleteCaptcha] = useState(false);
   const { dispatch } = useStudioTasksContext();
+  const { companies } = useCompaniesContext();
   // const [isEditing, setIsEditing] = useState(false);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
+  const [formValue, setFormValue] = useState<StudioTaskTypes>(task);
 
   const taskClass =
     task.participants.length > 4 ? styles.taskHigher : styles.task;
@@ -61,10 +65,10 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
 
   const {
     users,
-    formValue,
-    setFormValue,
-    handleAddMember,
-    handleDeleteMember,
+    // formValue,
+    // setFormValue,
+    // handleAddMember,
+    // handleDeleteMember,
     // clientInputValue,
     // setClientInputValue,
   } = useSelectUser({
@@ -87,6 +91,109 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
       dispatch({ type: 'SET_STUDIOTASKS', payload: res });
     } catch (error) {
       console.error('Error saving value:', error);
+    }
+  };
+
+  const handleAddMember = async (userId: string) => {
+    const userToAdd = users.find((user) => user._id === userId);
+
+    if (!userToAdd) return;
+
+    const participants = [...task.participants];
+
+    const isAlreadyAdded = participants.some(
+      (participant) => participant._id === userId
+    );
+
+    if (isAlreadyAdded) return;
+
+    const newFormValue = {
+      ...task,
+      participants: [...participants, userToAdd],
+    };
+
+    setFormValue(newFormValue);
+
+    try {
+      await UpdateStudioTask({
+        id: task._id,
+        studioTaskData: newFormValue,
+      });
+      const res = await getAllStudioTasks();
+      dispatch({ type: 'SET_STUDIOTASKS', payload: res });
+    } catch (error) {
+      console.error('Error saving value:', error);
+    }
+  };
+
+  const handleDeleteMember = async (userId: string) => {
+    const participants = [...task.participants];
+
+    const filteredParticipants = participants.filter(
+      (participant) => participant._id !== userId
+    );
+
+    setFormValue((prev) => {
+      return {
+        ...prev,
+        participants: filteredParticipants,
+      };
+    });
+
+    try {
+      await UpdateStudioTask({
+        id: task._id,
+        studioTaskData: { ...task, participants: filteredParticipants },
+      });
+      const res = await getAllStudioTasks();
+      dispatch({ type: 'SET_STUDIOTASKS', payload: res });
+    } catch (error) {
+      console.error('Error saving value:', error);
+    }
+  };
+
+  const handleClientChange = async (e) => {
+    const companyObject = companies.filter(
+      (com) => com.name === e.target.value
+    );
+    const companyFirstClientPerson = companyObject[0].clientPerson[0].value;
+    handleFormChange(e, 'client');
+    setFormValue((prev) => {
+      return {
+        ...prev,
+        clientPerson: companyFirstClientPerson,
+      };
+    });
+    try {
+      await UpdateStudioTask({
+        id: task._id,
+        studioTaskData: {
+          ...task,
+          client: e.target.value,
+          clientPerson: companyFirstClientPerson,
+        },
+      });
+      const res = await getAllStudioTasks();
+      dispatch({ type: 'SET_STUDIOTASKS', payload: res });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleClientPersonChange = async (e) => {
+    handleFormChange(e, 'clientPerson');
+    try {
+      await UpdateStudioTask({
+        id: task._id,
+        studioTaskData: {
+          ...task,
+          clientPerson: e.target.value,
+        },
+      });
+      const res = await getAllStudioTasks();
+      dispatch({ type: 'SET_STUDIOTASKS', payload: res });
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -190,16 +297,16 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
                         return (
                           <div key={user._id} className={styles.userWrapper}>
                             <input
+                              className={styles.checkInput}
                               type="checkbox"
                               checked={isUserChecked}
                               onChange={() => {
                                 if (isUserChecked) {
                                   handleDeleteMember(user._id);
+                                  setIsSelectOpen(true);
                                 } else {
-                                  console.log(
-                                    handleAddMember(user._id),
-                                    formValue
-                                  );
+                                  handleAddMember(user._id);
+                                  setIsSelectOpen(true);
                                 }
                               }}
                             />
@@ -220,11 +327,43 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
                   Zarchiwizuj
                 </button>
 
-                <select>
-                  <option value="Firma">Firma</option>
+                <select
+                  onChange={(e) => {
+                    handleClientChange(e);
+                  }}
+                >
+                  <option value="Firma">{formValue.client}</option>
+                  {companies.map((company) => {
+                    return (
+                      company.name !== formValue.client && (
+                        <option key={company._id} value={company.name}>
+                          {company.name}
+                        </option>
+                      )
+                    );
+                  })}
                 </select>
-                <select>
-                  <option value="Klient">Klient</option>
+                <select
+                  onChange={(e) => {
+                    handleClientPersonChange(e);
+                  }}
+                >
+                  <option value="Klient">{formValue.clientPerson}</option>
+                  {formValue.client.length > 0 &&
+                    companies.map((company) => {
+                      if (company.name === formValue.client) {
+                        return company.clientPerson.map((cp) => {
+                          return (
+                            cp.label !== formValue.clientPerson && (
+                              <option key={cp.value} value={cp.label}>
+                                {cp.label}
+                              </option>
+                            )
+                          );
+                        });
+                      }
+                      return null;
+                    })}
                 </select>
               </div>
             </div>
