@@ -17,6 +17,7 @@ import Captcha from '../Captcha/Captcha';
 import { archiveStudioTask } from '../../../services/archived-studio-tasks-service';
 import useSelectUser from '../../../hooks/useSelectUser';
 import useCompaniesContext from '../../../hooks/Context/useCompaniesContext';
+import useAuth from '../../../hooks/useAuth';
 
 // const initialTaskObject = {
 //   searchID: 0,
@@ -37,6 +38,7 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
   const { showModal, exitAnim, openModal, closeModal } = useModal();
   const [deleteCaptcha, setDeleteCaptcha] = useState(false);
   const { dispatch } = useStudioTasksContext();
+  const { user: currentUser } = useAuth();
   const { companies } = useCompaniesContext();
   // const [isEditing, setIsEditing] = useState(false);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
@@ -108,6 +110,7 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
   };
 
   const handleAddMember = async (userId: string) => {
+    console.log(currentUser);
     const userToAdd = users.find((user) => user._id === userId);
     const userToAddNasme = userToAdd.name;
 
@@ -297,13 +300,22 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
               <div className={styles.actionColumn}>
                 <button
                   type="button"
+                  className={styles.joinButton}
+                  onClick={() => {
+                    handleAddMember(currentUser[0]._id);
+                  }}
+                >
+                  Dołącz
+                </button>
+                <button
+                  type="button"
                   className={styles.openSelectButton}
                   onClick={() => {
                     setIsSelectOpen((prev) => !prev);
                   }}
                 >
                   <div className={styles.labelWrapper}>
-                    <p className={styles.buttonLabel}>Przypisz ludzi</p>
+                    <p className={styles.buttonLabel}>Członkowie</p>
                     <Icon
                       icon="material-symbols:keyboard-arrow-down-rounded"
                       width="24"
