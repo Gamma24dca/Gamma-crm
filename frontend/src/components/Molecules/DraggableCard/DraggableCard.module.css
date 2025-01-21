@@ -346,9 +346,21 @@
   margin: 0;
 }
 
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  padding: 5% 10%;
+  background-color: transparent;
+  z-index: 199;
+}
+
 .selectContainer {
   top: 35px;
-  left: 0px;
+  /* left: 0px; */
   position: absolute;
   background-color: var(--color-bg);
   max-height: 200px;
@@ -356,10 +368,36 @@
   border-radius: 15px;
   padding: 10px 20px;
   animation: appear 0.3s ease forwards;
+  z-index: 200;
 }
 
 .checkInput {
   cursor: pointer;
+}
+
+.userLoaderWrapper {
+  padding-top: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.userLoader {
+  border: 2px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 2px solid var(--color-orange);
+  width: 10px;
+  height: 10px;
+  animation: spin 0.5s ease-in-out infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes appear {
