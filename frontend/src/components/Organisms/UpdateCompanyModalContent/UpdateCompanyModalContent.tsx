@@ -1,11 +1,15 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import useSelectUser from '../../../hooks/useSelectUser';
-import { UpdateCompany } from '../../../services/companies-service';
+import {
+  getAllCompanies,
+  UpdateCompany,
+} from '../../../services/companies-service';
 import CompanyGraphicTile from '../../Molecules/CompanyGraphicTile/CompanyGraphicTile';
 import SelectUser from '../../Molecules/SelectUser/SelectUser';
 import styles from './UpdateCompanyModalContent.module.css';
 import ClientSelect from '../../Molecules/ClientSelect/ClientSelect';
+import useCompaniesContext from '../../../hooks/Context/useCompaniesContext';
 
 const initialCompanyObject = {
   name: '',
@@ -23,6 +27,7 @@ function UpdateCompanyModalContent({
   refreshCompanyData,
 }) {
   const params = useParams();
+  const { dispatch } = useCompaniesContext();
 
   const {
     users,
@@ -60,9 +65,12 @@ function UpdateCompanyModalContent({
       id: params.id,
       companyData: formValue,
     });
+
     if (response !== null) {
       closeModal();
       refreshCompanyData();
+      const companies = await getAllCompanies();
+      dispatch({ type: 'SET_COMPANIES', payload: companies });
     }
   };
 
