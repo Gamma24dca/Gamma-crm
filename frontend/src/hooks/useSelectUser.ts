@@ -31,8 +31,8 @@ const useSelectUser = <T>({
   }, [dispatch, users]);
 
   const handleAddMember = (userId: string) => {
-    console.log('fdsfsd', userId);
     const userToAdd = users.find((user) => user._id === userId);
+    console.log(userToAdd);
     if (!userToAdd) return;
 
     setFormValue((prev) => {
