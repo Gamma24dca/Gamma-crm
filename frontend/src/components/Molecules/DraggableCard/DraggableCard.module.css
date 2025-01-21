@@ -320,19 +320,6 @@
   align-items: center;
 }
 
-.openSelectButton {
-  font-family: Montserrat;
-  width: 130px;
-  height: 30px;
-  font-size: 13px;
-  border-radius: 30px;
-  border: 1px solid var(--color-navButton);
-  text-align: center;
-  background-color: transparent;
-  cursor: pointer;
-  position: relative;
-}
-
 .labelWrapper {
   display: flex;
   height: 100%;
@@ -344,6 +331,19 @@
 .buttonLabel {
   padding: 0;
   margin: 0;
+}
+
+.openSelectButton {
+  font-family: Montserrat;
+  width: 130px;
+  height: 30px;
+  font-size: 13px;
+  border-radius: 30px;
+  border: 1px solid var(--color-navButton);
+  text-align: center;
+  background-color: transparent;
+  cursor: pointer;
+  position: relative;
 }
 
 .overlay {
@@ -359,8 +359,8 @@
 }
 
 .selectContainer {
-  top: 35px;
-  /* left: 0px; */
+  top: 40px;
+  left: -2px;
   position: absolute;
   background-color: var(--color-bg);
   max-height: 200px;
@@ -369,6 +369,10 @@
   padding: 10px 20px;
   animation: appear 0.3s ease forwards;
   z-index: 200;
+}
+
+.selectContainer::-webkit-scrollbar {
+  display: none;
 }
 
 .checkInput {
