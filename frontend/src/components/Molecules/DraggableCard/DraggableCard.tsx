@@ -41,6 +41,10 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
   // const [isEditing, setIsEditing] = useState(false);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
   const [formValue, setFormValue] = useState<StudioTaskTypes>(task);
+  const [isMemberChangeLoading, setIsMemberChangeLoading] = useState({
+    userName: '',
+    isLoading: false,
+  });
 
   const taskClass =
     task.participants.length > 4 ? styles.taskHigher : styles.task;
@@ -94,8 +98,18 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
     }
   };
 
+  const handleMemberLoadChange = (name, loadState) => {
+    setIsMemberChangeLoading(() => {
+      return {
+        userName: name,
+        isLoading: loadState,
+      };
+    });
+  };
+
   const handleAddMember = async (userId: string) => {
     const userToAdd = users.find((user) => user._id === userId);
+    const userToAddNasme = userToAdd.name;
 
     if (!userToAdd) return;
 
@@ -115,6 +129,7 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
     setFormValue(newFormValue);
 
     try {
+      handleMemberLoadChange(userToAddNasme, true);
       await UpdateStudioTask({
         id: task._id,
         studioTaskData: newFormValue,
@@ -123,10 +138,14 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
       dispatch({ type: 'SET_STUDIOTASKS', payload: res });
     } catch (error) {
       console.error('Error saving value:', error);
+    } finally {
+      handleMemberLoadChange(userToAddNasme, false);
     }
   };
 
   const handleDeleteMember = async (userId: string) => {
+    const userToDelete = users.find((user) => user._id === userId);
+    const userToDeleteName = userToDelete.name;
     const participants = [...task.participants];
 
     const filteredParticipants = participants.filter(
@@ -141,6 +160,8 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
     });
 
     try {
+      handleMemberLoadChange(userToDeleteName, true);
+
       await UpdateStudioTask({
         id: task._id,
         studioTaskData: { ...task, participants: filteredParticipants },
@@ -149,6 +170,8 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
       dispatch({ type: 'SET_STUDIOTASKS', payload: res });
     } catch (error) {
       console.error('Error saving value:', error);
+    } finally {
+      handleMemberLoadChange(userToDeleteName, false);
     }
   };
 
@@ -289,32 +312,43 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
                   </div>
 
                   {isSelectOpen && (
-                    <div className={styles.selectContainer}>
-                      {users.map((user) => {
-                        const isUserChecked = task.participants.some(
-                          (participant) => participant._id === user._id
-                        );
-                        return (
-                          <div key={user._id} className={styles.userWrapper}>
-                            <input
-                              className={styles.checkInput}
-                              type="checkbox"
-                              checked={isUserChecked}
-                              onChange={() => {
-                                if (isUserChecked) {
-                                  handleDeleteMember(user._id);
-                                  setIsSelectOpen(true);
-                                } else {
-                                  handleAddMember(user._id);
-                                  setIsSelectOpen(true);
-                                }
-                              }}
-                            />
-                            <p>{user.name}</p>
-                          </div>
-                        );
-                      })}
-                    </div>
+                    <>
+                      <div className={styles.overlay} />
+                      <div className={styles.selectContainer}>
+                        {users.map((user) => {
+                          const isUserChecked = task.participants.some(
+                            (participant) => participant._id === user._id
+                          );
+                          return (
+                            <div key={user._id} className={styles.userWrapper}>
+                              {isMemberChangeLoading.isLoading &&
+                              user.name === isMemberChangeLoading.userName ? (
+                                <div className={styles.userLoaderWrapper}>
+                                  <div className={styles.userLoader} />
+                                </div>
+                              ) : (
+                                <input
+                                  className={styles.checkInput}
+                                  type="checkbox"
+                                  checked={isUserChecked}
+                                  onChange={() => {
+                                    if (isUserChecked) {
+                                      handleDeleteMember(user._id);
+                                      setIsSelectOpen(true);
+                                    } else {
+                                      handleAddMember(user._id);
+                                      setIsSelectOpen(true);
+                                    }
+                                  }}
+                                />
+                              )}
+
+                              <p>{user.name}</p>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </>
                   )}
                 </button>
                 <button type="button" onClick={() => setDeleteCaptcha(true)}>
