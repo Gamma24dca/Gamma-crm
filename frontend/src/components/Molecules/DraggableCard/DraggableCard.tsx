@@ -40,13 +40,15 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
   const { dispatch } = useStudioTasksContext();
   const { user: currentUser } = useAuth();
   const { companies } = useCompaniesContext();
-  // const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
   const [formValue, setFormValue] = useState<StudioTaskTypes>(task);
   const [isMemberChangeLoading, setIsMemberChangeLoading] = useState({
     userName: '',
     isLoading: false,
+    loadPlace: '',
   });
+  const [isUserAssigned, setIsUserAssigned] = useState(false);
 
   const taskClass =
     task.participants.length > 4 ? styles.taskHigher : styles.task;
@@ -90,7 +92,7 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
   };
 
   const handleBlur = async () => {
-    // setIsEditing(false);
+    setIsEditing(false);
     try {
       await UpdateStudioTask({ id: task._id, studioTaskData: formValue });
       const res = await getAllStudioTasks();
@@ -100,17 +102,17 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
     }
   };
 
-  const handleMemberLoadChange = (name, loadState) => {
+  const handleMemberLoadChange = (name, loadState, loadPlace) => {
     setIsMemberChangeLoading(() => {
       return {
         userName: name,
         isLoading: loadState,
+        loadPlace,
       };
     });
   };
 
-  const handleAddMember = async (userId: string) => {
-    console.log(currentUser);
+  const handleAddMember = async (userId: string, loadPlace: string) => {
     const userToAdd = users.find((user) => user._id === userId);
     const userToAddNasme = userToAdd.name;
 
@@ -132,7 +134,7 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
     setFormValue(newFormValue);
 
     try {
-      handleMemberLoadChange(userToAddNasme, true);
+      handleMemberLoadChange(userToAddNasme, true, loadPlace);
       await UpdateStudioTask({
         id: task._id,
         studioTaskData: newFormValue,
@@ -142,11 +144,11 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
     } catch (error) {
       console.error('Error saving value:', error);
     } finally {
-      handleMemberLoadChange(userToAddNasme, false);
+      handleMemberLoadChange(userToAddNasme, false, loadPlace);
     }
   };
 
-  const handleDeleteMember = async (userId: string) => {
+  const handleDeleteMember = async (userId: string, loadPlace: string) => {
     const userToDelete = users.find((user) => user._id === userId);
     const userToDeleteName = userToDelete.name;
     const participants = [...task.participants];
@@ -163,7 +165,7 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
     });
 
     try {
-      handleMemberLoadChange(userToDeleteName, true);
+      handleMemberLoadChange(userToDeleteName, true, loadPlace);
 
       await UpdateStudioTask({
         id: task._id,
@@ -174,7 +176,7 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
     } catch (error) {
       console.error('Error saving value:', error);
     } finally {
-      handleMemberLoadChange(userToDeleteName, false);
+      handleMemberLoadChange(userToDeleteName, false, loadPlace);
     }
   };
 
@@ -223,6 +225,10 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
     }
   };
 
+  const checkIfUserAssigned = (participantsUsers, userId) => {
+    return participantsUsers.some((participant) => participant._id === userId);
+  };
+
   return (
     <>
       <ModalTemplate
@@ -240,43 +246,93 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
           />
         ) : (
           <>
-            <h3>Edytuj</h3>
+            <h3 className={styles.editModalTitle}>Edytuj</h3>
             <div className={styles.modalContainer}>
               <div className={styles.infoColumn}>
                 {/* <p>{task.title}</p> */}
-                <input
-                  type="text"
-                  name="taskTitle"
-                  id="taskTitle"
-                  onChange={(e) => {
-                    handleFormChange(e, 'title');
-                  }}
-                  onBlur={handleBlur}
-                  // onClick={}
-                  value={formValue.title}
-                />
-                <UsersDisplay data={task} usersArray={task.participants} />
-                <div className={styles.clientContainer}>
-                  <p
-                    className={`${styles.modalCompanyBatch} ${
-                      styles[`${companyClass}`]
+                <div className={styles.titleContainer}>
+                  <Icon
+                    icon="line-md:monitor-screenshot-twotone"
+                    width="24"
+                    height="24"
+                    style={{ color: '#030136' }}
+                  />
+                  <input
+                    type="text"
+                    name="taskTitle"
+                    id="taskTitle"
+                    onChange={(e) => {
+                      handleFormChange(e, 'title');
+                    }}
+                    onBlur={handleBlur}
+                    onClick={() => setIsEditing(true)}
+                    value={formValue.title}
+                    className={`${styles.input} ${
+                      isEditing ? styles.editMode : styles.noEditMode
                     }`}
-                  >
-                    {task.client}
-                  </p>
-                  <p className={styles.modalClientBatch}>{task.clientPerson}</p>
+                  />
                 </div>
-                <div className={styles.modalDateContainer}>
-                  {task.deadline && task.startDate ? (
-                    <>
-                      <DateFormatter dateString={task.startDate} />
-                      <span>&nbsp;-&nbsp;</span>
-                      <DateFormatter dateString={task.deadline} />
-                    </>
-                  ) : (
-                    <p className={styles.noDates}>Brak dat</p>
-                  )}
+
+                <div className={styles.secondSection}>
+                  <div className={styles.usersContainer}>
+                    <p className={styles.sectionTitle}>Członkowie</p>
+                    <UsersDisplay data={task} usersArray={task.participants} />
+                  </div>
+                  <div>
+                    <p className={styles.sectionTitle}>Klient</p>
+
+                    <div className={styles.clientContainer}>
+                      <p
+                        className={`${styles.modalCompanyBatch} ${
+                          styles[`${companyClass}`]
+                        }`}
+                      >
+                        {task.client}
+                      </p>
+                      <p className={styles.modalClientBatch}>
+                        {task.clientPerson}
+                      </p>
+                    </div>
+                  </div>
                 </div>
+
+                <div className={styles.thirdSection}>
+                  <div className={styles.cardNumberWrapper}>
+                    <p className={styles.sectionTitle}>Data</p>
+                    <div
+                      className={`${styles.modalDatesWrapper} ${
+                        new Date(task.deadline) <= new Date()
+                          ? styles.datePast
+                          : styles.dateCurrent
+                      }`}
+                    >
+                      {task.deadline && task.startDate ? (
+                        <>
+                          <DateFormatter dateString={task.startDate} />
+                          <span>&nbsp;-&nbsp;</span>
+                          <DateFormatter dateString={task.deadline} />
+                        </>
+                      ) : (
+                        <p className={styles.noDates}>Brak dat</p>
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <p className={styles.sectionTitle}>Numer</p>
+                    <p className={styles.cardNumber}>#{task.searchID}</p>
+                  </div>
+                </div>
+
+                <div className={styles.titleContainer}>
+                  <Icon
+                    icon="fluent:text-description-ltr-24-filled"
+                    width="24"
+                    height="24"
+                    style={{ color: '#030136' }}
+                  />
+                  <p className={styles.descriptionTitle}>Opis</p>
+                </div>
+
                 <input
                   type="text"
                   name="taskTitle"
@@ -287,26 +343,61 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
                   onBlur={handleBlur}
                   // onClick={}
                   value={formValue.description}
+                  className={styles.descriptionInput}
                 />
-                {task.subtasks.map((subtask) => {
-                  return (
-                    <div key={subtask._id} className={styles.subtaskContainer}>
-                      <input type="checkbox" checked={subtask.done} />
-                      <p>{subtask.content}</p>
-                    </div>
-                  );
-                })}
+
+                <div className={styles.titleContainer}>
+                  <Icon
+                    icon="pajamas:task-done"
+                    width="22"
+                    height="22"
+                    style={{ color: '#030136' }}
+                  />
+                  <p className={styles.descriptionTitle}>Lista zadań</p>
+                </div>
+
+                <div className={styles.subtasksContainer}>
+                  {task.subtasks.map((subtask) => {
+                    return (
+                      <div
+                        key={subtask._id}
+                        className={styles.subtaskContainer}
+                      >
+                        <input type="checkbox" checked={subtask.done} />
+                        <p className={styles.subtaskContent}>
+                          {subtask.content}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
               <div className={styles.actionColumn}>
-                <button
-                  type="button"
-                  className={styles.joinButton}
-                  onClick={() => {
-                    handleAddMember(currentUser[0]._id);
-                  }}
-                >
-                  Dołącz
-                </button>
+                <div className={styles.joinContainer}>
+                  {isMemberChangeLoading.isLoading &&
+                    isMemberChangeLoading.loadPlace === 'Join' && (
+                      <div className={styles.userLoaderWrapper}>
+                        <div className={styles.userLoader} />
+                      </div>
+                    )}
+
+                  <button
+                    type="button"
+                    className={styles.joinButton}
+                    onClick={() => {
+                      if (!isUserAssigned) {
+                        handleAddMember(currentUser[0]._id, 'Join');
+                        setIsUserAssigned(true);
+                      } else {
+                        handleDeleteMember(currentUser[0]._id, 'Join');
+                        setIsUserAssigned(false);
+                      }
+                    }}
+                  >
+                    {isUserAssigned ? 'Odejdź' : 'Dołącz'}
+                  </button>
+                </div>
+
                 <button
                   type="button"
                   className={styles.openSelectButton}
@@ -328,35 +419,42 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
                       <div className={styles.overlay} />
                       <div className={styles.selectContainer}>
                         {users.map((user) => {
-                          const isUserChecked = task.participants.some(
-                            (participant) => participant._id === user._id
+                          const isUserChecked = checkIfUserAssigned(
+                            task.participants,
+                            user._id
                           );
                           return (
-                            <div key={user._id} className={styles.userWrapper}>
-                              {isMemberChangeLoading.isLoading &&
-                              user.name === isMemberChangeLoading.userName ? (
-                                <div className={styles.userLoaderWrapper}>
-                                  <div className={styles.userLoader} />
-                                </div>
-                              ) : (
-                                <input
-                                  className={styles.checkInput}
-                                  type="checkbox"
-                                  checked={isUserChecked}
-                                  onChange={() => {
-                                    if (isUserChecked) {
-                                      handleDeleteMember(user._id);
-                                      setIsSelectOpen(true);
-                                    } else {
-                                      handleAddMember(user._id);
-                                      setIsSelectOpen(true);
-                                    }
-                                  }}
-                                />
-                              )}
+                            user._id !== currentUser[0]._id && (
+                              <div
+                                key={user._id}
+                                className={styles.userWrapper}
+                              >
+                                {isMemberChangeLoading.isLoading &&
+                                user.name === isMemberChangeLoading.userName &&
+                                isMemberChangeLoading.loadPlace === 'Select' ? (
+                                  <div className={styles.userLoaderWrapper}>
+                                    <div className={styles.userLoader} />
+                                  </div>
+                                ) : (
+                                  <input
+                                    className={styles.checkInput}
+                                    type="checkbox"
+                                    checked={isUserChecked}
+                                    onChange={() => {
+                                      if (isUserChecked) {
+                                        handleDeleteMember(user._id, 'Select');
+                                        setIsSelectOpen(true);
+                                      } else {
+                                        handleAddMember(user._id, 'Select');
+                                        setIsSelectOpen(true);
+                                      }
+                                    }}
+                                  />
+                                )}
 
-                              <p>{user.name}</p>
-                            </div>
+                                <p>{user.name}</p>
+                              </div>
+                            )
                           );
                         })}
                       </div>
@@ -431,7 +529,12 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
             <div
               role="button"
               tabIndex={0}
-              onClick={() => openModal()}
+              onClick={() => {
+                setIsUserAssigned(
+                  checkIfUserAssigned(task.participants, currentUser[0]._id)
+                );
+                openModal();
+              }}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   openModal();
