@@ -333,8 +333,7 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
                   <p className={styles.descriptionTitle}>Opis</p>
                 </div>
 
-                <input
-                  type="text"
+                <textarea
                   name="taskTitle"
                   id="taskTitle"
                   onChange={(e) => {
