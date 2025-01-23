@@ -73,8 +73,16 @@ function KanbanView() {
     }
   >(({ source, destination }) => updateTaskStatus(source, destination), {
     onSettled: async () => {
-      const allStudioTasks = await getAllStudioTasks();
-      dispatch({ type: 'SET_STUDIOTASKS', payload: allStudioTasks });
+      try {
+        setIsDragAllowed(false);
+        const allStudioTasks = await getAllStudioTasks();
+        dispatch({ type: 'SET_STUDIOTASKS', payload: allStudioTasks });
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsDragAllowed(true);
+        console.log('dragging enabled');
+      }
     },
   });
 
@@ -88,7 +96,6 @@ function KanbanView() {
     if (!destination) return;
 
     setIsDragAllowed(false);
-    console.log('dragging disabled');
 
     try {
       if (
@@ -127,11 +134,6 @@ function KanbanView() {
       });
     } catch (error) {
       console.error('Error handling drag and drop', error);
-    } finally {
-      setTimeout(() => {
-        setIsDragAllowed(true);
-        console.log('dragging enabled');
-      }, 300);
     }
   };
 
