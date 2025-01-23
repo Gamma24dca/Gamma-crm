@@ -381,8 +381,9 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
                     )}
 
                   <button
+                    // disabled={isMemberChangeLoading}
                     type="button"
-                    className={styles.joinButton}
+                    className={styles.archiveTaskButton}
                     onClick={() => {
                       if (!isUserAssigned) {
                         handleAddMember(currentUser[0]._id, 'Join');
@@ -410,6 +411,9 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
                       icon="material-symbols:keyboard-arrow-down-rounded"
                       width="24"
                       height="24"
+                      className={`${
+                        isSelectOpen ? styles.upArrow : styles.downArrow
+                      }`}
                     />
                   </div>
 
@@ -460,20 +464,12 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
                     </>
                   )}
                 </button>
-                <button type="button" onClick={() => setDeleteCaptcha(true)}>
-                  Usuń zlecenie
-                </button>
-                <button
-                  onClick={() => handleArchiveTask(task._id)}
-                  type="button"
-                >
-                  Zarchiwizuj
-                </button>
 
                 <select
                   onChange={(e) => {
                     handleClientChange(e);
                   }}
+                  className={styles.selectInput}
                 >
                   <option value="Firma">{formValue.client}</option>
                   {companies.map((company) => {
@@ -490,6 +486,7 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
                   onChange={(e) => {
                     handleClientPersonChange(e);
                   }}
+                  className={styles.selectInput}
                 >
                   <option value="Klient">{formValue.clientPerson}</option>
                   {formValue.client.length > 0 &&
@@ -508,6 +505,21 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
                       return null;
                     })}
                 </select>
+
+                <button
+                  className={styles.archiveTaskButton}
+                  onClick={() => handleArchiveTask(task._id)}
+                  type="button"
+                >
+                  Zarchiwizuj
+                </button>
+                <button
+                  className={styles.deleteTaskButton}
+                  type="button"
+                  onClick={() => setDeleteCaptcha(true)}
+                >
+                  Usuń
+                </button>
               </div>
             </div>
           </>
