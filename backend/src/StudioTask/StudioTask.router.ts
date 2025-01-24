@@ -118,6 +118,30 @@ StudioTaskRouter.post(
   },
 );
 
+StudioTaskRouter.patch(
+  '/:id/subtasks/:subtaskId',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const taskId = req.params.id;
+      const subtaskId = req.params.subtaskId;
+      const subtaskBody = {
+        content: req.body.content,
+        done: req.body.done,
+      };
+      const updatedSubtasks = await StudioTaskController.updateSubtask(
+        taskId,
+        subtaskId,
+        subtaskBody,
+      );
+      res.status(StatusCodes.ACCEPTED).json(updatedSubtasks);
+    } catch (error) {
+      console.error(error);
+      res.status(StatusCodes.BAD_REQUEST).json({ message: error });
+    }
+  },
+);
+
 StudioTaskRouter.delete(
   '/:id/subtasks/:subtaskId',
   passport.authenticate('jwt', { session: false }),
