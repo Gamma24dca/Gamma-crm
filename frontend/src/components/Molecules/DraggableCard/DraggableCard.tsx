@@ -381,7 +381,7 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
                     )}
 
                   <button
-                    // disabled={isMemberChangeLoading}
+                    disabled={isMemberChangeLoading.isLoading}
                     type="button"
                     className={styles.archiveTaskButton}
                     onClick={() => {

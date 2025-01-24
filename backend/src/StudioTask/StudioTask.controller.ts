@@ -23,4 +23,19 @@ export const StudioTaskController = {
   async deleteStudioTask(id) {
     return await StudioTaskModel.findByIdAndDelete(id);
   },
+  async addSubtask(taskId, subtask) {
+    const task = await StudioTaskController.getStudioTask(taskId);
+    task.subtasks.push(subtask);
+    await StudioTaskController.updateStudioTask(taskId, task);
+    const updatedStudioTask = await StudioTaskController.getStudioTask(taskId);
+    return updatedStudioTask.subtasks;
+  },
+  async deleteSubtask(taskId, subtaskId) {
+    const task = await StudioTaskController.getStudioTask(taskId);
+    console.log(task);
+    task.subtasks = task.subtasks.filter((sub) => sub._id !== subtaskId);
+    await StudioTaskController.updateStudioTask(taskId, task);
+    const updatedStudioTask = await StudioTaskController.getStudioTask(taskId);
+    return updatedStudioTask.subtasks;
+  },
 };
