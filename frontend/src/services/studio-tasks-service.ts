@@ -2,7 +2,6 @@ import { Config } from '../config';
 import { User } from './users-service';
 
 type Subtask = {
-  taskId: string;
   content: string;
   done: boolean;
 };
