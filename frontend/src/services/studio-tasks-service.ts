@@ -2,6 +2,7 @@ import { Config } from '../config';
 import { User } from './users-service';
 
 type Subtask = {
+  taskId: string;
   content: string;
   done: boolean;
 };
@@ -154,6 +155,87 @@ export async function deleteTask(id: string) {
   } catch (error) {
     if (Config.isDev) {
       throw new Error('Delete studio task', error.message);
+    }
+    return null;
+  }
+}
+
+export async function addSubtask({ taskId, content, done }) {
+  try {
+    const subtaskBody = {
+      content,
+      done,
+    };
+    const response = await fetch(
+      `https://gamma-crm.onrender.com/api/studiotasks/${taskId}/subtasks`,
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(subtaskBody),
+      }
+    );
+    if (response.ok) {
+      return await response.json();
+    }
+    return null;
+  } catch (error) {
+    if (Config.isDev) {
+      throw new Error('Add subtask', error.message);
+    }
+    return null;
+  }
+}
+
+export async function updateSubtask({ taskId, subtaskId, subtaskData }) {
+  try {
+    const subtaskBody = {
+      ...subtaskData,
+    };
+    const response = await fetch(
+      `https://gamma-crm.onrender.com/api/studiotasks/${taskId}/subtasks/${subtaskId}`,
+      {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(subtaskBody),
+      }
+    );
+    if (response.ok) {
+      return await response.json();
+    }
+    return null;
+  } catch (error) {
+    if (Config.isDev) {
+      throw new Error('Update subtask', error.message);
+    }
+    return null;
+  }
+}
+
+export async function deleteSubtask(taskId: string, subtaskId: string) {
+  try {
+    const response = await fetch(
+      `https://gamma-crm.onrender.com/api/studiotasks/${taskId}/subtasks/${subtaskId}`,
+      {
+        method: 'DELETE',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    if (response.ok) {
+      return await response.json();
+    }
+    return null;
+  } catch (error) {
+    if (Config.isDev) {
+      throw new Error('Delete subtask', error.message);
     }
     return null;
   }
