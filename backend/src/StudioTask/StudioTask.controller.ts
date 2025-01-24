@@ -39,7 +39,7 @@ export const StudioTaskController = {
 
     await StudioTaskController.updateStudioTask(taskId, task);
     const updatedStudioTask = await StudioTaskController.getStudioTask(taskId);
-    return updatedStudioTask.subtasks;
+    return updatedStudioTask;
   },
 
   async deleteSubtask(taskId, subtaskId) {

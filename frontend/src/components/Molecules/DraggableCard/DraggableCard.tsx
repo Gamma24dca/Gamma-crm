@@ -12,6 +12,7 @@ import {
   getAllStudioTasks,
   StudioTaskTypes,
   UpdateStudioTask,
+  updateSubtask,
 } from '../../../services/studio-tasks-service';
 import useStudioTasksContext from '../../../hooks/Context/useStudioTasksContext';
 import Captcha from '../Captcha/Captcha';
@@ -44,6 +45,7 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
   const [isEditing, setIsEditing] = useState(false);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
   const [formValue, setFormValue] = useState<StudioTaskTypes>(task);
+  // const [subtaskForm, setSubtaskForm] = useState({});
   const [isMemberChangeLoading, setIsMemberChangeLoading] = useState({
     userName: '',
     isLoading: false,
@@ -60,18 +62,6 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
 
   const subtasksLength = task.subtasks.length;
 
-  const handleDeleteTask = async (id) => {
-    dispatch({ type: 'DELETE_STUDIOTASK', payload: task });
-    closeModal();
-    await deleteTask(id);
-  };
-
-  const handleArchiveTask = async (id) => {
-    dispatch({ type: 'DELETE_STUDIOTASK', payload: task });
-    closeModal();
-    await archiveStudioTask(id);
-  };
-
   const {
     users,
     // formValue,
@@ -85,10 +75,32 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
     objectKey: 'participants',
   });
 
+  const handleDeleteTask = async (id) => {
+    dispatch({ type: 'DELETE_STUDIOTASK', payload: task });
+    closeModal();
+    await deleteTask(id);
+  };
+
+  const handleArchiveTask = async (id) => {
+    dispatch({ type: 'DELETE_STUDIOTASK', payload: task });
+    closeModal();
+    await archiveStudioTask(id);
+  };
+
+  const handleUpdateSubtask = async (taskId, subtaskId, subtaskData) => {
+    try {
+      const response = await updateSubtask({ taskId, subtaskId, subtaskData });
+      dispatch({ type: 'UPDATE_SUBTASK', payload: response });
+    } catch (error) {
+      console.error('Error saving value:', error);
+    }
+  };
+
   const handleDeleteSubtask = async (taskId, subtaskId) => {
     try {
       const response = await deleteSubtask(taskId, subtaskId);
-      console.log(response);
+
+      dispatch({ type: 'UPDATE_SUBTASK', payload: response });
     } catch (error) {
       console.error('Error saving value:', error);
     }
@@ -372,7 +384,21 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
                         key={subtask._id}
                         className={styles.subtaskContainer}
                       >
-                        <input type="checkbox" checked={subtask.done} />
+                        <input
+                          type="checkbox"
+                          checked={subtask.done}
+                          onChange={() => {
+                            if (subtask.done) {
+                              handleUpdateSubtask(task._id, subtask._id, {
+                                done: false,
+                              });
+                            } else {
+                              handleUpdateSubtask(task._id, subtask._id, {
+                                done: true,
+                              });
+                            }
+                          }}
+                        />
                         <p className={styles.subtaskContent}>
                           {subtask.content}
                         </p>
