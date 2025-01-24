@@ -125,14 +125,11 @@ StudioTaskRouter.patch(
     try {
       const taskId = req.params.id;
       const subtaskId = req.params.subtaskId;
-      const subtaskBody = {
-        content: req.body.content,
-        done: req.body.done,
-      };
+
       const updatedSubtasks = await StudioTaskController.updateSubtask(
         taskId,
         subtaskId,
-        subtaskBody,
+        { ...req.body },
       );
       res.status(StatusCodes.ACCEPTED).json(updatedSubtasks);
     } catch (error) {
