@@ -7,6 +7,7 @@ import DateFormatter from '../../../utils/dateFormatter';
 import ModalTemplate from '../../Templates/ModalTemplate/ModalTemplate';
 import useModal from '../../../hooks/useModal';
 import {
+  deleteSubtask,
   deleteTask,
   getAllStudioTasks,
   StudioTaskTypes,
@@ -83,6 +84,15 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
     initialValue: task,
     objectKey: 'participants',
   });
+
+  const handleDeleteSubtask = async (taskId, subtaskId) => {
+    try {
+      const response = await deleteSubtask(taskId, subtaskId);
+      console.log(response);
+    } catch (error) {
+      console.error('Error saving value:', error);
+    }
+  };
 
   const handleFormChange = (e, key) => {
     setFormValue((prev) => ({
@@ -366,6 +376,15 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
                         <p className={styles.subtaskContent}>
                           {subtask.content}
                         </p>
+                        <Icon
+                          className={styles.trashIcon}
+                          icon="solar:trash-bin-minimalistic-broken"
+                          width="22"
+                          height="22"
+                          onClick={() => {
+                            handleDeleteSubtask(task._id, subtask._id);
+                          }}
+                        />
                       </div>
                     );
                   })}

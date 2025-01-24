@@ -322,9 +322,45 @@
   width: 150px;
 }
 
-.subtaskContainer {
+.subtasksContainer {
   display: flex;
+  flex-direction: column;
+  /* gap: 10px; */
+  /* padding: 10px; */
+  width: 80%;
+}
+
+.subtaskContainer {
+  cursor: pointer;
+  width: 100%;
+  padding: 6px 16px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
   gap: 10px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: var(--color-shadow);
+  }
+}
+
+.subtaskContent {
+  margin: 0;
+  flex-grow: 2;
+}
+
+.trashIcon {
+  transition: all 0.3s ease;
+  opacity: 0;
+  &:hover {
+    color: var(--color-orange);
+    transform: scale(1.05);
+  }
+}
+
+.subtaskContainer:hover .trashIcon {
+  opacity: 1;
 }
 
 .thirdSection {
@@ -342,7 +378,7 @@
 
 .descriptionInput {
   width: 80%;
-  margin-left: 10%;
+  margin-left: 5%;
   border: none;
   border-radius: 10px;
   padding: 5px 10px;
@@ -556,15 +592,6 @@
   width: 10px;
   height: 10px;
   animation: spin 0.5s ease-in-out infinite;
-}
-
-.subtasksContainer {
-  padding: 10px;
-  width: 75%;
-}
-
-.subtaskContent {
-  margin: 0 0 5px 0;
 }
 
 @keyframes spin {
