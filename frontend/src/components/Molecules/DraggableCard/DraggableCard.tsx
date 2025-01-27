@@ -7,6 +7,7 @@ import DateFormatter from '../../../utils/dateFormatter';
 import ModalTemplate from '../../Templates/ModalTemplate/ModalTemplate';
 import useModal from '../../../hooks/useModal';
 import {
+  addSubtask,
   deleteSubtask,
   deleteTask,
   getAllStudioTasks,
@@ -45,6 +46,10 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
   const [isEditing, setIsEditing] = useState(false);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
   const [formValue, setFormValue] = useState<StudioTaskTypes>(task);
+  const [addSubtaskInput, setAddSubtaskInput] = useState({
+    isInputOpen: false,
+    inputValue: '',
+  });
   // const [subtaskForm, setSubtaskForm] = useState({});
   const [isMemberChangeLoading, setIsMemberChangeLoading] = useState({
     userName: '',
@@ -96,14 +101,42 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
     }
   };
 
-  const handleDeleteSubtask = async (taskId, subtaskId) => {
+  const handleAddSubtask = async () => {
     try {
-      const response = await deleteSubtask(taskId, subtaskId);
-
+      const response = await addSubtask({
+        taskId: task._id,
+        content: addSubtaskInput.inputValue,
+        done: false,
+      });
       dispatch({ type: 'UPDATE_SUBTASK', payload: response });
     } catch (error) {
       console.error('Error saving value:', error);
     }
+  };
+
+  const handleDeleteSubtask = async (taskId, subtaskId) => {
+    try {
+      const response = await deleteSubtask(taskId, subtaskId);
+      dispatch({ type: 'UPDATE_SUBTASK', payload: response });
+    } catch (error) {
+      console.error('Error saving value:', error);
+    } finally {
+      setAddSubtaskInput((prev) => {
+        return {
+          ...prev,
+          isInputOpen: false,
+        };
+      });
+    }
+  };
+
+  const handleAddSubtaskInput = (key, value) => {
+    setAddSubtaskInput((prev) => {
+      return {
+        ...prev,
+        [key]: value,
+      };
+    });
   };
 
   const handleFormChange = (e, key) => {
@@ -365,6 +398,7 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
                   // onClick={}
                   value={formValue.description}
                   className={styles.descriptionInput}
+                  placeholder="Dodaj opis zlecenia..."
                 />
 
                 <div className={styles.titleContainer}>
@@ -414,6 +448,32 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
                       </div>
                     );
                   })}
+                  {!addSubtaskInput.isInputOpen && (
+                    <button
+                      type="button"
+                      className={styles.addSubtaskButton}
+                      onClick={() =>
+                        handleAddSubtaskInput(
+                          'isInputOpen',
+                          !addSubtaskInput.isInputOpen
+                        )
+                      }
+                    >
+                      Dodaj...
+                    </button>
+                  )}
+                  {addSubtaskInput.isInputOpen && (
+                    <input
+                      type="text"
+                      className={styles.addSubtaskInput}
+                      placeholder="Tytuł zadania..."
+                      onChange={(e) => {
+                        handleAddSubtaskInput('inputValue', e.target.value);
+                      }}
+                      onBlur={handleAddSubtask}
+                      autoFocus
+                    />
+                  )}
                 </div>
               </div>
               <div className={styles.actionColumn}>
