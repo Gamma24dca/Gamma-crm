@@ -29,7 +29,7 @@ export const StudioTaskController = {
     task.subtasks.push({ ...subtask, _id: randomUUID() });
     await StudioTaskController.updateStudioTask(taskId, task);
     const updatedStudioTask = await StudioTaskController.getStudioTask(taskId);
-    return updatedStudioTask.subtasks;
+    return updatedStudioTask;
   },
   async updateSubtask(taskId, subtaskId, subtask) {
     const task = await StudioTaskController.getStudioTask(taskId);
