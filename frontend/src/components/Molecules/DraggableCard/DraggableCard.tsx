@@ -6,49 +6,47 @@ import UsersDisplay from '../../Organisms/UsersDisplay/UsersDisplay';
 import DateFormatter from '../../../utils/dateFormatter';
 import ModalTemplate from '../../Templates/ModalTemplate/ModalTemplate';
 import useModal from '../../../hooks/useModal';
-import {
-  addSubtask,
-  deleteSubtask,
-  deleteTask,
-  getAllStudioTasks,
-  StudioTaskTypes,
-  UpdateStudioTask,
-  updateSubtask,
-} from '../../../services/studio-tasks-service';
-import useStudioTasksContext from '../../../hooks/Context/useStudioTasksContext';
 import Captcha from '../Captcha/Captcha';
-import { archiveStudioTask } from '../../../services/archived-studio-tasks-service';
-import useCompaniesContext from '../../../hooks/Context/useCompaniesContext';
 import useAuth from '../../../hooks/useAuth';
-import useUsersContext from '../../../hooks/Context/useUsersContext';
+import useSubtask from '../../../hooks/useSubtasks';
+import useStudioTaskUpdate from '../../../hooks/useStudioTaskUpdate';
 
 function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
   const { showModal, exitAnim, openModal, closeModal } = useModal();
   const [deleteCaptcha, setDeleteCaptcha] = useState(false);
-  const { dispatch } = useStudioTasksContext();
   const { user: currentUser } = useAuth();
-  const { users } = useUsersContext();
-  const { companies } = useCompaniesContext();
-  const [isEditing, setIsEditing] = useState(false);
-  const [isSelectOpen, setIsSelectOpen] = useState(false);
-  const [formValue, setFormValue] = useState<StudioTaskTypes>(task);
-  const [addSubtaskInput, setAddSubtaskInput] = useState({
-    isInputOpen: false,
-    isSubtaskLoading: false,
-    inputValue: '',
-  });
-  const [editSubtaskContent, setEditSubtaskContent] = useState({
-    isEditing: false,
-    isLoading: false,
-    contentValue: '',
-    subtaskId: '',
-  });
-  const [isMemberChangeLoading, setIsMemberChangeLoading] = useState({
-    userName: '',
-    isLoading: false,
-    loadPlace: '',
-  });
-  const [isUserAssigned, setIsUserAssigned] = useState(false);
+
+  const {
+    users,
+    companies,
+    isEditing,
+    setIsEditing,
+    isSelectOpen,
+    setIsSelectOpen,
+    isMemberChangeLoading,
+    formValue,
+    handleFormChange,
+    handleDeleteTask,
+    handleArchiveTask,
+    handleBlur,
+    handleAddMember,
+    handleDeleteMember,
+    handleClientChange,
+    handleClientPersonChange,
+    checkIfUserAssigned,
+    isUserAssigned,
+    setIsUserAssigned,
+  } = useStudioTaskUpdate(task, closeModal);
+
+  const {
+    handleAddSubtask,
+    handleDeleteSubtask,
+    handleAddSubtaskInput,
+    handleUpdateSubtask,
+    handleEditSubtask,
+    editSubtaskContent,
+    addSubtaskInput,
+  } = useSubtask(task);
 
   const taskClass =
     task.participants.length > 4 ? styles.taskHigher : styles.task;
@@ -58,231 +56,6 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
   const companyClass = task.client.split(' ').join('');
 
   const subtasksLength = task.subtasks.length;
-
-  const handleDeleteTask = async (id) => {
-    dispatch({ type: 'DELETE_STUDIOTASK', payload: task });
-    closeModal();
-    await deleteTask(id);
-  };
-
-  const handleArchiveTask = async (id) => {
-    dispatch({ type: 'DELETE_STUDIOTASK', payload: task });
-    closeModal();
-    await archiveStudioTask(id);
-  };
-
-  const handleEditSubtask = (object) => {
-    setEditSubtaskContent((prev) => {
-      return {
-        ...prev,
-        ...object,
-      };
-    });
-  };
-
-  const handleUpdateSubtask = async (taskId, subtaskId, subtaskData) => {
-    try {
-      handleEditSubtask({ isLoading: true, subtaskId });
-      const response = await updateSubtask({ taskId, subtaskId, subtaskData });
-      dispatch({ type: 'UPDATE_SUBTASK', payload: response });
-    } catch (error) {
-      console.error('Error saving value:', error);
-    } finally {
-      handleEditSubtask({ isLoading: false, subtaskId: '' });
-    }
-  };
-
-  const handleAddSubtask = async () => {
-    try {
-      if (addSubtaskInput.inputValue.length > 0) {
-        setAddSubtaskInput((prev) => {
-          return {
-            ...prev,
-            isSubtaskLoading: true,
-          };
-        });
-        const response = await addSubtask({
-          taskId: task._id,
-          content: addSubtaskInput.inputValue,
-          done: false,
-        });
-        dispatch({ type: 'UPDATE_SUBTASK', payload: response });
-      }
-    } catch (error) {
-      console.error('Error saving value:', error);
-    } finally {
-      setAddSubtaskInput(() => {
-        return {
-          isSubtaskLoading: false,
-          inputValue: '',
-          isInputOpen: false,
-        };
-      });
-    }
-  };
-
-  const handleDeleteSubtask = async (taskId, subtaskId) => {
-    try {
-      const response = await deleteSubtask(taskId, subtaskId);
-      dispatch({ type: 'UPDATE_SUBTASK', payload: response });
-    } catch (error) {
-      console.error('Error saving value:', error);
-    }
-  };
-
-  const handleAddSubtaskInput = (key, value) => {
-    setAddSubtaskInput((prev) => {
-      return {
-        ...prev,
-        [key]: value,
-      };
-    });
-  };
-
-  const handleFormChange = (e, key) => {
-    setFormValue((prev) => ({
-      ...prev,
-      [key]: e.target.value,
-    }));
-  };
-
-  const handleBlur = async () => {
-    setIsEditing(false);
-    try {
-      await UpdateStudioTask({ id: task._id, studioTaskData: formValue });
-      const res = await getAllStudioTasks();
-      dispatch({ type: 'SET_STUDIOTASKS', payload: res });
-    } catch (error) {
-      console.error('Error saving value:', error);
-    }
-  };
-
-  const handleMemberLoadChange = (name, loadState, loadPlace) => {
-    setIsMemberChangeLoading(() => {
-      return {
-        userName: name,
-        isLoading: loadState,
-        loadPlace,
-      };
-    });
-  };
-
-  const handleAddMember = async (userId: string, loadPlace: string) => {
-    const userToAdd = users.find((user) => user._id === userId);
-    const userToAddNasme = userToAdd.name;
-
-    if (!userToAdd) return;
-
-    const participants = [...task.participants];
-
-    const isAlreadyAdded = participants.some(
-      (participant) => participant._id === userId
-    );
-
-    if (isAlreadyAdded) return;
-
-    const newFormValue = {
-      ...task,
-      participants: [...participants, userToAdd],
-    };
-
-    setFormValue(newFormValue);
-
-    try {
-      handleMemberLoadChange(userToAddNasme, true, loadPlace);
-      await UpdateStudioTask({
-        id: task._id,
-        studioTaskData: newFormValue,
-      });
-      const res = await getAllStudioTasks();
-      dispatch({ type: 'SET_STUDIOTASKS', payload: res });
-    } catch (error) {
-      console.error('Error saving value:', error);
-    } finally {
-      handleMemberLoadChange(userToAddNasme, false, loadPlace);
-    }
-  };
-
-  const handleDeleteMember = async (userId: string, loadPlace: string) => {
-    const userToDelete = users.find((user) => user._id === userId);
-    const userToDeleteName = userToDelete.name;
-    const participants = [...task.participants];
-
-    const filteredParticipants = participants.filter(
-      (participant) => participant._id !== userId
-    );
-
-    setFormValue((prev) => {
-      return {
-        ...prev,
-        participants: filteredParticipants,
-      };
-    });
-
-    try {
-      handleMemberLoadChange(userToDeleteName, true, loadPlace);
-
-      await UpdateStudioTask({
-        id: task._id,
-        studioTaskData: { ...task, participants: filteredParticipants },
-      });
-      const res = await getAllStudioTasks();
-      dispatch({ type: 'SET_STUDIOTASKS', payload: res });
-    } catch (error) {
-      console.error('Error saving value:', error);
-    } finally {
-      handleMemberLoadChange(userToDeleteName, false, loadPlace);
-    }
-  };
-
-  const handleClientChange = async (e) => {
-    const companyObject = companies.filter(
-      (com) => com.name === e.target.value
-    );
-    const companyFirstClientPerson = companyObject[0].clientPerson[0].value;
-    handleFormChange(e, 'client');
-    setFormValue((prev) => {
-      return {
-        ...prev,
-        clientPerson: companyFirstClientPerson,
-      };
-    });
-    try {
-      await UpdateStudioTask({
-        id: task._id,
-        studioTaskData: {
-          ...task,
-          client: e.target.value,
-          clientPerson: companyFirstClientPerson,
-        },
-      });
-      const res = await getAllStudioTasks();
-      dispatch({ type: 'SET_STUDIOTASKS', payload: res });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleClientPersonChange = async (e) => {
-    handleFormChange(e, 'clientPerson');
-    try {
-      await UpdateStudioTask({
-        id: task._id,
-        studioTaskData: {
-          ...task,
-          clientPerson: e.target.value,
-        },
-      });
-      const res = await getAllStudioTasks();
-      dispatch({ type: 'SET_STUDIOTASKS', payload: res });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const checkIfUserAssigned = (participantsUsers, userId) => {
-    return participantsUsers.some((participant) => participant._id === userId);
-  };
 
   return (
     <>
@@ -513,10 +286,9 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
                       type="button"
                       className={styles.addSubtaskButton}
                       onClick={() =>
-                        handleAddSubtaskInput(
-                          'isInputOpen',
-                          !addSubtaskInput.isInputOpen
-                        )
+                        handleAddSubtaskInput({
+                          isInputOpen: !addSubtaskInput.isInputOpen,
+                        })
                       }
                     >
                       Dodaj...
@@ -534,7 +306,7 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
                           }
                         }}
                         onChange={(e) => {
-                          handleAddSubtaskInput('inputValue', e.target.value);
+                          handleAddSubtaskInput({ inputValue: e.target.value });
                         }}
                         onBlur={handleAddSubtask}
                         autoFocus
