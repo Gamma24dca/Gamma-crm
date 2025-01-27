@@ -350,6 +350,13 @@
   flex-grow: 2;
 }
 
+.subtaskInputEditMode {
+  border: none;
+  padding: 3px 10px;
+  border-radius: 15px;
+  flex-grow: 2;
+}
+
 .trashIcon {
   transition: all 0.3s ease;
   opacity: 0;
@@ -380,9 +387,15 @@
   }
 }
 
+.addSubtaskInputWrapper {
+  display: flex;
+  gap: 10px;
+  padding-left: 32px;
+}
+
 .addSubtaskInput {
   width: 70%;
-  margin: 7px 0 5px 38px;
+  margin: 7px 0 5px 0px;
   border-radius: 15px;
   border: none;
   padding: 5px 15px;

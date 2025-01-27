@@ -18,39 +18,31 @@ import {
 import useStudioTasksContext from '../../../hooks/Context/useStudioTasksContext';
 import Captcha from '../Captcha/Captcha';
 import { archiveStudioTask } from '../../../services/archived-studio-tasks-service';
-import useSelectUser from '../../../hooks/useSelectUser';
 import useCompaniesContext from '../../../hooks/Context/useCompaniesContext';
 import useAuth from '../../../hooks/useAuth';
-
-// const initialTaskObject = {
-//   searchID: 0,
-//   title: '',
-//   client: '',
-//   clientPerson: '',
-//   status: '',
-//   index: 0,
-//   author: {},
-//   participants: [],
-//   description: '',
-//   subtasks: [],
-//   startDate: ' ',
-//   deadline: '',
-// };
+import useUsersContext from '../../../hooks/Context/useUsersContext';
 
 function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
   const { showModal, exitAnim, openModal, closeModal } = useModal();
   const [deleteCaptcha, setDeleteCaptcha] = useState(false);
   const { dispatch } = useStudioTasksContext();
   const { user: currentUser } = useAuth();
+  const { users } = useUsersContext();
   const { companies } = useCompaniesContext();
   const [isEditing, setIsEditing] = useState(false);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
   const [formValue, setFormValue] = useState<StudioTaskTypes>(task);
   const [addSubtaskInput, setAddSubtaskInput] = useState({
     isInputOpen: false,
+    isSubtaskLoading: false,
     inputValue: '',
   });
-  // const [subtaskForm, setSubtaskForm] = useState({});
+  const [editSubtaskContent, setEditSubtaskContent] = useState({
+    isEditing: false,
+    isLoading: false,
+    contentValue: '',
+    subtaskId: '',
+  });
   const [isMemberChangeLoading, setIsMemberChangeLoading] = useState({
     userName: '',
     isLoading: false,
@@ -67,19 +59,6 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
 
   const subtasksLength = task.subtasks.length;
 
-  const {
-    users,
-    // formValue,
-    // setFormValue,
-    // handleAddMember,
-    // handleDeleteMember,
-    // clientInputValue,
-    // setClientInputValue,
-  } = useSelectUser({
-    initialValue: task,
-    objectKey: 'participants',
-  });
-
   const handleDeleteTask = async (id) => {
     dispatch({ type: 'DELETE_STUDIOTASK', payload: task });
     closeModal();
@@ -92,25 +71,53 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
     await archiveStudioTask(id);
   };
 
+  const handleEditSubtask = (object) => {
+    setEditSubtaskContent((prev) => {
+      return {
+        ...prev,
+        ...object,
+      };
+    });
+  };
+
   const handleUpdateSubtask = async (taskId, subtaskId, subtaskData) => {
     try {
+      handleEditSubtask({ isLoading: true, subtaskId });
       const response = await updateSubtask({ taskId, subtaskId, subtaskData });
       dispatch({ type: 'UPDATE_SUBTASK', payload: response });
     } catch (error) {
       console.error('Error saving value:', error);
+    } finally {
+      handleEditSubtask({ isLoading: false, subtaskId: '' });
     }
   };
 
   const handleAddSubtask = async () => {
     try {
-      const response = await addSubtask({
-        taskId: task._id,
-        content: addSubtaskInput.inputValue,
-        done: false,
-      });
-      dispatch({ type: 'UPDATE_SUBTASK', payload: response });
+      if (addSubtaskInput.inputValue.length > 0) {
+        setAddSubtaskInput((prev) => {
+          return {
+            ...prev,
+            isSubtaskLoading: true,
+          };
+        });
+        const response = await addSubtask({
+          taskId: task._id,
+          content: addSubtaskInput.inputValue,
+          done: false,
+        });
+        dispatch({ type: 'UPDATE_SUBTASK', payload: response });
+      }
     } catch (error) {
       console.error('Error saving value:', error);
+    } finally {
+      setAddSubtaskInput(() => {
+        return {
+          isSubtaskLoading: false,
+          inputValue: '',
+          isInputOpen: false,
+        };
+      });
     }
   };
 
@@ -120,13 +127,6 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
       dispatch({ type: 'UPDATE_SUBTASK', payload: response });
     } catch (error) {
       console.error('Error saving value:', error);
-    } finally {
-      setAddSubtaskInput((prev) => {
-        return {
-          ...prev,
-          isInputOpen: false,
-        };
-      });
     }
   };
 
@@ -418,24 +418,84 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
                         key={subtask._id}
                         className={styles.subtaskContainer}
                       >
-                        <input
-                          type="checkbox"
-                          checked={subtask.done}
-                          onChange={() => {
-                            if (subtask.done) {
-                              handleUpdateSubtask(task._id, subtask._id, {
-                                done: false,
+                        {editSubtaskContent.isLoading &&
+                        editSubtaskContent.subtaskId === subtask._id ? (
+                          <div className={styles.userLoaderWrapper}>
+                            <div className={styles.userLoader} />
+                          </div>
+                        ) : (
+                          <input
+                            type="checkbox"
+                            checked={subtask.done}
+                            onChange={() => {
+                              if (subtask.done) {
+                                handleUpdateSubtask(task._id, subtask._id, {
+                                  done: false,
+                                });
+                              } else {
+                                handleUpdateSubtask(task._id, subtask._id, {
+                                  done: true,
+                                });
+                              }
+                            }}
+                          />
+                        )}
+
+                        {editSubtaskContent.isEditing &&
+                        editSubtaskContent.subtaskId === subtask._id ? (
+                          <input
+                            autoFocus
+                            type="text"
+                            name="subtask content"
+                            id="subtask content"
+                            className={`${styles.subtaskInput} ${styles.subtaskInputEditMode}`}
+                            onChange={(e) => {
+                              handleEditSubtask({
+                                contentValue: e.target.value,
                               });
-                            } else {
+                            }}
+                            onBlur={() => {
                               handleUpdateSubtask(task._id, subtask._id, {
-                                done: true,
+                                content: editSubtaskContent.contentValue,
                               });
-                            }
-                          }}
-                        />
-                        <p className={styles.subtaskContent}>
-                          {subtask.content}
-                        </p>
+
+                              handleEditSubtask({
+                                contentValue: '',
+                                isEditing: false,
+                                subtaskId: '',
+                              });
+                            }}
+                            onClick={() => {
+                              handleEditSubtask({ isEditing: true });
+                            }}
+                            value={editSubtaskContent.contentValue}
+                          />
+                        ) : (
+                          <p
+                            role="button"
+                            tabIndex={0}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                handleEditSubtask({
+                                  contentValue: subtask.content,
+                                  isEditing: true,
+                                  subtaskId: subtask._id,
+                                });
+                              }
+                            }}
+                            className={styles.subtaskContent}
+                            onClick={() => {
+                              handleEditSubtask({
+                                contentValue: subtask.content,
+                                isEditing: true,
+                                subtaskId: subtask._id,
+                              });
+                            }}
+                          >
+                            {subtask.content}
+                          </p>
+                        )}
+
                         <Icon
                           className={styles.trashIcon}
                           icon="solar:trash-bin-minimalistic-broken"
@@ -463,16 +523,28 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
                     </button>
                   )}
                   {addSubtaskInput.isInputOpen && (
-                    <input
-                      type="text"
-                      className={styles.addSubtaskInput}
-                      placeholder="Tytuł zadania..."
-                      onChange={(e) => {
-                        handleAddSubtaskInput('inputValue', e.target.value);
-                      }}
-                      onBlur={handleAddSubtask}
-                      autoFocus
-                    />
+                    <div className={styles.addSubtaskInputWrapper}>
+                      <input
+                        type="text"
+                        className={styles.addSubtaskInput}
+                        placeholder="Tytuł zadania..."
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            handleAddSubtask();
+                          }
+                        }}
+                        onChange={(e) => {
+                          handleAddSubtaskInput('inputValue', e.target.value);
+                        }}
+                        onBlur={handleAddSubtask}
+                        autoFocus
+                      />
+                      {addSubtaskInput.isSubtaskLoading && (
+                        <div className={styles.userLoaderWrapper}>
+                          <div className={styles.userLoader} />
+                        </div>
+                      )}
+                    </div>
                   )}
                 </div>
               </div>
