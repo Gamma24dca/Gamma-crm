@@ -61,6 +61,10 @@ function StudioTaskView() {
     isFinalMessage: false,
     finalMessage: '',
   });
+  const [filterDropdown, setFilterDropdown] = useState<boolean>(false);
+  const [participantsToFilter, setParticipantsToFilter] = useState<string[]>(
+    []
+  );
 
   const { user } = useAuth();
 
@@ -235,12 +239,57 @@ function StudioTaskView() {
           >
             Nowe zlecenie
           </CTA>
-          <CTA onClick={() => {}}>Filtry</CTA>
+          <CTA
+            onClick={() => {
+              setFilterDropdown((prev) => !prev);
+            }}
+          >
+            Filtry
+          </CTA>
         </div>
+        {filterDropdown && (
+          <>
+            <div
+              className={styles.overlay}
+              onClick={() => setFilterDropdown(false)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === 'Escape') {
+                  setFilterDropdown(false);
+                }
+              }}
+            />
+            <div className={styles.filterDropdownContainer}>
+              <h3 className={styles.dropdownHeader}>Filtr</h3>
+              <div className={styles.assignedToMeWrapper}>
+                <input
+                  type="checkbox"
+                  className={styles.assignedToMeCheckbox}
+                  onChange={() => {
+                    if (participantsToFilter.includes(user[0]._id)) {
+                      setParticipantsToFilter(
+                        participantsToFilter.filter(
+                          (part) => part !== user[0]._id
+                        )
+                      );
+                    } else {
+                      setParticipantsToFilter((prev) => {
+                        return [...prev, user[0]._id];
+                      });
+                    }
+                  }}
+                />
+                <img src={`${user[0].img}`} alt="" className={styles.userImg} />
+                <p>Przypisane do mnie</p>
+              </div>
+            </div>
+          </>
+        )}
       </ControlBar>
 
       {viewVariable === 'Aktywne' ? (
-        <KanbanView />
+        <KanbanView filterArray={participantsToFilter} />
       ) : (
         <ArchivedListView
           activeGroupedTasks={tasksByStatus}

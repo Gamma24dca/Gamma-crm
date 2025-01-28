@@ -1,5 +1,5 @@
 .columnsWrapper {
-  /* height: 100%; */
+  height: fit-content;
   width: 95%;
   display: flex;
   gap: 15px;

@@ -17,15 +17,13 @@ import {
   StudioTaskTypes,
 } from '../../../services/studio-tasks-service';
 import DroppableColumn from '../../Molecules/DroppableColumn/DroppableColumn';
-import useAuth from '../../../hooks/useAuth';
 
-function KanbanView() {
+function KanbanView({ filterArray }) {
   const { studioTasks, dispatch } = useStudioTasksContext();
   const { companies, dispatch: companiesDispatch } = useCompaniesContext();
   const [tasksByStatus, setTasksByStatus] = useState(getTasksByStatus([]));
   const [isDragAllowed, setIsDragAllowed] = useState(true);
   const [isStudioTasksLoading, setIsStudioTasksLoading] = useState(true);
-  const { user: currentUser } = useAuth();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -58,19 +56,23 @@ function KanbanView() {
       if (studioTasks) {
         setIsStudioTasksLoading(false);
         const filteredStudioTasks = studioTasks.filter((taskToFilter) => {
-          return taskToFilter.participants.some(
-            (participant) => participant._id === currentUser._id
+          return taskToFilter.participants.some((participant) =>
+            filterArray.includes(participant._id)
           );
         });
+
         console.log(filteredStudioTasks);
-        const newTasksByStatus = getTasksByStatus(studioTasks);
+
+        const newTasksByStatus = getTasksByStatus(
+          filteredStudioTasks.length > 0 ? filteredStudioTasks : studioTasks
+        );
         if (!isEqual(newTasksByStatus, tasksByStatus)) {
           setTasksByStatus({ ...newTasksByStatus });
         }
       }
     };
     fetchTasks();
-  }, [dispatch, studioTasks]);
+  }, [dispatch, studioTasks, filterArray]);
 
   const mutation = useMutation<
     void,
