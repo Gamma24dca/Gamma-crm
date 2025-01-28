@@ -12,7 +12,12 @@ export type StudioTaskTypes = {
   title: string;
   client: string;
   clientPerson: string;
-  status: 'na_później' | 'do_zrobienia' | 'w_trakcie' | 'wysłane';
+  status:
+    | 'do_wzięcia'
+    | 'na_później'
+    | 'do_zrobienia'
+    | 'w_trakcie'
+    | 'wysłane';
   index: number;
   author: Omit<User, 'password'>;
   taskType: string;
