@@ -45,7 +45,7 @@
 .graphicName {
   position: absolute;
   top: 35px;
-  right: -30px;
+  right: -20px;
   display: flex;
   align-items: center;
   background-color: var(--color-black);

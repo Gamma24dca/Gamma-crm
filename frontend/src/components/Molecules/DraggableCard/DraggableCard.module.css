@@ -104,7 +104,7 @@
   cursor: pointer;
   margin: 0 auto;
   background-color: var(--color-lighter);
-  width: 75%;
+  width: 80%;
   min-width: 200px;
   border-radius: 10px;
   padding: 0 20px 10px 20px;
@@ -276,6 +276,8 @@
   justify-content: center;
   align-items: center;
   width: 85%;
+  min-width: 400px;
+  max-width: 650px;
   padding: 20px 10px;
 }
 
