@@ -17,6 +17,7 @@ import {
   StudioTaskTypes,
 } from '../../../services/studio-tasks-service';
 import DroppableColumn from '../../Molecules/DroppableColumn/DroppableColumn';
+import useAuth from '../../../hooks/useAuth';
 
 function KanbanView() {
   const { studioTasks, dispatch } = useStudioTasksContext();
@@ -24,6 +25,7 @@ function KanbanView() {
   const [tasksByStatus, setTasksByStatus] = useState(getTasksByStatus([]));
   const [isDragAllowed, setIsDragAllowed] = useState(true);
   const [isStudioTasksLoading, setIsStudioTasksLoading] = useState(true);
+  const { user: currentUser } = useAuth();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -55,6 +57,12 @@ function KanbanView() {
 
       if (studioTasks) {
         setIsStudioTasksLoading(false);
+        const filteredStudioTasks = studioTasks.filter((taskToFilter) => {
+          return taskToFilter.participants.some(
+            (participant) => participant._id === currentUser._id
+          );
+        });
+        console.log(filteredStudioTasks);
         const newTasksByStatus = getTasksByStatus(studioTasks);
         if (!isEqual(newTasksByStatus, tasksByStatus)) {
           setTasksByStatus({ ...newTasksByStatus });

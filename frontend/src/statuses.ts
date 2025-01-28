@@ -5,6 +5,7 @@ import {
 } from './services/studio-tasks-service';
 
 export const statuses: StudioTaskTypes['status'][] = [
+  'do_wzięcia',
   'na_później',
   'do_zrobienia',
   'w_trakcie',
@@ -12,6 +13,7 @@ export const statuses: StudioTaskTypes['status'][] = [
 ];
 
 export const statusNames: Record<StudioTaskTypes['status'], string> = {
+  do_wzięcia: 'Do wzięcia',
   na_później: 'Na później',
   do_zrobienia: 'Do zrobienia',
   w_trakcie: 'W trakcie',
