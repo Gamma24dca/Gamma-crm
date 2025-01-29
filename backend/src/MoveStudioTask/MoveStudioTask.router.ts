@@ -11,13 +11,13 @@ export const unArchiveStudioTaskRouter = Router();
 MoveStudioTaskRouter.post(
   '/:id',
   passport.authenticate('jwt', { session: false }),
-  async (req, res) => {
+  async (req, res): Promise<void> => {
     try {
       const sourceStudioTask = await StudioTaskController.getStudioTask(
         req.params.id,
       );
       if (!sourceStudioTask) {
-        return res
+        res
           .status(StatusCodes.NOT_FOUND)
           .json({ message: 'Document not found' });
       }
@@ -40,12 +40,12 @@ MoveStudioTaskRouter.post(
 unArchiveStudioTaskRouter.post(
   '/:id',
   passport.authenticate('jwt', { session: false }),
-  async (req, res) => {
+  async (req, res): Promise<void> => {
     try {
       const sourceStudioTask =
         await ArchivedStudioTaskController.getArchivedStudioTask(req.params.id);
       if (!sourceStudioTask) {
-        return res
+        res
           .status(StatusCodes.NOT_FOUND)
           .json({ message: 'Document not found' });
       }
