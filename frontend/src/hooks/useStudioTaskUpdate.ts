@@ -178,9 +178,6 @@ const useStudioTaskUpdate = (task, closeModal) => {
     }
   };
 
-  const checkIfUserAssigned = (participantsUsers, userId) => {
-    return participantsUsers.some((participant) => participant._id === userId);
-  };
   return {
     users,
     companies,
@@ -198,7 +195,6 @@ const useStudioTaskUpdate = (task, closeModal) => {
     handleDeleteMember,
     handleClientChange,
     handleClientPersonChange,
-    checkIfUserAssigned,
     isUserAssigned,
     setIsUserAssigned,
   };
