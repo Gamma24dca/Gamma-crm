@@ -140,20 +140,7 @@ function StudioTaskView() {
         taskType: formValue.taskType,
         participants: formValue.participants,
         description: formValue.description,
-        subtasks: [
-          {
-            content: 'test subtask',
-            done: false,
-          },
-          {
-            content: 'test subtask 2',
-            done: true,
-          },
-          {
-            content: 'test subtask 2',
-            done: true,
-          },
-        ],
+        subtasks: [],
         deadline: formValue.deadline,
         startDate: currentDate,
       });
