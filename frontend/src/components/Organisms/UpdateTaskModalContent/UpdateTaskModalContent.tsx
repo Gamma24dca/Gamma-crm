@@ -143,9 +143,9 @@ function UpdateTaskModalContent({
           <div className={styles.subtasksContainer}>
             {task.subtasks.map((subtask) => {
               return (
-                <div key={subtask.id} className={styles.subtaskContainer}>
+                <div key={subtask._id} className={styles.subtaskContainer}>
                   {editSubtaskContent.isLoading &&
-                  editSubtaskContent.subtaskId === subtask.id ? (
+                  editSubtaskContent.subtaskId === subtask._id ? (
                     <CheckboxLoader />
                   ) : (
                     <input
@@ -153,11 +153,11 @@ function UpdateTaskModalContent({
                       checked={subtask.done}
                       onChange={() => {
                         if (subtask.done) {
-                          handleUpdateSubtask(task._id, subtask.id, {
+                          handleUpdateSubtask(task._id, subtask._id, {
                             done: false,
                           });
                         } else {
-                          handleUpdateSubtask(task._id, subtask.id, {
+                          handleUpdateSubtask(task._id, subtask._id, {
                             done: true,
                           });
                         }
@@ -166,7 +166,7 @@ function UpdateTaskModalContent({
                   )}
 
                   {editSubtaskContent.isEditing &&
-                  editSubtaskContent.subtaskId === subtask.id ? (
+                  editSubtaskContent.subtaskId === subtask._id ? (
                     <input
                       autoFocus
                       type="text"
@@ -179,7 +179,7 @@ function UpdateTaskModalContent({
                         });
                       }}
                       onBlur={() => {
-                        handleUpdateSubtask(task._id, subtask.id, {
+                        handleUpdateSubtask(task._id, subtask._id, {
                           content: editSubtaskContent.contentValue,
                         });
 
@@ -203,7 +203,7 @@ function UpdateTaskModalContent({
                           handleEditSubtask({
                             contentValue: subtask.content,
                             isEditing: true,
-                            subtaskId: subtask.id,
+                            subtaskId: subtask._id,
                           });
                         }
                       }}
@@ -212,7 +212,7 @@ function UpdateTaskModalContent({
                         handleEditSubtask({
                           contentValue: subtask.content,
                           isEditing: true,
-                          subtaskId: subtask.id,
+                          subtaskId: subtask._id,
                         });
                       }}
                     >
@@ -226,7 +226,7 @@ function UpdateTaskModalContent({
                     width="22"
                     height="22"
                     onClick={() => {
-                      handleDeleteSubtask(task._id, subtask.id);
+                      handleDeleteSubtask(task._id, subtask._id);
                     }}
                   />
                 </div>
