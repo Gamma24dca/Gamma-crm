@@ -26,7 +26,7 @@ export const StudioTaskController = {
   },
   async addSubtask(taskId, subtask) {
     const task = await StudioTaskController.getStudioTask(taskId);
-    task.subtasks.push({ ...subtask, _id: randomUUID() });
+    task.subtasks.push({ ...subtask, id: randomUUID() });
     await StudioTaskController.updateStudioTask(taskId, task);
     const updatedStudioTask = await StudioTaskController.getStudioTask(taskId);
     return updatedStudioTask;
@@ -34,7 +34,7 @@ export const StudioTaskController = {
   async updateSubtask(taskId, subtaskId, subtask) {
     const task = await StudioTaskController.getStudioTask(taskId);
     task.subtasks = task.subtasks.map((obj) => {
-      return obj._id === subtaskId ? { ...obj, ...subtask } : obj;
+      return obj.id === subtaskId ? { ...obj, ...subtask } : obj;
     });
 
     await StudioTaskController.updateStudioTask(taskId, task);
@@ -44,7 +44,7 @@ export const StudioTaskController = {
 
   async deleteSubtask(taskId, subtaskId) {
     const task = await StudioTaskController.getStudioTask(taskId);
-    task.subtasks = task.subtasks.filter((sub) => sub._id !== subtaskId);
+    task.subtasks = task.subtasks.filter((sub) => sub.id !== subtaskId);
     await StudioTaskController.updateStudioTask(taskId, task);
     const updatedStudioTask = await StudioTaskController.getStudioTask(taskId);
     return updatedStudioTask;
