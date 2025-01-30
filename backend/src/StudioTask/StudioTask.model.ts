@@ -90,7 +90,7 @@ export const StudioTaskModel = mongoose.model(
       {
         content: { type: String },
         done: { type: Boolean },
-        _id: { type: String, auto: false },
+        _id: { type: String },
       },
     ],
     startDate: {
