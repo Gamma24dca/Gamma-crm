@@ -1,7 +1,12 @@
 import { Icon } from '@iconify/react';
-import styles from './UsersDropdown.module.css';
+import styles from './MultiselectDropdown.module.css';
 
-function UsersDropdown({ children, isSelectOpen, setIsSelectOpen }) {
+function MultiselectDropdown({
+  children,
+  isSelectOpen,
+  setIsSelectOpen,
+  label,
+}) {
   return (
     <button
       type="button"
@@ -11,12 +16,12 @@ function UsersDropdown({ children, isSelectOpen, setIsSelectOpen }) {
       }}
     >
       <div className={styles.labelWrapper}>
-        <p className={styles.buttonLabel}>Członkowie</p>
+        <p className={styles.buttonLabel}>{label}</p>
 
         <Icon
           icon="material-symbols:keyboard-arrow-down-rounded"
-          width="24"
-          height="24"
+          width="17"
+          height="17"
           className={`${isSelectOpen ? styles.upArrow : styles.downArrow}`}
         />
       </div>
@@ -31,4 +36,4 @@ function UsersDropdown({ children, isSelectOpen, setIsSelectOpen }) {
   );
 }
 
-export default UsersDropdown;
+export default MultiselectDropdown;

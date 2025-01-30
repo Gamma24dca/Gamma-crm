@@ -22,7 +22,7 @@
   right: 100px;
   top: 190px;
   width: 220px;
-  height: 350px;
+  /* height: 350px; */
   background-color: var(--color-lighter);
   box-shadow: 0 0px 3px var(--color-shadow);
   border-radius: 15px;
@@ -31,7 +31,7 @@
   flex-direction: column;
   justify-content: start;
   align-items: center;
-  padding: 20px 15px;
+  padding: 20px 15px 100px 15px;
   animation: appear 0.3s ease forwards;
 }
 
@@ -55,7 +55,11 @@
   align-items: center;
   gap: 10px;
   font-weight: 600;
-  font-size: 15px;
+  margin-bottom: 10px;
+
+  p {
+    font-size: 14px;
+  }
 }
 
 .assignedToMeCheckbox {
@@ -67,6 +71,44 @@
   max-height: 30px;
   border-radius: 50%;
   transition: all 0.3s ease;
+}
+
+.userWrapper {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.checkInput {
+  cursor: pointer;
+}
+
+.usersDropdownContainer {
+  margin-bottom: 15px;
+  width: 60%;
+}
+
+.companiesDropdownContainer {
+  width: 60%;
+}
+
+.clearButton {
+  position: absolute;
+  bottom: 20px;
+  border: none;
+  background-color: var(--color-shadow);
+  padding: 7px 15px;
+  border-radius: 15px;
+  cursor: pointer;
+  font-weight: 600;
+  font-family: Montserrat;
+  font-size: 14px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: var(--color-lighter);
+    box-shadow: 0 0 0 1px var(--color-shadow);
+  }
 }
 
 @keyframes appear {

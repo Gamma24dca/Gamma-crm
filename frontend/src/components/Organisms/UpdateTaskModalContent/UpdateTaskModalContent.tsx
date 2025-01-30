@@ -4,7 +4,7 @@ import CheckboxLoader from '../../Atoms/CheckboxLoader/CheckboxLoader';
 import ModalSectionTitle from '../../Atoms/ModalSectionTitle/ModalSectionTitle';
 import UsersDisplay from '../UsersDisplay/UsersDisplay';
 import styles from './UpdateTaskModalContent.module.css';
-import UsersDropdown from '../../Molecules/UsersDropdown/UsersDropdown';
+import MultiselectDropdown from '../../Molecules/MultiselectDropdown/MultiselectDropdown';
 import useStudioTaskUpdate from '../../../hooks/useStudioTaskUpdate';
 import useSubtask from '../../../hooks/useSubtasks';
 import useAuth from '../../../hooks/useAuth';
@@ -290,9 +290,10 @@ function UpdateTaskModalContent({
             </button>
           </div>
 
-          <UsersDropdown
+          <MultiselectDropdown
             isSelectOpen={isSelectOpen}
             setIsSelectOpen={setIsSelectOpen}
+            label="Członkowie"
           >
             {users.map((user) => {
               const isUserChecked = checkIfUserAssigned(
@@ -328,7 +329,7 @@ function UpdateTaskModalContent({
                 )
               );
             })}
-          </UsersDropdown>
+          </MultiselectDropdown>
 
           <select
             onChange={(e) => {
