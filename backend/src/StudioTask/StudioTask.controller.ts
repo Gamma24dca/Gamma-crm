@@ -1,5 +1,6 @@
-import { randomUUID } from 'crypto';
+// import { randomUUID } from 'crypto';
 import { StudioTaskModel } from './StudioTask.model';
+import mongoose from 'mongoose';
 
 export const StudioTaskController = {
   async getStudioTasks() {
@@ -26,7 +27,7 @@ export const StudioTaskController = {
   },
   async addSubtask(taskId, subtask) {
     const task = await StudioTaskController.getStudioTask(taskId);
-    task.subtasks.push({ ...subtask, _id: String(randomUUID()) });
+    task.subtasks.push({ ...subtask, _id: new mongoose.Types.ObjectId() });
     await StudioTaskController.updateStudioTask(taskId, task);
     const updatedStudioTask = await StudioTaskController.getStudioTask(taskId);
     return updatedStudioTask;
