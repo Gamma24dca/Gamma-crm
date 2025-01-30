@@ -23,6 +23,7 @@ import { getAllCompanies } from '../../services/companies-service';
 import Select from '../../components/Atoms/Select/Select';
 import KanbanView from '../../components/Organisms/KanbanView/KanbanView';
 import ArchivedListView from '../../components/Organisms/ArchivedListView/ArchivedListView';
+import MultiselectDropdown from '../../components/Molecules/MultiselectDropdown/MultiselectDropdown';
 
 const initialTaskObject: StudioTaskTypes = {
   searchID: 0,
@@ -56,6 +57,8 @@ function StudioTaskView() {
   const { companies, dispatch: companiesDispatch } = useCompaniesContext();
   const [tasksByStatus, setTasksByStatus] = useState(getTasksByStatus([]));
   const { showModal, exitAnim, openModal, closeModal } = useModal();
+  const [isUsersSelectOpen, setIsUsersSelectOpen] = useState(false);
+  const [isCompaniesSelectOpen, setIsCompaniesSelectOpen] = useState(false);
   const [loadingState, setLoadingState] = useState({
     isLoading: false,
     isFinalMessage: false,
@@ -63,10 +66,29 @@ function StudioTaskView() {
   });
   const [filterDropdown, setFilterDropdown] = useState<boolean>(false);
   const [participantsToFilter, setParticipantsToFilter] = useState<string[]>(
-    []
+    () => {
+      const storedFilters = localStorage.getItem('participantsToFilter');
+      return storedFilters ? JSON.parse(storedFilters) : [];
+    }
   );
+  const [companiesToFilter, setCompaniesToFilter] = useState<string[]>(() => {
+    const storedCompanies = localStorage.getItem('companiesToFilter');
+    return storedCompanies ? JSON.parse(storedCompanies) : [];
+  });
 
   const { user } = useAuth();
+
+  useEffect(() => {
+    localStorage.setItem(
+      'participantsToFilter',
+      JSON.stringify(participantsToFilter)
+    );
+
+    localStorage.setItem(
+      'companiesToFilter',
+      JSON.stringify(companiesToFilter)
+    );
+  }, [participantsToFilter, companiesToFilter]);
 
   useEffect(() => {
     const fetchCompanies = async () => {
@@ -253,6 +275,7 @@ function StudioTaskView() {
                 <input
                   type="checkbox"
                   className={styles.assignedToMeCheckbox}
+                  checked={participantsToFilter.includes(user[0]._id)}
                   onChange={() => {
                     if (participantsToFilter.includes(user[0]._id)) {
                       setParticipantsToFilter(
@@ -270,13 +293,109 @@ function StudioTaskView() {
                 <img src={`${user[0].img}`} alt="" className={styles.userImg} />
                 <p>Przypisane do mnie</p>
               </div>
+              <div className={styles.usersDropdownContainer}>
+                <MultiselectDropdown
+                  isSelectOpen={isUsersSelectOpen}
+                  setIsSelectOpen={setIsUsersSelectOpen}
+                  label="Członkowie"
+                >
+                  {users.map((userOnDrop) => {
+                    return (
+                      user._id !== user[0]._id && (
+                        <div
+                          key={userOnDrop._id}
+                          className={styles.userWrapper}
+                        >
+                          <input
+                            className={styles.checkInput}
+                            type="checkbox"
+                            checked={participantsToFilter.includes(
+                              userOnDrop._id
+                            )}
+                            onChange={() => {
+                              if (
+                                participantsToFilter.includes(userOnDrop._id)
+                              ) {
+                                setParticipantsToFilter(
+                                  participantsToFilter.filter(
+                                    (part) => part !== userOnDrop._id
+                                  )
+                                );
+
+                                setIsUsersSelectOpen(true);
+                              } else {
+                                setParticipantsToFilter((prev) => {
+                                  return [...prev, userOnDrop._id];
+                                });
+                                setIsUsersSelectOpen(true);
+                              }
+                            }}
+                          />
+                          <p>{userOnDrop.name}</p>
+                        </div>
+                      )
+                    );
+                  })}
+                </MultiselectDropdown>
+              </div>
+
+              <div className={styles.companiesDropdownContainer}>
+                <MultiselectDropdown
+                  isSelectOpen={isCompaniesSelectOpen}
+                  setIsSelectOpen={setIsCompaniesSelectOpen}
+                  label="Firmy"
+                >
+                  {companies.map((company) => {
+                    return (
+                      <div key={company._id} className={styles.userWrapper}>
+                        <input
+                          className={styles.checkInput}
+                          type="checkbox"
+                          checked={companiesToFilter.includes(company.name)}
+                          onChange={() => {
+                            if (companiesToFilter.includes(company.name)) {
+                              setCompaniesToFilter(
+                                companiesToFilter.filter(
+                                  (part) => part !== company.name
+                                )
+                              );
+
+                              setIsCompaniesSelectOpen(true);
+                            } else {
+                              setCompaniesToFilter((prev) => {
+                                return [...prev, company.name];
+                              });
+                              setIsCompaniesSelectOpen(true);
+                            }
+                          }}
+                        />
+                        <p>{company.name}</p>
+                      </div>
+                    );
+                  })}
+                </MultiselectDropdown>
+              </div>
+
+              <button
+                type="button"
+                className={styles.clearButton}
+                onClick={() => {
+                  setParticipantsToFilter([]);
+                  setCompaniesToFilter([]);
+                }}
+              >
+                Wyczyść
+              </button>
             </div>
           </>
         )}
       </ControlBar>
 
       {viewVariable === 'Aktywne' ? (
-        <KanbanView filterArray={participantsToFilter} />
+        <KanbanView
+          filterArray={participantsToFilter}
+          companiesFilterArray={companiesToFilter}
+        />
       ) : (
         <ArchivedListView
           activeGroupedTasks={tasksByStatus}

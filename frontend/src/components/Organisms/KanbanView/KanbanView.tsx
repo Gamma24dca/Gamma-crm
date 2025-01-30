@@ -18,7 +18,7 @@ import {
 } from '../../../services/studio-tasks-service';
 import DroppableColumn from '../../Molecules/DroppableColumn/DroppableColumn';
 
-function KanbanView({ filterArray }) {
+function KanbanView({ filterArray, companiesFilterArray }) {
   const { studioTasks, dispatch } = useStudioTasksContext();
   const { companies, dispatch: companiesDispatch } = useCompaniesContext();
   const [tasksByStatus, setTasksByStatus] = useState(getTasksByStatus([]));
@@ -61,10 +61,27 @@ function KanbanView({ filterArray }) {
           );
         });
 
-        console.log(filteredStudioTasks);
+        const filteredByCompanies =
+          companiesFilterArray.length > 0 && filteredStudioTasks.length > 0
+            ? filteredStudioTasks.filter((task) =>
+                companiesFilterArray.includes(task.client)
+              )
+            : studioTasks.filter((task) =>
+                companiesFilterArray.includes(task.client)
+              );
+
+        if (companiesFilterArray.length <= 0) {
+          const newTasksByStatus = getTasksByStatus(
+            filteredStudioTasks.length > 0 ? filteredStudioTasks : studioTasks
+          );
+          if (!isEqual(newTasksByStatus, tasksByStatus)) {
+            setTasksByStatus({ ...newTasksByStatus });
+          }
+          return;
+        }
 
         const newTasksByStatus = getTasksByStatus(
-          filteredStudioTasks.length > 0 ? filteredStudioTasks : studioTasks
+          filteredByCompanies.length > 0 ? filteredByCompanies : studioTasks
         );
         if (!isEqual(newTasksByStatus, tasksByStatus)) {
           setTasksByStatus({ ...newTasksByStatus });
@@ -72,7 +89,7 @@ function KanbanView({ filterArray }) {
       }
     };
     fetchTasks();
-  }, [dispatch, studioTasks, filterArray]);
+  }, [dispatch, studioTasks, filterArray, companiesFilterArray]);
 
   const mutation = useMutation<
     void,
