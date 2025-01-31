@@ -136,6 +136,8 @@ function KanbanView({ filterArray, companiesFilterArray }) {
         console.error(error);
       } finally {
         setIsDragAllowed(true);
+        socket.emit('dragConditionOn', true);
+
         console.log('dragging enabled');
       }
     },
@@ -193,8 +195,6 @@ function KanbanView({ filterArray, companiesFilterArray }) {
       });
     } catch (error) {
       console.error('Error handling drag and drop', error);
-    } finally {
-      socket.emit('dragConditionOn', true);
     }
   };
 
