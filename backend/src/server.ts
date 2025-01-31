@@ -16,8 +16,29 @@ import {
   MoveStudioTaskRouter,
   unArchiveStudioTaskRouter,
 } from './MoveStudioTask/MoveStudioTask.router';
+import { Server } from 'socket.io';
+import { createServer } from 'node:http';
+
+var corsOptions = {
+  origin: ['https://gamma-crm-frontend.onrender.com', 'http://localhost:5173'],
+  default: 'https://gamma-crm-frontend.onrender.com',
+  methods: 'GET,POST,PUT,PATCH,DELETE',
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
 
 const app = express();
+const server = createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: [
+      'https://gamma-crm-frontend.onrender.com',
+      'http://localhost:5173',
+    ],
+    methods: ['GET', 'POST'],
+    credentials: true,
+  },
+});
 
 if (!fs.existsSync('uploads')) {
   fs.mkdirSync('uploads');
@@ -32,7 +53,7 @@ mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
     console.log('connected to database');
-    app.listen(process.env.PORT, () => {
+    server.listen(process.env.PORT, () => {
       console.log('listening for requests on port', process.env.PORT);
     });
   })
@@ -42,14 +63,6 @@ mongoose
 app.get('/', (req, res) => {
   res.send('Gamma mail API');
 });
-
-var corsOptions = {
-  origin: ['https://gamma-crm-frontend.onrender.com', 'http://localhost:5173'],
-  default: 'https://gamma-crm-frontend.onrender.com',
-  methods: 'GET,POST,PUT,PATCH,DELETE',
-  credentials: true,
-  optionsSuccessStatus: 200,
-};
 
 app.use(cors(corsOptions));
 app.use(morgan('tiny'));
@@ -64,3 +77,17 @@ app.use('/api/archivedstudiotasks', ArchivedStudioTaskRouter);
 app.use('/api/move-studiotask', MoveStudioTaskRouter);
 app.use('/api/unarchive-sudiotask', unArchiveStudioTaskRouter);
 app.get('/api/status', (req, res) => res.status(200).json({ ok: true }));
+
+////Socket
+io.on('connection', (socket) => {
+  console.log(`User connected: ${socket.id}`);
+
+  socket.on('taskUpdated', (task) => {
+    console.log('Task Updated:', task);
+    io.emit('refreshTasks', task); // Broadcast to all clients
+  });
+
+  socket.on('disconnect', () => {
+    console.log(`User disconnected: ${socket.id}`);
+  });
+});

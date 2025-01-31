@@ -17,6 +17,7 @@ import {
   StudioTaskTypes,
 } from '../../../services/studio-tasks-service';
 import DroppableColumn from '../../Molecules/DroppableColumn/DroppableColumn';
+import socket from '../../../socket';
 
 function KanbanView({ filterArray, companiesFilterArray }) {
   const { studioTasks, dispatch } = useStudioTasksContext();
@@ -24,6 +25,18 @@ function KanbanView({ filterArray, companiesFilterArray }) {
   const [tasksByStatus, setTasksByStatus] = useState(getTasksByStatus([]));
   const [isDragAllowed, setIsDragAllowed] = useState(true);
   const [isStudioTasksLoading, setIsStudioTasksLoading] = useState(true);
+
+  useEffect(() => {
+    socket.on('refreshTasks', (updatedTask) => {
+      console.log('Received task update:');
+
+      dispatch({ type: 'SET_STUDIOTASKS', payload: updatedTask });
+    });
+
+    return () => {
+      socket.off('refreshTasks');
+    };
+  }, []);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -106,6 +119,7 @@ function KanbanView({ filterArray, companiesFilterArray }) {
         setIsDragAllowed(false);
         const allStudioTasks = await getAllStudioTasks();
         dispatch({ type: 'SET_STUDIOTASKS', payload: allStudioTasks });
+        socket.emit('taskUpdated', allStudioTasks); // Emit updated tasks
       } catch (error) {
         console.error(error);
       } finally {
