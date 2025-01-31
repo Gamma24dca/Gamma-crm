@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
-import { DragDropContext, OnDragEndResponder } from '@hello-pangea/dnd';
+import {
+  DragDropContext,
+  OnDragEndResponder,
+  OnDragStartResponder,
+} from '@hello-pangea/dnd';
 import { isEqual } from 'lodash';
 import { useMutation } from 'react-query';
 import styles from './KanbanView.module.css';
@@ -27,14 +31,22 @@ function KanbanView({ filterArray, companiesFilterArray }) {
   const [isStudioTasksLoading, setIsStudioTasksLoading] = useState(true);
 
   useEffect(() => {
-    socket.on('refreshTasks', (updatedTask) => {
-      console.log('Received task update:');
+    socket.on('refreshTasks', (updatedTasks) => {
+      console.log('Received task update');
 
-      dispatch({ type: 'SET_STUDIOTASKS', payload: updatedTask });
+      dispatch({ type: 'SET_STUDIOTASKS', payload: updatedTasks });
     });
 
+    socket.on('disableDrag', (condition) => {
+      setIsDragAllowed(condition);
+    });
+
+    socket.on('enableDrag', (condition) => {
+      setIsDragAllowed(condition);
+    });
     return () => {
       socket.off('refreshTasks');
+      socket.off('disableDrag');
     };
   }, []);
 
@@ -131,6 +143,10 @@ function KanbanView({ filterArray, companiesFilterArray }) {
 
   // console.log('tasks:', tasksByStatus);
 
+  const onDragStart: OnDragStartResponder = () => {
+    socket.emit('dragConditionOff', false);
+  };
+
   const onDragEnd: OnDragEndResponder = (result) => {
     if (!isDragAllowed) return;
 
@@ -177,11 +193,13 @@ function KanbanView({ filterArray, companiesFilterArray }) {
       });
     } catch (error) {
       console.error('Error handling drag and drop', error);
+    } finally {
+      socket.emit('dragConditionOn', true);
     }
   };
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
+    <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
       <div className={styles.columnsWrapper}>
         {statuses.map((status) => {
           return (
