@@ -83,8 +83,15 @@ io.on('connection', (socket) => {
   console.log(`User connected: ${socket.id}`);
 
   socket.on('taskUpdated', (task) => {
-    console.log('Task Updated:', task);
     io.emit('refreshTasks', task); // Broadcast to all clients
+  });
+
+  socket.on('dragConditionOff', (condition) => {
+    io.emit('disableDrag', condition);
+  });
+
+  socket.on('dragConditionOn', (condition) => {
+    io.emit('enableDrag', condition);
   });
 
   socket.on('disconnect', () => {
