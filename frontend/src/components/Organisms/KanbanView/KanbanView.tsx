@@ -81,7 +81,9 @@ function KanbanView({ filterArray, companiesFilterArray }) {
         }
 
         const newTasksByStatus = getTasksByStatus(
-          filteredByCompanies.length > 0 ? filteredByCompanies : studioTasks
+          filteredByCompanies.length > 0
+            ? filteredByCompanies
+            : filteredStudioTasks
         );
         if (!isEqual(newTasksByStatus, tasksByStatus)) {
           setTasksByStatus({ ...newTasksByStatus });
