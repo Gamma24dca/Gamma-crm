@@ -87,7 +87,8 @@ io.on('connection', (socket) => {
   });
 
   socket.on('dragConditionOff', (condition) => {
-    io.emit('disableDrag', condition);
+    // io.emit('disableDrag', condition);
+    socket.broadcast.emit('disableDrag', condition);
   });
 
   socket.on('dragConditionOn', (condition) => {
