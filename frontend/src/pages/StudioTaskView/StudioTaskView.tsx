@@ -24,6 +24,7 @@ import Select from '../../components/Atoms/Select/Select';
 import KanbanView from '../../components/Organisms/KanbanView/KanbanView';
 import ArchivedListView from '../../components/Organisms/ArchivedListView/ArchivedListView';
 import MultiselectDropdown from '../../components/Molecules/MultiselectDropdown/MultiselectDropdown';
+import socket from '../../socket';
 
 const initialTaskObject: StudioTaskTypes = {
   searchID: 0,
@@ -77,6 +78,14 @@ function StudioTaskView() {
   });
 
   const { user } = useAuth();
+
+  useEffect(() => {
+    socket.on('addTask', (updatedTasks) => {
+      console.log('Received task update');
+
+      dispatch({ type: 'CREATE_STUDIOTASK', payload: updatedTasks });
+    });
+  }, []);
 
   useEffect(() => {
     localStorage.setItem(
@@ -170,7 +179,7 @@ function StudioTaskView() {
       if (response !== null) {
         handleLoadingStateChange('finalMessage', 'Zlecenie utworzone!');
         setFormValue(initialTaskObject);
-
+        socket.emit('taskAdded', response); // Emit updated tasks
         dispatch({ type: 'CREATE_STUDIOTASK', payload: response });
       } else {
         handleLoadingStateChange('finalMessage', 'Coś poszło nie tak :(');

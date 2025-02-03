@@ -86,6 +86,10 @@ io.on('connection', (socket) => {
     io.emit('refreshTasks', task); // Broadcast to all clients
   });
 
+  socket.on('taskAdded', (task) => {
+    socket.broadcast.emit('addTask', task);
+  });
+
   socket.on('dragConditionOff', (condition) => {
     // io.emit('disableDrag', condition);
     socket.broadcast.emit('disableDrag', condition);
