@@ -90,6 +90,14 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('addTask', task);
   });
 
+  socket.on('taskDeleted', (task) => {
+    socket.broadcast.emit('deleteTask', task);
+  });
+
+  socket.on('taskArchived', (task) => {
+    socket.broadcast.emit('archiveTask', task);
+  });
+
   socket.on('dragConditionOff', (condition) => {
     // io.emit('disableDrag', condition);
     socket.broadcast.emit('disableDrag', condition);
