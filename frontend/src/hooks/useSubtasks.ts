@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   addSubtask,
   deleteSubtask,
   updateSubtask,
 } from '../services/studio-tasks-service';
 import useStudioTasksContext from './Context/useStudioTasksContext';
+import socket from '../socket';
 
 const useSubtask = (task) => {
   const { dispatch } = useStudioTasksContext();
@@ -20,6 +21,12 @@ const useSubtask = (task) => {
     contentValue: '',
     subtaskId: '',
   });
+
+  useEffect(() => {
+    socket.on('updateSubtask', (subtasks) => {
+      dispatch({ type: 'UPDATE_SUBTASK', payload: subtasks });
+    });
+  }, []);
 
   const handleAddSubtaskInput = (object) => {
     setAddSubtaskInput((prev) => {
@@ -44,6 +51,7 @@ const useSubtask = (task) => {
       handleEditSubtask({ isLoading: true, subtaskId });
       const response = await updateSubtask({ taskId, subtaskId, subtaskData });
       dispatch({ type: 'UPDATE_SUBTASK', payload: response });
+      socket.emit('tasksUpdated', response);
     } catch (error) {
       console.error('Error saving value:', error);
     } finally {
@@ -62,6 +70,7 @@ const useSubtask = (task) => {
           done: false,
         });
         dispatch({ type: 'UPDATE_SUBTASK', payload: response });
+        socket.emit('tasksUpdated', response);
       }
     } catch (error) {
       console.error('Error saving value:', error);
@@ -78,6 +87,7 @@ const useSubtask = (task) => {
     try {
       const response = await deleteSubtask(taskId, subtaskId);
       dispatch({ type: 'UPDATE_SUBTASK', payload: response });
+      socket.emit('tasksUpdated', response);
     } catch (error) {
       console.error('Error saving value:', error);
     }

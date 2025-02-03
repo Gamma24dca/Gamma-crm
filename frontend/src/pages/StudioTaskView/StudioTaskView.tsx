@@ -82,7 +82,6 @@ function StudioTaskView() {
   useEffect(() => {
     socket.on('addTask', (updatedTasks) => {
       console.log('Received task update');
-
       dispatch({ type: 'CREATE_STUDIOTASK', payload: updatedTasks });
     });
   }, []);
