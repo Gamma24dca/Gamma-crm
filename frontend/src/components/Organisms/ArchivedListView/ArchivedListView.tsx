@@ -12,11 +12,18 @@ import TileWrapper from '../../Atoms/TileWrapper/TileWrapper';
 import SkeletonUsersLoading from '../SkeletonUsersLoading/SkeletonUsersLoading';
 import InfoBar from '../../Atoms/InfoBar/InfoBar';
 import useStudioTasksContext from '../../../hooks/Context/useStudioTasksContext';
+import socket from '../../../socket';
 
 function ArchivedListView({ activeGroupedTasks, setViewVariable }) {
   const [archivedStudioTasks, setArchivedStudioTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const { dispatch } = useStudioTasksContext();
+
+  useEffect(() => {
+    socket.on('unArchiveTask', (task) => {
+      dispatch({ type: 'CREATE_STUDIOTASK', payload: task });
+    });
+  }, []);
 
   const fetchArchivedStudioTasks = async () => {
     try {
@@ -38,6 +45,7 @@ function ArchivedListView({ activeGroupedTasks, setViewVariable }) {
     const taskColumn = activeGroupedTasks[task.status];
     const taskColumnLength = taskColumn.length;
     const lastItemOfColumnIndex = taskColumn[taskColumnLength - 1].index + 1;
+    socket.emit('taskUnarchived', task);
 
     const response = await unarchiveStudioTask({
       id: task._id,

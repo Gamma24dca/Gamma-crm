@@ -33,10 +33,14 @@ const useStudioTaskUpdate = (task, closeModal) => {
     socket.on('archiveTask', (taskToArch) => {
       dispatch({ type: 'DELETE_STUDIOTASK', payload: taskToArch });
     });
+
+    socket.on('updateTasks', (tasks) => {
+      dispatch({ type: 'SET_STUDIOTASKS', payload: tasks });
+    });
   }, []);
 
   const handleDeleteTask = async (id) => {
-    socket.emit('taskDelted', task);
+    socket.emit('taskDeleted', task);
     dispatch({ type: 'DELETE_STUDIOTASK', payload: task });
     closeModal();
     await deleteTask(id);
@@ -62,6 +66,7 @@ const useStudioTaskUpdate = (task, closeModal) => {
       await UpdateStudioTask({ id: task._id, studioTaskData: formValue });
       const res = await getAllStudioTasks();
       dispatch({ type: 'SET_STUDIOTASKS', payload: res });
+      socket.emit('tasksUpdated', res);
     } catch (error) {
       console.error('Error saving value:', error);
     }
@@ -106,6 +111,7 @@ const useStudioTaskUpdate = (task, closeModal) => {
       });
       const res = await getAllStudioTasks();
       dispatch({ type: 'SET_STUDIOTASKS', payload: res });
+      socket.emit('tasksUpdated', res);
     } catch (error) {
       console.error('Error saving value:', error);
     } finally {
@@ -138,6 +144,7 @@ const useStudioTaskUpdate = (task, closeModal) => {
       });
       const res = await getAllStudioTasks();
       dispatch({ type: 'SET_STUDIOTASKS', payload: res });
+      socket.emit('tasksUpdated', res);
     } catch (error) {
       console.error('Error saving value:', error);
     } finally {
@@ -168,6 +175,7 @@ const useStudioTaskUpdate = (task, closeModal) => {
       });
       const res = await getAllStudioTasks();
       dispatch({ type: 'SET_STUDIOTASKS', payload: res });
+      socket.emit('tasksUpdated', res);
     } catch (error) {
       console.error(error);
     }
@@ -185,6 +193,7 @@ const useStudioTaskUpdate = (task, closeModal) => {
       });
       const res = await getAllStudioTasks();
       dispatch({ type: 'SET_STUDIOTASKS', payload: res });
+      socket.emit('tasksUpdated', res);
     } catch (error) {
       console.error(error);
     }
