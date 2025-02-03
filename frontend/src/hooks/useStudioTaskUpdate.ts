@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { archiveStudioTask } from '../services/archived-studio-tasks-service';
 import {
   deleteTask,
@@ -9,6 +9,7 @@ import {
 import useStudioTasksContext from './Context/useStudioTasksContext';
 import useUsersContext from './Context/useUsersContext';
 import useCompaniesContext from './Context/useCompaniesContext';
+import socket from '../socket';
 
 const useStudioTaskUpdate = (task, closeModal) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -22,16 +23,27 @@ const useStudioTaskUpdate = (task, closeModal) => {
   });
   const { users } = useUsersContext();
   const { companies } = useCompaniesContext();
-
   const { dispatch } = useStudioTasksContext();
 
+  useEffect(() => {
+    socket.on('deleteTask', (taskToDel) => {
+      dispatch({ type: 'DELETE_STUDIOTASK', payload: taskToDel });
+    });
+
+    socket.on('archiveTask', (taskToArch) => {
+      dispatch({ type: 'DELETE_STUDIOTASK', payload: taskToArch });
+    });
+  }, []);
+
   const handleDeleteTask = async (id) => {
+    socket.emit('taskDelted', task);
     dispatch({ type: 'DELETE_STUDIOTASK', payload: task });
     closeModal();
     await deleteTask(id);
   };
 
   const handleArchiveTask = async (id) => {
+    socket.emit('taskArchived', task);
     dispatch({ type: 'DELETE_STUDIOTASK', payload: task });
     closeModal();
     await archiveStudioTask(id);
