@@ -86,6 +86,10 @@ io.on('connection', (socket) => {
     io.emit('refreshTasks', task); // Broadcast to all clients
   });
 
+  socket.on('tasksUpdated', (tasks) => {
+    socket.broadcast.emit('updateTasks', tasks);
+  });
+
   socket.on('taskAdded', (task) => {
     socket.broadcast.emit('addTask', task);
   });
@@ -96,6 +100,10 @@ io.on('connection', (socket) => {
 
   socket.on('taskArchived', (task) => {
     socket.broadcast.emit('archiveTask', task);
+  });
+
+  socket.on('taskUnarchived', (task) => {
+    socket.broadcast.emit('unArchiveTask', task);
   });
 
   socket.on('dragConditionOff', (condition) => {
