@@ -51,7 +51,7 @@ const useSubtask = (task) => {
       handleEditSubtask({ isLoading: true, subtaskId });
       const response = await updateSubtask({ taskId, subtaskId, subtaskData });
       dispatch({ type: 'UPDATE_SUBTASK', payload: response });
-      socket.emit('tasksUpdated', response);
+      socket.emit('subtaskUpdated', response);
     } catch (error) {
       console.error('Error saving value:', error);
     } finally {
@@ -70,7 +70,7 @@ const useSubtask = (task) => {
           done: false,
         });
         dispatch({ type: 'UPDATE_SUBTASK', payload: response });
-        socket.emit('tasksUpdated', response);
+        socket.emit('subtaskUpdated', response);
       }
     } catch (error) {
       console.error('Error saving value:', error);
@@ -87,7 +87,7 @@ const useSubtask = (task) => {
     try {
       const response = await deleteSubtask(taskId, subtaskId);
       dispatch({ type: 'UPDATE_SUBTASK', payload: response });
-      socket.emit('tasksUpdated', response);
+      socket.emit('subtaskUpdated', response);
     } catch (error) {
       console.error('Error saving value:', error);
     }
