@@ -106,6 +106,10 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('unArchiveTask', task);
   });
 
+  socket.on('subtaskUpdated', (subtask) => {
+    socket.broadcast.emit('updateSubtask', subtask);
+  });
+
   socket.on('dragConditionOff', (condition) => {
     // io.emit('disableDrag', condition);
     socket.broadcast.emit('disableDrag', condition);
