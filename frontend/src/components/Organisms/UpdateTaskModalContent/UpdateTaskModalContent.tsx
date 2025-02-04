@@ -81,9 +81,9 @@ function UpdateTaskModalContent({
               <p className={styles.sectionTitle}>Klient</p>
               <div className={styles.clientContainer}>
                 <p
-                  className={`${styles.modalCompanyBatch} ${
-                    styles[`${companyClass}`]
-                  }`}
+                  className={`${styles.modalCompanyBatch} ${[
+                    `${companyClass}`,
+                  ]}`}
                 >
                   {task.client}
                 </p>
