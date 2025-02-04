@@ -89,11 +89,7 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
               className={taskClass}
             >
               <div className={styles.clientInfoWrapper}>
-                <p
-                  className={`${styles.clientName} ${
-                    styles[`${companyClass}`]
-                  }`}
-                >
+                <p className={`${styles.clientName} ${[`${companyClass}`]}`}>
                   {task.client}
                 </p>
                 <p className={`${styles.clientPerson}`}>{task.clientPerson}</p>
