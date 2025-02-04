@@ -137,7 +137,6 @@ function KanbanView({ filterArray, companiesFilterArray }) {
       } finally {
         setIsDragAllowed(true);
         socket.emit('dragConditionOn', true);
-
         console.log('dragging enabled');
       }
     },
@@ -157,12 +156,14 @@ function KanbanView({ filterArray, companiesFilterArray }) {
     if (!destination) return;
 
     setIsDragAllowed(false);
+    console.log('testestestst');
 
     try {
       if (
         destination.droppableId === source.droppableId &&
         destination.index === source.index
       ) {
+        setIsDragAllowed(true);
         return;
       }
 

@@ -188,23 +188,23 @@ function CompaniesView() {
       <ViewContainer>
         <ListContainer>
           <InfoBar>
-            <div className={styles.tileElementInfoBar}>
-              <p>Firma</p>
-            </div>
-            <div className={styles.tileElementInfoBar}>
-              <p>Numer</p>
-            </div>
-            <div className={styles.tileElementInfoBar}>
-              <p>Email</p>
-            </div>
-            <div className={styles.tileElementInfoBar}>
-              <p>Strona</p>
-            </div>
-            <div className={styles.tileElementInfoBar}>
-              <p>Zlecenia</p>
-            </div>
-            <div className={styles.usersImgContainer}>
-              <p>Graficy</p>
+            <div className={styles.companyInfoBarContainer}>
+              <div className={styles.tileElementInfoBar}>
+                <p>Firma</p>
+              </div>
+              <div className={styles.tileElementInfoBar}>
+                <p>Numer</p>
+              </div>
+              <div className={styles.tileElementInfoBar}>
+                <p>Email</p>
+              </div>
+              <div className={styles.tileElementInfoBar}>
+                <p>Strona</p>
+              </div>
+
+              <div className={styles.usersImgContainer}>
+                <p>Zespół</p>
+              </div>
             </div>
           </InfoBar>
           {companies?.length ? (

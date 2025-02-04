@@ -98,3 +98,19 @@ ArchivedStudioTaskRouter.delete(
     }
   },
 );
+
+ArchivedStudioTaskRouter.get(
+  '/search/:query?',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const query = req.params.query;
+      const searchResult =
+        await ArchivedStudioTaskController.archivedStudioTaskSearch(query);
+      res.status(StatusCodes.ACCEPTED).json(searchResult);
+    } catch (error) {
+      console.error('Error', error.message);
+      res.status(StatusCodes.BAD_GATEWAY).json({ message: error.message });
+    }
+  },
+);
