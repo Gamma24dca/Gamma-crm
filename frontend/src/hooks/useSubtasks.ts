@@ -23,8 +23,8 @@ const useSubtask = (task) => {
   });
 
   useEffect(() => {
-    socket.on('updateSubtask', (subtasks) => {
-      dispatch({ type: 'UPDATE_SUBTASK', payload: subtasks });
+    socket.on('updateSubtask', (subtask) => {
+      dispatch({ type: 'UPDATE_SUBTASK', payload: subtask });
     });
   }, []);
 
