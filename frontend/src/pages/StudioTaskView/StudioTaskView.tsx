@@ -313,16 +313,43 @@ function StudioTaskView() {
                         {...getItemProps({ item, index })}
                         className={styles.highlightedCompanyItem}
                       >
-                        <p className={styles.clientBatch}>{item.client}</p>
-                        {item.title}
+                        <div className={styles.clientInfoWrapper}>
+                          <p
+                            className={`${styles.clientBatch} ${[
+                              `${item.client}`,
+                            ]}`}
+                          >
+                            {item.client}
+                          </p>
+                          <p
+                            className={`${styles.clientBatch} ${styles.clientPersonBatch}`}
+                          >
+                            {item.clientPerson}
+                          </p>
+                        </div>
+
+                        <span className={styles.searchTitle}>{item.title}</span>
                       </p>
                     ) : (
                       <p
                         {...getItemProps({ item, index })}
                         className={styles.companyItem}
                       >
-                        <p className={styles.clientBatch}>{item.client}</p>
-                        {item.title}
+                        <div className={styles.clientInfoWrapper}>
+                          <p
+                            className={`${styles.clientBatch} ${[
+                              `${item.client}`,
+                            ]}`}
+                          >
+                            {item.client}
+                          </p>
+                          <p
+                            className={`${styles.clientBatch} ${styles.clientPersonBatch}`}
+                          >
+                            {item.clientPerson}
+                          </p>
+                        </div>
+                        <span className={styles.searchTitle}>{item.title}</span>
                       </p>
                     )}
                   </div>
