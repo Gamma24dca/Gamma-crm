@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
-import { isEqual } from 'lodash';
+import { useEffect, useRef, useState } from 'react';
+import { debounce, isEqual } from 'lodash';
+import { useCombobox } from 'downshift';
 import styles from './StudioTaskView.module.css';
 import { getTasksByStatus, statuses, statusNames } from '../../statuses';
 import useStudioTasksContext from '../../hooks/Context/useStudioTasksContext';
@@ -10,7 +11,6 @@ import {
 } from '../../services/studio-tasks-service';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
 import ControlBarTitle from '../../components/Atoms/ControlBar/Title/ControlBarTitle';
-import SearchInput from '../../components/Atoms/ControlBar/SearchInput/SearchInput';
 import CTA from '../../components/Atoms/CTA/CTA';
 import useModal from '../../hooks/useModal';
 import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplate';
@@ -25,6 +25,8 @@ import KanbanView from '../../components/Organisms/KanbanView/KanbanView';
 import ArchivedListView from '../../components/Organisms/ArchivedListView/ArchivedListView';
 import MultiselectDropdown from '../../components/Molecules/MultiselectDropdown/MultiselectDropdown';
 import socket from '../../socket';
+import { SearchArchivedTask } from '../../services/archived-studio-tasks-service';
+import SearchInput from '../../components/Atoms/ControlBar/SearchInput/SearchInput';
 
 const initialTaskObject: StudioTaskTypes = {
   searchID: 0,
@@ -60,6 +62,8 @@ function StudioTaskView() {
   const { showModal, exitAnim, openModal, closeModal } = useModal();
   const [isUsersSelectOpen, setIsUsersSelectOpen] = useState(false);
   const [isCompaniesSelectOpen, setIsCompaniesSelectOpen] = useState(false);
+  const [matchingTasks, setMatchingTasks] = useState([]);
+
   const [loadingState, setLoadingState] = useState({
     isLoading: false,
     isFinalMessage: false,
@@ -214,6 +218,40 @@ function StudioTaskView() {
     fetchTasks();
   }, [dispatch, studioTasks]);
 
+  const latestInputValue = useRef('');
+
+  const getMatchingTasks = debounce(async ({ inputValue }) => {
+    if (inputValue !== latestInputValue.current) return;
+
+    try {
+      const matchedArchivedTasks = await SearchArchivedTask(inputValue);
+      if (inputValue === latestInputValue.current) {
+        setMatchingTasks(matchedArchivedTasks);
+      }
+    } catch (error) {
+      console.error('Error fetching matching companies:', error.message);
+    }
+    if (!inputValue) setMatchingTasks([]);
+  }, 200);
+
+  const {
+    isOpen,
+    getMenuProps,
+    getInputProps,
+    highlightedIndex,
+    getItemProps,
+  } = useCombobox({
+    items: matchingTasks,
+    onInputValueChange: ({ inputValue }) => {
+      latestInputValue.current = inputValue;
+      getMatchingTasks({ inputValue });
+    },
+    onSelectedItemChange: () => {
+      setViewVariable('Archiwum');
+    },
+    itemToString: (item) => (item ? item.name : ''),
+  });
+
   return (
     <>
       <ModalTemplate
@@ -247,7 +285,52 @@ function StudioTaskView() {
           handleValueChange={handleViewChange}
           optionData={viewOptions}
         />
-        <SearchInput />
+        <div className={styles.searchContainer}>
+          <SearchInput
+            type="text"
+            name="Search"
+            id="Search"
+            placeholder="Szukaj"
+            className={styles.input}
+            {...getInputProps()}
+          />
+          <div
+            {...getMenuProps()}
+            className={
+              isOpen && matchingTasks.length > 0
+                ? styles.searchResultContainer
+                : styles.hidden
+            }
+            aria-label="results"
+          >
+            {isOpen && viewVariable === 'Aktywne' && (
+              <>
+                <p className={styles.dropdownTitle}>Zarchwizowane:</p>
+                {matchingTasks.map((item, index) => (
+                  <div key={item._id} className={styles.searchedCompanyItem}>
+                    {highlightedIndex === index ? (
+                      <p
+                        {...getItemProps({ item, index })}
+                        className={styles.highlightedCompanyItem}
+                      >
+                        <p className={styles.clientBatch}>{item.client}</p>
+                        {item.title}
+                      </p>
+                    ) : (
+                      <p
+                        {...getItemProps({ item, index })}
+                        className={styles.companyItem}
+                      >
+                        <p className={styles.clientBatch}>{item.client}</p>
+                        {item.title}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </>
+            )}
+          </div>
+        </div>
         <div className={styles.buttonsWrapper}>
           <CTA
             onClick={() => {
@@ -408,6 +491,7 @@ function StudioTaskView() {
         <ArchivedListView
           activeGroupedTasks={tasksByStatus}
           setViewVariable={setViewVariable}
+          matchingTasks={matchingTasks}
         />
       )}
     </>

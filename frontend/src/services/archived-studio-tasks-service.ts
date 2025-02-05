@@ -103,3 +103,29 @@ export async function unarchiveStudioTask({ id, index }) {
     return null;
   }
 }
+
+export async function SearchArchivedTask(query) {
+  try {
+    if (!query) {
+      return [];
+    }
+    const response = await fetch(
+      `https://gamma-crm.onrender.com/api/archivedstudiotasks/search/${query}`,
+      {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    if (response.ok) {
+      return await response.json();
+    }
+  } catch (error) {
+    console.error(error);
+    if (Config.isDev) {
+      throw new Error('Archived task search', error.message);
+    }
+  }
+}
