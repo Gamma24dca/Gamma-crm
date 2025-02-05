@@ -14,7 +14,11 @@ import InfoBar from '../../Atoms/InfoBar/InfoBar';
 import useStudioTasksContext from '../../../hooks/Context/useStudioTasksContext';
 import socket from '../../../socket';
 
-function ArchivedListView({ activeGroupedTasks, setViewVariable }) {
+function ArchivedListView({
+  activeGroupedTasks,
+  setViewVariable,
+  matchingTasks,
+}) {
   const [archivedStudioTasks, setArchivedStudioTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const { dispatch } = useStudioTasksContext();
@@ -58,6 +62,9 @@ function ArchivedListView({ activeGroupedTasks, setViewVariable }) {
     setViewVariable('Aktywne');
   };
 
+  const tasksArray =
+    matchingTasks.length > 0 ? matchingTasks : archivedStudioTasks;
+
   return (
     <ViewContainer>
       <ListContainer>
@@ -89,9 +96,9 @@ function ArchivedListView({ activeGroupedTasks, setViewVariable }) {
         {isLoading ? (
           <SkeletonUsersLoading />
         ) : (
-          archivedStudioTasks.length > 0 && (
+          tasksArray.length > 0 && (
             <>
-              {archivedStudioTasks.map((studioTask) => {
+              {tasksArray.map((studioTask) => {
                 return (
                   <TileWrapper key={studioTask._id}>
                     <div className={styles.tileContainer}>

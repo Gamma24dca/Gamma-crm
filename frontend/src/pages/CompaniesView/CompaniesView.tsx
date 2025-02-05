@@ -21,6 +21,7 @@ import useCompaniesContext from '../../hooks/Context/useCompaniesContext';
 import useSelectUser from '../../hooks/useSelectUser';
 import AddCompanyForm from '../../components/Organisms/AddCompanyForm/AddCompanyForm';
 import CompanyTile from '../../components/Organisms/CompanyTile/CompanyTile';
+import SearchInput from '../../components/Atoms/ControlBar/SearchInput/SearchInput';
 
 const initialCompanyObject = {
   name: '',
@@ -128,7 +129,7 @@ function CompaniesView() {
         /> */}
 
         <div className={styles.searchContainer}>
-          <input
+          <SearchInput
             type="text"
             name="Search"
             id="Search"
