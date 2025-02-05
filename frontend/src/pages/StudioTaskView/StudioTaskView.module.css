@@ -187,20 +187,34 @@
   font-weight: 600;
 }
 
+.clientInfoWrapper {
+  display: flex;
+  gap: 5px;
+}
+
 .clientBatch {
   width: fit-content;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
   height: 15px;
   color: var(--color-lighter);
-  padding: 2px 10px;
+  padding: 1px 8px;
   border-radius: 20px;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
   display: flex;
   align-items: center;
-  margin: 0;
+  margin: 0 0 5px 0;
+}
+
+.clientPersonBatch {
+  background-color: var(--color-navButton);
+}
+
+.searchTitle {
+  font-size: 13px;
+  margin: 15px 0 0 5px;
 }
 
 @keyframes appear {
