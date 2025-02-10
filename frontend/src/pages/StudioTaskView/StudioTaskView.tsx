@@ -234,6 +234,21 @@ function StudioTaskView() {
     if (!inputValue) setMatchingTasks([]);
   }, 200);
 
+  const handleUserAssign = (userOnDrop) => {
+    if (participantsToFilter.includes(userOnDrop._id)) {
+      setParticipantsToFilter(
+        participantsToFilter.filter((part) => part !== userOnDrop._id)
+      );
+
+      setIsUsersSelectOpen(true);
+    } else {
+      setParticipantsToFilter((prev) => {
+        return [...prev, userOnDrop._id];
+      });
+      setIsUsersSelectOpen(true);
+    }
+  };
+
   const {
     isOpen,
     getMenuProps,
@@ -423,6 +438,16 @@ function StudioTaskView() {
                         <div
                           key={userOnDrop._id}
                           className={styles.userWrapper}
+                          role="button"
+                          tabIndex={0}
+                          onClick={() => {
+                            handleUserAssign(userOnDrop);
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              handleUserAssign(userOnDrop);
+                            }
+                          }}
                         >
                           <input
                             className={styles.checkInput}
@@ -431,22 +456,7 @@ function StudioTaskView() {
                               userOnDrop._id
                             )}
                             onChange={() => {
-                              if (
-                                participantsToFilter.includes(userOnDrop._id)
-                              ) {
-                                setParticipantsToFilter(
-                                  participantsToFilter.filter(
-                                    (part) => part !== userOnDrop._id
-                                  )
-                                );
-
-                                setIsUsersSelectOpen(true);
-                              } else {
-                                setParticipantsToFilter((prev) => {
-                                  return [...prev, userOnDrop._id];
-                                });
-                                setIsUsersSelectOpen(true);
-                              }
+                              handleUserAssign(userOnDrop);
                             }}
                           />
                           <p>{userOnDrop.name}</p>
@@ -465,7 +475,46 @@ function StudioTaskView() {
                 >
                   {companies.map((company) => {
                     return (
-                      <div key={company._id} className={styles.userWrapper}>
+                      <div
+                        key={company._id}
+                        className={styles.userWrapper}
+                        role="button"
+                        tabIndex={0}
+                        onClick={() => {
+                          if (companiesToFilter.includes(company.name)) {
+                            setCompaniesToFilter(
+                              companiesToFilter.filter(
+                                (part) => part !== company.name
+                              )
+                            );
+
+                            setIsCompaniesSelectOpen(true);
+                          } else {
+                            setCompaniesToFilter((prev) => {
+                              return [...prev, company.name];
+                            });
+                            setIsCompaniesSelectOpen(true);
+                          }
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            if (companiesToFilter.includes(company.name)) {
+                              setCompaniesToFilter(
+                                companiesToFilter.filter(
+                                  (part) => part !== company.name
+                                )
+                              );
+
+                              setIsCompaniesSelectOpen(true);
+                            } else {
+                              setCompaniesToFilter((prev) => {
+                                return [...prev, company.name];
+                              });
+                              setIsCompaniesSelectOpen(true);
+                            }
+                          }
+                        }}
+                      >
                         <input
                           className={styles.checkInput}
                           type="checkbox"

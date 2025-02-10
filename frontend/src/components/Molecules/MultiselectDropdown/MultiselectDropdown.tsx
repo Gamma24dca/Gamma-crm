@@ -11,11 +11,23 @@ function MultiselectDropdown({
     <button
       type="button"
       className={styles.openSelectButton}
-      onClick={() => {
-        setIsSelectOpen((prev) => !prev);
-      }}
+      // onClick={() => {
+      //   setIsSelectOpen(true);
+      // }}
     >
-      <div className={styles.labelWrapper}>
+      <div
+        className={styles.labelWrapper}
+        role="button"
+        onClick={() => {
+          setIsSelectOpen((prev) => !prev);
+        }}
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            setIsSelectOpen((prev) => !prev);
+          }
+        }}
+      >
         <p className={styles.buttonLabel}>{label}</p>
 
         <Icon
@@ -28,7 +40,19 @@ function MultiselectDropdown({
 
       {isSelectOpen && (
         <>
-          <div className={styles.overlay} />
+          <div
+            className={styles.overlay}
+            role="button"
+            onClick={() => {
+              setIsSelectOpen(false);
+            }}
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                setIsSelectOpen(false);
+              }
+            }}
+          />
           <div className={styles.selectContainer}>{children}</div>
         </>
       )}
