@@ -301,14 +301,7 @@ function StudioTaskView() {
           optionData={viewOptions}
         />
         <div className={styles.searchContainer}>
-          <SearchInput
-            type="text"
-            name="Search"
-            id="Search"
-            placeholder="Szukaj"
-            className={styles.input}
-            {...getInputProps()}
-          />
+          <SearchInput {...getInputProps()} />
           <div
             {...getMenuProps()}
             className={
@@ -324,7 +317,7 @@ function StudioTaskView() {
                 {matchingTasks.map((item, index) => (
                   <div key={item._id} className={styles.searchedCompanyItem}>
                     {highlightedIndex === index ? (
-                      <p
+                      <div
                         {...getItemProps({ item, index })}
                         className={styles.highlightedCompanyItem}
                       >
@@ -344,9 +337,9 @@ function StudioTaskView() {
                         </div>
 
                         <span className={styles.searchTitle}>{item.title}</span>
-                      </p>
+                      </div>
                     ) : (
-                      <p
+                      <div
                         {...getItemProps({ item, index })}
                         className={styles.companyItem}
                       >
@@ -365,7 +358,7 @@ function StudioTaskView() {
                           </p>
                         </div>
                         <span className={styles.searchTitle}>{item.title}</span>
-                      </p>
+                      </div>
                     )}
                   </div>
                 ))}

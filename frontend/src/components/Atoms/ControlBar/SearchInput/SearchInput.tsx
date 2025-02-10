@@ -1,14 +1,20 @@
+import { forwardRef } from 'react';
 import styles from './SearchInput.module.css';
 
-function SearchInput({ ...restProps }) {
+const SearchInput = forwardRef<
+  HTMLInputElement,
+  React.InputHTMLAttributes<HTMLInputElement>
+>(({ ...props }, ref) => {
   return (
     <input
+      ref={ref}
       className={styles.navInput}
-      type="text"
       placeholder="Szukaj"
-      {...restProps}
+      type="text"
+      {...props}
     />
   );
-}
+});
+SearchInput.displayName = 'SearchInput';
 
 export default SearchInput;
