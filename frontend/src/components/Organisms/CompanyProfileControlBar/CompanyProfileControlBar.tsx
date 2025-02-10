@@ -1,38 +1,22 @@
-import { useEffect, useState } from 'react';
 import { Icon } from '@iconify/react';
 import BackButton from '../../Atoms/BackButton/BackButton';
 import styles from './CompanyProfileControlBar.module.css';
 import CTA from '../../Atoms/CTA/CTA';
 import Select from '../../Atoms/Select/Select';
-
-const months = [
-  'Styczeń',
-  'Luty',
-  'Marzec',
-  'Kwiecień',
-  'Maj',
-  'Czerwiec',
-  'Lipiec',
-  'Sierpień',
-  'Wrzesień',
-  'Październik',
-  'Listopad',
-  'Grudzień',
-];
+import useCurrentDate from '../../../hooks/useCurrentDate';
+import summarizeHours from '../../../utils/SummarizeHours';
 
 function CompanyProfileControlBar({ company, openModal, tasks }) {
-  const [selectedMonth, setSelectedMonth] = useState<string>('');
+  const {
+    selectedMonth,
+    selectedYear,
+    handleMonthChange,
+    handleYearChange,
+    months,
+    years,
+  } = useCurrentDate();
 
-  const handleMonthChange = (e) => {
-    setSelectedMonth(e.target.value);
-  };
-
-  useEffect(() => {
-    const currentMonthIndex = new Date().getMonth();
-    setSelectedMonth(months[currentMonthIndex]);
-  }, []);
-
-  const totalHours = tasks.reduce((acc, task) => acc + task.hours, 0);
+  const totalHours = summarizeHours(tasks);
 
   return (
     <>
@@ -59,22 +43,17 @@ function CompanyProfileControlBar({ company, openModal, tasks }) {
         ) : (
           <div className={styles.companyNameLoader} />
         )}
-        {/* <select
-          id="month-select"
-          value={selectedMonth}
-          onChange={handleMonthChange}
-          className={styles.selectInput}
-        >
-          {months.map((month) => (
-            <option key={month} value={month}>
-              {month}
-            </option>
-          ))}
-        </select> */}
+
         <Select
           value={selectedMonth}
           handleValueChange={handleMonthChange}
           optionData={months}
+        />
+
+        <Select
+          value={selectedYear}
+          handleValueChange={handleYearChange}
+          optionData={years}
         />
       </div>
       <div className={styles.center}>

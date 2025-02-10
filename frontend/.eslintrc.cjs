@@ -48,6 +48,7 @@ module.exports = {
     'react-hooks/exhaustive-deps': 'off',
     'jsx-a11y/no-noninteractive-element-to-interactive-role': 'off',
     'jsx-a11y/control-has-associated-label': 'off',
+    'react/no-array-index-key': 'off',
 
     'react/jsx-filename-extension': [
       1,
