@@ -1,6 +1,7 @@
 import { Link, NavLink } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import styles from './SideNavigation.module.css';
+import useSideNavHide from '../../../hooks/useSideNavHide';
 
 const sideNavButtons = [
   {
@@ -42,14 +43,30 @@ const sideNavButtons = [
 ];
 
 function SideNavigation() {
+  const { isSideNavHidden, setIsSideNavHidden } = useSideNavHide();
+
   return (
-    <div className={styles.sideNavContainer}>
+    <div
+      className={`${
+        isSideNavHidden
+          ? styles.hiddenSideNavContainer
+          : styles.sideNavContainer
+      }`}
+    >
       <Link to="/" className={styles.logoContainer}>
-        <img
-          src="https://res.cloudinary.com/dpktrptfr/image/upload/v1679038488/HomePage/orange.png"
-          alt="Gamma logo"
-          className={styles.logo}
-        />
+        {isSideNavHidden ? (
+          <img
+            src="https://res.cloudinary.com/dpktrptfr/image/upload/v1739274992/Gletter_ro2xia.svg"
+            alt="Gamma logo"
+            className={styles.smallLogo}
+          />
+        ) : (
+          <img
+            src="https://res.cloudinary.com/dpktrptfr/image/upload/v1679038488/HomePage/orange.png"
+            alt="Gamma logo"
+            className={styles.logo}
+          />
+        )}
       </Link>
 
       <div className={styles.buttonsContainer}>
@@ -69,7 +86,14 @@ function SideNavigation() {
                   height="28"
                   className={styles.icon}
                 />
-                <button type="button" className={styles.sideNavBtn}>
+                <button
+                  type="button"
+                  className={`${
+                    isSideNavHidden
+                      ? styles.hiddenSideNavBtn
+                      : styles.sideNavBtn
+                  }`}
+                >
                   {btn.name[0].toUpperCase() + btn.name.slice(1)}
                 </button>
               </NavLink>
@@ -77,6 +101,29 @@ function SideNavigation() {
           })}
         </div>
       </div>
+      <button
+        type="button"
+        className={styles.hideSideNavButton}
+        onClick={() => {
+          setIsSideNavHidden((prev) => !prev);
+        }}
+      >
+        <Icon
+          className={`${
+            isSideNavHidden ? styles.showIcon : styles.hideSideNavIcon
+          }`}
+          icon="clarity:eye-hide-line"
+          width="20"
+          height="20"
+        />
+        <span
+          className={`${
+            isSideNavHidden ? styles.hideButtonText : styles.showButtonText
+          }`}
+        >
+          Zwiń menu
+        </span>
+      </button>
     </div>
   );
 }
