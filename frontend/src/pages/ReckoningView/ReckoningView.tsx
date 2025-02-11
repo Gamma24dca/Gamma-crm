@@ -146,7 +146,14 @@ function StudioTaskView() {
                   <div className={styles.reckTaskItem}>
                     {reckTask.taskTitle}
                   </div>
-                  <div className={styles.reckTaskItem}>{reckTask.comment}</div>
+                  {reckTask.comment ? (
+                    <div className={styles.reckTaskItem}>
+                      {reckTask.comment && reckTask.comment}
+                    </div>
+                  ) : (
+                    <div className={styles.reckTaskItem}>Brak opisu</div>
+                  )}
+
                   <div className={styles.reckTaskItem}>
                     {reckTask.printSpec}
                   </div>
