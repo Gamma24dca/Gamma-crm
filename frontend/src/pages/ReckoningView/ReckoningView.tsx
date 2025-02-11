@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
 import ControlBarTitle from '../../components/Atoms/ControlBar/Title/ControlBarTitle';
-import InfoBar from '../../components/Atoms/InfoBar/InfoBar';
+// import InfoBar from '../../components/Atoms/InfoBar/InfoBar';
 import ListContainer from '../../components/Atoms/ListContainer/ListContainer';
 import Select from '../../components/Atoms/Select/Select';
 import ViewContainer from '../../components/Atoms/ViewContainer/ViewContainer';
@@ -24,7 +24,7 @@ const mockedTasks = [
     _id: 'ig35c',
     worker: 'Bartek',
     month: 'marzec',
-    company: 'Aksil',
+    company: 'Axa',
     createdAt: '2024.03.03',
     client: 'Stachowiczk Joanna',
     taskTitle: 'AKSIL_KATALOG_PRODUKTOW 2024',
@@ -84,7 +84,7 @@ function StudioTaskView() {
   return (
     <>
       <ControlBar>
-        <ControlBarTitle>Roliczenie</ControlBarTitle>
+        <ControlBarTitle>Rozliczenie</ControlBarTitle>
         <Select
           value={selectedMonth}
           handleValueChange={handleMonthChange}
@@ -99,7 +99,7 @@ function StudioTaskView() {
       </ControlBar>
       <ViewContainer>
         <ListContainer>
-          <InfoBar>
+          {/* <InfoBar>
             <div className={styles.infoBarContainer}>
               <p>Firma</p>
               <p>Klient</p>
@@ -115,21 +115,44 @@ function StudioTaskView() {
                 })}
               </div>
             </div>
-          </InfoBar>
+          </InfoBar> */}
 
           <div className={styles.reckoningContainer}>
+            <div className={styles.infoBar}>
+              <p className={styles.infoBarElement}>Firma</p>
+              <p className={styles.infoBarElement}>Klient</p>
+              <p className={styles.infoBarElement}>Tytuł</p>
+              <p className={styles.infoBarElement}>Opis</p>
+              <p className={styles.infoBarElement}>Druk(co)</p>
+              <p className={styles.infoBarElement}>Druk(gdzie)</p>
+              <div className={styles.daysWrapper}>
+                {selectedMonthDaysArray.map((dayTile, index) => {
+                  return (
+                    <p className={styles.dayInfoPar} key={index}>
+                      {index + 1}
+                    </p>
+                  );
+                })}
+              </div>
+            </div>
             {mockedTasks.map((reckTask) => {
               return (
                 <div
                   className={styles.reckoningItemContainer}
                   key={reckTask._id}
                 >
-                  <div>{reckTask.company}</div>
-                  <div>{reckTask.client}</div>
-                  <div>{reckTask.taskTitle}</div>
-                  <div>{reckTask.comment}</div>
-                  <div>{reckTask.printSpec}</div>
-                  <div>{reckTask.printWhere}</div>
+                  <div className={styles.reckTaskItem}>{reckTask.company}</div>
+                  <div className={styles.reckTaskItem}>{reckTask.client}</div>
+                  <div className={styles.reckTaskItem}>
+                    {reckTask.taskTitle}
+                  </div>
+                  <div className={styles.reckTaskItem}>{reckTask.comment}</div>
+                  <div className={styles.reckTaskItem}>
+                    {reckTask.printSpec}
+                  </div>
+                  <div className={styles.reckTaskItem}>
+                    {reckTask.printWhere}
+                  </div>
 
                   <div className={styles.daysWrapper}>
                     {selectedMonthDaysArray.map((dayTile, index) => {

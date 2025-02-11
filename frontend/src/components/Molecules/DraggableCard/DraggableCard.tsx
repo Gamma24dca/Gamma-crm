@@ -112,7 +112,20 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
                 )}
               </div>
               <div className={styles.subtasksCountWrapper}>
-                <Icon icon="material-symbols:task-alt" width="12" height="12" />
+                {doneSubtasks === subtasksLength ? (
+                  <Icon
+                    icon="material-symbols:task-alt"
+                    width="12"
+                    height="12"
+                    className={styles.greenDoneSubtasksIcon}
+                  />
+                ) : (
+                  <Icon
+                    icon="material-symbols:task-alt"
+                    width="12"
+                    height="12"
+                  />
+                )}
                 <div>
                   <span>{doneSubtasks}/</span>
                   <span>{subtasksLength}</span>
