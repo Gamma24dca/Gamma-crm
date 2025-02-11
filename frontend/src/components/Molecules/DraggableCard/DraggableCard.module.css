@@ -158,33 +158,6 @@
   overflow: hidden;
 }
 
-/* .Goodyear {
-  background-color: rgb(0, 78, 168);
-}
-
-.Axa {
-  background-color: green;
-}
-
-.Shell,
-.ShellSFS,
-.ShellCRT,
-.ShellGlobalProduct {
-  background-color: #ffc600;
-}
-
-.Mateo {
-  background-color: #892f23;
-}
-
-.Premio {
-  background-color: #002855;
-}
-
-.Santander {
-  background-color: #ec0000;
-} */
-
 .userDisplayWrapper {
   position: absolute;
   right: 10px;
@@ -204,12 +177,6 @@
   top: 10px;
   right: 20px;
 }
-
-/* .date {
-    font-size: 11px;
-    position: absolute;
-    right: 50%;
-  } */
 
 .datesWrapper {
   display: flex;
@@ -253,6 +220,10 @@
     top: 10px;
     right: 20px;
   }
+}
+
+.greenDoneSubtasksIcon {
+  color: var(--color-orange);
 }
 
 /* ///////Modal/////// */
