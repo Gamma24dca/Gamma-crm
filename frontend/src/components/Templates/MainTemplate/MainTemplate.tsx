@@ -12,7 +12,7 @@ function MainTemplate({ children }: ChildrenProps) {
       <SideNavigation />
       <div
         className={`${
-          isSideNavHidden
+          !isSideNavHidden
             ? styles.restContentWrapper
             : styles.fullSizeRestContentWrapper
         }`}
