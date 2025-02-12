@@ -1,7 +1,7 @@
 .listContainer {
   position: relative;
   width: 95%;
-  height: 70vh;
+  height: 75vh;
   /* max-height: 670px; */
   background-color: var(--color-lighter);
   border-radius: 10px;

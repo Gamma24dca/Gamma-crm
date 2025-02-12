@@ -141,7 +141,11 @@ function StudioTaskView() {
                   className={styles.reckoningItemContainer}
                   key={reckTask._id}
                 >
-                  <div className={styles.reckTaskItem}>{reckTask.company}</div>
+                  <div
+                    className={`${styles.reckTaskItem} ${styles.companyTile}`}
+                  >
+                    {reckTask.company}
+                  </div>
                   <div className={styles.reckTaskItem}>{reckTask.client}</div>
                   <div className={styles.reckTaskItem}>
                     {reckTask.taskTitle}
