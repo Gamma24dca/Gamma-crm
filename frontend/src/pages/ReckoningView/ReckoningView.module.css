@@ -23,7 +23,7 @@
   width: 100%;
   /* padding: 0px 20px; */
   display: grid;
-  grid-template-columns: 0.3fr 0.4fr 0.7fr 1fr 0.3fr 0.3fr 1fr;
+  grid-template-columns: 0.4fr 0.4fr 0.7fr 1fr 0.3fr 0.3fr 1fr;
   /* gap: 5px; */
   /* grid-template-columns: repeat(7, 1fr); */
   grid-template-rows: 1fr;
@@ -38,9 +38,9 @@
   color: var(--color-lighter);
 }
 
-.reckTaskItem {
+.reckTaskItem,
+.darkerReckTaskItem {
   font-size: 13px;
-  border: 1px solid gainsboro;
   text-align: center;
   padding: 5px;
   border-radius: 5px;
@@ -54,6 +54,18 @@
   }
 }
 
+.darkerReckTaskItem:not(:first-child) {
+  background-color: #dde3ef;
+}
+.reckTaskItem:not(:first-child) {
+  background-color: #f4f7fd;
+}
+
+.companyTile {
+  font-weight: 600;
+  color: var(--color-lighter);
+}
+
 .infoBarElement {
   margin: 0;
   text-align: center;
@@ -61,9 +73,10 @@
   font-weight: 600;
 }
 
-.dayTile {
-  width: 20px;
-  height: 20px;
+.dayTile,
+.weekendDayTile {
+  width: 22px;
+  height: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -74,10 +87,15 @@
   font-weight: 600;
 }
 
+.weekendDayTile {
+  background-color: var(--color-orange);
+  opacity: 0.7;
+}
+
 .dayInfoPar {
   font-size: 14px;
   font-weight: 600;
-  width: 20px;
+  width: 22px;
   text-align: center;
   margin: 0;
 }
