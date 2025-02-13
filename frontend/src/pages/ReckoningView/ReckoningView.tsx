@@ -56,7 +56,7 @@ const mockedTasks = [
     _id: '3x8[2',
     worker: 'Edyta',
     month: 'kwiecień',
-    company: 'Santander',
+    company: 'Mateo',
     createdAt: '2024.04.08',
     client: 'Ożóg Joanna',
     taskTitle: 'Avik Animation 4k',

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import styles from './SideNavigation.module.css';
@@ -44,6 +45,10 @@ const sideNavButtons = [
 
 function SideNavigation() {
   const { isSideNavHidden, setIsSideNavHidden } = useSideNavHide();
+  const [animationClass, setAnimationClass] = useState({
+    sideNavContainer: {},
+    text: {},
+  });
 
   return (
     <div
@@ -51,7 +56,7 @@ function SideNavigation() {
         isSideNavHidden
           ? styles.hiddenSideNavContainer
           : styles.sideNavContainer
-      }`}
+      } ${animationClass.sideNavContainer}`}
     >
       <Link to="/" className={styles.logoContainer}>
         {isSideNavHidden ? (
@@ -88,11 +93,11 @@ function SideNavigation() {
                 />
                 <button
                   type="button"
-                  className={`${
+                  className={`${`${
                     isSideNavHidden
                       ? styles.hiddenSideNavBtn
                       : styles.sideNavBtn
-                  }`}
+                  }`} ${animationClass.text}`}
                 >
                   {btn.name[0].toUpperCase() + btn.name.slice(1)}
                 </button>
@@ -105,6 +110,21 @@ function SideNavigation() {
         type="button"
         className={styles.hideSideNavButton}
         onClick={() => {
+          if (isSideNavHidden) {
+            setAnimationClass(() => {
+              return {
+                text: styles.showText,
+                sideNavContainer: styles.showSideNav,
+              };
+            });
+          } else {
+            setAnimationClass(() => {
+              return {
+                text: styles.hideText,
+                sideNavContainer: styles.hideSideNav,
+              };
+            });
+          }
           setIsSideNavHidden((prev) => !prev);
         }}
       >
