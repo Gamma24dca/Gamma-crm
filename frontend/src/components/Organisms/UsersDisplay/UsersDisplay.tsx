@@ -1,25 +1,10 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './UsersDisplay.module.css';
+import useShowLabel from '../../../hooks/useShowLabel';
+import HoverLabel from '../../Atoms/HoverLabel/HoverLabel';
 
 function UsersDisplay({ data, usersArray }) {
-  const [labelState, setLabelState] = useState({
-    isLabel: false,
-    userLabel: '',
-    dataTileValue: '',
-  });
-
-  const handleMouseEnter = (user, dataVal) => {
-    setLabelState({
-      isLabel: true,
-      userLabel: user.name,
-      dataTileValue: dataVal.name,
-    });
-  };
-
-  const handleMouseLeave = () => {
-    setLabelState({ isLabel: false, userLabel: '', dataTileValue: '' });
-  };
+  const { labelState, handleMouseEnter, handleMouseLeave } = useShowLabel();
 
   return (
     <div className={styles.usersImgContainer}>
@@ -36,18 +21,16 @@ function UsersDisplay({ data, usersArray }) {
                 src={user.img}
                 alt="user"
                 onMouseEnter={() => {
-                  handleMouseEnter(user, data);
+                  handleMouseEnter(user.name, data.name);
                 }}
                 onMouseLeave={() => {
                   handleMouseLeave();
                 }}
               />
               {labelState.isLabel &&
-                labelState.dataTileValue === data.name &&
-                labelState.userLabel === user.name && (
-                  <div className={styles.graphicName}>
-                    <p>{user.name}</p>
-                  </div>
+                labelState.labelValue === data.name &&
+                labelState.labelId === user.name && (
+                  <HoverLabel>{user.name}</HoverLabel>
                 )}
             </Link>
           );

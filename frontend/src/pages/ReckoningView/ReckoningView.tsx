@@ -7,6 +7,7 @@ import Select from '../../components/Atoms/Select/Select';
 import ViewContainer from '../../components/Atoms/ViewContainer/ViewContainer';
 import useCurrentDate from '../../hooks/useCurrentDate';
 import styles from './ReckoningView.module.css';
+import useShowLabel from '../../hooks/useShowLabel';
 
 function generateDaysArray(month, year) {
   const daysInMonth = new Date(year, month, 0).getDate();
@@ -79,6 +80,8 @@ function StudioTaskView() {
   } = useCurrentDate();
 
   const [selectedMonthDaysArray, setSelectedMonthDaysArray] = useState([]);
+
+  const { labelState, handleMouseEnter, handleMouseLeave } = useShowLabel();
 
   useEffect(() => {
     const monthIndex = months.indexOf(selectedMonth) + 1;
@@ -155,7 +158,23 @@ function StudioTaskView() {
                   >
                     {reckTask.company}
                   </div>
-                  <div className={`${tileClass(index)}`}>{reckTask.client}</div>
+                  <div
+                    className={`${tileClass(index)}`}
+                    onMouseEnter={() => {
+                      handleMouseEnter(reckTask.client, reckTask.client);
+                    }}
+                    onMouseLeave={() => {
+                      handleMouseLeave();
+                    }}
+                  >
+                    {reckTask.client}
+                    {labelState.isLabel &&
+                      labelState.labelValue === reckTask.client &&
+                      labelState.labelId === reckTask.client && (
+                        // <HoverLabel>{reckTask.client}</HoverLabel>
+                        <p className={styles.test}>{reckTask.client}</p>
+                      )}
+                  </div>
                   <div className={`${tileClass(index)}`}>
                     {reckTask.taskTitle}
                   </div>
