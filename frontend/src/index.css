@@ -171,6 +171,7 @@ select {
 
 .Axa {
   background-color: green;
+  opacity: 0.8;
 }
 
 .Shell,
@@ -178,16 +179,20 @@ select {
 .ShellCRT,
 .ShellGlobalProduct {
   background-color: #ffc600;
+  opacity: 0.8;
 }
 
 .Mateo {
   background-color: #892f23;
+  opacity: 0.8;
 }
 
 .Premio {
   background-color: #002855;
+  opacity: 0.8;
 }
 
 .Santander {
   background-color: #ec0000;
+  opacity: 0.8;
 }

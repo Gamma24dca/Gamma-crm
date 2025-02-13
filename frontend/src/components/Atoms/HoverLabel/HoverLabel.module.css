@@ -1,0 +1,25 @@
+.graphicName {
+  position: absolute;
+  top: 35px;
+  right: -20px;
+  display: flex;
+  align-items: center;
+  background-color: var(--color-black);
+  opacity: 0;
+  border-radius: 5px;
+  height: 30px;
+  padding: 0px 20px;
+  color: var(--color-lighter);
+  font-size: 13px;
+  animation: appear 0.3s ease forwards;
+  z-index: 30;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.7;
+  }
+}
