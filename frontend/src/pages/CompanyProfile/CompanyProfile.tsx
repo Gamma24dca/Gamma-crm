@@ -307,7 +307,7 @@ function CompanyProfile() {
       setItemsPerPage(12);
     }
     if (!is1800 && !is1600) {
-      setItemsPerPage(14);
+      setItemsPerPage(15);
     }
   }, [is1800, is1600, is1350, setItemsPerPage]);
 
