@@ -81,6 +81,8 @@ function StudioTaskView() {
 
   const [selectedMonthDaysArray, setSelectedMonthDaysArray] = useState([]);
 
+  console.log(selectedMonthDaysArray);
+
   const { labelState, handleMouseEnter, handleMouseLeave } = useShowLabel();
 
   useEffect(() => {

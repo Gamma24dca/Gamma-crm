@@ -18,6 +18,7 @@ import {
 } from './MoveStudioTask/MoveStudioTask.router';
 import { Server } from 'socket.io';
 import { createServer } from 'node:http';
+import { ReckoningTaskRouter } from './Reckoning/Reckoning.router';
 
 var corsOptions = {
   origin: ['https://gamma-crm-frontend.onrender.com', 'http://localhost:5173'],
@@ -73,6 +74,7 @@ app.use('/api/users', UserRouter);
 app.use('/api/tasks', TaskRouter);
 app.use('/api/companies', CompanyRouter);
 app.use('/api/studiotasks', StudioTaskRouter);
+app.use('/api/reckoningtasks', ReckoningTaskRouter);
 app.use('/api/archivedstudiotasks', ArchivedStudioTaskRouter);
 app.use('/api/move-studiotask', MoveStudioTaskRouter);
 app.use('/api/unarchive-sudiotask', unArchiveStudioTaskRouter);

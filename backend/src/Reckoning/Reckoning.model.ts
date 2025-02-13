@@ -1,17 +1,14 @@
 import mongoose from 'mongoose';
 
-export const StudioTaskModel = mongoose.model(
-  'StudioTask',
+export const ReckoningTaskModel = mongoose.model(
+  'ReckoningTask',
   new mongoose.Schema({
     searchID: {
       type: Number,
       required: true,
       unique: true,
     },
-    title: {
-      type: String,
-      required: true,
-    },
+
     client: {
       type: String,
       required: true,
@@ -20,14 +17,15 @@ export const StudioTaskModel = mongoose.model(
       type: String,
       required: true,
     },
-    status: {
+    title: {
       type: String,
       required: true,
     },
-    index: {
-      type: Number,
-      required: true,
+
+    description: {
+      type: String,
     },
+
     author: {
       _id: {
         type: String,
@@ -58,6 +56,15 @@ export const StudioTaskModel = mongoose.model(
     TaskType: {
       type: String,
     },
+
+    printWhat: {
+      type: String,
+    },
+
+    printWhere: {
+      type: String,
+    },
+
     participants: [
       {
         _id: {
@@ -66,33 +73,10 @@ export const StudioTaskModel = mongoose.model(
         name: {
           type: String,
         },
-        lastname: {
-          type: String,
-        },
-        email: {
-          type: String,
-        },
-        phone: {
-          type: Number,
-        },
-        job: {
-          type: String,
-        },
-        img: {
-          type: String,
-        },
+        hours: [{ hourNum: Number, isWeekend: Boolean }],
       },
     ],
-    description: {
-      type: String,
-    },
-    subtasks: [
-      {
-        content: { type: String },
-        done: { type: Boolean },
-        _id: { type: String },
-      },
-    ],
+
     startDate: {
       type: Date,
       required: true,
