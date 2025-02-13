@@ -8,12 +8,24 @@
   overflow: hidden;
 }
 
-.sideNavContainer {
+.hiddenSideNavContainer {
+  width: 3%;
+}
+
+.showSideNav {
   animation: showSideNav 0.5s ease forwards;
 }
 
-.hiddenSideNavContainer {
+.hideSideNav {
   animation: hideSideNav 0.5s ease forwards;
+}
+
+.hideText {
+  animation: hide 0.2s ease forwards;
+}
+
+.showText {
+  animation: reveal 0.2s ease forwards;
 }
 
 .logoContainer {
@@ -56,7 +68,7 @@
 }
 
 .hiddenSideNavBtn {
-  animation: hide 0.5s ease forwards;
+  opacity: 0;
 }
 
 .inactive,
@@ -125,7 +137,6 @@
 
 .hideButtonText {
   opacity: 0;
-  animation: hide 0.2s ease forwards;
 }
 
 .hideSideNavIcon {
