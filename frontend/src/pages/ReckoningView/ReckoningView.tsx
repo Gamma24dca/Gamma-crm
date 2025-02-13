@@ -9,11 +9,15 @@ import useCurrentDate from '../../hooks/useCurrentDate';
 import styles from './ReckoningView.module.css';
 
 function generateDaysArray(month, year) {
-  const daysInMonth = new Date(year, month, 0).getDate(); // Get number of days in the given month
+  const daysInMonth = new Date(year, month, 0).getDate();
   const daysArray = [];
 
   for (let i = 1; i <= daysInMonth; i += 1) {
-    daysArray.push({ hourNum: 0 }); // Assign a random value (0-19)
+    const dayOfWeek = new Date(year, month - 1, i).getDay(); // Sunday=0, Saturday=6
+    daysArray.push({
+      hourNum: 0,
+      isWeekend: dayOfWeek === 0 || dayOfWeek === 6,
+    });
   }
 
   return daysArray;
@@ -81,6 +85,11 @@ function StudioTaskView() {
 
     setSelectedMonthDaysArray(generateDaysArray(monthIndex, 2025));
   }, [selectedMonth]);
+
+  const tileClass = (index) => {
+    return index % 2 === 0 ? styles.reckTaskItem : styles.darkerReckTaskItem;
+  };
+
   return (
     <>
       <ControlBar>
@@ -135,40 +144,47 @@ function StudioTaskView() {
                 })}
               </div>
             </div>
-            {mockedTasks.map((reckTask) => {
+            {mockedTasks.map((reckTask, index) => {
               return (
                 <div
                   className={styles.reckoningItemContainer}
                   key={reckTask._id}
                 >
                   <div
-                    className={`${styles.reckTaskItem} ${styles.companyTile}`}
+                    className={`${styles.reckTaskItem} ${styles.companyTile} ${reckTask.company}`}
                   >
                     {reckTask.company}
                   </div>
-                  <div className={styles.reckTaskItem}>{reckTask.client}</div>
-                  <div className={styles.reckTaskItem}>
+                  <div className={`${tileClass(index)}`}>{reckTask.client}</div>
+                  <div className={`${tileClass(index)}`}>
                     {reckTask.taskTitle}
                   </div>
                   {reckTask.comment ? (
-                    <div className={styles.reckTaskItem}>
+                    <div className={`${tileClass(index)}`}>
                       {reckTask.comment && reckTask.comment}
                     </div>
                   ) : (
-                    <div className={styles.reckTaskItem}>Brak opisu</div>
+                    <div className={`${tileClass(index)}`}>Brak opisu</div>
                   )}
 
-                  <div className={styles.reckTaskItem}>
+                  <div className={`${tileClass(index)}`}>
                     {reckTask.printSpec}
                   </div>
-                  <div className={styles.reckTaskItem}>
+                  <div className={`${tileClass(index)}`}>
                     {reckTask.printWhere}
                   </div>
 
                   <div className={styles.daysWrapper}>
-                    {selectedMonthDaysArray.map((dayTile, index) => {
+                    {selectedMonthDaysArray.map((dayTile, dayIndex) => {
                       return (
-                        <div className={styles.dayTile} key={index}>
+                        <div
+                          className={
+                            dayTile.isWeekend
+                              ? styles.weekendDayTile
+                              : styles.dayTile
+                          }
+                          key={dayIndex}
+                        >
                           {dayTile.hourNum > 0 && dayTile.hourNum}
                         </div>
                       );
