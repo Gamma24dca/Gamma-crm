@@ -15,11 +15,21 @@ export const ReckoningTaskController = {
     const reckoningTasks = await ReckoningTaskModel.find().exec();
     const filteredByDate = reckoningTasks.filter((taskToFilter) => {
       const taskDate = new Date(taskToFilter.startDate);
+      console.log(
+        taskDate,
+        taskDate.getMonth() - 1 === month,
+        month,
+        taskDate.getFullYear().toString() === year,
+        year,
+      );
+      const TaskMonth = taskDate.getMonth();
       return (
         // month is a number not string
-        taskDate.getFullYear() === year && taskDate.getMonth() === month - 1
+        taskDate.getFullYear() === year && TaskMonth === month - 1
       );
     });
+
+    console.log(filteredByDate);
 
     const filteredReckoningTasks = filteredByDate.filter((task) => {
       return task.participants.some((part) => {
