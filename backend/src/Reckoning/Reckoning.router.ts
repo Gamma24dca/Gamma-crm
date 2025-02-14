@@ -36,6 +36,26 @@ ReckoningTaskRouter.get(
   },
 );
 
+ReckoningTaskRouter.get(
+  '/:year/:month/:userId',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const filteredReckoningTasks =
+        await ReckoningTaskController.getFilteredReckoningTasks(
+          req.params.userId,
+          req.params.year,
+          req.params.month,
+        );
+
+      res.status(StatusCodes.ACCEPTED).json(filteredReckoningTasks);
+    } catch (error) {
+      console.error(error);
+      res.status(StatusCodes.BAD_REQUEST).json({ message: error });
+    }
+  },
+);
+
 ReckoningTaskRouter.post(
   '/',
   passport.authenticate('jwt', { session: false }),
