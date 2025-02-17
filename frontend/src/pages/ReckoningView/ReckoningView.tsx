@@ -91,16 +91,12 @@ function StudioTaskView() {
   const { user } = useAuth();
   const currentUserId = user[0]._id;
 
-  console.log(currentMonthIndex + 1);
+  // console.log(currentMonthIndex + 1);
 
   useEffect(() => {
     const fetchReckoningTasks = async () => {
       try {
-        const response = await getMyReckoningTasks(
-          currentUserId,
-          '2025',
-          currentMonthIndex + 1
-        );
+        const response = await getMyReckoningTasks(currentUserId, '2025', 1);
         console.log(response);
       } catch (error) {
         console.error(error);
