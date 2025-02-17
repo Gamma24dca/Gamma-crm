@@ -19,8 +19,7 @@ export const ReckoningTaskController = {
       const TaskMonth = taskDate.getMonth();
       return (
         // month is a number not string
-        taskDate.getFullYear() === Number(year) &&
-        TaskMonth === Number(month - 1)
+        taskDate.getFullYear() === Number(year) && TaskMonth === month
       );
     });
 

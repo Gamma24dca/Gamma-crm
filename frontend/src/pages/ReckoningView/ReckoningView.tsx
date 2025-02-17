@@ -8,6 +8,8 @@ import ViewContainer from '../../components/Atoms/ViewContainer/ViewContainer';
 import useCurrentDate from '../../hooks/useCurrentDate';
 import styles from './ReckoningView.module.css';
 import useShowLabel from '../../hooks/useShowLabel';
+import useAuth from '../../hooks/useAuth';
+import { getMyReckoningTasks } from '../../services/reckoning-view-service';
 
 function generateDaysArray(month, year) {
   const daysInMonth = new Date(year, month, 0).getDate();
@@ -73,6 +75,7 @@ function StudioTaskView() {
   const {
     selectedMonth,
     selectedYear,
+    currentMonthIndex,
     handleMonthChange,
     handleYearChange,
     months,
@@ -84,6 +87,29 @@ function StudioTaskView() {
   // console.log(selectedMonthDaysArray);
 
   const { labelState, handleMouseEnter, handleMouseLeave } = useShowLabel();
+
+  const { user } = useAuth();
+  const currentUserId = user[0]._id;
+
+  console.log(currentMonthIndex + 1);
+
+  useEffect(() => {
+    const fetchReckoningTasks = async () => {
+      try {
+        const response = await getMyReckoningTasks(
+          currentUserId,
+          '2025',
+          currentMonthIndex + 1
+        );
+        console.log(response);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        console.log('fefe');
+      }
+    };
+    fetchReckoningTasks();
+  }, []);
 
   useEffect(() => {
     const monthIndex = months.indexOf(selectedMonth) + 1;
