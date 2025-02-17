@@ -19,6 +19,7 @@ const years = [2024, 2025];
 
 const useCurrentDate = () => {
   const [selectedMonth, setSelectedMonth] = useState<string>('');
+  const [currentMonthIndex, setCurrentMonthIndex] = useState<number>();
   const [selectedYear, setSelectedYear] = useState<number>();
 
   const handleMonthChange = (e) => {
@@ -30,15 +31,17 @@ const useCurrentDate = () => {
   };
 
   useEffect(() => {
-    const currentMonthIndex = new Date().getMonth();
+    const monthIndex = new Date().getMonth();
     const currentYear = new Date().getFullYear();
+    setCurrentMonthIndex(monthIndex);
     setSelectedYear(currentYear);
-    setSelectedMonth(months[currentMonthIndex]);
+    setSelectedMonth(months[monthIndex]);
   }, []);
 
   return {
     selectedMonth,
     selectedYear,
+    currentMonthIndex,
     handleMonthChange,
     handleYearChange,
     months,
