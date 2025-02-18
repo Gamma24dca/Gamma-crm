@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const months = [
   'Styczeń',
@@ -18,9 +18,12 @@ const months = [
 const years = [2024, 2025];
 
 const useCurrentDate = () => {
-  const [selectedMonth, setSelectedMonth] = useState<string>('');
-  const [currentMonthIndex, setCurrentMonthIndex] = useState<number>();
-  const [selectedYear, setSelectedYear] = useState<number>();
+  const [selectedMonth, setSelectedMonth] = useState<string>(
+    months[new Date().getMonth()]
+  );
+  const [selectedYear, setSelectedYear] = useState<number>(
+    new Date().getFullYear()
+  );
 
   const handleMonthChange = (e) => {
     setSelectedMonth(e.target.value);
@@ -30,18 +33,16 @@ const useCurrentDate = () => {
     setSelectedYear(e.target.value);
   };
 
-  useEffect(() => {
-    const monthIndex = new Date().getMonth();
-    const currentYear = new Date().getFullYear();
-    setCurrentMonthIndex(monthIndex);
-    setSelectedYear(currentYear);
-    setSelectedMonth(months[monthIndex]);
-  }, []);
+  // useEffect(() => {
+  //   const monthIndex = new Date().getMonth();
+  //   const currentYear = new Date().getFullYear();
+  //   setSelectedYear(currentYear);
+  //   setSelectedMonth(months[monthIndex]);
+  // }, []);
 
   return {
     selectedMonth,
     selectedYear,
-    currentMonthIndex,
     handleMonthChange,
     handleYearChange,
     months,

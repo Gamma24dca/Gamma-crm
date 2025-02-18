@@ -48,4 +48,19 @@ export const ReckoningTaskController = {
   async deleteReckoningTask(id) {
     await ReckoningTaskModel.findByIdAndDelete(id);
   },
+
+  async updateDay(taskId, dayId, userId, value) {
+    const task = await ReckoningTaskController.getReckoningTask(taskId);
+    const filteredParticipant = task.participants.filter((user) => {
+      return user._id === userId;
+    });
+    filteredParticipant[0].hours = filteredParticipant[0].hours.map((obj) => {
+      return String(obj._id) === String(dayId) ? { ...obj, ...value } : obj;
+    });
+
+    await ReckoningTaskController.updateReckoningTask(taskId, task);
+    const updatedStudioTask =
+      await ReckoningTaskController.getReckoningTask(taskId);
+    return updatedStudioTask;
+  },
 };

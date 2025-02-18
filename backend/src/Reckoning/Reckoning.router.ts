@@ -113,3 +113,26 @@ ReckoningTaskRouter.delete(
     }
   },
 );
+
+ReckoningTaskRouter.patch(
+  '/:taskId/dayUpdate/:userId/:dayId',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const taskId = req.params.taskId;
+      const userId = req.params.userId;
+      const dayId = req.params.dayId;
+
+      const updatedSubtasks = await ReckoningTaskController.updateDay(
+        taskId,
+        dayId,
+        userId,
+        { ...req.body },
+      );
+      res.status(StatusCodes.ACCEPTED).json(updatedSubtasks);
+    } catch (error) {
+      console.error(error);
+      res.status(StatusCodes.BAD_REQUEST).json({ message: error });
+    }
+  },
+);
