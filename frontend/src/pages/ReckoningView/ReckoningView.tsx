@@ -121,16 +121,6 @@ function StudioTaskView() {
     return index % 2 === 0 ? styles.reckTaskItem : styles.darkerReckTaskItem;
   };
 
-  // console.log('recko not filt', reckoningTasks);
-
-  const filteredParticipant =
-    reckoningTasks.length > 0 &&
-    reckoningTasks[0].participants.filter((userto) => {
-      return userto._id === currentUserId;
-    });
-
-  console.log('filtered', filteredParticipant);
-
   return (
     <>
       <ControlBar>
