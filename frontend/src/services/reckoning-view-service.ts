@@ -122,3 +122,61 @@ export async function addReckoningTask({
     return null;
   }
 }
+
+export async function updateReckoningTask({ taskId, value }) {
+  try {
+    const formValue = {
+      taskId,
+      ...value,
+    };
+    const response = await fetch(
+      'https://gamma-crm.onrender.com/api/reckoningtasks',
+      {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formValue),
+      }
+    );
+
+    if (response.ok) {
+      return await response.json();
+    }
+    throw new Error(`${response.status} ${response.statusText}`);
+  } catch (error) {
+    if (Config.isDev) {
+      throw new Error('Update subtask', error.message);
+    }
+    return null;
+  }
+}
+
+export async function updateDay({ taskId, userId, dayId, value }) {
+  try {
+    const subtaskBody = {
+      ...value,
+    };
+    const response = await fetch(
+      `https://gamma-crm.onrender.com/api/studiotasks/${taskId}/dayUpdate/${userId}/${dayId}`,
+      {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(subtaskBody),
+      }
+    );
+    if (response.ok) {
+      return await response.json();
+    }
+    return null;
+  } catch (error) {
+    if (Config.isDev) {
+      throw new Error('Update subtask', error.message);
+    }
+    return null;
+  }
+}
