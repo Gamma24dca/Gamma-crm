@@ -130,7 +130,7 @@ export async function updateReckoningTask({ taskId, value }) {
       ...value,
     };
     const response = await fetch(
-      'https://gamma-crm.onrender.com/api/reckoningtasks',
+      `https://gamma-crm.onrender.com/api/reckoningtasks/${taskId}`,
       {
         method: 'PATCH',
         credentials: 'include',
