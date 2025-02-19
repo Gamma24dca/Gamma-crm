@@ -7,9 +7,9 @@ import Select from '../../components/Atoms/Select/Select';
 import ViewContainer from '../../components/Atoms/ViewContainer/ViewContainer';
 import useCurrentDate from '../../hooks/useCurrentDate';
 import styles from './ReckoningView.module.css';
-import useShowLabel from '../../hooks/useShowLabel';
 import useAuth from '../../hooks/useAuth';
 import { getMyReckoningTasks } from '../../services/reckoning-view-service';
+import ReckoningTile from '../../components/Organisms/ReckoningTile/ReckoningTile';
 
 function generateDaysArray(month, year) {
   const daysInMonth = new Date(year, month, 0).getDate();
@@ -26,51 +26,6 @@ function generateDaysArray(month, year) {
   return daysArray;
 }
 
-// const mockedTasks = [
-//   {
-//     _id: 'ig35c',
-//     worker: 'Bartek',
-//     month: 'marzec',
-//     company: 'Axa',
-//     createdAt: '2024.03.03',
-//     client: 'Stachowiczk Joanna',
-//     taskTitle: 'AKSIL_KATALOG_PRODUKTOW 2024',
-//     hours: generateDaysArray(2, 2025),
-//     comment: 'projekt, poprawki i pliki do druku',
-//     printWhere: 'Zetka',
-//     printSpec: 'A4',
-//     isSettled: true,
-//   },
-//   {
-//     _id: 'fps32',
-//     worker: 'Edyta',
-//     month: 'wrzesień',
-//     company: 'Santander',
-//     createdAt: '2024.05.01',
-//     client: 'Badowska Alicja',
-//     taskTitle: 'Baner industry 1070x2125',
-//     hours: generateDaysArray(2, 2025),
-//     comment: 'Zaliczka 12',
-//     printWhere: 'RM Print',
-//     printSpec: 'A5',
-//     isSettled: false,
-//   },
-//   {
-//     _id: '3x8[2',
-//     worker: 'Edyta',
-//     month: 'kwiecień',
-//     company: 'Mateo',
-//     createdAt: '2024.04.08',
-//     client: 'Ożóg Joanna',
-//     taskTitle: 'Avik Animation 4k',
-//     hours: generateDaysArray(2, 2025),
-//     comment: '',
-//     printWhere: 'Zetka',
-//     printSpec: 'A4',
-//     isSettled: true,
-//   },
-// ];
-
 function StudioTaskView() {
   const {
     selectedMonth,
@@ -83,10 +38,6 @@ function StudioTaskView() {
 
   const [selectedMonthDaysArray, setSelectedMonthDaysArray] = useState([]);
   const [reckoningTasks, setReckoningTasks] = useState([]);
-
-  // console.log(selectedMonthDaysArray);
-
-  const { labelState, handleMouseEnter, handleMouseLeave } = useShowLabel();
 
   const { user } = useAuth();
   const currentUserId = user[0]._id;
@@ -116,10 +67,6 @@ function StudioTaskView() {
 
     fetchReckoningTasks(arrayMonthIndex - 1);
   }, [selectedMonth]);
-
-  const tileClass = (index) => {
-    return index % 2 === 0 ? styles.reckTaskItem : styles.darkerReckTaskItem;
-  };
 
   return (
     <>
@@ -178,92 +125,11 @@ function StudioTaskView() {
             {reckoningTasks.length > 0 &&
               reckoningTasks.map((reckTask, index) => {
                 return (
-                  <div
-                    className={styles.reckoningItemContainer}
+                  <ReckoningTile
                     key={reckTask._id}
-                  >
-                    <div
-                      className={`${styles.reckTaskItem} ${styles.companyTile} ${reckTask.client}`}
-                    >
-                      {reckTask.client}
-                    </div>
-                    <div
-                      className={`${tileClass(index)}`}
-                      onMouseEnter={() => {
-                        handleMouseEnter(
-                          reckTask.clientPerson,
-                          reckTask.clientPerson
-                        );
-                      }}
-                      onMouseLeave={() => {
-                        handleMouseLeave();
-                      }}
-                    >
-                      {reckTask.clientPerson}
-                      {labelState.isLabel &&
-                        labelState.labelValue === reckTask.clientPerson &&
-                        labelState.labelId === reckTask.clientPerson && (
-                          // <HoverLabel>{reckTask.clientPerson}</HoverLabel>
-                          <p className={styles.test}>{reckTask.clientPerson}</p>
-                        )}
-                    </div>
-                    <div className={`${tileClass(index)}`}>
-                      {reckTask.title}
-                    </div>
-                    {reckTask.description ? (
-                      <div className={`${tileClass(index)}`}>
-                        {reckTask.description && reckTask.description}
-                      </div>
-                    ) : (
-                      <div className={`${tileClass(index)}`}>Brak opisu</div>
-                    )}
-
-                    <div className={`${tileClass(index)}`}>
-                      {reckTask.printWhat}
-                    </div>
-                    <div className={`${tileClass(index)}`}>
-                      {reckTask.printWhere}
-                    </div>
-
-                    {/* <div className={styles.daysWrapper}>
-                      {selectedMonthDaysArray.map((dayTile, dayIndex) => {
-                        return (
-                          <div
-                            className={
-                              dayTile.isWeekend
-                                ? styles.weekendDayTile
-                                : styles.dayTile
-                            }
-                            key={dayIndex}
-                          >
-                            {dayTile.hourNum > 0 && dayTile.hourNum}
-                          </div>
-                        );
-                      })}
-                    </div> */}
-
-                    <div className={styles.daysWrapper}>
-                      {reckTask.participants.map((participant) => {
-                        return (
-                          participant._id === currentUserId &&
-                          participant.hours.map((dayTile, dayIndex) => {
-                            return (
-                              <div
-                                className={
-                                  dayTile.isWeekend
-                                    ? styles.weekendDayTile
-                                    : styles.dayTile
-                                }
-                                key={dayIndex}
-                              >
-                                {dayTile.hourNum > 0 && dayTile.hourNum}
-                              </div>
-                            );
-                          })
-                        );
-                      })}
-                    </div>
-                  </div>
+                    reckTask={reckTask}
+                    index={index}
+                  />
                 );
               })}
           </div>
