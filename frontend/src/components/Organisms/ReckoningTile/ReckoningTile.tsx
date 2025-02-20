@@ -1,16 +1,42 @@
-import { useState } from 'react';
-import useShowLabel from '../../../hooks/useShowLabel';
+import { useEffect, useState } from 'react';
+// import useShowLabel from '../../../hooks/useShowLabel';
 import styles from './ReckoningTile.module.css';
-import { updateReckoningTask } from '../../../services/reckoning-view-service';
+import {
+  updateDay,
+  updateReckoningTask,
+} from '../../../services/reckoning-view-service';
 import useAuth from '../../../hooks/useAuth';
+import useCompaniesContext from '../../../hooks/Context/useCompaniesContext';
+import { getAllCompanies } from '../../../services/companies-service';
 
 function ReckoningTile({ reckTask, index }) {
   const [formValue, setFormValue] = useState(reckTask);
-
-  const { labelState, handleMouseEnter, handleMouseLeave } = useShowLabel();
+  const { companies, dispatch: companiesDispatch } = useCompaniesContext();
 
   const { user } = useAuth();
   const currentUserId = user[0]._id;
+
+  const filterReckTasks = reckTask.participants.filter((part) => {
+    return part._id === currentUserId;
+  });
+
+  const [days, setDays] = useState(filterReckTasks[0].hours);
+  // const { labelState, handleMouseEnter, handleMouseLeave } = useShowLabel();
+
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      if (companies.length === 0) {
+        try {
+          const allCompanies = await getAllCompanies();
+          companiesDispatch({ type: 'SET_COMPANIES', payload: allCompanies });
+        } catch (error) {
+          console.error('Error fetching users:', error);
+        }
+      }
+    };
+
+    fetchCompanies();
+  }, [companiesDispatch, companies]);
 
   const handleFormValueChange = (e, key) => {
     setFormValue((prev) => {
@@ -36,14 +62,74 @@ function ReckoningTile({ reckTask, index }) {
       : styles.darkerReckTaskItem;
   };
 
+  const handleHourChange = (dayId, e) => {
+    setDays((prevData) =>
+      prevData.map((item) => {
+        return item._id === dayId ? { ...item, hourNum: e.target.value } : item;
+      })
+    );
+  };
+
+  const handleDayUpdate = async (taskId, userId, dayId, value) => {
+    try {
+      await updateDay({ taskId, userId, dayId, value });
+    } catch (error) {
+      console.error('Error saving value:', error);
+    }
+  };
+
   return (
     <div className={styles.reckoningItemContainer}>
-      <div
+      <select
+        className={`${styles.reckTaskItem} ${styles.companyTile} ${formValue.client}`}
+        name="client"
+        id="client"
+        onChange={(e) => {
+          handleFormValueChange(e, 'client');
+          handleBlur(reckTask._id, { client: e.target.value });
+        }}
+      >
+        <option value={formValue.client}>{formValue.client}</option>
+        {companies.map((comOpt) => {
+          return (
+            comOpt.name !== formValue.client && (
+              <option key={comOpt._id} value={comOpt.name}>
+                {comOpt.name}
+              </option>
+            )
+          );
+        })}
+      </select>
+      <select
+        onChange={(e) => {
+          handleFormValueChange(e, 'clientPerson');
+          handleBlur(reckTask._id, { clientPerson: e.target.value });
+        }}
+        className={`${styles.reckTaskItem} ${styles.clientPersonTile}`}
+      >
+        <option value="Klient">{formValue.clientPerson}</option>
+        {formValue.client.length > 0 &&
+          companies.map((company) => {
+            if (company.name === formValue.client) {
+              return company.clientPerson.map((cp) => {
+                return (
+                  cp.label !== formValue.clientPerson && (
+                    <option key={cp.value} value={cp.label}>
+                      {cp.label}
+                    </option>
+                  )
+                );
+              });
+            }
+            return null;
+          })}
+      </select>
+      {/* <div
         className={`${styles.reckTaskItem} ${styles.companyTile} ${reckTask.client}`}
       >
         {reckTask.client}
-      </div>
-      <div
+      </div> */}
+      {/* <div
         className={`${tileClass(index)}`}
         onMouseEnter={() => {
           handleMouseEnter(reckTask.clientPerson, reckTask.clientPerson);
@@ -59,7 +145,7 @@ function ReckoningTile({ reckTask, index }) {
             // <HoverLabel>{reckTask.clientPerson}</HoverLabel>
             <p className={styles.test}>{reckTask.clientPerson}</p>
           )}
-      </div>
+      </div> */}
       <input
         className={`${tileClass(index)}`}
         type="text"
@@ -124,21 +210,23 @@ function ReckoningTile({ reckTask, index }) {
       />
 
       <div className={styles.daysWrapper}>
-        {reckTask.participants.map((participant) => {
+        {days.map((dayTile, dayIndex) => {
           return (
-            participant._id === currentUserId &&
-            participant.hours.map((dayTile, dayIndex) => {
-              return (
-                <div
-                  className={
-                    dayTile.isWeekend ? styles.weekendDayTile : styles.dayTile
-                  }
-                  key={dayIndex}
-                >
-                  {dayTile.hourNum > 0 && dayTile.hourNum}
-                </div>
-              );
-            })
+            <input
+              className={
+                dayTile.isWeekend ? styles.weekendDayTile : styles.dayTile
+              }
+              key={dayIndex}
+              value={dayTile.hourNum}
+              onChange={(e) => {
+                handleHourChange(dayTile._id, e);
+              }}
+              onBlur={(e) => {
+                handleDayUpdate(reckTask._id, currentUserId, dayTile._id, {
+                  hourNum: e.target.value,
+                });
+              }}
+            />
           );
         })}
       </div>
