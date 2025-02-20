@@ -132,6 +132,10 @@ function StudioTaskView() {
                   />
                 );
               })}
+            <div>
+              <button type="button">Dodaj puste</button>
+              <button type="button">Dodaj ze zleceń</button>
+            </div>
           </div>
         </ListContainer>
       </ViewContainer>
