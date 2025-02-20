@@ -159,7 +159,7 @@ export async function updateDay({ taskId, userId, dayId, value }) {
       ...value,
     };
     const response = await fetch(
-      `https://gamma-crm.onrender.com/api/studiotasks/${taskId}/dayUpdate/${userId}/${dayId}`,
+      `https://gamma-crm.onrender.com/api/reckoningtasks/${taskId}/dayUpdate/${userId}/${dayId}`,
       {
         method: 'PATCH',
         credentials: 'include',
