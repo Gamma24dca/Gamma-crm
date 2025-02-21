@@ -11,15 +11,12 @@ export const ReckoningTaskModel = mongoose.model(
 
     client: {
       type: String,
-      required: true,
     },
     clientPerson: {
       type: String,
-      required: true,
     },
     title: {
       type: String,
-      required: true,
     },
 
     description: {

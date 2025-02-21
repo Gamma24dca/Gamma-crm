@@ -1,6 +1,11 @@
 import { Config } from '../config';
 import { User } from './users-service';
 
+type DaysArray = {
+  hourNum: number;
+  isWeekend: boolean;
+};
+
 export type ReckoningTaskTypes = {
   _id?: string;
   searchID: number;
@@ -11,7 +16,7 @@ export type ReckoningTaskTypes = {
   author: Omit<User, 'password'>;
   printWhat: string;
   printWhere: string;
-  participants: Omit<User, 'password'>[];
+  participants: [{ _id: string; name: string; hours: DaysArray[] }];
   deadline: string;
   startDate: Date;
 };
