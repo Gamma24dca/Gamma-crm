@@ -58,7 +58,7 @@
 
 .clientPersonTile {
   color: var(--color-black);
-  max-width: none;
+  width: 120px;
 }
 
 .test {
