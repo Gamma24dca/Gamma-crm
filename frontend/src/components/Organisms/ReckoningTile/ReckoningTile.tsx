@@ -161,24 +161,20 @@ function ReckoningTile({ reckTask, index }) {
         }}
       />
 
-      {reckTask.description ? (
-        <input
-          className={`${tileClass(index)}`}
-          type="text"
-          name="Description"
-          id="Description"
-          placeholder="Dodaj opis..."
-          value={formValue.description}
-          onChange={(e) => {
-            handleFormValueChange(e, 'description');
-          }}
-          onBlur={() => {
-            handleBlur(reckTask._id, formValue);
-          }}
-        />
-      ) : (
-        <div className={`${tileClass(index)}`}>Brak opisu</div>
-      )}
+      <input
+        className={`${tileClass(index)}`}
+        type="text"
+        name="Description"
+        id="Description"
+        placeholder="Dodaj opis..."
+        value={formValue.description}
+        onChange={(e) => {
+          handleFormValueChange(e, 'description');
+        }}
+        onBlur={() => {
+          handleBlur(reckTask._id, formValue);
+        }}
+      />
 
       <input
         className={`${tileClass(index)}`}
