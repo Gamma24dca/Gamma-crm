@@ -8,8 +8,14 @@ import ViewContainer from '../../components/Atoms/ViewContainer/ViewContainer';
 import useCurrentDate from '../../hooks/useCurrentDate';
 import styles from './ReckoningView.module.css';
 import useAuth from '../../hooks/useAuth';
-import { getMyReckoningTasks } from '../../services/reckoning-view-service';
+import {
+  addReckoningTask,
+  getMyReckoningTasks,
+} from '../../services/reckoning-view-service';
 import ReckoningTile from '../../components/Organisms/ReckoningTile/ReckoningTile';
+import CTA from '../../components/Atoms/CTA/CTA';
+import SearchInput from '../../components/Atoms/ControlBar/SearchInput/SearchInput';
+import generateSearchID from '../../utils/generateSearchId';
 
 function generateDaysArray(month, year) {
   const daysInMonth = new Date(year, month, 0).getDate();
@@ -68,6 +74,34 @@ function StudioTaskView() {
     fetchReckoningTasks(arrayMonthIndex - 1);
   }, [selectedMonth]);
 
+  console.log(user[0]);
+
+  const handleAddEmptyReckoTask = async () => {
+    try {
+      const response = await addReckoningTask({
+        searchID: generateSearchID(),
+        client: '',
+        clientPerson: '',
+        title: '',
+        description: '',
+        author: user[0],
+        printWhat: '',
+        printWhere: '',
+        participants: [{ _id: user[0]._id, name: user[0].name, hours: [] }],
+        startDate: new Date(),
+        deadline: '',
+      });
+
+      if (response !== null) {
+        setReckoningTasks((prev) => {
+          return [...prev, ...response];
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <>
       <ControlBar>
@@ -83,6 +117,10 @@ function StudioTaskView() {
           handleValueChange={handleYearChange}
           optionData={years}
         />
+        <SearchInput />
+        <div className={styles.ctaWrapper}>
+          <CTA type="button">Dodaj ze zleceń</CTA>
+        </div>
       </ControlBar>
       <ViewContainer>
         <ListContainer>
@@ -132,9 +170,14 @@ function StudioTaskView() {
                   />
                 );
               })}
-            <div>
-              <button type="button">Dodaj puste</button>
-              <button type="button">Dodaj ze zleceń</button>
+            <div className={styles.addNewReckoTaskWrapper}>
+              <button
+                type="button"
+                className={styles.addNewReckoTaskButton}
+                onClick={handleAddEmptyReckoTask}
+              >
+                Dodaj wiersz..
+              </button>
             </div>
           </div>
         </ListContainer>
