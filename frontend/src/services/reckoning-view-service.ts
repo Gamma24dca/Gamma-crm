@@ -4,12 +4,11 @@ import { User } from './users-service';
 export type ReckoningTaskTypes = {
   _id?: string;
   searchID: number;
-  clientPerson: string;
   client: string;
+  clientPerson: string;
   title: string;
   description: string;
   author: Omit<User, 'password'>;
-  taskType: string;
   printWhat: string;
   printWhere: string;
   participants: Omit<User, 'password'>[];
@@ -76,7 +75,6 @@ export async function addReckoningTask({
   title,
   description,
   author,
-  taskType,
   printWhat,
   printWhere,
   participants,
@@ -90,7 +88,6 @@ export async function addReckoningTask({
     title,
     description,
     author,
-    taskType,
     printWhat,
     printWhere,
     participants,
