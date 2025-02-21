@@ -74,7 +74,7 @@ function StudioTaskView() {
     fetchReckoningTasks(arrayMonthIndex - 1);
   }, [selectedMonth]);
 
-  console.log(user[0]);
+  console.log(generateDaysArray(2, 2025));
 
   const handleAddEmptyReckoTask = async () => {
     try {
@@ -87,7 +87,13 @@ function StudioTaskView() {
         author: user[0],
         printWhat: '',
         printWhere: '',
-        participants: [{ _id: user[0]._id, name: user[0].name, hours: [] }],
+        participants: [
+          {
+            _id: user[0]._id,
+            name: user[0].name,
+            hours: generateDaysArray(2, 2025),
+          },
+        ],
         startDate: new Date(),
         deadline: '',
       });
