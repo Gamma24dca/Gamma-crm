@@ -72,7 +72,13 @@ export const ReckoningTaskModel = mongoose.model(
         name: {
           type: String,
         },
-        hours: [{ hourNum: Number, isWeekend: Boolean }],
+        hours: [
+          {
+            _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
+            hourNum: Number,
+            isWeekend: Boolean,
+          },
+        ],
       },
     ],
 
