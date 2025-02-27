@@ -181,7 +181,9 @@ select {
   background-color: #ffc600;
   opacity: 0.8;
 }
-
+.Wybierz {
+  background-color: var(--color-navButton);
+}
 .Mateo {
   background-color: #892f23;
   opacity: 0.8;
