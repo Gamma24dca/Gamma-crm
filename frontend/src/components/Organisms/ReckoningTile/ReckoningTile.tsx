@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 // import useShowLabel from '../../../hooks/useShowLabel';
+import { Icon } from '@iconify/react';
 import styles from './ReckoningTile.module.css';
 import {
   updateDay,
@@ -80,6 +81,9 @@ function ReckoningTile({ reckTask, index }) {
 
   return (
     <div className={styles.reckoningItemContainer}>
+      <button type="button" className={styles.moreButton}>
+        <Icon icon="ic:outline-more-vert" width="24" height="24" />
+      </button>
       <select
         className={`${styles.reckTaskItem} ${styles.companyTile} ${formValue.client}`}
         name="client"
@@ -124,28 +128,6 @@ function ReckoningTile({ reckTask, index }) {
             return null;
           })}
       </select>
-      {/* <div
-        className={`${styles.reckTaskItem} ${styles.companyTile} ${reckTask.client}`}
-      >
-        {reckTask.client}
-      </div> */}
-      {/* <div
-        className={`${tileClass(index)}`}
-        onMouseEnter={() => {
-          handleMouseEnter(reckTask.clientPerson, reckTask.clientPerson);
-        }}
-        onMouseLeave={() => {
-          handleMouseLeave();
-        }}
-      >
-        {reckTask.clientPerson}
-        {labelState.isLabel &&
-          labelState.labelValue === reckTask.clientPerson &&
-          labelState.labelId === reckTask.clientPerson && (
-            // <HoverLabel>{reckTask.clientPerson}</HoverLabel>
-            <p className={styles.test}>{reckTask.clientPerson}</p>
-          )}
-      </div> */}
       <input
         className={`${tileClass(index)}`}
         type="text"

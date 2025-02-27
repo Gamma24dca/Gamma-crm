@@ -14,12 +14,12 @@
 
 .loadingUserTile {
   width: 95%;
-  min-height: 60px;
+  min-height: 50px;
   display: flex;
   border: none;
   background-color: #f4f7fd;
   border-radius: 6px;
-  margin: 20px auto;
+  margin: 5px auto;
   align-items: center;
   justify-content: start;
   position: static;

@@ -23,7 +23,7 @@
   width: 100%;
   /* padding: 0px 20px; */
   display: grid;
-  grid-template-columns: 0.4fr 0.4fr 0.7fr 1fr 0.3fr 0.3fr 1fr;
+  grid-template-columns: 2% 6% 7% 10% 20% 7% 7% 35%;
   /* gap: 5px; */
   /* grid-template-columns: repeat(7, 1fr); */
   grid-template-rows: 1fr;
@@ -88,7 +88,7 @@
 .addNewReckoTaskWrapper {
   display: flex;
   gap: 5px;
-  padding: 5px 0 0 15px;
+  padding: 5px 0 0 38px;
 }
 
 .addNewReckoTaskButton {

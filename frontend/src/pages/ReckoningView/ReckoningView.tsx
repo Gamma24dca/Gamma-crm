@@ -16,6 +16,7 @@ import ReckoningTile from '../../components/Organisms/ReckoningTile/ReckoningTil
 import CTA from '../../components/Atoms/CTA/CTA';
 import SearchInput from '../../components/Atoms/ControlBar/SearchInput/SearchInput';
 import generateSearchID from '../../utils/generateSearchId';
+import SkeletonUsersLoading from '../../components/Organisms/SkeletonUsersLoading/SkeletonUsersLoading';
 
 function generateDaysArray(month, year) {
   const daysInMonth = new Date(year, month, 0).getDate();
@@ -57,8 +58,6 @@ function StudioTaskView() {
       }
     } catch (error) {
       console.error(error);
-    } finally {
-      console.log('final');
     }
   };
 
@@ -74,11 +73,9 @@ function StudioTaskView() {
     fetchReckoningTasks(arrayMonthIndex - 1);
   }, [selectedMonth]);
 
-  console.log(generateDaysArray(2, 2025));
-
   const handleAddEmptyReckoTask = async () => {
     try {
-      const response = await addReckoningTask({
+      const addResponse = await addReckoningTask({
         searchID: generateSearchID(),
         client: 'Wybierz firme',
         clientPerson: 'Wybierz klienta',
@@ -98,9 +95,11 @@ function StudioTaskView() {
         deadline: '',
       });
 
-      if (response !== null) {
+      console.log(addResponse);
+
+      if (addResponse !== null) {
         setReckoningTasks((prev) => {
-          return [...prev, ...response];
+          return [...prev, addResponse];
         });
       }
     } catch (error) {
@@ -150,6 +149,8 @@ function StudioTaskView() {
 
           <div className={styles.reckoningContainer}>
             <div className={styles.infoBar}>
+              <p className={styles.infoBarElement}>t</p>
+
               <p className={styles.infoBarElement}>Firma</p>
               <p className={styles.infoBarElement}>Klient</p>
               <p className={styles.infoBarElement}>Tytuł</p>
@@ -166,7 +167,8 @@ function StudioTaskView() {
                 })}
               </div>
             </div>
-            {reckoningTasks.length > 0 &&
+
+            {reckoningTasks.length > 0 ? (
               reckoningTasks.map((reckTask, index) => {
                 return (
                   <ReckoningTile
@@ -175,16 +177,21 @@ function StudioTaskView() {
                     index={index}
                   />
                 );
-              })}
-            <div className={styles.addNewReckoTaskWrapper}>
-              <button
-                type="button"
-                className={styles.addNewReckoTaskButton}
-                onClick={handleAddEmptyReckoTask}
-              >
-                Dodaj wiersz..
-              </button>
-            </div>
+              })
+            ) : (
+              <SkeletonUsersLoading />
+            )}
+            {reckoningTasks.length > 0 && (
+              <div className={styles.addNewReckoTaskWrapper}>
+                <button
+                  type="button"
+                  className={styles.addNewReckoTaskButton}
+                  onClick={handleAddEmptyReckoTask}
+                >
+                  Dodaj wiersz..
+                </button>
+              </div>
+            )}
           </div>
         </ListContainer>
       </ViewContainer>
