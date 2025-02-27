@@ -150,7 +150,6 @@ function StudioTaskView() {
           <div className={styles.reckoningContainer}>
             <div className={styles.infoBar}>
               <p className={styles.infoBarElement}>t</p>
-
               <p className={styles.infoBarElement}>Firma</p>
               <p className={styles.infoBarElement}>Klient</p>
               <p className={styles.infoBarElement}>Tytuł</p>

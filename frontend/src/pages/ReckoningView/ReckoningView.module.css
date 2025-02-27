@@ -45,29 +45,10 @@
   font-weight: 600;
 }
 
-.dayTile,
-.weekendDayTile {
-  width: 22px;
-  height: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--color-shadow);
-  border-radius: 5px;
-  /* padding: 2px 12px; */
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.weekendDayTile {
-  background-color: var(--color-orange);
-  opacity: 0.7;
-}
-
 .dayInfoPar {
   font-size: 14px;
   font-weight: 600;
-  width: 22px;
+  min-width: 22px;
   text-align: center;
   margin: 0;
 }
