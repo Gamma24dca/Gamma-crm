@@ -129,27 +129,9 @@ function StudioTaskView() {
       </ControlBar>
       <ViewContainer>
         <ListContainer>
-          {/* <InfoBar>
-            <div className={styles.infoBarContainer}>
-              <p>Firma</p>
-              <p>Klient</p>
-              <p>Tytuł</p>
-              <p>Komentarz</p>
-              <div className={styles.daysWrapper}>
-                {selectedMonthDaysArray.map((dayTile, index) => {
-                  return (
-                    <p className={styles.dayNumberInfo} key={index}>
-                      {index + 1}
-                    </p>
-                  );
-                })}
-              </div>
-            </div>
-          </InfoBar> */}
-
           <div className={styles.reckoningContainer}>
             <div className={styles.infoBar}>
-              <p className={styles.infoBarElement}>{''}</p>
+              <p className={styles.infoBarElement}>&nbsp;</p>
               <p className={styles.infoBarElement}>Firma</p>
               <p className={styles.infoBarElement}>Klient</p>
               <p className={styles.infoBarElement}>Tytuł</p>

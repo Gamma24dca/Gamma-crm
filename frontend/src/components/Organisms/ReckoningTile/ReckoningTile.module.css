@@ -133,7 +133,9 @@
 }
 
 .editModal {
-  z-index: 10;
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 330;
   position: absolute;
   width: 100px;
   height: 100px;
@@ -142,4 +144,24 @@
   border-radius: 10px;
   left: 15px;
   top: 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.deleteWrapper {
+  z-index: 12;
+  cursor: pointer;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.trashIcon {
+  transition: all 0.3s ease;
+}
+
+.deleteWrapper:hover .trashIcon {
+  color: var(--color-orange);
 }

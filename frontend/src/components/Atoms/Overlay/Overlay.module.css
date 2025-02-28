@@ -1,0 +1,21 @@
+/* .overlay {
+  position: fixed;
+  top: 0%;
+  right: 0%;
+  width: 100vw;
+  height: 100vh;
+  z-index: 199;
+  background-color: transparent;
+} */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  padding: 5% 10%;
+  background-color: transparent;
+  z-index: 199;
+  cursor: default;
+}

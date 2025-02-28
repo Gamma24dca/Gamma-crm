@@ -1,5 +1,6 @@
 import { Icon } from '@iconify/react';
 import styles from './MultiselectDropdown.module.css';
+import Overlay from '../../Atoms/Overlay/Overlay';
 
 function MultiselectDropdown({
   children,
@@ -40,19 +41,7 @@ function MultiselectDropdown({
 
       {isSelectOpen && (
         <>
-          <div
-            className={styles.overlay}
-            role="button"
-            onClick={() => {
-              setIsSelectOpen(false);
-            }}
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                setIsSelectOpen(false);
-              }
-            }}
-          />
+          <Overlay closeFunction={setIsSelectOpen} />
           <div className={styles.selectContainer}>{children}</div>
         </>
       )}

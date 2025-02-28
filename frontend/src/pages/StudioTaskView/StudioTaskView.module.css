@@ -35,16 +35,6 @@
   animation: appear 0.3s ease forwards;
 }
 
-.overlay {
-  position: fixed;
-  top: 0%;
-  right: 0%;
-  width: 100vw;
-  height: 100vh;
-  z-index: 199;
-  background-color: transparent;
-}
-
 .dropdownHeader {
   font-size: 16px;
   margin: 0;
