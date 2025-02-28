@@ -13,6 +13,7 @@ import { getAllCompanies } from '../../../services/companies-service';
 function ReckoningTile({ reckTask, index }) {
   const [formValue, setFormValue] = useState(reckTask);
   const { companies, dispatch: companiesDispatch } = useCompaniesContext();
+  const [isEditOpen, setIsEditOpen] = useState(false);
 
   const { user } = useAuth();
   const currentUserId = user[0]._id;
@@ -81,9 +82,23 @@ function ReckoningTile({ reckTask, index }) {
 
   return (
     <div className={styles.reckoningItemContainer}>
-      <button type="button" className={styles.moreButton}>
-        <Icon icon="ic:outline-more-vert" width="24" height="24" />
-      </button>
+      <div className={styles.editButtonWrapper}>
+        <button
+          type="button"
+          className={styles.moreButton}
+          onClick={() => {
+            setIsEditOpen((prev) => !prev);
+          }}
+        >
+          <Icon icon="ic:outline-more-vert" width="24" height="24" />
+        </button>
+        {isEditOpen && (
+          <div className={styles.editModal}>
+            <p>test</p>
+          </div>
+        )}
+      </div>
+
       <select
         className={`${styles.reckTaskItem} ${styles.companyTile} ${formValue.client}`}
         name="client"

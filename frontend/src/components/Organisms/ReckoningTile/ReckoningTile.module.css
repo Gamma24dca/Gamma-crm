@@ -127,3 +127,19 @@
   background-color: var(--color-orange);
   opacity: 0.7;
 }
+
+.editButtonWrapper {
+  position: relative;
+}
+
+.editModal {
+  z-index: 10;
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background-color: var(--color-lighter);
+  box-shadow: 0 0px 3px var(--color-shadow);
+  border-radius: 10px;
+  left: 15px;
+  top: 22px;
+}
