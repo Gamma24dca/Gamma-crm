@@ -3,12 +3,14 @@ import { useEffect, useState } from 'react';
 import { Icon } from '@iconify/react';
 import styles from './ReckoningTile.module.css';
 import {
+  deleteReckoningTask,
   updateDay,
   updateReckoningTask,
 } from '../../../services/reckoning-view-service';
 import useAuth from '../../../hooks/useAuth';
 import useCompaniesContext from '../../../hooks/Context/useCompaniesContext';
 import { getAllCompanies } from '../../../services/companies-service';
+import Overlay from '../../Atoms/Overlay/Overlay';
 
 function ReckoningTile({ reckTask, index }) {
   const [formValue, setFormValue] = useState(reckTask);
@@ -80,6 +82,15 @@ function ReckoningTile({ reckTask, index }) {
     }
   };
 
+  const handleDeleteReckoTask = async (id) => {
+    try {
+      setIsEditOpen(false);
+      await deleteReckoningTask(id);
+    } catch (error) {
+      console.error('Error saving value:', error);
+    }
+  };
+
   return (
     <div className={styles.reckoningItemContainer}>
       <div className={styles.editButtonWrapper}>
@@ -93,9 +104,32 @@ function ReckoningTile({ reckTask, index }) {
           <Icon icon="ic:outline-more-vert" width="24" height="24" />
         </button>
         {isEditOpen && (
-          <div className={styles.editModal}>
-            <p>test</p>
-          </div>
+          <>
+            <Overlay closeFunction={setIsEditOpen} />
+            <div className={styles.editModal}>
+              <div
+                className={styles.deleteWrapper}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    handleDeleteReckoTask(reckTask._id);
+                  }
+                }}
+                onClick={() => {
+                  handleDeleteReckoTask(reckTask._id);
+                }}
+              >
+                <Icon
+                  className={styles.trashIcon}
+                  icon="solar:trash-bin-minimalistic-broken"
+                  width="20"
+                  height="20"
+                />
+                <p>Usuń</p>
+              </div>
+            </div>
+          </>
         )}
       </div>
 

@@ -182,3 +182,27 @@ export async function updateDay({ taskId, userId, dayId, value }) {
     return null;
   }
 }
+
+export async function deleteReckoningTask(id) {
+  try {
+    const response = await fetch(
+      `https://gamma-crm.onrender.com/api/reckoningtasks/${id}`,
+      {
+        method: 'DELETE',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    if (response.ok) {
+      return await response.json();
+    }
+    return null;
+  } catch (error) {
+    if (Config.isDev) {
+      throw new Error('Update subtask', error.message);
+    }
+    return null;
+  }
+}

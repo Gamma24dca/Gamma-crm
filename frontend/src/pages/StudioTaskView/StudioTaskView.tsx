@@ -27,6 +27,7 @@ import MultiselectDropdown from '../../components/Molecules/MultiselectDropdown/
 import socket from '../../socket';
 import { SearchArchivedTask } from '../../services/archived-studio-tasks-service';
 import SearchInput from '../../components/Atoms/ControlBar/SearchInput/SearchInput';
+import Overlay from '../../components/Atoms/Overlay/Overlay';
 
 const initialTaskObject: StudioTaskTypes = {
   searchID: 0,
@@ -384,17 +385,7 @@ function StudioTaskView() {
         </div>
         {filterDropdown && (
           <>
-            <div
-              className={styles.overlay}
-              onClick={() => setFilterDropdown(false)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === 'Escape') {
-                  setFilterDropdown(false);
-                }
-              }}
-            />
+            <Overlay closeFunction={setFilterDropdown} />
             <div className={styles.filterDropdownContainer}>
               <h3 className={styles.dropdownHeader}>Filtr</h3>
               <div className={styles.assignedToMeWrapper}>
