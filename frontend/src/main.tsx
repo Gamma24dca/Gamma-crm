@@ -9,6 +9,7 @@ import { UsersContextProvider } from './context/UsersContext';
 import TasksContextProvder from './context/TasksContext';
 import { CompaniesContextProvider } from './context/CompaniesContext';
 import { StudioTasksContextProvider } from './context/StudioTasksContext';
+import { ReckoTasksContextProvider } from './context/ReckoTasksContext';
 
 // If you want deploy site to static cdn, use Hashrouter instead
 
@@ -19,15 +20,17 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <UserProvider>
-          <StudioTasksContextProvider>
-            <CompaniesContextProvider>
-              <TasksContextProvder>
-                <UsersContextProvider>
-                  <App />
-                </UsersContextProvider>
-              </TasksContextProvder>
-            </CompaniesContextProvider>
-          </StudioTasksContextProvider>
+          <ReckoTasksContextProvider>
+            <StudioTasksContextProvider>
+              <CompaniesContextProvider>
+                <TasksContextProvder>
+                  <UsersContextProvider>
+                    <App />
+                  </UsersContextProvider>
+                </TasksContextProvder>
+              </CompaniesContextProvider>
+            </StudioTasksContextProvider>
+          </ReckoTasksContextProvider>
         </UserProvider>
       </QueryClientProvider>
     </BrowserRouter>

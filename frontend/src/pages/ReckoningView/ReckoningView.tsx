@@ -17,6 +17,7 @@ import CTA from '../../components/Atoms/CTA/CTA';
 import SearchInput from '../../components/Atoms/ControlBar/SearchInput/SearchInput';
 import generateSearchID from '../../utils/generateSearchId';
 import SkeletonUsersLoading from '../../components/Organisms/SkeletonUsersLoading/SkeletonUsersLoading';
+import useReckoTasksContext from '../../hooks/Context/useReckoTasksContext';
 
 function generateDaysArray(month, year) {
   const daysInMonth = new Date(year, month, 0).getDate();
@@ -44,7 +45,8 @@ function StudioTaskView() {
   } = useCurrentDate();
 
   const [selectedMonthDaysArray, setSelectedMonthDaysArray] = useState([]);
-  const [reckoningTasks, setReckoningTasks] = useState([]);
+  // const [reckoningTasks, setReckoningTasks] = useState([]);
+  const { reckoTasks, dispatch } = useReckoTasksContext();
 
   const { user } = useAuth();
   const currentUserId = user[0]._id;
@@ -53,8 +55,11 @@ function StudioTaskView() {
   const fetchReckoningTasks = async (index) => {
     try {
       const response = await getMyReckoningTasks(currentUserId, '2025', index);
+      console.log(response);
+
       if (response) {
-        setReckoningTasks(response);
+        // setReckoningTasks(response);
+        dispatch({ type: 'SET_RECKOTASKS', payload: response });
       }
     } catch (error) {
       console.error(error);
@@ -95,12 +100,11 @@ function StudioTaskView() {
         deadline: '',
       });
 
-      console.log(addResponse);
-
       if (addResponse !== null) {
-        setReckoningTasks((prev) => {
-          return [...prev, addResponse];
-        });
+        // setReckoningTasks((prev) => {
+        //   return [...prev, addResponse];
+        // });
+        dispatch({ type: 'CREATE_RECKOTASK', payload: addResponse });
       }
     } catch (error) {
       console.error(error);
@@ -149,8 +153,8 @@ function StudioTaskView() {
               </div>
             </div>
 
-            {reckoningTasks.length > 0 ? (
-              reckoningTasks.map((reckTask, index) => {
+            {reckoTasks.length > 0 ? (
+              reckoTasks.map((reckTask, index) => {
                 return (
                   <ReckoningTile
                     key={reckTask._id}
@@ -162,7 +166,7 @@ function StudioTaskView() {
             ) : (
               <SkeletonUsersLoading />
             )}
-            {reckoningTasks.length > 0 && (
+            {reckoTasks.length > 0 && (
               <div className={styles.addNewReckoTaskWrapper}>
                 <button
                   type="button"
