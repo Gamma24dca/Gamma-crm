@@ -46,7 +46,8 @@ export const ReckoningTaskController = {
   },
 
   async deleteReckoningTask(id) {
-    await ReckoningTaskModel.findByIdAndDelete(id);
+    const deletedReckTask = await ReckoningTaskModel.findByIdAndDelete(id);
+    return deletedReckTask;
   },
 
   async updateDay(taskId, dayId, userId, value) {
