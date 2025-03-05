@@ -11,11 +11,13 @@ import useAuth from '../../../hooks/useAuth';
 import useCompaniesContext from '../../../hooks/Context/useCompaniesContext';
 import { getAllCompanies } from '../../../services/companies-service';
 import Overlay from '../../Atoms/Overlay/Overlay';
+import useReckoTasksContext from '../../../hooks/Context/useReckoTasksContext';
 
 function ReckoningTile({ reckTask, index }) {
   const [formValue, setFormValue] = useState(reckTask);
   const { companies, dispatch: companiesDispatch } = useCompaniesContext();
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const { dispatch } = useReckoTasksContext();
 
   const { user } = useAuth();
   const currentUserId = user[0]._id;
@@ -85,7 +87,8 @@ function ReckoningTile({ reckTask, index }) {
   const handleDeleteReckoTask = async (id) => {
     try {
       setIsEditOpen(false);
-      await deleteReckoningTask(id);
+      const response = await deleteReckoningTask(id);
+      dispatch({ type: 'DELETE_RECKOTASK', payload: response });
     } catch (error) {
       console.error('Error saving value:', error);
     }

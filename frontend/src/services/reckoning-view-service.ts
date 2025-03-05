@@ -195,6 +195,7 @@ export async function deleteReckoningTask(id) {
         },
       }
     );
+    console.log(response.json());
     if (response.ok) {
       return await response.json();
     }

@@ -105,8 +105,9 @@ ReckoningTaskRouter.delete(
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try {
-      await ReckoningTaskController.deleteReckoningTask(req.params.id);
-      res.status(StatusCodes.ACCEPTED);
+      const deletedReckoTask =
+        await ReckoningTaskController.deleteReckoningTask(req.params.id);
+      res.status(StatusCodes.ACCEPTED).json(deletedReckoTask);
     } catch (error) {
       console.error(error);
       res.status(StatusCodes.BAD_REQUEST).json({ message: error });
