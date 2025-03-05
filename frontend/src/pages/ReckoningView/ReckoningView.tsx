@@ -55,7 +55,6 @@ function StudioTaskView() {
   const fetchReckoningTasks = async (index) => {
     try {
       const response = await getMyReckoningTasks(currentUserId, '2025', index);
-      console.log(response);
 
       if (response) {
         // setReckoningTasks(response);

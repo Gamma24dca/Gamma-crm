@@ -88,6 +88,7 @@ function ReckoningTile({ reckTask, index }) {
     try {
       setIsEditOpen(false);
       const response = await deleteReckoningTask(id);
+      console.log(response);
       dispatch({ type: 'DELETE_RECKOTASK', payload: response });
     } catch (error) {
       console.error('Error saving value:', error);
