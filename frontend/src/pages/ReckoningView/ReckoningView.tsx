@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Icon } from '@iconify/react';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
 import ControlBarTitle from '../../components/Atoms/ControlBar/Title/ControlBarTitle';
 // import InfoBar from '../../components/Atoms/InfoBar/InfoBar';
@@ -47,6 +48,7 @@ function StudioTaskView() {
 
   const [selectedMonthDaysArray, setSelectedMonthDaysArray] = useState([]);
   const [taskLoadingState, setTaskLoadingState] = useState({
+    isGetMyTasksLoading: false,
     isAddEmptyLoading: false,
   });
 
@@ -57,39 +59,49 @@ function StudioTaskView() {
   const currentUserId = user[0]._id;
   const monthIndex = new Date().getMonth();
 
+  const handleLoadingStateChange = (key, value) => {
+    setTaskLoadingState((prev) => {
+      return {
+        ...prev,
+        [key]: value,
+      };
+    });
+  };
+
   const fetchReckoningTasks = async (index) => {
     try {
-      const response = await getMyReckoningTasks(currentUserId, '2025', index);
+      handleLoadingStateChange('isGetMyTasksLoading', true);
 
+      const response = await getMyReckoningTasks(currentUserId, '2025', index);
       if (response) {
         // setReckoningTasks(response);
         dispatch({ type: 'SET_RECKOTASKS', payload: response });
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      handleLoadingStateChange('isGetMyTasksLoading', false);
     }
   };
+
+  const selectedMonthIndex = months.indexOf(selectedMonth) + 1;
 
   useEffect(() => {
     fetchReckoningTasks(monthIndex);
   }, []);
 
   useEffect(() => {
-    const arrayMonthIndex = months.indexOf(selectedMonth) + 1;
+    setSelectedMonthDaysArray(generateDaysArray(selectedMonthIndex, 2025));
 
-    setSelectedMonthDaysArray(generateDaysArray(arrayMonthIndex, 2025));
-
-    fetchReckoningTasks(arrayMonthIndex - 1);
+    fetchReckoningTasks(selectedMonthIndex - 1);
   }, [selectedMonth]);
 
   const handleAddEmptyReckoTask = async () => {
     try {
-      setTaskLoadingState((prev) => {
-        return {
-          ...prev,
-          isAddEmptyLoading: true,
-        };
-      });
+      handleLoadingStateChange('isAddEmptyLoading', true);
+
+      const startDate = new Date(selectedYear, selectedMonthIndex, 1);
+
       const addResponse = await addReckoningTask({
         searchID: generateSearchID(),
         client: 'Wybierz firme',
@@ -103,29 +115,55 @@ function StudioTaskView() {
           {
             _id: user[0]._id,
             name: user[0].name,
-            hours: generateDaysArray(2, 2025),
+            hours: generateDaysArray(selectedMonthIndex, 2025),
           },
         ],
-        startDate: new Date(),
+        startDate,
         deadline: '',
       });
 
       if (addResponse !== null) {
-        // setReckoningTasks((prev) => {
-        //   return [...prev, addResponse];
-        // });
         dispatch({ type: 'CREATE_RECKOTASK', payload: addResponse });
       }
     } catch (error) {
       console.error(error);
     } finally {
-      setTaskLoadingState((prev) => {
-        return {
-          ...prev,
-          isAddEmptyLoading: false,
-        };
+      handleLoadingStateChange('isAddEmptyLoading', false);
+    }
+  };
+
+  const renderReckoTasks = () => {
+    if (taskLoadingState.isGetMyTasksLoading) {
+      return <SkeletonUsersLoading />;
+    }
+
+    if (reckoTasks.length > 0 && !taskLoadingState.isGetMyTasksLoading) {
+      return reckoTasks.map((reckTask, index) => {
+        return (
+          <ReckoningTile key={reckTask._id} reckTask={reckTask} index={index} />
+        );
       });
     }
+
+    return (
+      <div className={styles.noTasksContainer}>
+        <div>
+          <p>Brak zleceń</p>
+          <Icon icon="line-md:coffee-loop" width="24" height="24" />
+        </div>
+
+        <div>
+          <button
+            type="button"
+            className={styles.addNewReckoTaskButton}
+            onClick={handleAddEmptyReckoTask}
+          >
+            Dodaj pierwszy wiersz!
+          </button>
+          {taskLoadingState.isAddEmptyLoading && <CheckboxLoader />}
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -170,19 +208,24 @@ function StudioTaskView() {
               </div>
             </div>
 
-            {reckoTasks.length > 0 ? (
-              reckoTasks.map((reckTask, index) => {
-                return (
-                  <ReckoningTile
-                    key={reckTask._id}
-                    reckTask={reckTask}
-                    index={index}
-                  />
-                );
-              })
+            {/* {!taskLoadingState.isGetMyTasksLoading ? (
+              reckoTasks.length > 0 ? (
+                reckoTasks.map((reckTask, index) => {
+                  return (
+                    <ReckoningTile
+                      key={reckTask._id}
+                      reckTask={reckTask}
+                      index={index}
+                    />
+                  );
+                })
+              ) : (
+                <p>brak zadan</p>
+              )
             ) : (
               <SkeletonUsersLoading />
-            )}
+            )} */}
+            {renderReckoTasks()}
             {reckoTasks.length > 0 && (
               <div className={styles.addNewReckoTaskWrapper}>
                 <button
