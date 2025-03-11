@@ -18,6 +18,7 @@ import SearchInput from '../../components/Atoms/ControlBar/SearchInput/SearchInp
 import generateSearchID from '../../utils/generateSearchId';
 import SkeletonUsersLoading from '../../components/Organisms/SkeletonUsersLoading/SkeletonUsersLoading';
 import useReckoTasksContext from '../../hooks/Context/useReckoTasksContext';
+import CheckboxLoader from '../../components/Atoms/CheckboxLoader/CheckboxLoader';
 
 function generateDaysArray(month, year) {
   const daysInMonth = new Date(year, month, 0).getDate();
@@ -45,6 +46,10 @@ function StudioTaskView() {
   } = useCurrentDate();
 
   const [selectedMonthDaysArray, setSelectedMonthDaysArray] = useState([]);
+  const [taskLoadingState, setTaskLoadingState] = useState({
+    isAddEmptyLoading: false,
+  });
+
   // const [reckoningTasks, setReckoningTasks] = useState([]);
   const { reckoTasks, dispatch } = useReckoTasksContext();
 
@@ -79,6 +84,12 @@ function StudioTaskView() {
 
   const handleAddEmptyReckoTask = async () => {
     try {
+      setTaskLoadingState((prev) => {
+        return {
+          ...prev,
+          isAddEmptyLoading: true,
+        };
+      });
       const addResponse = await addReckoningTask({
         searchID: generateSearchID(),
         client: 'Wybierz firme',
@@ -107,6 +118,13 @@ function StudioTaskView() {
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setTaskLoadingState((prev) => {
+        return {
+          ...prev,
+          isAddEmptyLoading: false,
+        };
+      });
     }
   };
 
@@ -174,6 +192,7 @@ function StudioTaskView() {
                 >
                   Dodaj wiersz..
                 </button>
+                {taskLoadingState.isAddEmptyLoading && <CheckboxLoader />}
               </div>
             )}
           </div>
