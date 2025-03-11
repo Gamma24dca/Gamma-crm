@@ -81,6 +81,7 @@
 
 .clientPersonTile {
   color: var(--color-black);
+  max-width: 120px;
   /* width: 120px; */
 }
 
@@ -137,8 +138,9 @@
   font-weight: 600;
   z-index: 330;
   position: absolute;
+  padding: 5px 10px;
   width: 100px;
-  height: 100px;
+  /* height: 70px; */
   background-color: var(--color-lighter);
   box-shadow: 0 0px 3px var(--color-shadow);
   border-radius: 10px;
@@ -146,16 +148,17 @@
   top: 22px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  justify-content: start;
+  align-items: start;
 }
 
 .deleteWrapper {
   z-index: 12;
   cursor: pointer;
   display: flex;
-  gap: 5px;
+  gap: 3px;
   align-items: center;
+  height: 30px;
 }
 
 .trashIcon {
