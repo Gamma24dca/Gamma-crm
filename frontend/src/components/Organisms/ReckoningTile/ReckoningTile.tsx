@@ -12,9 +12,11 @@ import useCompaniesContext from '../../../hooks/Context/useCompaniesContext';
 import { getAllCompanies } from '../../../services/companies-service';
 import Overlay from '../../Atoms/Overlay/Overlay';
 import useReckoTasksContext from '../../../hooks/Context/useReckoTasksContext';
+import CheckboxLoader from '../../Atoms/CheckboxLoader/CheckboxLoader';
 
 function ReckoningTile({ reckTask, index }) {
   const [formValue, setFormValue] = useState(reckTask);
+  const [isTaskDeleteLoading, setIsTaskDeleteLoading] = useState(false);
   const { companies, dispatch: companiesDispatch } = useCompaniesContext();
   const [isEditOpen, setIsEditOpen] = useState(false);
   const { dispatch } = useReckoTasksContext();
@@ -86,12 +88,15 @@ function ReckoningTile({ reckTask, index }) {
 
   const handleDeleteReckoTask = async (id) => {
     try {
+      setIsTaskDeleteLoading(true);
       setIsEditOpen(false);
       const response = await deleteReckoningTask(id);
       console.log(response);
       dispatch({ type: 'DELETE_RECKOTASK', payload: response });
     } catch (error) {
       console.error('Error saving value:', error);
+    } finally {
+      setIsTaskDeleteLoading(false);
     }
   };
 
@@ -105,7 +110,12 @@ function ReckoningTile({ reckTask, index }) {
             setIsEditOpen((prev) => !prev);
           }}
         >
-          <Icon icon="ic:outline-more-vert" width="24" height="24" />
+          {isTaskDeleteLoading ? (
+            <CheckboxLoader />
+          ) : (
+            <Icon icon="ic:outline-more-vert" width="24" height="24" />
+          )}
+          {/* <Icon icon="ic:outline-more-vert" width="24" height="24" /> */}
         </button>
         {isEditOpen && (
           <>
