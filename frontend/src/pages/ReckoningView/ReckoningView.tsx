@@ -226,7 +226,7 @@ function StudioTaskView() {
               <SkeletonUsersLoading />
             )} */}
             {renderReckoTasks()}
-            {reckoTasks.length > 0 && (
+            {reckoTasks.length > 0 && !taskLoadingState.isGetMyTasksLoading && (
               <div className={styles.addNewReckoTaskWrapper}>
                 <button
                   type="button"

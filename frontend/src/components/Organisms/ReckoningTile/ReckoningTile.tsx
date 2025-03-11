@@ -58,9 +58,12 @@ function ReckoningTile({ reckTask, index }) {
   const handleBlur = async (id, value) => {
     // setIsEditing(false);
     try {
+      setIsTaskDeleteLoading(true);
       await updateReckoningTask({ taskId: id, value });
     } catch (error) {
       console.error('Error saving value:', error);
+    } finally {
+      setIsTaskDeleteLoading(false);
     }
   };
 
@@ -80,9 +83,12 @@ function ReckoningTile({ reckTask, index }) {
 
   const handleDayUpdate = async (taskId, userId, dayId, value) => {
     try {
+      setIsTaskDeleteLoading(true);
       await updateDay({ taskId, userId, dayId, value });
     } catch (error) {
       console.error('Error saving value:', error);
+    } finally {
+      setIsTaskDeleteLoading(false);
     }
   };
 
@@ -91,7 +97,7 @@ function ReckoningTile({ reckTask, index }) {
       setIsTaskDeleteLoading(true);
       setIsEditOpen(false);
       const response = await deleteReckoningTask(id);
-      console.log(response);
+
       dispatch({ type: 'DELETE_RECKOTASK', payload: response });
     } catch (error) {
       console.error('Error saving value:', error);
@@ -136,11 +142,39 @@ function ReckoningTile({ reckTask, index }) {
               >
                 <Icon
                   className={styles.trashIcon}
-                  icon="solar:trash-bin-minimalistic-broken"
+                  icon="line-md:document-delete"
                   width="20"
                   height="20"
                 />
                 <p>Usuń</p>
+              </div>
+              <div
+                className={styles.deleteWrapper}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    handleDeleteReckoTask(reckTask._id);
+                  }
+                }}
+                onClick={() => {
+                  handleBlur(reckTask._id, {
+                    client: 'Wybierz firme',
+                    clientPerson: 'Wybierz klienta',
+                    title: '',
+                    description: '',
+                    printWhat: '',
+                    printWhere: '',
+                  });
+                }}
+              >
+                <Icon
+                  className={styles.trashIcon}
+                  icon="line-md:file-document-off"
+                  width="20"
+                  height="20"
+                />
+                <p>Wyczyść</p>
               </div>
             </div>
           </>

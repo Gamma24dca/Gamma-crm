@@ -56,7 +56,9 @@ function SideNavigation() {
         isSideNavHidden
           ? styles.hiddenSideNavContainer
           : styles.sideNavContainer
-      } ${animationClass.sideNavContainer}`}
+      } ${animationClass.sideNavContainer} ${
+        isSideNavHidden && styles.setMinWidth
+      }`}
     >
       <Link to="/" className={styles.logoContainer}>
         {isSideNavHidden ? (

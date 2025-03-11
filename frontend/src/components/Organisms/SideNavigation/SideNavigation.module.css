@@ -1,6 +1,7 @@
 .sideNavContainer,
 .hiddenSideNavContainer {
   width: 13%;
+  min-width: 200px;
   height: 100vh;
   background-color: var(--color-lighter);
   border-right: 1px solid var(--color-border);
@@ -10,6 +11,7 @@
 
 .hiddenSideNavContainer {
   width: 3%;
+  min-width: 50px;
 }
 
 .showSideNav {
@@ -187,9 +189,11 @@
 @keyframes showSideNav {
   from {
     width: 3%;
+    min-width: 50px;
   }
   to {
     width: 13%;
+    min-width: 200px;
   }
 }
 
