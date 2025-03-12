@@ -20,6 +20,7 @@ function ReckoningTile({ reckTask, index }) {
   const { companies, dispatch: companiesDispatch } = useCompaniesContext();
   const [isEditOpen, setIsEditOpen] = useState(false);
   const { dispatch } = useReckoTasksContext();
+  const currentDate = new Date();
 
   const { user } = useAuth();
   const currentUserId = user[0]._id;
@@ -288,9 +289,12 @@ function ReckoningTile({ reckTask, index }) {
         {days.map((dayTile, dayIndex) => {
           return (
             <input
-              className={
+              className={`${
                 dayTile.isWeekend ? styles.weekendDayTile : styles.dayTile
-              }
+              } ${
+                dayIndex + 1 === currentDate.getDate() &&
+                styles.highlightCurrentDay
+              }`}
               key={dayIndex}
               value={dayTile.hourNum}
               onChange={(e) => {
