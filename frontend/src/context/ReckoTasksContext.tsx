@@ -25,6 +25,10 @@ export const reckoTasksReducer = (state: ReckoTasksStateType, action: any) => {
           return reckTask._id !== action.payload._id;
         }),
       };
+
+    // case 'UPDATE_RECKOTASK':
+    //   return {};
+
     default:
       return state;
   }
