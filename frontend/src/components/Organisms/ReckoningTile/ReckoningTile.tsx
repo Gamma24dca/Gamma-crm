@@ -167,6 +167,17 @@ function ReckoningTile({ reckTask, index }) {
                     printWhat: '',
                     printWhere: '',
                   });
+                  setFormValue((prev) => {
+                    return {
+                      ...prev,
+                      client: 'Wybierz firme',
+                      clientPerson: 'Wybierz klienta',
+                      title: '',
+                      description: '',
+                      printWhat: '',
+                      printWhere: '',
+                    };
+                  });
                 }}
               >
                 <Icon
