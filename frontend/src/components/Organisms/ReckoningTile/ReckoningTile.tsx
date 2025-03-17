@@ -315,7 +315,6 @@ function ReckoningTile({ reckTask, index }) {
                 dayIndex + 1 === currentDate.getDate() &&
                 styles.highlightCurrentDay
               }`}
-              type="text"
               key={dayIndex}
               value={dayTile.hourNum}
               onChange={(e) => {
