@@ -83,6 +83,7 @@ function ReckoningTile({ reckTask, index }) {
   };
 
   const handleDayUpdate = async (taskId, userId, dayId, value) => {
+    console.log(value);
     try {
       setIsTaskDeleteLoading(true);
       await updateDay({ taskId, userId, dayId, value });
@@ -110,9 +111,40 @@ function ReckoningTile({ reckTask, index }) {
   const handleHoursClear = async () => {
     setDays((prevData) =>
       prevData.map((item) => {
-        return item.hourNum !== null ? { ...item, hourNum: null } : item;
+        return item.hourNum !== 0 ? { ...item, hourNum: 0 } : item;
       })
     );
+    // if (item.hourNum !== 0) {
+    //   updateDay({
+    //     taskId: reckTask._id,
+    //     userId: currentUserId,
+    //     dayId: item._id,
+    //     value: 0,
+    //   });
+    // }
+
+    // const filteredDays = days.filter((daytof) => {
+    //   return daytof.hourNum !== 0;
+    // });
+
+    const filterByUser = reckTask.participants.filter((part) => {
+      return part._id === currentUserId;
+    });
+
+    console.log(filterByUser[0].hours);
+
+    // await Promise.all(
+    //   days
+    //     .filter((day) => day.hourNum !== 0)
+    //     .map((day) =>
+    //       updateDay({
+    //         taskId: reckTask._id,
+    //         userId: currentUserId,
+    //         dayId: day._id,
+    //         value: 0,
+    //       })
+    //     )
+    // );
   };
 
   return (
@@ -316,12 +348,12 @@ function ReckoningTile({ reckTask, index }) {
                 styles.highlightCurrentDay
               }`}
               key={dayIndex}
-              value={dayTile.hourNum}
+              value={dayTile.hourNum === 0 ? '' : dayTile.hourNum}
               onChange={(e) => {
                 // console.log(typeof e.target.value);
                 handleHourChange(dayTile._id, e);
                 handleDayUpdate(reckTask._id, currentUserId, dayTile._id, {
-                  hourNum: e.target.value,
+                  hourNum: e.target.value !== '' ? e.target.value : 0,
                 });
               }}
               // onBlur={(e) => {
