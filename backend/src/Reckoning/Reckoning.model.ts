@@ -75,7 +75,7 @@ export const ReckoningTaskModel = mongoose.model(
         hours: [
           {
             _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
-            hourNum: Number,
+            hourNum: String,
             isWeekend: Boolean,
           },
         ],

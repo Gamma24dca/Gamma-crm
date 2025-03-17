@@ -107,6 +107,14 @@ function ReckoningTile({ reckTask, index }) {
     }
   };
 
+  const handleHoursClear = async () => {
+    setDays((prevData) =>
+      prevData.map((item) => {
+        return item.hourNum !== null ? { ...item, hourNum: null } : item;
+      })
+    );
+  };
+
   return (
     <div className={styles.reckoningItemContainer}>
       <div className={styles.editButtonWrapper}>
@@ -178,6 +186,7 @@ function ReckoningTile({ reckTask, index }) {
                       printWhere: '',
                     };
                   });
+                  handleHoursClear();
                 }}
               >
                 <Icon
@@ -306,16 +315,21 @@ function ReckoningTile({ reckTask, index }) {
                 dayIndex + 1 === currentDate.getDate() &&
                 styles.highlightCurrentDay
               }`}
+              type="text"
               key={dayIndex}
               value={dayTile.hourNum}
               onChange={(e) => {
+                // console.log(typeof e.target.value);
                 handleHourChange(dayTile._id, e);
-              }}
-              onBlur={(e) => {
                 handleDayUpdate(reckTask._id, currentUserId, dayTile._id, {
                   hourNum: e.target.value,
                 });
               }}
+              // onBlur={(e) => {
+              // handleDayUpdate(reckTask._id, currentUserId, dayTile._id, {
+              //   hourNum: e.target.value,
+              // });
+              // }}
             />
           );
         })}
