@@ -114,6 +114,17 @@ function ReckoningTile({ reckTask, index }) {
         return item.hourNum !== 0 ? { ...item, hourNum: 0 } : item;
       })
     );
+
+    const filterByUser = reckTask.participants.filter((part) => {
+      return part._id === currentUserId;
+    });
+
+    const removedHoursFrom = filterByUser[0].hours.map((day) => {
+      return day.hourNum > 0 ? { ...day, hourNum: 0 } : day;
+    });
+
+    console.log(removedHoursFrom);
+
     // if (item.hourNum !== 0) {
     //   updateDay({
     //     taskId: reckTask._id,
@@ -126,12 +137,6 @@ function ReckoningTile({ reckTask, index }) {
     // const filteredDays = days.filter((daytof) => {
     //   return daytof.hourNum !== 0;
     // });
-
-    const filterByUser = reckTask.participants.filter((part) => {
-      return part._id === currentUserId;
-    });
-
-    console.log(filterByUser[0].hours);
 
     // await Promise.all(
     //   days
