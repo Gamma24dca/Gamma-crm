@@ -1,6 +1,5 @@
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Icon } from '@iconify/react';
 import { useEffect } from 'react';
 import { getAllUsers } from '../../services/users-service';
 import styles from './UsersView.module.css';
@@ -18,6 +17,9 @@ import TilesColumnContainer from '../../components/Atoms/ListContainer/ListConta
 import useUsersContext from '../../hooks/Context/useUsersContext';
 import TileWrapper from '../../components/Atoms/TileWrapper/TileWrapper';
 import InfoBar from '../../components/Atoms/InfoBar/InfoBar';
+import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
+import ControlBarTitle from '../../components/Atoms/ControlBar/Title/ControlBarTitle';
+import CTA from '../../components/Atoms/CTA/CTA';
 
 const createUserSchema = Yup.object({
   name: Yup.string().required('Imie jest wymagane'),
@@ -235,6 +237,19 @@ function UsersView() {
         </Form>
       </ModalTemplate>
 
+      <ControlBar>
+        <ControlBarTitle>Firmy</ControlBarTitle>
+
+        <div className={styles.buttonsWrapper}>
+          <CTA
+            onClick={() => {
+              openModal();
+            }}
+          >
+            Dodaj Użytkownika
+          </CTA>
+        </div>
+      </ControlBar>
       <ViewContainer>
         <TilesColumnContainer>
           <InfoBar>
@@ -288,16 +303,6 @@ function UsersView() {
           </div>
         </TilesColumnContainer>
       </ViewContainer>
-
-      <button type="button" onClick={() => openModal()}>
-        <Icon
-          icon="icons8:plus"
-          color="#f68c1e"
-          width="60"
-          height="60"
-          className={styles.addNewUserBtn}
-        />
-      </button>
     </>
   );
 }
