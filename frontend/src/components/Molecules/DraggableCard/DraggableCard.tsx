@@ -75,6 +75,7 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
                 setIsUserAssigned(
                   checkIfUserAssigned(task.participants, currentUser[0]._id)
                 );
+
                 openModal();
               }}
               onKeyDown={(e) => {

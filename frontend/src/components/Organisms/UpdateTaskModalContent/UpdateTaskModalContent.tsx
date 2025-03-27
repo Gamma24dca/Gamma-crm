@@ -1,4 +1,5 @@
 import { Icon } from '@iconify/react';
+import { useEffect } from 'react';
 import DateFormatter from '../../../utils/dateFormatter';
 import CheckboxLoader from '../../Atoms/CheckboxLoader/CheckboxLoader';
 import ModalSectionTitle from '../../Atoms/ModalSectionTitle/ModalSectionTitle';
@@ -47,6 +48,12 @@ function UpdateTaskModalContent({
   } = useSubtask(task);
 
   const { user: currentUser } = useAuth();
+
+  useEffect(() => {
+    setIsUserAssigned(
+      checkIfUserAssigned(task.participants, currentUser[0]._id)
+    );
+  }, []);
 
   return (
     <>
