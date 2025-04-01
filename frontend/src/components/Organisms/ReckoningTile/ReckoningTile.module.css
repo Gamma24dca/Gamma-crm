@@ -129,6 +129,19 @@
   opacity: 0.7;
 }
 
+.summHoursContainer {
+  min-width: 10px;
+  height: 30px;
+  padding: 0 7px;
+  background-color: #e5f6df;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .editButtonWrapper {
   position: relative;
 }

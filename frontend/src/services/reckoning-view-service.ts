@@ -2,6 +2,7 @@ import { Config } from '../config';
 import { User } from './users-service';
 
 type DaysArray = {
+  _id?: string;
   hourNum: number;
   isWeekend: boolean;
 };
