@@ -36,7 +36,7 @@ function generateDaysArray(month, year) {
   return daysArray;
 }
 
-function StudioTaskView() {
+function ReckoningView() {
   const {
     selectedMonth,
     selectedYear,
@@ -245,4 +245,4 @@ function StudioTaskView() {
   );
 }
 
-export default StudioTaskView;
+export default ReckoningView;

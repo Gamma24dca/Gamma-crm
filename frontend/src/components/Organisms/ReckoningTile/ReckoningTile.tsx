@@ -123,33 +123,17 @@ function ReckoningTile({ reckTask, index }) {
       return day.hourNum > 0 ? { ...day, hourNum: 0 } : day;
     });
 
-    console.log(removedHoursFrom);
+    console.log('emptied hours object:', removedHoursFrom);
 
-    // if (item.hourNum !== 0) {
-    //   updateDay({
-    //     taskId: reckTask._id,
-    //     userId: currentUserId,
-    //     dayId: item._id,
-    //     value: 0,
-    //   });
-    // }
-
-    // const filteredDays = days.filter((daytof) => {
-    //   return daytof.hourNum !== 0;
-    // });
-
-    // await Promise.all(
-    //   days
-    //     .filter((day) => day.hourNum !== 0)
-    //     .map((day) =>
-    //       updateDay({
-    //         taskId: reckTask._id,
-    //         userId: currentUserId,
-    //         dayId: day._id,
-    //         value: 0,
-    //       })
-    //     )
-    // );
+    const updatedParticipants = reckTask.participants.map((part) => {
+      return part._id === currentUserId
+        ? { ...filterByUser[0], hours: removedHoursFrom }
+        : part;
+    });
+    await updateReckoningTask({
+      taskId: reckTask._id,
+      value: { participants: updatedParticipants },
+    });
   };
 
   return (
