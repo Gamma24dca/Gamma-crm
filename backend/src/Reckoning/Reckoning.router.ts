@@ -83,6 +83,37 @@ ReckoningTaskRouter.post(
   },
 );
 
+ReckoningTaskRouter.post(
+  '/from-kanban',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const newStudioTask =
+        await ReckoningTaskController.addReckoningTaskFromKanban(
+          {
+            searchID: req.body.searchID,
+            client: req.body.client,
+            clientPerson: req.body.clientPerson,
+            title: req.body.title,
+            description: req.body.description,
+            author: req.body.author,
+            taskType: req.body.taskType,
+            printWhat: req.body.printWhat,
+            printWhere: req.body.printWhere,
+            participants: req.body.participants,
+            startDate: req.body.startDate,
+            deadline: req.body.deadline,
+          },
+          req.user.id,
+        );
+      res.status(StatusCodes.CREATED).json(newStudioTask);
+    } catch (error) {
+      console.error(error);
+      res.status(StatusCodes.BAD_REQUEST).json({ message: error });
+    }
+  },
+);
+
 ReckoningTaskRouter.patch(
   '/:id',
   passport.authenticate('jwt', { session: false }),

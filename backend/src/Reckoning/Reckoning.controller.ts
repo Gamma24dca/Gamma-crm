@@ -37,6 +37,36 @@ export const ReckoningTaskController = {
     return newReckoningTask;
   },
 
+  async addReckoningTaskFromKanban(taskData, userId) {
+    const reckoningTasks = await ReckoningTaskModel.find().exec();
+
+    const isAlreadyCreated = reckoningTasks.some((obj) =>
+      Object.values(obj).includes(taskData.searchID),
+    );
+
+    if (isAlreadyCreated) {
+      const filteredTask = reckoningTasks.filter((task) => {
+        return task.searchID === taskData.searchID;
+      });
+
+      filteredTask[0].participants = filteredTask[0].participants.map(
+        (part) => {
+          return part._id === userId ? { ...part, isVisible: true } : part;
+        },
+      );
+      const updatedTask = await ReckoningTaskController.updateReckoningTask(
+        filteredTask[0]._id,
+        filteredTask[0],
+      );
+      return updatedTask;
+    } else {
+      await ReckoningTaskModel.validate(taskData);
+      const newReckoningTaskFromKanban =
+        await ReckoningTaskModel.create(taskData);
+      return newReckoningTaskFromKanban;
+    }
+  },
+
   async updateReckoningTask(id, taskData) {
     const updatedReckoningTask = await ReckoningTaskModel.findByIdAndUpdate(
       id,

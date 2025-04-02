@@ -118,6 +118,7 @@ function ReckoningView() {
         participants: [
           {
             _id: user[0]._id,
+            isVisible: true,
             name: user[0].name,
             hours: generateDaysArray(selectedMonthIndex, 2025),
           },
