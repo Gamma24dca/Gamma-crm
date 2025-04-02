@@ -36,7 +36,7 @@ function generateDaysArray(month, year) {
   return daysArray;
 }
 
-function StudioTaskView() {
+function ReckoningView() {
   const {
     selectedMonth,
     selectedYear,
@@ -96,6 +96,10 @@ function StudioTaskView() {
     fetchReckoningTasks(selectedMonthIndex - 1);
   }, [selectedMonth]);
 
+  const totalHours = reckoTasks
+    .flatMap((task) => task.participants[0]?.hours || [])
+    .reduce((sum, hourObj) => sum + hourObj.hourNum, 0);
+
   const handleAddEmptyReckoTask = async () => {
     try {
       handleLoadingStateChange('isAddEmptyLoading', true);
@@ -139,6 +143,7 @@ function StudioTaskView() {
 
     if (reckoTasks.length > 0 && !taskLoadingState.isGetMyTasksLoading) {
       return reckoTasks.map((reckTask, index) => {
+        // console.log(reckTask.participants[0].hours);
         return (
           <ReckoningTile key={reckTask._id} reckTask={reckTask} index={index} />
         );
@@ -182,6 +187,9 @@ function StudioTaskView() {
           optionData={years}
         />
         <SearchInput />
+        <div className={styles.totalHoursContainer}>
+          <p>{totalHours}</p>
+        </div>
         <div className={styles.ctaWrapper}>
           <CTA type="button">Dodaj ze zleceń</CTA>
         </div>
@@ -198,6 +206,14 @@ function StudioTaskView() {
               <p className={styles.infoBarElement}>Druk(co)</p>
               <p className={styles.infoBarElement}>Druk(gdzie)</p>
               <div className={styles.daysWrapper}>
+                <div className={styles.summHoursInfoEl}>
+                  <Icon
+                    icon="tabler:circle-plus-2"
+                    width="24"
+                    height="24"
+                    // style="color: #030136"
+                  />
+                </div>
                 {selectedMonthDaysArray.map((dayTile, index) => {
                   return (
                     <p className={styles.dayInfoPar} key={index}>
@@ -245,4 +261,4 @@ function StudioTaskView() {
   );
 }
 
-export default StudioTaskView;
+export default ReckoningView;

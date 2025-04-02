@@ -7,6 +7,22 @@
   height: 100%;
 }
 
+.totalHoursContainer {
+  max-height: 60px;
+  width: 4%;
+  transform: translateX(-10%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--color-orange);
+
+  p {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-lighter);
+  }
+}
+
 .noTasksContainer {
   width: 100%;
   display: flex;
@@ -86,9 +102,24 @@
   margin: 0 8px;
 }
 
+.summHoursInfoEl {
+  min-width: 14px;
+  max-width: 14px;
+  text-overflow: hidden;
+  height: 30px;
+  padding: 0 7px;
+  background-color: var(--color-navButton);
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .ctaWrapper {
-  padding: 5%;
-  width: 20%;
+  padding-right: 5%;
+  width: 32.5%;
   display: flex;
   justify-content: end;
 }
