@@ -26,8 +26,50 @@ export const reckoTasksReducer = (state: ReckoTasksStateType, action: any) => {
         }),
       };
 
-    // case 'UPDATE_RECKOTASK':
-    //   return {};
+    case 'UPDATE_HOUR_NUM': {
+      const { taskId, userId, dayId, newValue } = action.payload;
+
+      return {
+        reckoTasks: state.reckoTasks.map((task) => {
+          if (task._id !== taskId) return task;
+
+          const updatedParticipants = task.participants.map((participant) => {
+            if (participant._id !== userId) return participant;
+
+            const updatedHours = participant.hours.map((hour) => {
+              return hour._id === dayId
+                ? { ...hour, hourNum: Number(newValue) }
+                : hour;
+            });
+
+            return { ...participant, hours: updatedHours };
+          });
+
+          return { ...task, participants: updatedParticipants };
+        }),
+      };
+    }
+
+    case 'CLEAR_HOURS': {
+      const { taskId, userId } = action.payload;
+      return {
+        reckoTasks: state.reckoTasks.map((task) => {
+          if (task._id !== taskId) return task;
+
+          const updatedParticipants = task.participants.map((participant) => {
+            if (participant._id !== userId) return participant;
+
+            const clearedHours = participant.hours.map((hour) => {
+              return hour.hourNum === 0 ? hour : { ...hour, hourNum: 0 };
+            });
+
+            return { ...participant, hours: clearedHours };
+          });
+
+          return { ...task, participants: updatedParticipants };
+        }),
+      };
+    }
 
     default:
       return state;

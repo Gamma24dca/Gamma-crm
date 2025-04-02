@@ -13,6 +13,7 @@ import { getAllCompanies } from '../../../services/companies-service';
 import Overlay from '../../Atoms/Overlay/Overlay';
 import useReckoTasksContext from '../../../hooks/Context/useReckoTasksContext';
 import CheckboxLoader from '../../Atoms/CheckboxLoader/CheckboxLoader';
+import summarizeHours from '../../../utils/SummarizeHours';
 
 function ReckoningTile({ reckTask, index }) {
   const [formValue, setFormValue] = useState(reckTask);
@@ -31,6 +32,8 @@ function ReckoningTile({ reckTask, index }) {
 
   const [days, setDays] = useState(filterReckTasks[0].hours);
   // const { labelState, handleMouseEnter, handleMouseLeave } = useShowLabel();
+
+  const totalHours = summarizeHours(days);
 
   useEffect(() => {
     const fetchCompanies = async () => {
@@ -83,10 +86,18 @@ function ReckoningTile({ reckTask, index }) {
   };
 
   const handleDayUpdate = async (taskId, userId, dayId, value) => {
-    console.log(value);
     try {
       setIsTaskDeleteLoading(true);
       await updateDay({ taskId, userId, dayId, value });
+      dispatch({
+        type: 'UPDATE_HOUR_NUM',
+        payload: {
+          taskId: reckTask._id,
+          userId: currentUserId,
+          dayId,
+          newValue: Number(value.hourNum),
+        },
+      });
     } catch (error) {
       console.error('Error saving value:', error);
     } finally {
@@ -123,33 +134,24 @@ function ReckoningTile({ reckTask, index }) {
       return day.hourNum > 0 ? { ...day, hourNum: 0 } : day;
     });
 
-    console.log(removedHoursFrom);
+    const updatedParticipants = reckTask.participants.map((part) => {
+      return part._id === currentUserId
+        ? { ...filterByUser[0], hours: removedHoursFrom }
+        : part;
+    });
 
-    // if (item.hourNum !== 0) {
-    //   updateDay({
-    //     taskId: reckTask._id,
-    //     userId: currentUserId,
-    //     dayId: item._id,
-    //     value: 0,
-    //   });
-    // }
+    dispatch({
+      type: 'CLEAR_HOURS',
+      payload: {
+        taskId: reckTask._id,
+        userId: currentUserId,
+      },
+    });
 
-    // const filteredDays = days.filter((daytof) => {
-    //   return daytof.hourNum !== 0;
-    // });
-
-    // await Promise.all(
-    //   days
-    //     .filter((day) => day.hourNum !== 0)
-    //     .map((day) =>
-    //       updateDay({
-    //         taskId: reckTask._id,
-    //         userId: currentUserId,
-    //         dayId: day._id,
-    //         value: 0,
-    //       })
-    //     )
-    // );
+    await updateReckoningTask({
+      taskId: reckTask._id,
+      value: { participants: updatedParticipants },
+    });
   };
 
   return (
@@ -167,7 +169,6 @@ function ReckoningTile({ reckTask, index }) {
           ) : (
             <Icon icon="ic:outline-more-vert" width="24" height="24" />
           )}
-          {/* <Icon icon="ic:outline-more-vert" width="24" height="24" /> */}
         </button>
         {isEditOpen && (
           <>
@@ -343,6 +344,7 @@ function ReckoningTile({ reckTask, index }) {
       />
 
       <div className={styles.daysWrapper}>
+        <div className={styles.summHoursContainer}>{totalHours}</div>
         {days.map((dayTile, dayIndex) => {
           return (
             <input
