@@ -17,7 +17,9 @@ export type ReckoningTaskTypes = {
   author: Omit<User, 'password'>;
   printWhat: string;
   printWhere: string;
-  participants: [{ _id: string; name: string; hours: DaysArray[] }];
+  participants: [
+    { _id: string; isVisible: boolean; name: string; hours: DaysArray[] },
+  ];
   deadline: string;
   startDate: Date;
 };
