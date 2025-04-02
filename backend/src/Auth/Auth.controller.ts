@@ -9,7 +9,9 @@ export const AuthController = {
     return omit(user.toObject(), ['password']);
   },
   async signUser(email: string, password: string): Promise<null | string> {
+    console.log(email);
     const user = await UserModel.findOne({ email }).exec();
+    console.log('USER:', user);
     if (!user) {
       return null;
     }

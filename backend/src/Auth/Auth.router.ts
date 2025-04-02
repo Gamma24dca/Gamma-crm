@@ -15,6 +15,7 @@ AuthRouter.post('/signin', async (req, res) => {
     }
     const token = await AuthController.signUser(email, password);
     if (token === null) {
+      console.log('tyutej kurwa', token);
       res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Unauthorized' });
       return;
     }
