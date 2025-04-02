@@ -5,8 +5,6 @@ export const ReckoningTaskModel = mongoose.model(
   new mongoose.Schema({
     searchID: {
       type: Number,
-      required: true,
-      unique: true,
     },
 
     client: {

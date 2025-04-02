@@ -25,7 +25,7 @@ export const ReckoningTaskController = {
 
     const filteredReckoningTasks = filteredByDate.filter((task) => {
       return task.participants.some((part) => {
-        return part._id === userId;
+        return part._id === userId && part.isVisible;
       });
     });
     return filteredReckoningTasks;
@@ -40,8 +40,8 @@ export const ReckoningTaskController = {
   async addReckoningTaskFromKanban(taskData, userId) {
     const reckoningTasks = await ReckoningTaskModel.find().exec();
 
-    const isAlreadyCreated = reckoningTasks.some((obj) =>
-      Object.values(obj).includes(taskData.searchID),
+    const isAlreadyCreated = reckoningTasks.some(
+      (obj) => obj.searchID === taskData.searchID,
     );
 
     if (isAlreadyCreated) {
