@@ -14,7 +14,7 @@ export type TaskTypes = {
 
 export async function getAllTasks(): Promise<TaskTypes[] | null> {
   try {
-    const response = await fetch('http://localhost:5001/api/tasks', {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/tasks`, {
       method: 'GET',
       credentials: 'include',
       headers: {
@@ -36,13 +36,16 @@ export async function getAllTasks(): Promise<TaskTypes[] | null> {
 
 export async function getTaskById(id: string): Promise<TaskTypes | null> {
   try {
-    const response = await fetch(`http://localhost:5001/api/tasks/${id}`, {
-      method: 'GET',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/tasks/${id}`,
+      {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
     if (response.ok) {
       return await response.json();
     }
@@ -76,7 +79,7 @@ export async function addTask({
     formData.append('status', status);
     formData.append('deadline', deadline);
 
-    const response = await fetch('http://localhost:5001/api/tasks', {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/tasks`, {
       method: 'POST',
       credentials: 'include',
       body: formData,

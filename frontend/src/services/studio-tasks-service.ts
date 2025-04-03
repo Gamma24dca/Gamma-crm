@@ -30,13 +30,16 @@ export type StudioTaskTypes = {
 
 export async function getAllStudioTasks() {
   try {
-    const response = await fetch('http://localhost:5001/api/studiotasks', {
-      method: 'GET',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/studiotasks`,
+      {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
     if (response.ok) {
       return await response.json();
     }
@@ -82,14 +85,17 @@ export async function addStudioTask({
   };
 
   try {
-    const response = await fetch('http://localhost:5001/api/studiotasks', {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    });
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/studiotasks`,
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      }
+    );
     if (response.ok) {
       return await response.json();
     }
@@ -111,7 +117,7 @@ export async function UpdateStudioTask({ id, studioTaskData }) {
 
   try {
     const response = await fetch(
-      `http://localhost:5001/api/studiotasks/${id}`,
+      `${import.meta.env.VITE_API_URL}/api/studiotasks/${id}`,
       {
         method: 'PATCH',
         credentials: 'include',
@@ -137,7 +143,7 @@ export async function UpdateStudioTask({ id, studioTaskData }) {
 export async function deleteTask(id: string) {
   try {
     const response = await fetch(
-      `http://localhost:5001/api/studiotasks/${id}`,
+      `${import.meta.env.VITE_API_URL}/api/studiotasks/${id}`,
       {
         method: 'DELETE',
         credentials: 'include',
@@ -165,7 +171,7 @@ export async function addSubtask({ taskId, content, done }) {
       done,
     };
     const response = await fetch(
-      `http://localhost:5001/api/studiotasks/${taskId}/subtasks`,
+      `${import.meta.env.VITE_API_URL}/api/studiotasks/${taskId}/subtasks`,
       {
         method: 'POST',
         credentials: 'include',
@@ -193,7 +199,9 @@ export async function updateSubtask({ taskId, subtaskId, subtaskData }) {
       ...subtaskData,
     };
     const response = await fetch(
-      `http://localhost:5001/api/studiotasks/${taskId}/subtasks/${subtaskId}`,
+      `${
+        import.meta.env.VITE_API_URL
+      }/api/studiotasks/${taskId}/subtasks/${subtaskId}`,
       {
         method: 'PATCH',
         credentials: 'include',
@@ -218,7 +226,9 @@ export async function updateSubtask({ taskId, subtaskId, subtaskData }) {
 export async function deleteSubtask(taskId: string, subtaskId: string) {
   try {
     const response = await fetch(
-      `http://localhost:5001/api/studiotasks/${taskId}/subtasks/${subtaskId}`,
+      `${
+        import.meta.env.VITE_API_URL
+      }/api/studiotasks/${taskId}/subtasks/${subtaskId}`,
       {
         method: 'DELETE',
         credentials: 'include',
