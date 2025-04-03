@@ -13,7 +13,7 @@ export type User = {
 
 export async function getAllUsers(): Promise<User[] | null> {
   try {
-    const response = await fetch('https://gamma-crm.onrender.com/api/users', {
+    const response = await fetch('http://localhost:5001/api/users', {
       method: 'GET',
       credentials: 'include',
       headers: {
@@ -34,16 +34,13 @@ export async function getAllUsers(): Promise<User[] | null> {
 
 export async function getUserById(id: string): Promise<User | null> {
   try {
-    const response = await fetch(
-      `https://gamma-crm.onrender.com/api/users/${id}`,
-      {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    const response = await fetch(`http://localhost:5001/api/users/${id}`, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
     if (response.ok) {
       return await response.json();
     }
@@ -58,12 +55,9 @@ export async function getUserById(id: string): Promise<User | null> {
 
 export async function getCurrentUser(): Promise<User | null> {
   try {
-    const response = await fetch(
-      'https://gamma-crm.onrender.com/api/users/me',
-      {
-        credentials: 'include',
-      }
-    );
+    const response = await fetch('http://localhost:5001/api/users/me', {
+      credentials: 'include',
+    });
     if (response.ok) {
       return await response.json();
     }
@@ -78,16 +72,13 @@ export async function getCurrentUser(): Promise<User | null> {
 
 export async function deleteUser(id: string) {
   try {
-    const response = await fetch(
-      `https://gamma-crm.onrender.com/api/users/${id}`,
-      {
-        method: 'DELETE',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    const response = await fetch(`http://localhost:5001/api/users/${id}`, {
+      method: 'DELETE',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
     if (response.ok) {
       return await response.json();
     }

@@ -86,8 +86,8 @@ export const ReckoningTaskModel = mongoose.model(
       type: Date,
       required: true,
     },
-    deadline: {
-      type: String,
-    },
+    // deadline: {
+    //   type: String,
+    // },
   }),
 );

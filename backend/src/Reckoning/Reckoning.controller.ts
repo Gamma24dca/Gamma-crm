@@ -17,6 +17,8 @@ export const ReckoningTaskController = {
       const taskDate = new Date(taskToFilter.startDate);
 
       const TaskMonth = taskDate.getMonth();
+      // console.log('task month:', TaskMonth, 'fetched month:', month);
+
       return (
         // month is a number not string
         taskDate.getFullYear() === Number(year) && TaskMonth === Number(month)
@@ -28,6 +30,8 @@ export const ReckoningTaskController = {
         return part._id === userId && part.isVisible;
       });
     });
+
+    // console.log('tasks:', filteredReckoningTasks);
     return filteredReckoningTasks;
   },
 

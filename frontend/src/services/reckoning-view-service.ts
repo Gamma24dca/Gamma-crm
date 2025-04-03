@@ -20,22 +20,19 @@ export type ReckoningTaskTypes = {
   participants: [
     { _id: string; isVisible: boolean; name: string; hours: DaysArray[] },
   ];
-  deadline: string;
+  // deadline: string;
   startDate: Date;
 };
 
 export async function getAllReckoningTasks() {
   try {
-    const response = await fetch(
-      'https://gamma-crm.onrender.com/api/reckoningtasks',
-      {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    const response = await fetch('http://localhost:5001/api/reckoningtasks', {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
     if (response.ok) {
       return await response.json();
@@ -53,7 +50,7 @@ export async function getAllReckoningTasks() {
 export async function getMyReckoningTasks(userId, year, month) {
   try {
     const response = await fetch(
-      `https://gamma-crm.onrender.com/api/reckoningtasks/${year}/${month}/${userId}`,
+      `http://localhost:5001/api/reckoningtasks/${year}/${month}/${userId}`,
       {
         method: 'GET',
         credentials: 'include',
@@ -86,7 +83,7 @@ export async function addReckoningTask({
   printWhat,
   printWhere,
   participants,
-  deadline,
+  // deadline,
   startDate,
 }: ReckoningTaskTypes) {
   const formData = {
@@ -99,22 +96,19 @@ export async function addReckoningTask({
     printWhat,
     printWhere,
     participants,
-    deadline,
+    // deadline,
     startDate,
   };
 
   try {
-    const response = await fetch(
-      'https://gamma-crm.onrender.com/api/reckoningtasks',
-      {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      }
-    );
+    const response = await fetch('http://localhost:5001/api/reckoningtasks', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
     if (response.ok) {
       return await response.json();
     }
@@ -135,7 +129,7 @@ export async function updateReckoningTask({ taskId, value }) {
       ...value,
     };
     const response = await fetch(
-      `https://gamma-crm.onrender.com/api/reckoningtasks/${taskId}`,
+      `http://localhost:5001/api/reckoningtasks/${taskId}`,
       {
         method: 'PATCH',
         credentials: 'include',
@@ -164,7 +158,7 @@ export async function updateDay({ taskId, userId, dayId, value }) {
       ...value,
     };
     const response = await fetch(
-      `https://gamma-crm.onrender.com/api/reckoningtasks/${taskId}/dayUpdate/${userId}/${dayId}`,
+      `http://localhost:5001/api/reckoningtasks/${taskId}/dayUpdate/${userId}/${dayId}`,
       {
         method: 'PATCH',
         credentials: 'include',
@@ -189,7 +183,7 @@ export async function updateDay({ taskId, userId, dayId, value }) {
 export async function deleteReckoningTask(id) {
   try {
     const response = await fetch(
-      `https://gamma-crm.onrender.com/api/reckoningtasks/${id}`,
+      `http://localhost:5001/api/reckoningtasks/${id}`,
       {
         method: 'DELETE',
         credentials: 'include',

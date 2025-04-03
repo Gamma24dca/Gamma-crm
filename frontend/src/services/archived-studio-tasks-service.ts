@@ -3,7 +3,7 @@ import { Config } from '../config';
 export async function getAllArchivedStudioTasks() {
   try {
     const response = await fetch(
-      'https://gamma-crm.onrender.com/api/archivedstudiotasks',
+      'http://localhost:5001/api/archivedstudiotasks',
       {
         method: 'GET',
         credentials: 'include',
@@ -28,7 +28,7 @@ export async function getAllArchivedStudioTasks() {
 export async function getArchivedStudioTask(id: string) {
   try {
     const response = await fetch(
-      `https://gamma-crm.onrender.com/api/archivedstudiotasks/${id}`,
+      `http://localhost:5001/api/archivedstudiotasks/${id}`,
       {
         method: 'GET',
         credentials: 'include',
@@ -53,7 +53,7 @@ export async function getArchivedStudioTask(id: string) {
 export async function archiveStudioTask(id: string) {
   try {
     const response = await fetch(
-      `https://gamma-crm.onrender.com/api/move-studiotask/${id}`,
+      `http://localhost:5001/api/move-studiotask/${id}`,
       {
         method: 'POST',
         credentials: 'include',
@@ -81,7 +81,7 @@ export async function unarchiveStudioTask({ id, index }) {
   };
   try {
     const response = await fetch(
-      `https://gamma-crm.onrender.com/api/unarchive-sudiotask/${id}`,
+      `http://localhost:5001/api/unarchive-sudiotask/${id}`,
       {
         method: 'POST',
         credentials: 'include',
@@ -110,7 +110,7 @@ export async function SearchArchivedTask(query) {
       return [];
     }
     const response = await fetch(
-      `https://gamma-crm.onrender.com/api/archivedstudiotasks/search/${query}`,
+      `http://localhost:5001/api/archivedstudiotasks/search/${query}`,
       {
         method: 'GET',
         credentials: 'include',
