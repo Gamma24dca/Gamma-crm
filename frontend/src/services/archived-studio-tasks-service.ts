@@ -3,7 +3,7 @@ import { Config } from '../config';
 export async function getAllArchivedStudioTasks() {
   try {
     const response = await fetch(
-      'http://localhost:5001/api/archivedstudiotasks',
+      `${import.meta.env.VITE_API_URL}/api/archivedstudiotasks`,
       {
         method: 'GET',
         credentials: 'include',
@@ -28,7 +28,7 @@ export async function getAllArchivedStudioTasks() {
 export async function getArchivedStudioTask(id: string) {
   try {
     const response = await fetch(
-      `http://localhost:5001/api/archivedstudiotasks/${id}`,
+      `${import.meta.env.VITE_API_URL}/api/archivedstudiotasks/${id}`,
       {
         method: 'GET',
         credentials: 'include',
@@ -53,7 +53,7 @@ export async function getArchivedStudioTask(id: string) {
 export async function archiveStudioTask(id: string) {
   try {
     const response = await fetch(
-      `http://localhost:5001/api/move-studiotask/${id}`,
+      `${import.meta.env.VITE_API_URL}/api/move-studiotask/${id}`,
       {
         method: 'POST',
         credentials: 'include',
@@ -81,7 +81,7 @@ export async function unarchiveStudioTask({ id, index }) {
   };
   try {
     const response = await fetch(
-      `http://localhost:5001/api/unarchive-sudiotask/${id}`,
+      `${import.meta.env.VITE_API_URL}/api/unarchive-sudiotask/${id}`,
       {
         method: 'POST',
         credentials: 'include',
@@ -110,7 +110,7 @@ export async function SearchArchivedTask(query) {
       return [];
     }
     const response = await fetch(
-      `http://localhost:5001/api/archivedstudiotasks/search/${query}`,
+      `${import.meta.env.VITE_API_URL}/api/archivedstudiotasks/search/${query}`,
       {
         method: 'GET',
         credentials: 'include',

@@ -26,13 +26,16 @@ export type ReckoningTaskTypes = {
 
 export async function getAllReckoningTasks() {
   try {
-    const response = await fetch('http://localhost:5001/api/reckoningtasks', {
-      method: 'GET',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/reckoningtasks`,
+      {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
 
     if (response.ok) {
       return await response.json();
@@ -50,7 +53,9 @@ export async function getAllReckoningTasks() {
 export async function getMyReckoningTasks(userId, year, month) {
   try {
     const response = await fetch(
-      `http://localhost:5001/api/reckoningtasks/${year}/${month}/${userId}`,
+      `${
+        import.meta.env.VITE_API_URL
+      }/api/reckoningtasks/${year}/${month}/${userId}`,
       {
         method: 'GET',
         credentials: 'include',
@@ -101,14 +106,17 @@ export async function addReckoningTask({
   };
 
   try {
-    const response = await fetch('http://localhost:5001/api/reckoningtasks', {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    });
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/reckoningtasks`,
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      }
+    );
     if (response.ok) {
       return await response.json();
     }
@@ -129,7 +137,7 @@ export async function updateReckoningTask({ taskId, value }) {
       ...value,
     };
     const response = await fetch(
-      `http://localhost:5001/api/reckoningtasks/${taskId}`,
+      `${import.meta.env.VITE_API_URL}/api/reckoningtasks/${taskId}`,
       {
         method: 'PATCH',
         credentials: 'include',
@@ -158,7 +166,9 @@ export async function updateDay({ taskId, userId, dayId, value }) {
       ...value,
     };
     const response = await fetch(
-      `http://localhost:5001/api/reckoningtasks/${taskId}/dayUpdate/${userId}/${dayId}`,
+      `${
+        import.meta.env.VITE_API_URL
+      }/api/reckoningtasks/${taskId}/dayUpdate/${userId}/${dayId}`,
       {
         method: 'PATCH',
         credentials: 'include',
@@ -183,7 +193,7 @@ export async function updateDay({ taskId, userId, dayId, value }) {
 export async function deleteReckoningTask(id) {
   try {
     const response = await fetch(
-      `http://localhost:5001/api/reckoningtasks/${id}`,
+      `${import.meta.env.VITE_API_URL}/api/reckoningtasks/${id}`,
       {
         method: 'DELETE',
         credentials: 'include',
