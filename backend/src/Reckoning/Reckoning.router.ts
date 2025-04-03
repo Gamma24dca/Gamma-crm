@@ -40,6 +40,7 @@ ReckoningTaskRouter.get(
   '/:year/:month/:userId',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
+    console.log(req.params.month);
     try {
       const filteredReckoningTasks =
         await ReckoningTaskController.getFilteredReckoningTasks(
@@ -102,7 +103,7 @@ ReckoningTaskRouter.post(
             printWhere: req.body.printWhere,
             participants: req.body.participants,
             startDate: req.body.startDate,
-            deadline: req.body.deadline,
+            // deadline: req.body.deadline,
           },
           req.user.id,
         );

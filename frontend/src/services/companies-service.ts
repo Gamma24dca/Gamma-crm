@@ -20,16 +20,13 @@ export type CompaniesType = {
 
 export async function getAllCompanies(): Promise<CompaniesType[] | null> {
   try {
-    const response = await fetch(
-      'https://gamma-crm.onrender.com/api/companies',
-      {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    const response = await fetch('http://localhost:5001/api/companies', {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
     if (response.ok) {
       return await response.json();
     }
@@ -44,16 +41,13 @@ export async function getAllCompanies(): Promise<CompaniesType[] | null> {
 
 export async function getCurrentCompany(id): Promise<CompaniesType | null> {
   try {
-    const response = await fetch(
-      `https://gamma-crm.onrender.com/api/companies/${id}`,
-      {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    const response = await fetch(`http://localhost:5001/api/companies/${id}`, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
     if (response.ok) {
       return await response.json();
@@ -85,17 +79,14 @@ export async function addCompany({
   };
 
   try {
-    const response = await fetch(
-      'https://gamma-crm.onrender.com/api/companies',
-      {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      }
-    );
+    const response = await fetch('http://localhost:5001/api/companies', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
 
     if (response.ok) {
       return await response.json();
@@ -113,16 +104,13 @@ export async function addCompany({
 
 export async function deleteCompany(id) {
   try {
-    const response = await fetch(
-      `https://gamma-crm.onrender.com/api/companies/${id}`,
-      {
-        method: 'DELETE',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    const response = await fetch(`http://localhost:5001/api/companies/${id}`, {
+      method: 'DELETE',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
     if (response.ok) {
       return await response.json();
     }
@@ -143,17 +131,14 @@ export async function UpdateCompany({ id, companyData }) {
   };
 
   try {
-    const response = await fetch(
-      `https://gamma-crm.onrender.com/api/companies/${id}`,
-      {
-        method: 'PATCH',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      }
-    );
+    const response = await fetch(`http://localhost:5001/api/companies/${id}`, {
+      method: 'PATCH',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
 
     if (response.ok) {
       return await response.json();
@@ -173,7 +158,7 @@ export async function SearchCompany(query) {
       return [];
     }
     const response = await fetch(
-      `https://gamma-crm.onrender.com/api/companies/search/${query}`,
+      `http://localhost:5001/api/companies/search/${query}`,
       {
         method: 'GET',
         credentials: 'include',

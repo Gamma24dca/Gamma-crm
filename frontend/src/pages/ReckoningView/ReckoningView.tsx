@@ -1,25 +1,25 @@
-import { useEffect, useState } from 'react';
 import { Icon } from '@iconify/react';
+import { useEffect, useState } from 'react';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
 import ControlBarTitle from '../../components/Atoms/ControlBar/Title/ControlBarTitle';
 // import InfoBar from '../../components/Atoms/InfoBar/InfoBar';
+import CTA from '../../components/Atoms/CTA/CTA';
+import CheckboxLoader from '../../components/Atoms/CheckboxLoader/CheckboxLoader';
+import SearchInput from '../../components/Atoms/ControlBar/SearchInput/SearchInput';
 import ListContainer from '../../components/Atoms/ListContainer/ListContainer';
 import Select from '../../components/Atoms/Select/Select';
 import ViewContainer from '../../components/Atoms/ViewContainer/ViewContainer';
-import useCurrentDate from '../../hooks/useCurrentDate';
-import styles from './ReckoningView.module.css';
+import ReckoningTile from '../../components/Organisms/ReckoningTile/ReckoningTile';
+import SkeletonUsersLoading from '../../components/Organisms/SkeletonUsersLoading/SkeletonUsersLoading';
+import useReckoTasksContext from '../../hooks/Context/useReckoTasksContext';
 import useAuth from '../../hooks/useAuth';
+import useCurrentDate from '../../hooks/useCurrentDate';
 import {
   addReckoningTask,
   getMyReckoningTasks,
 } from '../../services/reckoning-view-service';
-import ReckoningTile from '../../components/Organisms/ReckoningTile/ReckoningTile';
-import CTA from '../../components/Atoms/CTA/CTA';
-import SearchInput from '../../components/Atoms/ControlBar/SearchInput/SearchInput';
 import generateSearchID from '../../utils/generateSearchId';
-import SkeletonUsersLoading from '../../components/Organisms/SkeletonUsersLoading/SkeletonUsersLoading';
-import useReckoTasksContext from '../../hooks/Context/useReckoTasksContext';
-import CheckboxLoader from '../../components/Atoms/CheckboxLoader/CheckboxLoader';
+import styles from './ReckoningView.module.css';
 
 function generateDaysArray(month, year) {
   const daysInMonth = new Date(year, month, 0).getDate();
@@ -69,10 +69,16 @@ function ReckoningView() {
   };
 
   const fetchReckoningTasks = async (index) => {
+    // console.log('client month index:', index);
     try {
       handleLoadingStateChange('isGetMyTasksLoading', true);
 
-      const response = await getMyReckoningTasks(currentUserId, '2025', index);
+      // DODANE +1 PO ZMIANIE REQUESTOW NA LOCALHOST NIE WIEM DLACZEGO, PEWNIE TRZEBA ZMIENIC TAK JAK BYLO NA MAINE I FETCHOW Z CHMURY
+      const response = await getMyReckoningTasks(
+        currentUserId,
+        '2025',
+        index + 1
+      );
       if (response) {
         // setReckoningTasks(response);
         dispatch({ type: 'SET_RECKOTASKS', payload: response });
@@ -124,7 +130,7 @@ function ReckoningView() {
           },
         ],
         startDate,
-        deadline: '',
+        // deadline: '',
       });
 
       if (addResponse !== null) {
