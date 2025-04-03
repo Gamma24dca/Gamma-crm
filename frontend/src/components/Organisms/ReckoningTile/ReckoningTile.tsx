@@ -109,9 +109,26 @@ function ReckoningTile({ reckTask, index }) {
     try {
       setIsTaskDeleteLoading(true);
       setIsEditOpen(false);
-      const response = await deleteReckoningTask(id);
+      const activeUsersCount = reckTask.participants.filter(
+        (p) => p.isVisible
+      ).length;
 
-      dispatch({ type: 'DELETE_RECKOTASK', payload: response });
+      if (activeUsersCount <= 1) {
+        const response = await deleteReckoningTask(id);
+        dispatch({ type: 'DELETE_RECKOTASK', payload: response });
+      } else {
+        const updatedParticipants = reckTask.participants.map((part) => {
+          return part._id === currentUserId && part.isVisible
+            ? { ...part, isVisible: false }
+            : part;
+        });
+
+        const response = await updateReckoningTask({
+          taskId: reckTask._id,
+          value: { participants: updatedParticipants },
+        });
+        dispatch({ type: 'DELETE_RECKOTASK', payload: response });
+      }
     } catch (error) {
       console.error('Error saving value:', error);
     } finally {
