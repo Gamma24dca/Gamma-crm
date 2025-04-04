@@ -20,6 +20,12 @@ import {
 } from '../../services/reckoning-view-service';
 import generateSearchID from '../../utils/generateSearchId';
 import styles from './ReckoningView.module.css';
+import useModal from '../../hooks/useModal';
+import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplate';
+import useStudioTasksContext from '../../hooks/Context/useStudioTasksContext';
+import { getAllStudioTasks } from '../../services/studio-tasks-service';
+import CompanyBatch from '../../components/Atoms/CompanyBatch/CompanyBatch';
+import UsersDisplay from '../../components/Organisms/UsersDisplay/UsersDisplay';
 
 function generateDaysArray(month, year) {
   const daysInMonth = new Date(year, month, 0).getDate();
@@ -37,6 +43,16 @@ function generateDaysArray(month, year) {
 }
 
 function ReckoningView() {
+  const [selectedMonthDaysArray, setSelectedMonthDaysArray] = useState([]);
+  const [hover, setHover] = useState({
+    isHover: false,
+    cardId: '',
+    wrapperClass: styles.contentWrapper,
+  });
+  const [taskLoadingState, setTaskLoadingState] = useState({
+    isGetMyTasksLoading: false,
+    isAddEmptyLoading: false,
+  });
   const {
     selectedMonth,
     selectedYear,
@@ -46,18 +62,16 @@ function ReckoningView() {
     years,
   } = useCurrentDate();
 
-  const [selectedMonthDaysArray, setSelectedMonthDaysArray] = useState([]);
-  const [taskLoadingState, setTaskLoadingState] = useState({
-    isGetMyTasksLoading: false,
-    isAddEmptyLoading: false,
-  });
-
   // const [reckoningTasks, setReckoningTasks] = useState([]);
   const { reckoTasks, dispatch } = useReckoTasksContext();
+  const { showModal, exitAnim, openModal, closeModal } = useModal();
+  const { studioTasks, dispatch: studioTasksDispatch } =
+    useStudioTasksContext();
 
   const { user } = useAuth();
   const currentUserId = user[0]._id;
   const monthIndex = new Date().getMonth();
+  const selectedMonthIndex = months.indexOf(selectedMonth) + 1;
 
   const handleLoadingStateChange = (key, value) => {
     setTaskLoadingState((prev) => {
@@ -90,10 +104,24 @@ function ReckoningView() {
     }
   };
 
-  const selectedMonthIndex = months.indexOf(selectedMonth) + 1;
+  const fetchTasksFromKanban = async () => {
+    if (studioTasks.length === 0) {
+      try {
+        const allStudioTasks = await getAllStudioTasks();
+        studioTasksDispatch({
+          type: 'SET_STUDIOTASKS',
+          payload: allStudioTasks,
+        });
+        console.log('fetched', allStudioTasks);
+      } catch (error) {
+        console.error('Error fetching tasks:', error);
+      }
+    }
+  };
 
   useEffect(() => {
     fetchReckoningTasks(monthIndex);
+    fetchTasksFromKanban();
   }, []);
 
   useEffect(() => {
@@ -179,8 +207,110 @@ function ReckoningView() {
     );
   };
 
+  const studioTasksAssignedTome = studioTasks.filter((task) => {
+    return task.participants.some((participant) => {
+      return participant._id === currentUserId;
+    });
+  });
+
   return (
     <>
+      <ModalTemplate
+        isOpen={showModal}
+        onClose={() => {
+          closeModal();
+          // handleLoadingStateChange('isFinalMessage', false);
+          // setFormValue(initialTaskObject);
+        }}
+        exitAnim={exitAnim}
+      >
+        <h3>Aktywne zlecenia</h3>
+
+        <div className={styles.tasksWrapper}>
+          {studioTasksAssignedTome.map((studioTask) => {
+            const companyClass = studioTask.client.split(' ').join(' ');
+            return (
+              <div
+                className={styles.studioTaskContainer}
+                key={studioTask._id}
+                onMouseEnter={() => {
+                  setHover((prev) => {
+                    return {
+                      ...prev,
+                      cardId: studioTask._id,
+                      wrapperClass: styles.contentWrapperExit,
+                    };
+                  });
+                  setTimeout(() => {
+                    setHover((prev) => {
+                      return {
+                        ...prev,
+                        isHover: true,
+                      };
+                    });
+                  }, 1000);
+                }}
+                onMouseLeave={() => {
+                  setHover((prev) => {
+                    return {
+                      ...prev,
+                      cardId: '',
+                      wrapperClass: styles.defaultContentWrapper,
+                    };
+                  });
+                  setTimeout(() => {
+                    setHover((prev) => {
+                      return {
+                        ...prev,
+                        isHover: false,
+                      };
+                    });
+                  }, 400);
+                }}
+              >
+                {hover.isHover && hover.cardId === studioTask._id ? (
+                  <div className={styles.ctaContainer}>
+                    <CTA>Dodaj</CTA>
+                  </div>
+                ) : (
+                  <div
+                    className={`${
+                      hover.cardId === studioTask._id
+                        ? hover.wrapperClass
+                        : styles.defaultContentWrapper
+                    }`}
+                  >
+                    <div className={styles.batchWrapper}>
+                      <CompanyBatch
+                        companyClass={companyClass}
+                        isClientPerson={false}
+                        isBigger={false}
+                      >
+                        {studioTask.client}
+                      </CompanyBatch>
+                      <CompanyBatch
+                        companyClass={null}
+                        isClientPerson
+                        isBigger={false}
+                      >
+                        {studioTask.clientPerson}
+                      </CompanyBatch>
+                    </div>
+                    <p className={styles.searchIDel}>#{studioTask.searchID}</p>
+                    <p className={styles.studioTaskTitle}>{studioTask.title}</p>
+                    <div className={styles.userDisplayWrapper}>
+                      <UsersDisplay
+                        data={studioTask}
+                        usersArray={studioTask.participants}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </ModalTemplate>
       <ControlBar>
         <ControlBarTitle>Rozliczenie</ControlBarTitle>
         <Select
@@ -199,7 +329,9 @@ function ReckoningView() {
           <p>{totalHours}</p>
         </div>
         <div className={styles.ctaWrapper}>
-          <CTA type="button">Dodaj ze zleceń</CTA>
+          <CTA type="button" onClick={openModal}>
+            Dodaj ze zleceń
+          </CTA>
         </div>
       </ControlBar>
       <ViewContainer>
