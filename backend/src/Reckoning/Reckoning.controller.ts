@@ -13,25 +13,37 @@ export const ReckoningTaskController = {
 
   async getFilteredReckoningTasks(userId, year, month) {
     const reckoningTasks = await ReckoningTaskModel.find().exec();
-    const filteredByDate = reckoningTasks.filter((taskToFilter) => {
-      const taskDate = new Date(taskToFilter.startDate);
+    // const filteredByDate = reckoningTasks.filter((taskToFilter) => {
+    //   const taskDate = new Date(taskToFilter.startDate);
 
-      const TaskMonth = taskDate.getMonth();
-      // console.log('task month:', TaskMonth, 'fetched month:', month);
+    //   const TaskMonth = taskDate.getMonth();
 
-      return (
-        // month is a number not string
-        taskDate.getFullYear() === Number(year) && TaskMonth === Number(month)
-      );
-    });
+    //   return (
+    //     taskDate.getFullYear() === Number(year) && TaskMonth === Number(month)
+    //   );
+    // });
 
-    const filteredReckoningTasks = filteredByDate.filter((task) => {
-      return task.participants.some((part) => {
-        return part._id === userId && part.isVisible;
+    // const filteredReckoningTasks = filteredByDate.filter((task) => {
+    //   return task.participants.some((part) => {
+    //     return part._id === userId && part.isVisible;
+    //   });
+    // });
+
+    const filteredReckoningTasks = reckoningTasks.filter((task) => {
+      return task.participants.some((participant) => {
+        const participantDate = new Date(participant.createdAt);
+        const participantMonth = participantDate.getMonth();
+        const participantYear = participantDate.getFullYear();
+
+        return (
+          participant._id === userId &&
+          participant.isVisible &&
+          participantYear === Number(year) &&
+          participantMonth === Number(month)
+        );
       });
     });
 
-    // console.log('tasks:', filteredReckoningTasks);
     return filteredReckoningTasks;
   },
 

@@ -79,6 +79,7 @@ export const ReckoningTaskModel = mongoose.model(
             isWeekend: Boolean,
           },
         ],
+        createdAt: Date,
       },
     ],
 
