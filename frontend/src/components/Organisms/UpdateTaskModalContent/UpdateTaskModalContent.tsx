@@ -10,6 +10,7 @@ import useStudioTaskUpdate from '../../../hooks/useStudioTaskUpdate';
 import useSubtask from '../../../hooks/useSubtasks';
 import useAuth from '../../../hooks/useAuth';
 import checkIfUserAssigned from '../../../utils/checkIfUserAssigned';
+import CompanyBatch from '../../Atoms/CompanyBatch/CompanyBatch';
 
 function UpdateTaskModalContent({
   task,
@@ -87,14 +88,17 @@ function UpdateTaskModalContent({
             <div>
               <p className={styles.sectionTitle}>Klient</p>
               <div className={styles.clientContainer}>
-                <p
-                  className={`${styles.modalCompanyBatch} ${[
-                    `${companyClass}`,
-                  ]}`}
+                <CompanyBatch
+                  companyClass={companyClass}
+                  isClientPerson={false}
+                  isBigger
                 >
                   {task.client}
-                </p>
-                <p className={styles.modalClientBatch}>{task.clientPerson}</p>
+                </CompanyBatch>
+
+                <CompanyBatch companyClass={null} isClientPerson isBigger>
+                  {task.clientPerson}
+                </CompanyBatch>
               </div>
             </div>
           </div>

@@ -11,6 +11,7 @@ import useAuth from '../../../hooks/useAuth';
 import useStudioTaskUpdate from '../../../hooks/useStudioTaskUpdate';
 import checkIfUserAssigned from '../../../utils/checkIfUserAssigned';
 import UpdateTaskModalContent from '../../Organisms/UpdateTaskModalContent/UpdateTaskModalContent';
+import CompanyBatch from '../../Atoms/CompanyBatch/CompanyBatch';
 
 function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
   const { showModal, exitAnim, openModal, closeModal } = useModal();
@@ -90,10 +91,21 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
               className={taskClass}
             >
               <div className={styles.clientInfoWrapper}>
-                <p className={`${styles.clientName} ${[`${companyClass}`]}`}>
+                <CompanyBatch
+                  companyClass={companyClass}
+                  isClientPerson={false}
+                  isBigger={false}
+                >
                   {task.client}
-                </p>
-                <p className={`${styles.clientPerson}`}>{task.clientPerson}</p>
+                </CompanyBatch>
+
+                <CompanyBatch
+                  companyClass={null}
+                  isClientPerson
+                  isBigger={false}
+                >
+                  {task.clientPerson}
+                </CompanyBatch>
               </div>
 
               <span className={styles.searchID}>#{task.searchID}</span>
