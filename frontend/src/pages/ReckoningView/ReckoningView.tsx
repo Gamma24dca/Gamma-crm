@@ -127,6 +127,7 @@ function ReckoningView() {
             isVisible: true,
             name: user[0].name,
             hours: generateDaysArray(selectedMonthIndex, 2025),
+            createdAt: new Date(selectedYear, selectedMonthIndex, 1),
           },
         ],
         startDate,

@@ -18,7 +18,13 @@ export type ReckoningTaskTypes = {
   printWhat: string;
   printWhere: string;
   participants: [
-    { _id: string; isVisible: boolean; name: string; hours: DaysArray[] },
+    {
+      _id: string;
+      isVisible: boolean;
+      name: string;
+      hours: DaysArray[];
+      createdAt: Date;
+    },
   ];
   // deadline: string;
   startDate: Date;
