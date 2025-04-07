@@ -60,6 +60,8 @@ export const ReckoningTaskController = {
       (obj) => obj.searchID === taskData.searchID,
     );
 
+    console.log('is already>!?!!?!?', isAlreadyCreated);
+
     if (isAlreadyCreated) {
       const filteredTask = reckoningTasks.filter((task) => {
         return task.searchID === taskData.searchID;
@@ -67,7 +69,9 @@ export const ReckoningTaskController = {
 
       filteredTask[0].participants = filteredTask[0].participants.map(
         (part) => {
-          return part._id === userId ? { ...part, isVisible: true } : part;
+          return part._id === userId
+            ? { ...part, isVisible: true, createdAt: taskData.startDate }
+            : part;
         },
       );
       const updatedTask = await ReckoningTaskController.updateReckoningTask(

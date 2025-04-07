@@ -136,6 +136,58 @@ export async function addReckoningTask({
   }
 }
 
+export async function addReckoningTaskFromKanban({
+  searchID,
+  client,
+  clientPerson,
+  title,
+  description,
+  author,
+  printWhat,
+  printWhere,
+  participants,
+  // deadline,
+  startDate,
+}: ReckoningTaskTypes) {
+  const formData = {
+    searchID,
+    client,
+    clientPerson,
+    title,
+    description,
+    author,
+    printWhat,
+    printWhere,
+    participants,
+    // deadline,
+    startDate,
+  };
+
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/reckoningtasks/from-kanban`,
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      }
+    );
+    if (response.ok) {
+      return await response.json();
+    }
+    throw new Error(`${response.status} ${response.statusText}`);
+  } catch (error) {
+    if (Config.isDev) {
+      throw new Error('Get users', error.message);
+    }
+    console.error(error.message);
+    return null;
+  }
+}
+
 export async function updateReckoningTask({ taskId, value }) {
   try {
     const formValue = {

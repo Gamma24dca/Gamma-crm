@@ -6,7 +6,7 @@ export const ArchivedStudioTaskModel = mongoose.model(
     searchID: {
       type: Number,
       required: true,
-      unique: true,
+      // unique: true,
     },
     title: {
       type: String,

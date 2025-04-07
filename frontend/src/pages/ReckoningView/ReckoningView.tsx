@@ -16,6 +16,7 @@ import useAuth from '../../hooks/useAuth';
 import useCurrentDate from '../../hooks/useCurrentDate';
 import {
   addReckoningTask,
+  addReckoningTaskFromKanban,
   getMyReckoningTasks,
 } from '../../services/reckoning-view-service';
 import generateSearchID from '../../utils/generateSearchId';
@@ -44,15 +45,16 @@ function generateDaysArray(month, year) {
 
 function ReckoningView() {
   const [selectedMonthDaysArray, setSelectedMonthDaysArray] = useState([]);
-  const [hover, setHover] = useState({
-    isHover: false,
-    cardId: '',
-    wrapperClass: styles.contentWrapper,
-  });
+  // const [hover, setHover] = useState({
+  //   isHover: false,
+  //   cardId: '',
+  // });
+  const [hoveredCardId, setHoveredCardId] = useState(null);
   const [taskLoadingState, setTaskLoadingState] = useState({
     isGetMyTasksLoading: false,
     isAddEmptyLoading: false,
   });
+
   const {
     selectedMonth,
     selectedYear,
@@ -172,6 +174,52 @@ function ReckoningView() {
     }
   };
 
+  const handleAddFromKanban = async ({
+    searchID,
+    client,
+    clientPerson,
+    title,
+    description,
+
+    participants,
+  }) => {
+    try {
+      handleLoadingStateChange('isAddEmptyLoading', true);
+
+      const startDate = new Date(selectedYear, selectedMonthIndex, 1);
+
+      const addResponse = await addReckoningTaskFromKanban({
+        searchID,
+        client,
+        clientPerson,
+        title,
+        description,
+        author: user[0],
+        printWhat: '',
+        printWhere: '',
+        participants: participants.map((part) => {
+          return {
+            _id: part._id,
+            isVisible: currentUserId === part._id,
+            name: part.name,
+            hours: generateDaysArray(selectedMonthIndex, 2025),
+            createdAt: new Date(selectedYear, selectedMonthIndex, 1),
+          };
+        }),
+        startDate,
+        // deadline: '',
+      });
+
+      if (addResponse !== null) {
+        dispatch({ type: 'CREATE_RECKOTASK', payload: addResponse });
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      handleLoadingStateChange('isAddEmptyLoading', false);
+    }
+  };
+
   const renderReckoTasks = () => {
     if (taskLoadingState.isGetMyTasksLoading) {
       return <SkeletonUsersLoading />;
@@ -234,78 +282,59 @@ function ReckoningView() {
                 className={styles.studioTaskContainer}
                 key={studioTask._id}
                 onMouseEnter={() => {
-                  setHover((prev) => {
-                    return {
-                      ...prev,
-                      cardId: studioTask._id,
-                      wrapperClass: styles.contentWrapperExit,
-                    };
-                  });
-                  setTimeout(() => {
-                    setHover((prev) => {
-                      return {
-                        ...prev,
-                        isHover: true,
-                      };
-                    });
-                  }, 1000);
+                  setHoveredCardId(studioTask._id);
                 }}
                 onMouseLeave={() => {
-                  setHover((prev) => {
-                    return {
-                      ...prev,
-                      cardId: '',
-                      wrapperClass: styles.defaultContentWrapper,
-                    };
-                  });
-                  setTimeout(() => {
-                    setHover((prev) => {
-                      return {
-                        ...prev,
-                        isHover: false,
-                      };
-                    });
-                  }, 400);
+                  setHoveredCardId(null);
                 }}
               >
-                {hover.isHover && hover.cardId === studioTask._id ? (
-                  <div className={styles.ctaContainer}>
-                    <CTA>Dodaj</CTA>
+                <div
+                  className={`${styles.contentWrapper} ${
+                    hoveredCardId === studioTask._id
+                      ? styles.fadeOut
+                      : styles.fadeIn
+                  }`}
+                >
+                  <div className={styles.batchWrapper}>
+                    <CompanyBatch
+                      companyClass={companyClass}
+                      isClientPerson={false}
+                      isBigger={false}
+                    >
+                      {studioTask.client}
+                    </CompanyBatch>
+                    <CompanyBatch
+                      companyClass={null}
+                      isClientPerson
+                      isBigger={false}
+                    >
+                      {studioTask.clientPerson}
+                    </CompanyBatch>
                   </div>
-                ) : (
-                  <div
-                    className={`${
-                      hover.cardId === studioTask._id
-                        ? hover.wrapperClass
-                        : styles.defaultContentWrapper
-                    }`}
+                  <p className={styles.searchIDel}>#{studioTask.searchID}</p>
+                  <p className={styles.studioTaskTitle}>{studioTask.title}</p>
+                  <div className={styles.userDisplayWrapper}>
+                    <UsersDisplay
+                      data={studioTask}
+                      usersArray={studioTask.participants}
+                    />
+                  </div>
+                </div>
+                <div
+                  className={`${styles.ctaContainer} ${
+                    hoveredCardId === studioTask._id
+                      ? styles.fadeIn
+                      : styles.fadeOut
+                  }`}
+                >
+                  <CTA
+                    onClick={() => {
+                      handleAddFromKanban(studioTask);
+                    }}
                   >
-                    <div className={styles.batchWrapper}>
-                      <CompanyBatch
-                        companyClass={companyClass}
-                        isClientPerson={false}
-                        isBigger={false}
-                      >
-                        {studioTask.client}
-                      </CompanyBatch>
-                      <CompanyBatch
-                        companyClass={null}
-                        isClientPerson
-                        isBigger={false}
-                      >
-                        {studioTask.clientPerson}
-                      </CompanyBatch>
-                    </div>
-                    <p className={styles.searchIDel}>#{studioTask.searchID}</p>
-                    <p className={styles.studioTaskTitle}>{studioTask.title}</p>
-                    <div className={styles.userDisplayWrapper}>
-                      <UsersDisplay
-                        data={studioTask}
-                        usersArray={studioTask.participants}
-                      />
-                    </div>
-                  </div>
-                )}
+                    Dodaj
+                  </CTA>
+                </div>
               </div>
             );
           })}
