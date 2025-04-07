@@ -60,17 +60,26 @@ export const ReckoningTaskController = {
       (obj) => obj.searchID === taskData.searchID,
     );
 
-    console.log('is already>!?!!?!?', isAlreadyCreated);
-
     if (isAlreadyCreated) {
       const filteredTask = reckoningTasks.filter((task) => {
         return task.searchID === taskData.searchID;
       });
 
+      const partHours = taskData.participants.filter((part) => {
+        return part._id === userId;
+      });
+
+      console.log(partHours);
+
       filteredTask[0].participants = filteredTask[0].participants.map(
         (part) => {
           return part._id === userId
-            ? { ...part, isVisible: true, createdAt: taskData.startDate }
+            ? {
+                ...part,
+                isVisible: true,
+                createdAt: taskData.startDate,
+                hours: partHours[0].hours,
+              }
             : part;
         },
       );
@@ -95,9 +104,35 @@ export const ReckoningTaskController = {
     return updatedReckoningTask;
   },
 
-  async deleteReckoningTask(id) {
-    const deletedReckTask = await ReckoningTaskModel.findByIdAndDelete(id);
-    return deletedReckTask;
+  async deleteReckoningTask(id, userId) {
+    const taskToDelete = await ReckoningTaskModel.findById(id).exec();
+
+    const activeUsersCount = taskToDelete.participants.filter(
+      (p) => p.isVisible,
+    ).length;
+
+    if (activeUsersCount <= 1) {
+      const deletedReckTask = await ReckoningTaskModel.findByIdAndDelete(id);
+      return deletedReckTask;
+    } else {
+      taskToDelete.participants = taskToDelete.participants.map((part) => {
+        return part._id === userId && part.isVisible
+          ? { ...part, isVisible: false }
+          : part;
+      });
+
+      // console.log('Parts', updatedParticipants);
+
+      await ReckoningTaskController.updateReckoningTask(
+        taskToDelete._id,
+        taskToDelete,
+      );
+      const updatedReckoTask =
+        await ReckoningTaskController.getReckoningTask(id);
+
+      // console.log('upda TASK', updatedTask);
+      return updatedReckoTask;
+    }
   },
 
   async updateDay(taskId, dayId, userId, value) {
