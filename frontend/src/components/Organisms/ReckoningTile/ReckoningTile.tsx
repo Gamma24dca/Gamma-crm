@@ -109,26 +109,26 @@ function ReckoningTile({ reckTask, index }) {
     try {
       setIsTaskDeleteLoading(true);
       setIsEditOpen(false);
-      const activeUsersCount = reckTask.participants.filter(
-        (p) => p.isVisible
-      ).length;
+      // const activeUsersCount = reckTask.participants.filter(
+      //   (p) => p.isVisible
+      // ).length;
 
-      if (activeUsersCount <= 1) {
-        const response = await deleteReckoningTask(id);
-        dispatch({ type: 'DELETE_RECKOTASK', payload: response });
-      } else {
-        const updatedParticipants = reckTask.participants.map((part) => {
-          return part._id === currentUserId && part.isVisible
-            ? { ...part, isVisible: false }
-            : part;
-        });
+      // if (activeUsersCount <= 1) {
+      const response = await deleteReckoningTask(id);
+      dispatch({ type: 'DELETE_RECKOTASK', payload: response });
+      // } else {
+      //   const updatedParticipants = reckTask.participants.map((part) => {
+      //     return part._id === currentUserId && part.isVisible
+      //       ? { ...part, isVisible: false }
+      //       : part;
+      //   });
 
-        const response = await updateReckoningTask({
-          taskId: reckTask._id,
-          value: { participants: updatedParticipants },
-        });
-        dispatch({ type: 'DELETE_RECKOTASK', payload: response });
-      }
+      //   const response = await updateReckoningTask({
+      //     taskId: reckTask._id,
+      //     value: { participants: updatedParticipants },
+      //   });
+      //   dispatch({ type: 'DELETE_RECKOTASK', payload: response });
+      // }
     } catch (error) {
       console.error('Error saving value:', error);
     } finally {

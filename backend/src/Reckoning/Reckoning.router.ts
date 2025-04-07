@@ -138,7 +138,10 @@ ReckoningTaskRouter.delete(
   async (req, res) => {
     try {
       const deletedReckoTask =
-        await ReckoningTaskController.deleteReckoningTask(req.params.id);
+        await ReckoningTaskController.deleteReckoningTask(
+          req.params.id,
+          req.user.id,
+        );
       res.status(StatusCodes.ACCEPTED).json(deletedReckoTask);
     } catch (error) {
       console.error(error);
