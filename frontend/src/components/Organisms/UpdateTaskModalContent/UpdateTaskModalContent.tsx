@@ -1,5 +1,6 @@
 import { Icon } from '@iconify/react';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import DateFormatter from '../../../utils/dateFormatter';
 import CheckboxLoader from '../../Atoms/CheckboxLoader/CheckboxLoader';
 import ModalSectionTitle from '../../Atoms/ModalSectionTitle/ModalSectionTitle';
@@ -159,11 +160,17 @@ function UpdateTaskModalContent({
                       className={styles.reckoSectionElementContainer}
                       key={art._id}
                     >
-                      <img
-                        className={styles.heroImg}
-                        src={`${art.img}`}
-                        alt=""
-                      />
+                      <Link
+                        className={styles.userWrapper}
+                        to={`/użytkownicy/${art._id}`}
+                      >
+                        <img
+                          className={styles.heroImg}
+                          src={`${art.img}`}
+                          alt=""
+                        />
+                      </Link>
+
                       <p className={styles.reckoSectionPartName}>{art.name}:</p>
                       <p>{summarizeHours(art.hours)}h</p>
                     </div>

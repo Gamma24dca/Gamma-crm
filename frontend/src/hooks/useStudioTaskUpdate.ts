@@ -10,6 +10,11 @@ import useStudioTasksContext from './Context/useStudioTasksContext';
 import useUsersContext from './Context/useUsersContext';
 import useCompaniesContext from './Context/useCompaniesContext';
 import socket from '../socket';
+import {
+  getReckoningTask,
+  updateReckoningTask,
+} from '../services/reckoning-view-service';
+import generateDaysArray from '../utils/generateDaysArray';
 
 const useStudioTaskUpdate = (task, closeModal) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -24,6 +29,14 @@ const useStudioTaskUpdate = (task, closeModal) => {
   const { users } = useUsersContext();
   const { companies } = useCompaniesContext();
   const { dispatch } = useStudioTasksContext();
+
+  const fetchRelatedReckoTask = async () => {
+    if (task.reckoTaskID) {
+      const reckoTask = await getReckoningTask(task.reckoTaskID);
+      return reckoTask;
+    }
+    return null;
+  };
 
   useEffect(() => {
     socket.on('deleteTask', (taskToDel) => {
@@ -90,6 +103,7 @@ const useStudioTaskUpdate = (task, closeModal) => {
   const handleAddMember = async (userId: string, loadPlace: string) => {
     const userToAdd = users.find((user) => user._id === userId);
     const userToAddNasme = userToAdd.name;
+    const date = new Date();
 
     if (!userToAdd) return;
 
@@ -100,6 +114,32 @@ const useStudioTaskUpdate = (task, closeModal) => {
     );
 
     if (isAlreadyAdded) return;
+
+    const relatedReckoTask = await fetchRelatedReckoTask();
+
+    if (relatedReckoTask !== null) {
+      const updatedReckoTask = {
+        ...relatedReckoTask,
+        participants: [
+          ...relatedReckoTask.participants,
+          {
+            _id: userToAdd._id,
+            name: userToAdd.name,
+            img: userToAdd.img,
+            isVisible: false,
+            hours: generateDaysArray(date.getMonth() + 1, 2025),
+            createdAt: new Date(date.getFullYear(), date.getMonth() + 1, 1),
+          },
+        ],
+      };
+
+      await updateReckoningTask({
+        taskId: updatedReckoTask._id,
+        value: updatedReckoTask,
+      });
+
+      console.log(updatedReckoTask);
+    }
 
     const newFormValue = {
       ...task,
