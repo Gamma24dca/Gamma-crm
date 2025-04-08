@@ -10,6 +10,7 @@ type DaysArray = {
 export type ReckoningTaskTypes = {
   _id?: string;
   searchID: number;
+  idOfAssignedStudioTask: string;
   client: string;
   clientPerson: string;
   title: string;
@@ -138,6 +139,7 @@ export async function addReckoningTask({
 
 export async function addReckoningTaskFromKanban({
   searchID,
+  idOfAssignedStudioTask,
   client,
   clientPerson,
   title,
@@ -151,6 +153,7 @@ export async function addReckoningTaskFromKanban({
 }: ReckoningTaskTypes) {
   const formData = {
     searchID,
+    idOfAssignedStudioTask,
     client,
     clientPerson,
     title,

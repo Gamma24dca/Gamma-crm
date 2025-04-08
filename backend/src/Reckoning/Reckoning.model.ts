@@ -6,7 +6,9 @@ export const ReckoningTaskModel = mongoose.model(
     searchID: {
       type: Number,
     },
-
+    idOfAssignedStudioTask: {
+      type: String,
+    },
     client: {
       type: String,
     },

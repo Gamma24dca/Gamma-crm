@@ -32,6 +32,8 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
 
   const subtasksLength = task.subtasks.length;
 
+  console.log(task.reckoTaskID);
+
   return (
     <>
       <ModalTemplate
@@ -109,6 +111,7 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
               </div>
 
               <span className={styles.searchID}>#{task.searchID}</span>
+              <span>{`${task.reckoTaskID}`}</span>
               <p className={styles.taskTitle}>{task.title}</p>
               <div className={styles.userDisplayWrapper}>
                 <UsersDisplay data={task} usersArray={task.participants} />

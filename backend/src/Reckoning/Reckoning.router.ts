@@ -93,6 +93,7 @@ ReckoningTaskRouter.post(
         await ReckoningTaskController.addReckoningTaskFromKanban(
           {
             searchID: req.body.searchID,
+            idOfAssignedStudioTask: req.body.idOfAssignedStudioTask,
             client: req.body.client,
             clientPerson: req.body.clientPerson,
             title: req.body.title,

@@ -25,6 +25,12 @@ export const studioTasksReducer = (state: StudioTaskStateType, action: any) => {
           (studioTask) => studioTask._id !== action.payload._id
         ),
       };
+    case 'UPDATE_STUDIOTASK':
+      return {
+        studioTasks: state.studioTasks.map((st) => {
+          return st._id === action.payload._id ? action.payload : st;
+        }),
+      };
 
     case 'UPDATE_SUBTASK':
       return {

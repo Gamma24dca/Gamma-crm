@@ -8,6 +8,9 @@ export const StudioTaskModel = mongoose.model(
       required: true,
       // unique: true,
     },
+    reckoTaskID: {
+      type: String,
+    },
     title: {
       type: String,
       required: true,

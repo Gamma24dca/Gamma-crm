@@ -43,6 +43,7 @@ StudioTaskRouter.post(
     try {
       const newStudioTask = await StudioTaskController.addStudioTask({
         searchID: req.body.searchID,
+        reckoTaskID: req.body.reckoTaskID,
         title: req.body.title,
         client: req.body.client,
         clientPerson: req.body.clientPerson,

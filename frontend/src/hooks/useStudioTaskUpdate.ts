@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { archiveStudioTask } from '../services/archived-studio-tasks-service';
 import {
   deleteTask,
-  getAllStudioTasks,
   UpdateStudioTask,
   StudioTaskTypes,
+  getStudioTask,
 } from '../services/studio-tasks-service';
 import useStudioTasksContext from './Context/useStudioTasksContext';
 import useUsersContext from './Context/useUsersContext';
@@ -35,7 +35,7 @@ const useStudioTaskUpdate = (task, closeModal) => {
     });
 
     socket.on('updateTasks', (tasks) => {
-      dispatch({ type: 'SET_STUDIOTASKS', payload: tasks });
+      dispatch({ type: 'UPDATE_STUDIOTASK', payload: tasks });
     });
   }, []);
 
@@ -63,9 +63,14 @@ const useStudioTaskUpdate = (task, closeModal) => {
   const handleBlur = async () => {
     setIsEditing(false);
     try {
-      await UpdateStudioTask({ id: task._id, studioTaskData: formValue });
-      const res = await getAllStudioTasks();
-      dispatch({ type: 'SET_STUDIOTASKS', payload: res });
+      const updatedTask = await UpdateStudioTask({
+        id: task._id,
+        studioTaskData: formValue,
+      });
+      // const res = await getAllStudioTasks();
+      // dispatch({ type: 'SET_STUDIOTASKS', payload: res });
+      const res = await getStudioTask(updatedTask._id);
+      dispatch({ type: 'UPDATE_STUDIOTASK', payload: res });
       socket.emit('tasksUpdated', res);
     } catch (error) {
       console.error('Error saving value:', error);
@@ -105,12 +110,12 @@ const useStudioTaskUpdate = (task, closeModal) => {
 
     try {
       handleMemberLoadChange(userToAddNasme, true, loadPlace);
-      await UpdateStudioTask({
+      const updatedTask = await UpdateStudioTask({
         id: task._id,
         studioTaskData: newFormValue,
       });
-      const res = await getAllStudioTasks();
-      dispatch({ type: 'SET_STUDIOTASKS', payload: res });
+      const res = await getStudioTask(updatedTask._id);
+      dispatch({ type: 'UPDATE_STUDIOTASK', payload: res });
       socket.emit('tasksUpdated', res);
     } catch (error) {
       console.error('Error saving value:', error);
@@ -138,12 +143,14 @@ const useStudioTaskUpdate = (task, closeModal) => {
     try {
       handleMemberLoadChange(userToDeleteName, true, loadPlace);
 
-      await UpdateStudioTask({
+      const updatedTask = await UpdateStudioTask({
         id: task._id,
         studioTaskData: { ...task, participants: filteredParticipants },
       });
-      const res = await getAllStudioTasks();
-      dispatch({ type: 'SET_STUDIOTASKS', payload: res });
+      // const res = await getAllStudioTasks();
+      // dispatch({ type: 'SET_STUDIOTASKS', payload: res });
+      const res = await getStudioTask(updatedTask._id);
+      dispatch({ type: 'UPDATE_STUDIOTASK', payload: res });
       socket.emit('tasksUpdated', res);
     } catch (error) {
       console.error('Error saving value:', error);
@@ -165,7 +172,7 @@ const useStudioTaskUpdate = (task, closeModal) => {
       };
     });
     try {
-      await UpdateStudioTask({
+      const updatedTask = await UpdateStudioTask({
         id: task._id,
         studioTaskData: {
           ...task,
@@ -173,8 +180,10 @@ const useStudioTaskUpdate = (task, closeModal) => {
           clientPerson: companyFirstClientPerson,
         },
       });
-      const res = await getAllStudioTasks();
-      dispatch({ type: 'SET_STUDIOTASKS', payload: res });
+      // const res = await getAllStudioTasks();
+      // dispatch({ type: 'SET_STUDIOTASKS', payload: res });
+      const res = await getStudioTask(updatedTask._id);
+      dispatch({ type: 'UPDATE_STUDIOTASK', payload: res });
       socket.emit('tasksUpdated', res);
     } catch (error) {
       console.error(error);
@@ -184,15 +193,17 @@ const useStudioTaskUpdate = (task, closeModal) => {
   const handleClientPersonChange = async (e) => {
     handleFormChange(e, 'clientPerson');
     try {
-      await UpdateStudioTask({
+      const updatedTask = await UpdateStudioTask({
         id: task._id,
         studioTaskData: {
           ...task,
           clientPerson: e.target.value,
         },
       });
-      const res = await getAllStudioTasks();
-      dispatch({ type: 'SET_STUDIOTASKS', payload: res });
+      // const res = await getAllStudioTasks();
+      // dispatch({ type: 'SET_STUDIOTASKS', payload: res });
+      const res = await getStudioTask(updatedTask._id);
+      dispatch({ type: 'UPDATE_STUDIOTASK', payload: res });
       socket.emit('tasksUpdated', res);
     } catch (error) {
       console.error(error);

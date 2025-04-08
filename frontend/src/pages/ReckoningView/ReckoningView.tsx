@@ -24,9 +24,14 @@ import styles from './ReckoningView.module.css';
 import useModal from '../../hooks/useModal';
 import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplate';
 import useStudioTasksContext from '../../hooks/Context/useStudioTasksContext';
-import { getAllStudioTasks } from '../../services/studio-tasks-service';
+import {
+  getAllStudioTasks,
+  getStudioTask,
+  UpdateStudioTask,
+} from '../../services/studio-tasks-service';
 import CompanyBatch from '../../components/Atoms/CompanyBatch/CompanyBatch';
 import UsersDisplay from '../../components/Organisms/UsersDisplay/UsersDisplay';
+import socket from '../../socket';
 
 function generateDaysArray(month, year) {
   const daysInMonth = new Date(year, month, 0).getDate();
@@ -144,6 +149,7 @@ function ReckoningView() {
 
       const addResponse = await addReckoningTask({
         searchID: generateSearchID(),
+        idOfAssignedStudioTask: '',
         client: 'Wybierz firme',
         clientPerson: 'Wybierz klienta',
         title: '',
@@ -175,12 +181,12 @@ function ReckoningView() {
   };
 
   const handleAddFromKanban = async ({
+    _id,
     searchID,
     client,
     clientPerson,
     title,
     description,
-
     participants,
   }) => {
     try {
@@ -190,6 +196,7 @@ function ReckoningView() {
 
       const addResponse = await addReckoningTaskFromKanban({
         searchID,
+        idOfAssignedStudioTask: _id,
         client,
         clientPerson,
         title,
@@ -210,6 +217,15 @@ function ReckoningView() {
         // deadline: '',
       });
 
+      const updatedStudioTask = await UpdateStudioTask({
+        id: _id,
+        studioTaskData: { reckoTaskID: addResponse._id },
+      });
+
+      const res = await getStudioTask(updatedStudioTask._id);
+      dispatch({ type: 'UPDATE_STUDIOTASK', payload: res });
+      socket.emit('tasksUpdated', res);
+
       if (addResponse !== null) {
         dispatch({ type: 'CREATE_RECKOTASK', payload: addResponse });
       }
@@ -229,7 +245,12 @@ function ReckoningView() {
       return reckoTasks.map((reckTask, index) => {
         // console.log(reckTask.participants[0].hours);
         return (
-          <ReckoningTile key={reckTask._id} reckTask={reckTask} index={index} />
+          <ReckoningTile
+            key={reckTask._id}
+            reckTask={reckTask}
+            index={index}
+            assigneStudioTaskId={reckTask.idOfAssignedStudioTask}
+          />
         );
       });
     }
@@ -329,7 +350,17 @@ function ReckoningView() {
                 >
                   <CTA
                     onClick={() => {
-                      handleAddFromKanban(studioTask);
+                      handleAddFromKanban(
+                        studioTask as {
+                          _id: string;
+                          searchID: number;
+                          client: string;
+                          clientPerson: string;
+                          title: string;
+                          description: string;
+                          participants: any[];
+                        }
+                      );
                     }}
                   >
                     Dodaj
