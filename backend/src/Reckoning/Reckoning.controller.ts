@@ -13,21 +13,6 @@ export const ReckoningTaskController = {
 
   async getFilteredReckoningTasks(userId, year, month) {
     const reckoningTasks = await ReckoningTaskModel.find().exec();
-    // const filteredByDate = reckoningTasks.filter((taskToFilter) => {
-    //   const taskDate = new Date(taskToFilter.startDate);
-
-    //   const TaskMonth = taskDate.getMonth();
-
-    //   return (
-    //     taskDate.getFullYear() === Number(year) && TaskMonth === Number(month)
-    //   );
-    // });
-
-    // const filteredReckoningTasks = filteredByDate.filter((task) => {
-    //   return task.participants.some((part) => {
-    //     return part._id === userId && part.isVisible;
-    //   });
-    // });
 
     const filteredReckoningTasks = reckoningTasks.filter((task) => {
       return task.participants.some((participant) => {
@@ -68,8 +53,6 @@ export const ReckoningTaskController = {
       const partHours = taskData.participants.filter((part) => {
         return part._id === userId;
       });
-
-      console.log(partHours);
 
       filteredTask[0].participants = filteredTask[0].participants.map(
         (part) => {
@@ -121,8 +104,6 @@ export const ReckoningTaskController = {
           : part;
       });
 
-      // console.log('Parts', updatedParticipants);
-
       await ReckoningTaskController.updateReckoningTask(
         taskToDelete._id,
         taskToDelete,
@@ -130,7 +111,6 @@ export const ReckoningTaskController = {
       const updatedReckoTask =
         await ReckoningTaskController.getReckoningTask(id);
 
-      // console.log('upda TASK', updatedTask);
       return updatedReckoTask;
     }
   },

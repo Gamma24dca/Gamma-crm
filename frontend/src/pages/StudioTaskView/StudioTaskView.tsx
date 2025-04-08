@@ -31,6 +31,7 @@ import Overlay from '../../components/Atoms/Overlay/Overlay';
 
 const initialTaskObject: StudioTaskTypes = {
   searchID: 0,
+  reckoTaskID: '',
   title: '',
   client: '',
   clientPerson: '',
@@ -166,6 +167,7 @@ function StudioTaskView() {
       }
       const response = await addStudioTask({
         searchID,
+        reckoTaskID: '',
         title: formValue.title,
         client: formValue.client,
         clientPerson: formValue.clientPerson,

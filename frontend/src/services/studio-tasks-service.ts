@@ -9,6 +9,7 @@ type Subtask = {
 export type StudioTaskTypes = {
   _id?: string;
   searchID: number;
+  reckoTaskID: string;
   title: string;
   client: string;
   clientPerson: string;
@@ -53,8 +54,34 @@ export async function getAllStudioTasks() {
   }
 }
 
+export async function getStudioTask(id: string) {
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/studiotasks/${id}`,
+      {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    if (response.ok) {
+      return await response.json();
+    }
+    throw new Error(`${response.status} ${response.statusText}`);
+  } catch (error) {
+    if (Config.isDev) {
+      throw new Error('Get users', error.message);
+    }
+    console.error(error.message);
+    return null;
+  }
+}
+
 export async function addStudioTask({
   searchID,
+  reckoTaskID,
   title,
   client,
   clientPerson,
@@ -70,6 +97,7 @@ export async function addStudioTask({
 }: StudioTaskTypes) {
   const formData = {
     searchID,
+    reckoTaskID,
     title,
     client,
     clientPerson,
