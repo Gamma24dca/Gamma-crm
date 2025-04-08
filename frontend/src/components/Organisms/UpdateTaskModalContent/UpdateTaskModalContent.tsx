@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import DateFormatter from '../../../utils/dateFormatter';
 import CheckboxLoader from '../../Atoms/CheckboxLoader/CheckboxLoader';
 import ModalSectionTitle from '../../Atoms/ModalSectionTitle/ModalSectionTitle';
@@ -11,6 +11,8 @@ import useSubtask from '../../../hooks/useSubtasks';
 import useAuth from '../../../hooks/useAuth';
 import checkIfUserAssigned from '../../../utils/checkIfUserAssigned';
 import CompanyBatch from '../../Atoms/CompanyBatch/CompanyBatch';
+import { getReckoningTask } from '../../../services/reckoning-view-service';
+import summarizeHours from '../../../utils/SummarizeHours';
 
 function UpdateTaskModalContent({
   task,
@@ -18,6 +20,7 @@ function UpdateTaskModalContent({
   setDeleteCaptcha,
   companyClass,
 }) {
+  const [assignedReckoTask, setAssignedReckoTask] = useState([]);
   const {
     users,
     companies,
@@ -50,10 +53,23 @@ function UpdateTaskModalContent({
 
   const { user: currentUser } = useAuth();
 
+  const getAssignedReckoTask = async () => {
+    if (task.reckoTaskID) {
+      const reckoTask = await getReckoningTask(task.reckoTaskID);
+      // console.log(reckoTask);
+      if (reckoTask !== null) {
+        setAssignedReckoTask([reckoTask]);
+      } else {
+        setAssignedReckoTask([]);
+      }
+    }
+  };
+
   useEffect(() => {
     setIsUserAssigned(
       checkIfUserAssigned(task.participants, currentUser[0]._id)
     );
+    getAssignedReckoTask();
   }, []);
 
   return (
@@ -128,6 +144,35 @@ function UpdateTaskModalContent({
               <p className={styles.sectionTitle}>Numer</p>
               <p className={styles.cardNumber}>#{task.searchID}</p>
             </div>
+          </div>
+
+          <ModalSectionTitle iconName="mdi:account-clock-outline">
+            <p className={styles.descriptionTitle}>Rozliczenie</p>
+          </ModalSectionTitle>
+
+          <div className={styles.reckoSectionWrapper}>
+            {assignedReckoTask.length > 0 ? (
+              <div>
+                {assignedReckoTask[0].participants.map((art) => {
+                  return art.isVisible ? (
+                    <div
+                      className={styles.reckoSectionElementContainer}
+                      key={art._id}
+                    >
+                      <img
+                        className={styles.heroImg}
+                        src={`${art.img}`}
+                        alt=""
+                      />
+                      <p className={styles.reckoSectionPartName}>{art.name}:</p>
+                      <p>{summarizeHours(art.hours)}h</p>
+                    </div>
+                  ) : null;
+                })}
+              </div>
+            ) : (
+              <p>Nikt nie dodał</p>
+            )}
           </div>
 
           <ModalSectionTitle iconName="fluent:text-description-ltr-24-filled">

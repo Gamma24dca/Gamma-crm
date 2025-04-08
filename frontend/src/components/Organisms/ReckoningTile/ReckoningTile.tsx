@@ -14,9 +14,13 @@ import Overlay from '../../Atoms/Overlay/Overlay';
 import useReckoTasksContext from '../../../hooks/Context/useReckoTasksContext';
 import CheckboxLoader from '../../Atoms/CheckboxLoader/CheckboxLoader';
 import summarizeHours from '../../../utils/SummarizeHours';
-import { UpdateStudioTask } from '../../../services/studio-tasks-service';
+// import {
+//   getStudioTask,
+//   UpdateStudioTask,
+// } from '../../../services/studio-tasks-service';
+// import socket from '../../../socket';
 
-function ReckoningTile({ reckTask, index, assigneStudioTaskId }) {
+function ReckoningTile({ reckTask, index }) {
   const [formValue, setFormValue] = useState(reckTask);
   const [isTaskDeleteLoading, setIsTaskDeleteLoading] = useState(false);
   const { companies, dispatch: companiesDispatch } = useCompaniesContext();
@@ -110,16 +114,19 @@ function ReckoningTile({ reckTask, index, assigneStudioTaskId }) {
     try {
       setIsTaskDeleteLoading(true);
       setIsEditOpen(false);
-      const activeUsersCount = reckTask.participants.filter(
-        (p) => p.isVisible
-      ).length;
+      // const activeUsersCount = reckTask.participants.filter(
+      //   (p) => p.isVisible
+      // ).length;
 
-      if (activeUsersCount <= 1) {
-        await UpdateStudioTask({
-          id: assigneStudioTaskId,
-          studioTaskData: { idOfAssignedStudioTask: true },
-        });
-      }
+      // if (activeUsersCount <= 1) {
+      //   const updatedStudioTask = await UpdateStudioTask({
+      //     id: assigneStudioTaskId,
+      //     studioTaskData: { reckoTaskID: '' },
+      //   });
+
+      //   const res = await getStudioTask(updatedStudioTask._id);
+      //   dispatch({ type: 'UPDATE_STUDIOTASK', payload: res });
+      // }
 
       // if (activeUsersCount <= 1) {
       const response = await deleteReckoningTask(id);

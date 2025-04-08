@@ -32,8 +32,6 @@ function DraggableCard({ task, index, doneSubtasks = 0, isDragAllowed }) {
 
   const subtasksLength = task.subtasks.length;
 
-  console.log(task.reckoTaskID);
-
   return (
     <>
       <ModalTemplate
