@@ -74,6 +74,9 @@ export const ReckoningTaskModel = mongoose.model(
         name: {
           type: String,
         },
+        img: {
+          type: String,
+        },
         hours: [
           {
             _id: { type: mongoose.Schema.Types.ObjectId, auto: true },

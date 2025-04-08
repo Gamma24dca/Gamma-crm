@@ -282,6 +282,42 @@
   cursor: pointer;
 }
 
+.reckoSectionWrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-left: 25%;
+  display: flex;
+  gap: 10%;
+  margin-bottom: 30px;
+}
+
+.reckoSectionElementContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  p {
+    margin: 0;
+  }
+}
+
+.reckoSectionPartName {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.heroImg {
+  cursor: pointer;
+  width: 30px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
 @keyframes appear {
   from {
     opacity: 0;

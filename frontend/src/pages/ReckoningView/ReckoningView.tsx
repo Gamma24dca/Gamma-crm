@@ -119,7 +119,6 @@ function ReckoningView() {
           type: 'SET_STUDIOTASKS',
           payload: allStudioTasks,
         });
-        console.log('fetched', allStudioTasks);
       } catch (error) {
         console.error('Error fetching tasks:', error);
       }
@@ -209,6 +208,7 @@ function ReckoningView() {
             _id: part._id,
             isVisible: currentUserId === part._id,
             name: part.name,
+            img: part.img,
             hours: generateDaysArray(selectedMonthIndex, 2025),
             createdAt: new Date(selectedYear, selectedMonthIndex, 1),
           };
@@ -217,13 +217,17 @@ function ReckoningView() {
         // deadline: '',
       });
 
-      const updatedStudioTask = await UpdateStudioTask({
+      const updatedTask = await UpdateStudioTask({
         id: _id,
         studioTaskData: { reckoTaskID: addResponse._id },
       });
 
-      const res = await getStudioTask(updatedStudioTask._id);
-      dispatch({ type: 'UPDATE_STUDIOTASK', payload: res });
+      const res = await getStudioTask(updatedTask._id);
+      studioTasksDispatch({
+        type: 'UPDATE_STUDIOTASK',
+        payload: res,
+      });
+      console.log('updated', res);
       socket.emit('tasksUpdated', res);
 
       if (addResponse !== null) {
@@ -249,7 +253,7 @@ function ReckoningView() {
             key={reckTask._id}
             reckTask={reckTask}
             index={index}
-            assigneStudioTaskId={reckTask.idOfAssignedStudioTask}
+            // assigneStudioTaskId={reckTask.idOfAssignedStudioTask}
           />
         );
       });

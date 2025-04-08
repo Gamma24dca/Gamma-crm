@@ -25,6 +25,12 @@ export const reckoTasksReducer = (state: ReckoTasksStateType, action: any) => {
           return reckTask._id !== action.payload._id;
         }),
       };
+    case 'UPDATE_RECKOTASK':
+      return {
+        reckoTasks: state.reckoTasks.map((rt) => {
+          return rt._id === action.payload._id ? action.payload : rt;
+        }),
+      };
 
     case 'UPDATE_HOUR_NUM': {
       const { taskId, userId, dayId, newValue } = action.payload;
