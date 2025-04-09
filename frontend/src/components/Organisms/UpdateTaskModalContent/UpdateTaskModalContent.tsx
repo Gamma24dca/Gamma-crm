@@ -178,7 +178,9 @@ function UpdateTaskModalContent({
                 })}
               </div>
             ) : (
-              <p>Nikt nie dodał</p>
+              <p className={styles.noRecordsTitle}>
+                Brak pozycji w rozliczeniu
+              </p>
             )}
           </div>
 
