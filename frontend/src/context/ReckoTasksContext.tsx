@@ -33,7 +33,8 @@ export const reckoTasksReducer = (state: ReckoTasksStateType, action: any) => {
       };
 
     case 'UPDATE_HOUR_NUM': {
-      const { taskId, userId, dayId, newValue } = action.payload;
+      const { taskId, userId, dayId, newValue, selectedMonthIndex } =
+        action.payload;
 
       return {
         reckoTasks: state.reckoTasks.map((task) => {
@@ -42,40 +43,54 @@ export const reckoTasksReducer = (state: ReckoTasksStateType, action: any) => {
           const updatedParticipants = task.participants.map((participant) => {
             if (participant._id !== userId) return participant;
 
-            const updatedHours = participant.hours.map((hour) => {
+            const filteredHours = participant.months.filter((obj) => {
+              const monthIndex = new Date(obj.createdAt).getUTCMonth() + 1;
+              return monthIndex === selectedMonthIndex;
+            });
+
+            const updatedHours = filteredHours[0].hours.map((hour) => {
               return hour._id === dayId
                 ? { ...hour, hourNum: Number(newValue) }
                 : hour;
             });
 
-            return { ...participant, hours: updatedHours };
-          });
+            const updatedMonths = participant.months.map((month) => {
+              const monthIndex = new Date(month.createdAt).getUTCMonth() + 1;
 
-          return { ...task, participants: updatedParticipants };
-        }),
-      };
-    }
-
-    case 'CLEAR_HOURS': {
-      const { taskId, userId } = action.payload;
-      return {
-        reckoTasks: state.reckoTasks.map((task) => {
-          if (task._id !== taskId) return task;
-
-          const updatedParticipants = task.participants.map((participant) => {
-            if (participant._id !== userId) return participant;
-
-            const clearedHours = participant.hours.map((hour) => {
-              return hour.hourNum === 0 ? hour : { ...hour, hourNum: 0 };
+              return monthIndex === selectedMonthIndex
+                ? { ...month, hours: updatedHours }
+                : month;
             });
 
-            return { ...participant, hours: clearedHours };
+            return { ...participant, months: updatedMonths };
           });
+          // console.log({ ...task, participants: updatedParticipants });
 
           return { ...task, participants: updatedParticipants };
         }),
       };
     }
+
+    // case 'CLEAR_HOURS': {
+    //   const { taskId, userId } = action.payload;
+    //   return {
+    //     reckoTasks: state.reckoTasks.map((task) => {
+    //       if (task._id !== taskId) return task;
+
+    //       const updatedParticipants = task.participants.map((participant) => {
+    //         if (participant._id !== userId) return participant;
+
+    //         const clearedHours = participant.hours.map((hour) => {
+    //           return hour.hourNum === 0 ? hour : { ...hour, hourNum: 0 };
+    //         });
+
+    //         return { ...participant, hours: clearedHours };
+    //       });
+
+    //       return { ...task, participants: updatedParticipants };
+    //     }),
+    //   };
+    // }
 
     default:
       return state;

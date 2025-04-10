@@ -152,19 +152,21 @@ ReckoningTaskRouter.delete(
 );
 
 ReckoningTaskRouter.patch(
-  '/:taskId/dayUpdate/:userId/:dayId',
+  '/:taskId/dayUpdate/:userId/:dayId/:month',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try {
       const taskId = req.params.taskId;
       const userId = req.params.userId;
       const dayId = req.params.dayId;
+      const month = req.params.month;
 
       const updatedSubtasks = await ReckoningTaskController.updateDay(
         taskId,
         dayId,
         userId,
         { ...req.body },
+        month,
       );
       res.status(StatusCodes.ACCEPTED).json(updatedSubtasks);
     } catch (error) {

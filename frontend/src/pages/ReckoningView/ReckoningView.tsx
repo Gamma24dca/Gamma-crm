@@ -137,9 +137,9 @@ function ReckoningView() {
     fetchReckoningTasks(selectedMonthIndex - 1);
   }, [selectedMonth]);
 
-  const totalHours = reckoTasks
-    .flatMap((task) => task.participants[0]?.hours || [])
-    .reduce((sum, hourObj) => sum + hourObj.hourNum, 0);
+  // const totalHours = reckoTasks
+  //   .flatMap((task) => task.participants[0]?.hours || [])
+  //   .reduce((sum, hourObj) => sum + hourObj.hourNum, 0);
 
   const handleAddEmptyReckoTask = async () => {
     try {
@@ -162,8 +162,13 @@ function ReckoningView() {
             _id: user[0]._id,
             isVisible: true,
             name: user[0].name,
-            hours: generateDaysArray(selectedMonthIndex, 2025),
-            createdAt: new Date(selectedYear, selectedMonthIndex, 1),
+            img: user[0].img,
+            months: [
+              {
+                createdAt: new Date(selectedYear, selectedMonthIndex, 1),
+                hours: generateDaysArray(selectedMonthIndex, 2025),
+              },
+            ],
           },
         ],
         startDate,
@@ -210,8 +215,12 @@ function ReckoningView() {
             isVisible: currentUserId === part._id,
             name: part.name,
             img: part.img,
-            hours: generateDaysArray(selectedMonthIndex, 2025),
-            createdAt: new Date(selectedYear, selectedMonthIndex, 1),
+            months: [
+              {
+                createdAt: new Date(selectedYear, selectedMonthIndex, 1),
+                hours: generateDaysArray(selectedMonthIndex, 2025),
+              },
+            ],
           };
         }),
         startDate,
@@ -254,6 +263,7 @@ function ReckoningView() {
             key={reckTask._id}
             reckTask={reckTask}
             index={index}
+            selectedMonthIndex={selectedMonthIndex}
             // assigneStudioTaskId={reckTask.idOfAssignedStudioTask}
           />
         );
@@ -391,7 +401,7 @@ function ReckoningView() {
         />
         <SearchInput />
         <div className={styles.totalHoursContainer}>
-          <p>{totalHours}</p>
+          {/* <p>{totalHours}</p> */}
         </div>
         <div className={styles.ctaWrapper}>
           <CTA type="button" onClick={openModal}>

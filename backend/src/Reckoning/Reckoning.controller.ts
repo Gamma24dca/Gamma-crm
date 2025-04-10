@@ -16,16 +16,17 @@ export const ReckoningTaskController = {
 
     const filteredReckoningTasks = reckoningTasks.filter((task) => {
       return task.participants.some((participant) => {
-        const participantDate = new Date(participant.createdAt);
-        const participantMonth = participantDate.getMonth();
-        const participantYear = participantDate.getFullYear();
+        if (participant._id !== userId || !participant.isVisible) {
+          return false;
+        }
 
-        return (
-          participant._id === userId &&
-          participant.isVisible &&
-          participantYear === Number(year) &&
-          participantMonth === Number(month)
-        );
+        return participant.months.some((monthObj) => {
+          const monthDate = new Date(monthObj.createdAt);
+          return (
+            monthDate.getFullYear() === Number(year) &&
+            monthDate.getUTCMonth() + 1 === Number(month)
+          );
+        });
       });
     });
 
@@ -115,14 +116,36 @@ export const ReckoningTaskController = {
     }
   },
 
-  async updateDay(taskId, dayId, userId, value) {
+  async updateDay(taskId, dayId, userId, value, month) {
     const task = await ReckoningTaskController.getReckoningTask(taskId);
     const filteredParticipant = task.participants.filter((user) => {
       return user._id === userId;
     });
-    filteredParticipant[0].hours = filteredParticipant[0].hours.map((obj) => {
-      return String(obj._id) === String(dayId) ? { ...obj, ...value } : obj;
-    });
+
+    filteredParticipant[0].months = filteredParticipant[0].months.map(
+      (monthObj) => {
+        const monthDate = new Date(monthObj.createdAt);
+
+        if (monthDate.getUTCMonth() + 1 === Number(month)) {
+          const updatedHours = monthObj.hours.map((obj) => {
+            return String(obj._id) === String(dayId)
+              ? { ...obj, ...value }
+              : obj;
+          });
+
+          return {
+            ...monthObj,
+            hours: updatedHours,
+          };
+        }
+
+        return monthObj;
+      },
+    );
+
+    // filteredParticipant[0].hours = filteredParticipant[0].hours.map((obj) => {
+    //   return String(obj._id) === String(dayId) ? { ...obj, ...value } : obj;
+    // });
 
     await ReckoningTaskController.updateReckoningTask(taskId, task);
     const updatedStudioTask =

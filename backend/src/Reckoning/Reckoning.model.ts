@@ -77,14 +77,19 @@ export const ReckoningTaskModel = mongoose.model(
         img: {
           type: String,
         },
-        hours: [
+
+        months: [
           {
-            _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
-            hourNum: Number,
-            isWeekend: Boolean,
+            hours: [
+              {
+                _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
+                hourNum: Number,
+                isWeekend: Boolean,
+              },
+            ],
+            createdAt: Date,
           },
         ],
-        createdAt: Date,
       },
     ],
 
