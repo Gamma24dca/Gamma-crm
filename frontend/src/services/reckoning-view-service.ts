@@ -23,11 +23,15 @@ export type ReckoningTaskTypes = {
       _id: string;
       isVisible: boolean;
       name: string;
-      hours: DaysArray[];
-      createdAt: Date;
+      img: string;
+      months: [
+        {
+          createdAt: Date;
+          hours: DaysArray[];
+        },
+      ];
     },
   ];
-  // deadline: string;
   startDate: Date;
 };
 
@@ -247,7 +251,7 @@ export async function updateReckoningTask({ taskId, value }) {
   }
 }
 
-export async function updateDay({ taskId, userId, dayId, value }) {
+export async function updateDay({ taskId, userId, dayId, value, month }) {
   try {
     const subtaskBody = {
       ...value,
@@ -255,7 +259,7 @@ export async function updateDay({ taskId, userId, dayId, value }) {
     const response = await fetch(
       `${
         import.meta.env.VITE_API_URL
-      }/api/reckoningtasks/${taskId}/dayUpdate/${userId}/${dayId}`,
+      }/api/reckoningtasks/${taskId}/dayUpdate/${userId}/${dayId}/${month}`,
       {
         method: 'PATCH',
         credentials: 'include',

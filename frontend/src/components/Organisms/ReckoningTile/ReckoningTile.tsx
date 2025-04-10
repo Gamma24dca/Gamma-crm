@@ -20,7 +20,7 @@ import summarizeHours from '../../../utils/SummarizeHours';
 // } from '../../../services/studio-tasks-service';
 // import socket from '../../../socket';
 
-function ReckoningTile({ reckTask, index }) {
+function ReckoningTile({ reckTask, index, selectedMonthIndex }) {
   const [formValue, setFormValue] = useState(reckTask);
   const [isTaskDeleteLoading, setIsTaskDeleteLoading] = useState(false);
   const { companies, dispatch: companiesDispatch } = useCompaniesContext();
@@ -31,14 +31,19 @@ function ReckoningTile({ reckTask, index }) {
   const { user } = useAuth();
   const currentUserId = user[0]._id;
 
-  const filterReckTasks = reckTask.participants.filter((part) => {
+  const filteredParticipants = reckTask.participants.filter((part) => {
     return part._id === currentUserId;
   });
 
-  const [days, setDays] = useState(filterReckTasks[0].hours);
+  const filteredHours = filteredParticipants[0].months.filter((obj) => {
+    const monthIndex = new Date(obj.createdAt).getUTCMonth() + 1;
+    return monthIndex === selectedMonthIndex;
+  });
+
+  const [days, setDays] = useState(filteredHours);
   // const { labelState, handleMouseEnter, handleMouseLeave } = useShowLabel();
 
-  const totalHours = summarizeHours(days);
+  const totalHours = summarizeHours(days[0].hours);
 
   useEffect(() => {
     const fetchCompanies = async () => {
@@ -83,17 +88,27 @@ function ReckoningTile({ reckTask, index }) {
   };
 
   const handleHourChange = (dayId, e) => {
-    setDays((prevData) =>
-      prevData.map((item) => {
-        return item._id === dayId ? { ...item, hourNum: e.target.value } : item;
-      })
-    );
+    setDays((prevData) => {
+      const updatedData = prevData.map((day, dayIndex) => {
+        if (dayIndex === 0) {
+          return {
+            ...day,
+            hours: day.hours.map((item) =>
+              item._id === dayId ? { ...item, hourNum: e.target.value } : item
+            ),
+          };
+        }
+        return day;
+      });
+
+      return updatedData;
+    });
   };
 
-  const handleDayUpdate = async (taskId, userId, dayId, value) => {
+  const handleDayUpdate = async (taskId, userId, dayId, value, month) => {
     try {
       setIsTaskDeleteLoading(true);
-      await updateDay({ taskId, userId, dayId, value });
+      await updateDay({ taskId, userId, dayId, value, month });
       dispatch({
         type: 'UPDATE_HOUR_NUM',
         payload: {
@@ -101,6 +116,7 @@ function ReckoningTile({ reckTask, index }) {
           userId: currentUserId,
           dayId,
           newValue: Number(value.hourNum),
+          selectedMonthIndex,
         },
       });
     } catch (error) {
@@ -377,7 +393,7 @@ function ReckoningTile({ reckTask, index }) {
 
       <div className={styles.daysWrapper}>
         <div className={styles.summHoursContainer}>{totalHours}</div>
-        {days.map((dayTile, dayIndex) => {
+        {days[0].hours.map((dayTile, dayIndex) => {
           return (
             <input
               className={`${
@@ -391,15 +407,16 @@ function ReckoningTile({ reckTask, index }) {
               onChange={(e) => {
                 // console.log(typeof e.target.value);
                 handleHourChange(dayTile._id, e);
-                handleDayUpdate(reckTask._id, currentUserId, dayTile._id, {
-                  hourNum: e.target.value !== '' ? e.target.value : 0,
-                });
+                handleDayUpdate(
+                  reckTask._id,
+                  currentUserId,
+                  dayTile._id,
+                  {
+                    hourNum: e.target.value !== '' ? e.target.value : 0,
+                  },
+                  selectedMonthIndex
+                );
               }}
-              // onBlur={(e) => {
-              // handleDayUpdate(reckTask._id, currentUserId, dayTile._id, {
-              //   hourNum: e.target.value,
-              // });
-              // }}
             />
           );
         })}
