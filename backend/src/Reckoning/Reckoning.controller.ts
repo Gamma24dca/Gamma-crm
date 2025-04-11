@@ -39,7 +39,7 @@ export const ReckoningTaskController = {
     return newReckoningTask;
   },
 
-  async addReckoningTaskFromKanban(taskData, userId) {
+  async addReckoningTaskFromKanban(taskData, userId, monthCreated) {
     const reckoningTasks = await ReckoningTaskModel.find().exec();
 
     const isAlreadyCreated = reckoningTasks.some(
@@ -47,31 +47,88 @@ export const ReckoningTaskController = {
     );
 
     if (isAlreadyCreated) {
-      const filteredTask = reckoningTasks.filter((task) => {
+      const filteredTask = reckoningTasks.find((task) => {
         return task.searchID === taskData.searchID;
       });
 
-      const partHours = taskData.participants.filter((part) => {
+      const filteredParticipant = filteredTask.participants.find((part) => {
         return part._id === userId;
       });
 
-      filteredTask[0].participants = filteredTask[0].participants.map(
-        (part) => {
+      if (!filteredParticipant) return;
+
+      const isThatMonthCreated = filteredTask.participants.some((part) => {
+        return (
+          part._id === userId &&
+          part.months.some((month) => {
+            return (
+              new Date(month.createdAt).getUTCMonth() + 1 ===
+              Number(monthCreated)
+            );
+          })
+        );
+      });
+
+      if (isThatMonthCreated && filteredParticipant.isVisible) {
+        return;
+      } else if (isThatMonthCreated && !filteredParticipant.isVisible) {
+        filteredTask.participants = filteredTask.participants.map((part) => {
           return part._id === userId
             ? {
                 ...part,
                 isVisible: true,
-                createdAt: taskData.startDate,
-                hours: partHours[0].hours,
               }
             : part;
-        },
-      );
-      const updatedTask = await ReckoningTaskController.updateReckoningTask(
-        filteredTask[0]._id,
-        filteredTask[0],
-      );
-      return updatedTask;
+        });
+        const updatedTask = await ReckoningTaskController.updateReckoningTask(
+          filteredTask._id,
+          filteredTask,
+        );
+        return updatedTask;
+      } else if (!isThatMonthCreated && filteredParticipant.isVisible) {
+        const filterRequestPart = taskData.participants.find((part) => {
+          return part._id === userId;
+        });
+
+        filteredTask.participants = filteredTask.participants.map((part) => {
+          return part._id === userId
+            ? {
+                ...part,
+                isVisible: true,
+                months: [...part.months, filterRequestPart.months[0]],
+              }
+            : part;
+        });
+        const updatedTask = await ReckoningTaskController.updateReckoningTask(
+          filteredTask._id,
+          filteredTask,
+        );
+        return updatedTask;
+      } else if (!isThatMonthCreated && !filteredParticipant.isVisible) {
+        const filterRequestPart = taskData.participants.find((part) => {
+          return part._id === userId;
+        });
+
+        filteredTask.participants = filteredTask.participants.map((part) => {
+          const updateMonth = {
+            ...part.months[0],
+            hours: filterRequestPart.months[0].createdAt,
+            createdAt: filterRequestPart.months[0].createdAt,
+          };
+          return part._id === userId
+            ? {
+                ...part,
+                isVisible: true,
+                months: [updateMonth],
+              }
+            : part;
+        });
+        const updatedTask = await ReckoningTaskController.updateReckoningTask(
+          filteredTask._id,
+          filteredTask,
+        );
+        return updatedTask;
+      }
     } else {
       await ReckoningTaskModel.validate(taskData);
       const newReckoningTaskFromKanban =

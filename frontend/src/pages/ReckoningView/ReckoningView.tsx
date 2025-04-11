@@ -172,6 +172,7 @@ function ReckoningView() {
           },
         ],
         startDate,
+        month: selectedMonthIndex,
         // deadline: '',
       });
 
@@ -224,6 +225,7 @@ function ReckoningView() {
           };
         }),
         startDate,
+        month: selectedMonthIndex,
         // deadline: '',
       });
 

@@ -85,7 +85,7 @@ ReckoningTaskRouter.post(
 );
 
 ReckoningTaskRouter.post(
-  '/from-kanban',
+  '/from-kanban/:month',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try {
@@ -107,6 +107,7 @@ ReckoningTaskRouter.post(
             // deadline: req.body.deadline,
           },
           req.user.id,
+          req.params.month,
         );
       res.status(StatusCodes.CREATED).json(newStudioTask);
     } catch (error) {
