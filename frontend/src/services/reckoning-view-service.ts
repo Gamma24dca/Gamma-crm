@@ -33,6 +33,7 @@ export type ReckoningTaskTypes = {
     },
   ];
   startDate: Date;
+  month: number;
 };
 
 export async function getAllReckoningTasks() {
@@ -180,6 +181,7 @@ export async function addReckoningTaskFromKanban({
   participants,
   // deadline,
   startDate,
+  month,
 }: ReckoningTaskTypes) {
   const formData = {
     searchID,
@@ -198,7 +200,7 @@ export async function addReckoningTaskFromKanban({
 
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/api/reckoningtasks/from-kanban`,
+      `${import.meta.env.VITE_API_URL}/api/reckoningtasks/from-kanban/${month}`,
       {
         method: 'POST',
         credentials: 'include',
