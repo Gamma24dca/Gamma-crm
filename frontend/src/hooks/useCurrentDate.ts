@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const months = [
+export const months = [
   'Styczeń',
   'Luty',
   'Marzec',

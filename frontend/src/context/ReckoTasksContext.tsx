@@ -71,26 +71,40 @@ export const reckoTasksReducer = (state: ReckoTasksStateType, action: any) => {
       };
     }
 
-    // case 'CLEAR_HOURS': {
-    //   const { taskId, userId } = action.payload;
-    //   return {
-    //     reckoTasks: state.reckoTasks.map((task) => {
-    //       if (task._id !== taskId) return task;
+    case 'CLEAR_HOURS': {
+      const { taskId, userId, selectedMonthIndex } = action.payload;
+      return {
+        reckoTasks: state.reckoTasks.map((task) => {
+          if (task._id !== taskId) return task;
 
-    //       const updatedParticipants = task.participants.map((participant) => {
-    //         if (participant._id !== userId) return participant;
+          const updatedParticipants = task.participants.map((participant) => {
+            if (participant._id !== userId) return participant;
 
-    //         const clearedHours = participant.hours.map((hour) => {
-    //           return hour.hourNum === 0 ? hour : { ...hour, hourNum: 0 };
-    //         });
+            const clearedMonth = participant.months.map((m) => {
+              const reckTaskMonthIndex =
+                new Date(m.createdAt).getUTCMonth() + 1;
 
-    //         return { ...participant, hours: clearedHours };
-    //       });
+              return reckTaskMonthIndex === selectedMonthIndex
+                ? {
+                    ...m,
+                    hours: m.hours.map((h) => {
+                      return h.hourNum > 0 ? { ...h, hourNum: 0 } : h;
+                    }),
+                  }
+                : m;
+            });
 
-    //       return { ...task, participants: updatedParticipants };
-    //     }),
-    //   };
-    // }
+            return { ...participant, months: clearedMonth };
+          });
+
+          // console.log(updatedParticipants);
+
+          console.log(state.reckoTasks);
+
+          return { ...task, participants: updatedParticipants };
+        }),
+      };
+    }
 
     default:
       return state;

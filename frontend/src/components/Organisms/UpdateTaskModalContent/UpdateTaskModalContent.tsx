@@ -14,6 +14,7 @@ import checkIfUserAssigned from '../../../utils/checkIfUserAssigned';
 import CompanyBatch from '../../Atoms/CompanyBatch/CompanyBatch';
 import { getReckoningTask } from '../../../services/reckoning-view-service';
 import summarizeHours from '../../../utils/SummarizeHours';
+import { months } from '../../../hooks/useCurrentDate';
 
 function UpdateTaskModalContent({
   task,
@@ -151,17 +152,14 @@ function UpdateTaskModalContent({
             <p className={styles.descriptionTitle}>Rozliczenie</p>
           </ModalSectionTitle>
 
-          <div className={styles.reckoSectionWrapper}>
+          <div className={styles.reckoTableWrapper}>
             {assignedReckoTask.length > 0 ? (
-              <div>
-                {assignedReckoTask[0].participants.map((art) => {
-                  return art.isVisible ? (
-                    <div
-                      className={styles.reckoSectionElementContainer}
-                      key={art._id}
-                    >
+              <div className={styles.reckoTable}>
+                {assignedReckoTask[0].participants.map((art) =>
+                  art.isVisible ? (
+                    <div className={styles.reckoTableRow} key={art._id}>
                       <Link
-                        className={styles.userWrapper}
+                        className={styles.reckoUserCell}
                         to={`/użytkownicy/${art._id}`}
                       >
                         <img
@@ -169,13 +167,36 @@ function UpdateTaskModalContent({
                           src={`${art.img}`}
                           alt=""
                         />
+                        <p className={styles.reckoSectionPartName}>
+                          {art.name}:
+                        </p>
                       </Link>
 
-                      <p className={styles.reckoSectionPartName}>{art.name}:</p>
-                      <p>{summarizeHours(art.hours)}h</p>
+                      <div className={styles.reckoMonthCells}>
+                        {art.months
+                          .sort(
+                            (a, b) =>
+                              new Date(a.createdAt).getTime() -
+                              new Date(b.createdAt).getTime()
+                          )
+                          .map((m) => {
+                            const monthIndex = new Date(
+                              m.createdAt
+                            ).getUTCMonth();
+                            return (
+                              <div
+                                key={m._id}
+                                className={styles.reckoMonthCell}
+                              >
+                                <p>{months[monthIndex].slice(0, 3)}</p>
+                                <p>{summarizeHours(m.hours)}h</p>
+                              </div>
+                            );
+                          })}
+                      </div>
                     </div>
-                  ) : null;
-                })}
+                  ) : null
+                )}
               </div>
             ) : (
               <p className={styles.noRecordsTitle}>
