@@ -88,7 +88,6 @@ export const ReckoningTaskController = {
       existingTask._id,
       existingTask,
     );
-    console.log(updatedTask.participants[1].months);
     return updatedTask;
   },
 

@@ -46,6 +46,21 @@ function ReckoningTile({ reckTask, index, selectedMonthIndex }) {
   const totalHours = summarizeHours(days[0].hours);
 
   useEffect(() => {
+    const updatedFilteredParticipants = reckTask.participants.filter((part) => {
+      return part._id === currentUserId;
+    });
+
+    const updatedFilteredHours = updatedFilteredParticipants[0].months.filter(
+      (obj) => {
+        const monthIndex = new Date(obj.createdAt).getUTCMonth() + 1;
+        return monthIndex === selectedMonthIndex;
+      }
+    );
+
+    setDays(updatedFilteredHours);
+  }, [reckTask.participants, selectedMonthIndex, currentUserId]);
+
+  useEffect(() => {
     const fetchCompanies = async () => {
       if (companies.length === 0) {
         try {
@@ -130,21 +145,6 @@ function ReckoningTile({ reckTask, index, selectedMonthIndex }) {
     try {
       setIsTaskDeleteLoading(true);
       setIsEditOpen(false);
-      // const activeUsersCount = reckTask.participants.filter(
-      //   (p) => p.isVisible
-      // ).length;
-
-      // if (activeUsersCount <= 1) {
-      //   const updatedStudioTask = await UpdateStudioTask({
-      //     id: assigneStudioTaskId,
-      //     studioTaskData: { reckoTaskID: '' },
-      //   });
-
-      //   const res = await getStudioTask(updatedStudioTask._id);
-      //   dispatch({ type: 'UPDATE_STUDIOTASK', payload: res });
-      // }
-
-      // if (activeUsersCount <= 1) {
 
       const currentParticipant = reckTask.participants.find(
         (p) => p._id === currentUserId
@@ -157,19 +157,6 @@ function ReckoningTile({ reckTask, index, selectedMonthIndex }) {
 
       const response = await deleteReckoningTask(id, currentMonth._id);
       dispatch({ type: 'DELETE_RECKOTASK', payload: response });
-      // } else {
-      //   const updatedParticipants = reckTask.participants.map((part) => {
-      //     return part._id === currentUserId && part.isVisible
-      //       ? { ...part, isVisible: false }
-      //       : part;
-      //   });
-
-      //   const response = await updateReckoningTask({
-      //     taskId: reckTask._id,
-      //     value: { participants: updatedParticipants },
-      //   });
-      //   dispatch({ type: 'DELETE_RECKOTASK', payload: response });
-      // }
     } catch (error) {
       console.error('Error saving value:', error);
     } finally {
@@ -178,23 +165,26 @@ function ReckoningTile({ reckTask, index, selectedMonthIndex }) {
   };
 
   const handleHoursClear = async () => {
-    setDays((prevData) =>
-      prevData.map((item) => {
-        return item.hourNum !== 0 ? { ...item, hourNum: 0 } : item;
-      })
-    );
-
-    const filterByUser = reckTask.participants.filter((part) => {
+    const findUser = reckTask.participants.find((part) => {
       return part._id === currentUserId;
     });
 
-    const removedHoursFrom = filterByUser[0].hours.map((day) => {
-      return day.hourNum > 0 ? { ...day, hourNum: 0 } : day;
+    const clearedMonthHours = findUser.months.map((m) => {
+      const monthIndex = new Date(m.createdAt).getUTCMonth() + 1;
+
+      return monthIndex === selectedMonthIndex
+        ? {
+            ...m,
+            hours: m.hours.map((h) => {
+              return h.hourNum > 0 ? { ...h, hourNum: 0 } : h;
+            }),
+          }
+        : m;
     });
 
     const updatedParticipants = reckTask.participants.map((part) => {
       return part._id === currentUserId
-        ? { ...filterByUser[0], hours: removedHoursFrom }
+        ? { ...findUser, months: clearedMonthHours }
         : part;
     });
 
@@ -203,6 +193,7 @@ function ReckoningTile({ reckTask, index, selectedMonthIndex }) {
       payload: {
         taskId: reckTask._id,
         userId: currentUserId,
+        selectedMonthIndex,
       },
     });
 
