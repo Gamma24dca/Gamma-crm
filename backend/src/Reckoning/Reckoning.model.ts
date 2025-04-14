@@ -80,6 +80,7 @@ export const ReckoningTaskModel = mongoose.model(
 
         months: [
           {
+            _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
             hours: [
               {
                 _id: { type: mongoose.Schema.Types.ObjectId, auto: true },

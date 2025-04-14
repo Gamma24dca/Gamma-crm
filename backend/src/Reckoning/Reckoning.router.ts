@@ -135,7 +135,7 @@ ReckoningTaskRouter.patch(
 );
 
 ReckoningTaskRouter.delete(
-  '/:id',
+  '/:id/:monthId',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try {
@@ -143,6 +143,7 @@ ReckoningTaskRouter.delete(
         await ReckoningTaskController.deleteReckoningTask(
           req.params.id,
           req.user.id,
+          req.params.monthId,
         );
       res.status(StatusCodes.ACCEPTED).json(deletedReckoTask);
     } catch (error) {

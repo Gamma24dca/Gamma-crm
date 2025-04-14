@@ -239,12 +239,23 @@ function ReckoningView() {
         type: 'UPDATE_STUDIOTASK',
         payload: res,
       });
-      console.log('updated', res);
+      // console.log('updated', res);
       socket.emit('tasksUpdated', res);
 
-      if (addResponse !== null) {
-        dispatch({ type: 'CREATE_RECKOTASK', payload: addResponse });
+      const response = await getMyReckoningTasks(
+        currentUserId,
+        '2025',
+        selectedMonthIndex
+      );
+      if (response) {
+        // setReckoningTasks(response);
+        dispatch({ type: 'SET_RECKOTASKS', payload: response });
       }
+
+      // if (addResponse !== null) {
+      //   dispatch({ type: 'CREATE_RECKOTASK', payload: addResponse });
+      // }
+      // console.log(addResponse);
     } catch (error) {
       console.error(error);
     } finally {

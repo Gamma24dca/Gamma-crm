@@ -145,7 +145,17 @@ function ReckoningTile({ reckTask, index, selectedMonthIndex }) {
       // }
 
       // if (activeUsersCount <= 1) {
-      const response = await deleteReckoningTask(id);
+
+      const currentParticipant = reckTask.participants.find(
+        (p) => p._id === currentUserId
+      );
+
+      const currentMonth = currentParticipant.months.find((m) => {
+        const date = new Date(m.createdAt);
+        return date.getMonth() === selectedMonthIndex;
+      });
+
+      const response = await deleteReckoningTask(id, currentMonth._id);
       dispatch({ type: 'DELETE_RECKOTASK', payload: response });
       // } else {
       //   const updatedParticipants = reckTask.participants.map((part) => {
