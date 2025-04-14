@@ -88,6 +88,7 @@ export const ReckoningTaskController = {
       existingTask._id,
       existingTask,
     );
+    console.log(updatedTask.participants[1].months);
     return updatedTask;
   },
 
@@ -99,27 +100,64 @@ export const ReckoningTaskController = {
     return updatedReckoningTask;
   },
 
-  async deleteReckoningTask(id, userId) {
+  async deleteReckoningTask(id, userId, monthId) {
     const taskToDelete = await ReckoningTaskModel.findById(id).exec();
 
     const activeUsersCount = taskToDelete.participants.filter(
       (p) => p.isVisible,
     ).length;
 
-    if (activeUsersCount <= 1) {
-      const deletedReckTask = await ReckoningTaskModel.findByIdAndDelete(id);
-      return deletedReckTask;
-    } else {
-      taskToDelete.participants = taskToDelete.participants.map((part) => {
-        return part._id === userId && part.isVisible
-          ? { ...part, isVisible: false }
-          : part;
+    const paticipantOfTask = taskToDelete.participants.find((part) => {
+      return part._id === userId;
+    });
+
+    const filterMonth = () => {
+      paticipantOfTask.months = paticipantOfTask.months.filter((m) => {
+        return String(m._id) !== monthId;
       });
+    };
+
+    if (activeUsersCount <= 1) {
+      if (paticipantOfTask.months.length <= 1) {
+        const deletedReckTask = await ReckoningTaskModel.findByIdAndDelete(id);
+        return deletedReckTask;
+      }
+
+      filterMonth();
 
       await ReckoningTaskController.updateReckoningTask(
         taskToDelete._id,
         taskToDelete,
       );
+
+      const updatedReckoTask =
+        await ReckoningTaskController.getReckoningTask(id);
+
+      return updatedReckoTask;
+    } else {
+      if (paticipantOfTask.months.length <= 1) {
+        taskToDelete.participants = taskToDelete.participants.map((part) => {
+          return part._id === userId && part.isVisible
+            ? { ...part, isVisible: false }
+            : part;
+        });
+
+        await ReckoningTaskController.updateReckoningTask(
+          taskToDelete._id,
+          taskToDelete,
+        );
+        const updatedReckoTask =
+          await ReckoningTaskController.getReckoningTask(id);
+
+        return updatedReckoTask;
+      }
+      filterMonth();
+
+      await ReckoningTaskController.updateReckoningTask(
+        taskToDelete._id,
+        taskToDelete,
+      );
+
       const updatedReckoTask =
         await ReckoningTaskController.getReckoningTask(id);
 

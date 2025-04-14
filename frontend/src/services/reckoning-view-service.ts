@@ -283,10 +283,10 @@ export async function updateDay({ taskId, userId, dayId, value, month }) {
   }
 }
 
-export async function deleteReckoningTask(id) {
+export async function deleteReckoningTask(id, monthId) {
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/api/reckoningtasks/${id}`,
+      `${import.meta.env.VITE_API_URL}/api/reckoningtasks/${id}/${monthId}`,
       {
         method: 'DELETE',
         credentials: 'include',
