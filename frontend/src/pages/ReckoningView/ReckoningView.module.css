@@ -1,6 +1,6 @@
 .reckoningContainer {
   width: 100%;
-  overflow-x: scroll;
+  overflow-x: auto;
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -195,6 +195,11 @@
     visibility 0.3s ease;
 }
 
+.loaderWrapper {
+  position: absolute;
+  right: -20px;
+}
+
 .fadeIn {
   opacity: 1;
   visibility: visible;
@@ -231,11 +236,44 @@
   margin: 0;
 }
 
+.successMessage,
+.errorMessage {
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  width: 150px;
+  position: absolute;
+  bottom: 10px;
+  animation: appear 0.3s ease forwards;
+}
+
+.errorMessage {
+  color: #ed4337;
+}
+
 @keyframes appear {
   from {
     opacity: 0;
   }
   to {
     opacity: 1;
+  }
+}
+
+@media (max-width: 1700px) {
+  .ctaWrapper {
+    width: 25%;
+  }
+}
+
+@media (max-width: 1500px) {
+  .ctaWrapper {
+    width: 20%;
+  }
+}
+
+@media (max-width: 1350px) {
+  .ctaWrapper {
+    width: 15%;
   }
 }

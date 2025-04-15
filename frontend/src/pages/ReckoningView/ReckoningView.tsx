@@ -56,6 +56,11 @@ function ReckoningView() {
   //   cardId: '',
   // });
   const [hoveredCardId, setHoveredCardId] = useState(null);
+  const [addTaskFromKanbanState, setAddTaskFromKanbanState] = useState({
+    errorMessage: '',
+    successMessage: '',
+    isAlreadyExist: false,
+  });
   const [taskLoadingState, setTaskLoadingState] = useState({
     isGetMyTasksLoading: false,
     isAddEmptyLoading: false,
@@ -96,6 +101,7 @@ function ReckoningView() {
       handleLoadingStateChange('isGetMyTasksLoading', true);
 
       // DODANE +1 PO ZMIANIE REQUESTOW NA LOCALHOST NIE WIEM DLACZEGO, PEWNIE TRZEBA ZMIENIC TAK JAK BYLO NA MAINE I FETCHOW Z CHMURY
+
       const response = await getMyReckoningTasks(
         currentUserId,
         '2025',
@@ -134,7 +140,13 @@ function ReckoningView() {
   useEffect(() => {
     setSelectedMonthDaysArray(generateDaysArray(selectedMonthIndex, 2025));
 
-    fetchReckoningTasks(selectedMonthIndex - 1);
+    const alreadyHasDataForMonth = reckoTasks.some(
+      (task) => task.month === selectedMonthIndex
+    );
+
+    if (!alreadyHasDataForMonth) {
+      fetchReckoningTasks(selectedMonthIndex - 1);
+    }
   }, [selectedMonth]);
 
   const totalHours = reckoTasks
@@ -240,6 +252,15 @@ function ReckoningView() {
         // deadline: '',
       });
 
+      if (addResponse.alreadyExist) {
+        setAddTaskFromKanbanState((prev) => {
+          return {
+            ...prev,
+            isAlreadyExist: true,
+          };
+        });
+      }
+
       const updatedTask = await UpdateStudioTask({
         id: _id,
         studioTaskData: { reckoTaskID: addResponse._id },
@@ -250,7 +271,6 @@ function ReckoningView() {
         type: 'UPDATE_STUDIOTASK',
         payload: res,
       });
-      // console.log('updated', res);
       socket.emit('tasksUpdated', res);
 
       const response = await getMyReckoningTasks(
@@ -269,8 +289,21 @@ function ReckoningView() {
       // console.log(addResponse);
     } catch (error) {
       console.error(error);
+      setAddTaskFromKanbanState((prev) => {
+        return {
+          ...prev,
+          errorMessage: 'Coś poszło nie tak :(',
+        };
+      });
     } finally {
       handleLoadingStateChange('isAddEmptyLoading', false);
+
+      setAddTaskFromKanbanState((prev) => {
+        return {
+          ...prev,
+          successMessage: 'Zlecenie utworzone!',
+        };
+      });
     }
   };
 
@@ -346,6 +379,14 @@ function ReckoningView() {
                 }}
                 onMouseLeave={() => {
                   setHoveredCardId(null);
+                  setAddTaskFromKanbanState((prev) => {
+                    return {
+                      ...prev,
+                      successMessage: '',
+                      isAlreadyExist: false,
+                      errorMessage: '',
+                    };
+                  });
                 }}
               >
                 <div
@@ -404,6 +445,22 @@ function ReckoningView() {
                   >
                     Dodaj
                   </CTA>
+                  <div className={styles.loaderWrapper}>
+                    {taskLoadingState.isAddEmptyLoading && <CheckboxLoader />}
+                  </div>
+                  {addTaskFromKanbanState.successMessage.length > 0 && (
+                    <p className={styles.successMessage}>
+                      {!addTaskFromKanbanState.isAlreadyExist &&
+                        addTaskFromKanbanState.successMessage}
+                      {addTaskFromKanbanState.isAlreadyExist && 'Już istnieje'}
+                    </p>
+                  )}
+
+                  {addTaskFromKanbanState.errorMessage.length > 0 && (
+                    <p className={styles.errorMessage}>
+                      {addTaskFromKanbanState.errorMessage}
+                    </p>
+                  )}
                 </div>
               </div>
             );
@@ -462,24 +519,6 @@ function ReckoningView() {
                 })}
               </div>
             </div>
-
-            {/* {!taskLoadingState.isGetMyTasksLoading ? (
-              reckoTasks.length > 0 ? (
-                reckoTasks.map((reckTask, index) => {
-                  return (
-                    <ReckoningTile
-                      key={reckTask._id}
-                      reckTask={reckTask}
-                      index={index}
-                    />
-                  );
-                })
-              ) : (
-                <p>brak zadan</p>
-              )
-            ) : (
-              <SkeletonUsersLoading />
-            )} */}
             {renderReckoTasks()}
             {reckoTasks.length > 0 && !taskLoadingState.isGetMyTasksLoading && (
               <div className={styles.addNewReckoTaskWrapper}>
@@ -490,6 +529,7 @@ function ReckoningView() {
                 >
                   Dodaj wiersz..
                 </button>
+
                 {taskLoadingState.isAddEmptyLoading && <CheckboxLoader />}
               </div>
             )}
