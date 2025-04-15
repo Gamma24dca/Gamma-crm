@@ -357,6 +357,7 @@
   flex-direction: column;
   gap: 10px;
   width: 100%;
+  overflow-x: scroll;
 }
 
 .reckoTableRow {
