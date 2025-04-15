@@ -394,6 +394,7 @@ function ReckoningTile({ reckTask, index, selectedMonthIndex }) {
 
       <div className={styles.daysWrapper}>
         <div className={styles.summHoursContainer}>{totalHours}</div>
+
         {days[0].hours.map((dayTile, dayIndex) => {
           return (
             <input

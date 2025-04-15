@@ -65,7 +65,7 @@ export const ReckoningTaskController = {
 
     if (monthExists && participant.isVisible) {
       // Month exists and participant is visible; nothing to do
-      return;
+      return { alreadyExist: true };
     }
 
     if (monthExists && !participant.isVisible) {
