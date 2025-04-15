@@ -137,9 +137,20 @@ function ReckoningView() {
     fetchReckoningTasks(selectedMonthIndex - 1);
   }, [selectedMonth]);
 
-  // const totalHours = reckoTasks
-  //   .flatMap((task) => task.participants[0]?.hours || [])
-  //   .reduce((sum, hourObj) => sum + hourObj.hourNum, 0);
+  const totalHours = reckoTasks
+    .flatMap(
+      (task) =>
+        task.participants?.flatMap(
+          (p) =>
+            p.months?.flatMap((m) => {
+              const monthIndexToSumm = new Date(m.createdAt).getUTCMonth() + 1;
+              return monthIndexToSumm === selectedMonthIndex
+                ? m.hours || []
+                : [];
+            }) || []
+        ) || []
+    )
+    .reduce((sum, hourObj) => sum + hourObj.hourNum, 0);
 
   const handleAddEmptyReckoTask = async () => {
     try {
@@ -414,7 +425,7 @@ function ReckoningView() {
         />
         <SearchInput />
         <div className={styles.totalHoursContainer}>
-          {/* <p>{totalHours}</p> */}
+          <p>{totalHours}</p>
         </div>
         <div className={styles.ctaWrapper}>
           <CTA type="button" onClick={openModal}>
