@@ -1,42 +1,49 @@
 name: Check
+
 on:
   push:
     branches:
       - "**"
+
 jobs:
   lint:
+    name: 🧹 Lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v3
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: 18
           cache: npm
-          # cache-dependency-path: package-lock.json
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
       - run: npm ci
       - run: npm run lint
+
   types:
+    name: 🧠 Type check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v3
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: 18
           cache: npm
-          # cache-dependency-path: package-lock.json
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
       - run: npm ci
       - run: npm run tsc
+
   test:
+    name: 🧪 Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v3
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: 18
           cache: npm
-          # cache-dependency-path: package-lock.json
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
       - run: npm ci
       - run: npm run test
