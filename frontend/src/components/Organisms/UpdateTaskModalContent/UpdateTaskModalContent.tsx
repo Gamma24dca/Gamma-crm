@@ -23,6 +23,7 @@ function UpdateTaskModalContent({
   companyClass,
 }) {
   const [assignedReckoTask, setAssignedReckoTask] = useState([]);
+  const [isReckoTaskLoading, setIsReckoTaskLoading] = useState(false);
   const {
     users,
     companies,
@@ -56,14 +57,21 @@ function UpdateTaskModalContent({
   const { user: currentUser } = useAuth();
 
   const getAssignedReckoTask = async () => {
-    if (task.reckoTaskID) {
-      const reckoTask = await getReckoningTask(task.reckoTaskID);
-      // console.log(reckoTask);
-      if (reckoTask !== null) {
-        setAssignedReckoTask([reckoTask]);
-      } else {
-        setAssignedReckoTask([]);
+    try {
+      setIsReckoTaskLoading(true);
+      if (task.reckoTaskID) {
+        const reckoTask = await getReckoningTask(task.reckoTaskID);
+        // console.log(reckoTask);
+        if (reckoTask !== null) {
+          setAssignedReckoTask([reckoTask]);
+        } else {
+          setAssignedReckoTask([]);
+        }
       }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsReckoTaskLoading(false);
     }
   };
 
@@ -73,6 +81,57 @@ function UpdateTaskModalContent({
     );
     getAssignedReckoTask();
   }, []);
+
+  const renderReckoSection = () => {
+    if (isReckoTaskLoading) {
+      return (
+        <div className={styles.checkboxLoaderContainer}>
+          <CheckboxLoader />
+        </div>
+      );
+    }
+
+    if (assignedReckoTask.length === 0) {
+      return (
+        <p className={styles.noRecordsTitle}>Brak pozycji w rozliczeniu</p>
+      );
+    }
+
+    return (
+      <div className={styles.reckoTable}>
+        {assignedReckoTask[0].participants.map((art) =>
+          art.isVisible ? (
+            <div className={styles.reckoTableRow} key={art._id}>
+              <Link
+                className={styles.reckoUserCell}
+                to={`/użytkownicy/${art._id}`}
+              >
+                <img className={styles.heroImg} src={`${art.img}`} alt="" />
+                <p className={styles.reckoSectionPartName}>{art.name}:</p>
+              </Link>
+              <div className={styles.reckoMonthCells}>
+                {art.months
+                  .sort(
+                    (a, b) =>
+                      new Date(a.createdAt).getTime() -
+                      new Date(b.createdAt).getTime()
+                  )
+                  .map((m) => {
+                    const monthIndex = new Date(m.createdAt).getUTCMonth();
+                    return (
+                      <div key={m._id} className={styles.reckoMonthCell}>
+                        <p>{months[monthIndex].slice(0, 3)}</p>
+                        <p>{summarizeHours(m.hours)}h</p>
+                      </div>
+                    );
+                  })}
+              </div>
+            </div>
+          ) : null
+        )}
+      </div>
+    );
+  };
 
   return (
     <>
@@ -152,58 +211,7 @@ function UpdateTaskModalContent({
             <p className={styles.descriptionTitle}>Rozliczenie</p>
           </ModalSectionTitle>
 
-          <div className={styles.reckoTableWrapper}>
-            {assignedReckoTask.length > 0 ? (
-              <div className={styles.reckoTable}>
-                {assignedReckoTask[0].participants.map((art) =>
-                  art.isVisible ? (
-                    <div className={styles.reckoTableRow} key={art._id}>
-                      <Link
-                        className={styles.reckoUserCell}
-                        to={`/użytkownicy/${art._id}`}
-                      >
-                        <img
-                          className={styles.heroImg}
-                          src={`${art.img}`}
-                          alt=""
-                        />
-                        <p className={styles.reckoSectionPartName}>
-                          {art.name}:
-                        </p>
-                      </Link>
-
-                      <div className={styles.reckoMonthCells}>
-                        {art.months
-                          .sort(
-                            (a, b) =>
-                              new Date(a.createdAt).getTime() -
-                              new Date(b.createdAt).getTime()
-                          )
-                          .map((m) => {
-                            const monthIndex = new Date(
-                              m.createdAt
-                            ).getUTCMonth();
-                            return (
-                              <div
-                                key={m._id}
-                                className={styles.reckoMonthCell}
-                              >
-                                <p>{months[monthIndex].slice(0, 3)}</p>
-                                <p>{summarizeHours(m.hours)}h</p>
-                              </div>
-                            );
-                          })}
-                      </div>
-                    </div>
-                  ) : null
-                )}
-              </div>
-            ) : (
-              <p className={styles.noRecordsTitle}>
-                Brak pozycji w rozliczeniu
-              </p>
-            )}
-          </div>
+          <div className={styles.reckoTableWrapper}>{renderReckoSection()}</div>
 
           <ModalSectionTitle iconName="fluent:text-description-ltr-24-filled">
             <p className={styles.descriptionTitle}>Opis</p>
