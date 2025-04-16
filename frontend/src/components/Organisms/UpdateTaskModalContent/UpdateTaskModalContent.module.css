@@ -402,6 +402,13 @@
   font-size: 14px;
 }
 
+.checkboxLoaderContainer {
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 @keyframes appear {
   from {
     opacity: 0;
