@@ -10,6 +10,7 @@ type DaysArray = {
 export type ReckoningTaskTypes = {
   _id?: string;
   searchID: number;
+  idOfAssignedStudioTask: string;
   client: string;
   clientPerson: string;
   title: string;
@@ -17,15 +18,54 @@ export type ReckoningTaskTypes = {
   author: Omit<User, 'password'>;
   printWhat: string;
   printWhere: string;
-  participants: [{ _id: string; name: string; hours: DaysArray[] }];
-  deadline: string;
+  participants: [
+    {
+      _id: string;
+      isVisible: boolean;
+      name: string;
+      img: string;
+      months: [
+        {
+          createdAt: Date;
+          hours: DaysArray[];
+        },
+      ];
+    },
+  ];
   startDate: Date;
+  month: number;
 };
 
 export async function getAllReckoningTasks() {
   try {
     const response = await fetch(
-      'https://gamma-crm.onrender.com/api/reckoningtasks',
+      `${import.meta.env.VITE_API_URL}/api/reckoningtasks`,
+      {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    if (response.ok) {
+      return await response.json();
+    }
+    throw new Error(`${response.status} ${response.statusText}`);
+  } catch (error) {
+    if (Config.isDev) {
+      throw new Error('Get users', error.message);
+    }
+    console.error(error.message);
+    return null;
+  }
+}
+
+export async function getReckoningTask(id: string) {
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/reckoningtasks/${id}`,
       {
         method: 'GET',
         credentials: 'include',
@@ -51,7 +91,9 @@ export async function getAllReckoningTasks() {
 export async function getMyReckoningTasks(userId, year, month) {
   try {
     const response = await fetch(
-      `https://gamma-crm.onrender.com/api/reckoningtasks/${year}/${month}/${userId}`,
+      `${
+        import.meta.env.VITE_API_URL
+      }/api/reckoningtasks/${year}/${month}/${userId}`,
       {
         method: 'GET',
         credentials: 'include',
@@ -84,7 +126,7 @@ export async function addReckoningTask({
   printWhat,
   printWhere,
   participants,
-  deadline,
+  // deadline,
   startDate,
 }: ReckoningTaskTypes) {
   const formData = {
@@ -97,13 +139,68 @@ export async function addReckoningTask({
     printWhat,
     printWhere,
     participants,
-    deadline,
+    // deadline,
     startDate,
   };
 
   try {
     const response = await fetch(
-      'https://gamma-crm.onrender.com/api/reckoningtasks',
+      `${import.meta.env.VITE_API_URL}/api/reckoningtasks`,
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      }
+    );
+    if (response.ok) {
+      return await response.json();
+    }
+    throw new Error(`${response.status} ${response.statusText}`);
+  } catch (error) {
+    if (Config.isDev) {
+      throw new Error('Get users', error.message);
+    }
+    console.error(error.message);
+    return null;
+  }
+}
+
+export async function addReckoningTaskFromKanban({
+  searchID,
+  idOfAssignedStudioTask,
+  client,
+  clientPerson,
+  title,
+  description,
+  author,
+  printWhat,
+  printWhere,
+  participants,
+  // deadline,
+  startDate,
+  month,
+}: ReckoningTaskTypes) {
+  const formData = {
+    searchID,
+    idOfAssignedStudioTask,
+    client,
+    clientPerson,
+    title,
+    description,
+    author,
+    printWhat,
+    printWhere,
+    participants,
+    // deadline,
+    startDate,
+  };
+
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/reckoningtasks/from-kanban/${month}`,
       {
         method: 'POST',
         credentials: 'include',
@@ -133,7 +230,7 @@ export async function updateReckoningTask({ taskId, value }) {
       ...value,
     };
     const response = await fetch(
-      `https://gamma-crm.onrender.com/api/reckoningtasks/${taskId}`,
+      `${import.meta.env.VITE_API_URL}/api/reckoningtasks/${taskId}`,
       {
         method: 'PATCH',
         credentials: 'include',
@@ -156,13 +253,15 @@ export async function updateReckoningTask({ taskId, value }) {
   }
 }
 
-export async function updateDay({ taskId, userId, dayId, value }) {
+export async function updateDay({ taskId, userId, dayId, value, month }) {
   try {
     const subtaskBody = {
       ...value,
     };
     const response = await fetch(
-      `https://gamma-crm.onrender.com/api/reckoningtasks/${taskId}/dayUpdate/${userId}/${dayId}`,
+      `${
+        import.meta.env.VITE_API_URL
+      }/api/reckoningtasks/${taskId}/dayUpdate/${userId}/${dayId}/${month}`,
       {
         method: 'PATCH',
         credentials: 'include',
@@ -184,10 +283,10 @@ export async function updateDay({ taskId, userId, dayId, value }) {
   }
 }
 
-export async function deleteReckoningTask(id) {
+export async function deleteReckoningTask(id, monthId) {
   try {
     const response = await fetch(
-      `https://gamma-crm.onrender.com/api/reckoningtasks/${id}`,
+      `${import.meta.env.VITE_API_URL}/api/reckoningtasks/${id}/${monthId}`,
       {
         method: 'DELETE',
         credentials: 'include',

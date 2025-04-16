@@ -40,6 +40,7 @@ ReckoningTaskRouter.get(
   '/:year/:month/:userId',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
+    console.log(req.params.month);
     try {
       const filteredReckoningTasks =
         await ReckoningTaskController.getFilteredReckoningTasks(
@@ -83,6 +84,39 @@ ReckoningTaskRouter.post(
   },
 );
 
+ReckoningTaskRouter.post(
+  '/from-kanban/:month',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const newStudioTask =
+        await ReckoningTaskController.addReckoningTaskFromKanban(
+          {
+            searchID: req.body.searchID,
+            idOfAssignedStudioTask: req.body.idOfAssignedStudioTask,
+            client: req.body.client,
+            clientPerson: req.body.clientPerson,
+            title: req.body.title,
+            description: req.body.description,
+            author: req.body.author,
+            taskType: req.body.taskType,
+            printWhat: req.body.printWhat,
+            printWhere: req.body.printWhere,
+            participants: req.body.participants,
+            startDate: req.body.startDate,
+            // deadline: req.body.deadline,
+          },
+          req.user.id,
+          req.params.month,
+        );
+      res.status(StatusCodes.CREATED).json(newStudioTask);
+    } catch (error) {
+      console.error(error);
+      res.status(StatusCodes.BAD_REQUEST).json({ message: error });
+    }
+  },
+);
+
 ReckoningTaskRouter.patch(
   '/:id',
   passport.authenticate('jwt', { session: false }),
@@ -101,12 +135,16 @@ ReckoningTaskRouter.patch(
 );
 
 ReckoningTaskRouter.delete(
-  '/:id',
+  '/:id/:monthId',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try {
       const deletedReckoTask =
-        await ReckoningTaskController.deleteReckoningTask(req.params.id);
+        await ReckoningTaskController.deleteReckoningTask(
+          req.params.id,
+          req.user.id,
+          req.params.monthId,
+        );
       res.status(StatusCodes.ACCEPTED).json(deletedReckoTask);
     } catch (error) {
       console.error(error);
@@ -116,19 +154,21 @@ ReckoningTaskRouter.delete(
 );
 
 ReckoningTaskRouter.patch(
-  '/:taskId/dayUpdate/:userId/:dayId',
+  '/:taskId/dayUpdate/:userId/:dayId/:month',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try {
       const taskId = req.params.taskId;
       const userId = req.params.userId;
       const dayId = req.params.dayId;
+      const month = req.params.month;
 
       const updatedSubtasks = await ReckoningTaskController.updateDay(
         taskId,
         dayId,
         userId,
         { ...req.body },
+        month,
       );
       res.status(StatusCodes.ACCEPTED).json(updatedSubtasks);
     } catch (error) {

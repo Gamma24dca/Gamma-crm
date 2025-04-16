@@ -1,42 +1,71 @@
-import { useEffect, useState } from 'react';
 import { Icon } from '@iconify/react';
+import { useEffect, useState } from 'react';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
 import ControlBarTitle from '../../components/Atoms/ControlBar/Title/ControlBarTitle';
 // import InfoBar from '../../components/Atoms/InfoBar/InfoBar';
+import CTA from '../../components/Atoms/CTA/CTA';
+import CheckboxLoader from '../../components/Atoms/CheckboxLoader/CheckboxLoader';
+import SearchInput from '../../components/Atoms/ControlBar/SearchInput/SearchInput';
 import ListContainer from '../../components/Atoms/ListContainer/ListContainer';
 import Select from '../../components/Atoms/Select/Select';
 import ViewContainer from '../../components/Atoms/ViewContainer/ViewContainer';
-import useCurrentDate from '../../hooks/useCurrentDate';
-import styles from './ReckoningView.module.css';
-import useAuth from '../../hooks/useAuth';
-import {
-  addReckoningTask,
-  getMyReckoningTasks,
-} from '../../services/reckoning-view-service';
 import ReckoningTile from '../../components/Organisms/ReckoningTile/ReckoningTile';
-import CTA from '../../components/Atoms/CTA/CTA';
-import SearchInput from '../../components/Atoms/ControlBar/SearchInput/SearchInput';
-import generateSearchID from '../../utils/generateSearchId';
 import SkeletonUsersLoading from '../../components/Organisms/SkeletonUsersLoading/SkeletonUsersLoading';
 import useReckoTasksContext from '../../hooks/Context/useReckoTasksContext';
-import CheckboxLoader from '../../components/Atoms/CheckboxLoader/CheckboxLoader';
+import useAuth from '../../hooks/useAuth';
+import useCurrentDate from '../../hooks/useCurrentDate';
+import {
+  addReckoningTask,
+  addReckoningTaskFromKanban,
+  getMyReckoningTasks,
+} from '../../services/reckoning-view-service';
+import generateSearchID from '../../utils/generateSearchId';
+import styles from './ReckoningView.module.css';
+import useModal from '../../hooks/useModal';
+import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplate';
+import useStudioTasksContext from '../../hooks/Context/useStudioTasksContext';
+import {
+  getAllStudioTasks,
+  getStudioTask,
+  UpdateStudioTask,
+} from '../../services/studio-tasks-service';
+import CompanyBatch from '../../components/Atoms/CompanyBatch/CompanyBatch';
+import UsersDisplay from '../../components/Organisms/UsersDisplay/UsersDisplay';
+import socket from '../../socket';
+import generateDaysArray from '../../utils/generateDaysArray';
 
-function generateDaysArray(month, year) {
-  const daysInMonth = new Date(year, month, 0).getDate();
-  const daysArray = [];
+// function generateDaysArray(month, year) {
+//   const daysInMonth = new Date(year, month, 0).getDate();
+//   const daysArray = [];
 
-  for (let i = 1; i <= daysInMonth; i += 1) {
-    const dayOfWeek = new Date(year, month - 1, i).getDay(); // Sunday=0, Saturday=6
-    daysArray.push({
-      hourNum: 0,
-      isWeekend: dayOfWeek === 0 || dayOfWeek === 6,
-    });
-  }
+//   for (let i = 1; i <= daysInMonth; i += 1) {
+//     const dayOfWeek = new Date(year, month - 1, i).getDay(); // Sunday=0, Saturday=6
+//     daysArray.push({
+//       hourNum: 0,
+//       isWeekend: dayOfWeek === 0 || dayOfWeek === 6,
+//     });
+//   }
 
-  return daysArray;
-}
+//   return daysArray;
+// }
 
 function ReckoningView() {
+  const [selectedMonthDaysArray, setSelectedMonthDaysArray] = useState([]);
+  // const [hover, setHover] = useState({
+  //   isHover: false,
+  //   cardId: '',
+  // });
+  const [hoveredCardId, setHoveredCardId] = useState(null);
+  const [addTaskFromKanbanState, setAddTaskFromKanbanState] = useState({
+    errorMessage: '',
+    successMessage: '',
+    isAlreadyExist: false,
+  });
+  const [taskLoadingState, setTaskLoadingState] = useState({
+    isGetMyTasksLoading: false,
+    isAddEmptyLoading: false,
+  });
+
   const {
     selectedMonth,
     selectedYear,
@@ -46,18 +75,16 @@ function ReckoningView() {
     years,
   } = useCurrentDate();
 
-  const [selectedMonthDaysArray, setSelectedMonthDaysArray] = useState([]);
-  const [taskLoadingState, setTaskLoadingState] = useState({
-    isGetMyTasksLoading: false,
-    isAddEmptyLoading: false,
-  });
-
   // const [reckoningTasks, setReckoningTasks] = useState([]);
   const { reckoTasks, dispatch } = useReckoTasksContext();
+  const { showModal, exitAnim, openModal, closeModal } = useModal();
+  const { studioTasks, dispatch: studioTasksDispatch } =
+    useStudioTasksContext();
 
   const { user } = useAuth();
   const currentUserId = user[0]._id;
   const monthIndex = new Date().getMonth();
+  const selectedMonthIndex = months.indexOf(selectedMonth) + 1;
 
   const handleLoadingStateChange = (key, value) => {
     setTaskLoadingState((prev) => {
@@ -69,10 +96,17 @@ function ReckoningView() {
   };
 
   const fetchReckoningTasks = async (index) => {
+    // console.log('client month index:', index);
     try {
       handleLoadingStateChange('isGetMyTasksLoading', true);
 
-      const response = await getMyReckoningTasks(currentUserId, '2025', index);
+      // DODANE +1 PO ZMIANIE REQUESTOW NA LOCALHOST NIE WIEM DLACZEGO, PEWNIE TRZEBA ZMIENIC TAK JAK BYLO NA MAINE I FETCHOW Z CHMURY
+
+      const response = await getMyReckoningTasks(
+        currentUserId,
+        '2025',
+        index + 1
+      );
       if (response) {
         // setReckoningTasks(response);
         dispatch({ type: 'SET_RECKOTASKS', payload: response });
@@ -84,20 +118,50 @@ function ReckoningView() {
     }
   };
 
-  const selectedMonthIndex = months.indexOf(selectedMonth) + 1;
+  const fetchTasksFromKanban = async () => {
+    if (studioTasks.length === 0) {
+      try {
+        const allStudioTasks = await getAllStudioTasks();
+        studioTasksDispatch({
+          type: 'SET_STUDIOTASKS',
+          payload: allStudioTasks,
+        });
+      } catch (error) {
+        console.error('Error fetching tasks:', error);
+      }
+    }
+  };
 
   useEffect(() => {
     fetchReckoningTasks(monthIndex);
+    fetchTasksFromKanban();
   }, []);
 
   useEffect(() => {
     setSelectedMonthDaysArray(generateDaysArray(selectedMonthIndex, 2025));
 
-    fetchReckoningTasks(selectedMonthIndex - 1);
+    const alreadyHasDataForMonth = reckoTasks.some(
+      (task) => task.month === selectedMonthIndex
+    );
+
+    if (!alreadyHasDataForMonth) {
+      fetchReckoningTasks(selectedMonthIndex - 1);
+    }
   }, [selectedMonth]);
 
   const totalHours = reckoTasks
-    .flatMap((task) => task.participants[0]?.hours || [])
+    .flatMap(
+      (task) =>
+        task.participants?.flatMap(
+          (p) =>
+            p.months?.flatMap((m) => {
+              const monthIndexToSumm = new Date(m.createdAt).getUTCMonth() + 1;
+              return monthIndexToSumm === selectedMonthIndex
+                ? m.hours || []
+                : [];
+            }) || []
+        ) || []
+    )
     .reduce((sum, hourObj) => sum + hourObj.hourNum, 0);
 
   const handleAddEmptyReckoTask = async () => {
@@ -108,6 +172,7 @@ function ReckoningView() {
 
       const addResponse = await addReckoningTask({
         searchID: generateSearchID(),
+        idOfAssignedStudioTask: '',
         client: 'Wybierz firme',
         clientPerson: 'Wybierz klienta',
         title: '',
@@ -118,12 +183,20 @@ function ReckoningView() {
         participants: [
           {
             _id: user[0]._id,
+            isVisible: true,
             name: user[0].name,
-            hours: generateDaysArray(selectedMonthIndex, 2025),
+            img: user[0].img,
+            months: [
+              {
+                createdAt: new Date(selectedYear, selectedMonthIndex, 1),
+                hours: generateDaysArray(selectedMonthIndex, 2025),
+              },
+            ],
           },
         ],
         startDate,
-        deadline: '',
+        month: selectedMonthIndex,
+        // deadline: '',
       });
 
       if (addResponse !== null) {
@@ -136,6 +209,104 @@ function ReckoningView() {
     }
   };
 
+  const handleAddFromKanban = async ({
+    _id,
+    searchID,
+    client,
+    clientPerson,
+    title,
+    description,
+    participants,
+  }) => {
+    try {
+      handleLoadingStateChange('isAddEmptyLoading', true);
+
+      const startDate = new Date(selectedYear, selectedMonthIndex, 1);
+
+      const addResponse = await addReckoningTaskFromKanban({
+        searchID,
+        idOfAssignedStudioTask: _id,
+        client,
+        clientPerson,
+        title,
+        description,
+        author: user[0],
+        printWhat: '',
+        printWhere: '',
+        participants: participants.map((part) => {
+          return {
+            _id: part._id,
+            isVisible: currentUserId === part._id,
+            name: part.name,
+            img: part.img,
+            months: [
+              {
+                createdAt: new Date(selectedYear, selectedMonthIndex, 1),
+                hours: generateDaysArray(selectedMonthIndex, 2025),
+              },
+            ],
+          };
+        }),
+        startDate,
+        month: selectedMonthIndex,
+        // deadline: '',
+      });
+
+      if (addResponse.alreadyExist) {
+        setAddTaskFromKanbanState((prev) => {
+          return {
+            ...prev,
+            isAlreadyExist: true,
+          };
+        });
+      }
+
+      const updatedTask = await UpdateStudioTask({
+        id: _id,
+        studioTaskData: { reckoTaskID: addResponse._id },
+      });
+
+      const res = await getStudioTask(updatedTask._id);
+      studioTasksDispatch({
+        type: 'UPDATE_STUDIOTASK',
+        payload: res,
+      });
+      socket.emit('tasksUpdated', res);
+
+      const response = await getMyReckoningTasks(
+        currentUserId,
+        '2025',
+        selectedMonthIndex
+      );
+      if (response) {
+        // setReckoningTasks(response);
+        dispatch({ type: 'SET_RECKOTASKS', payload: response });
+      }
+
+      // if (addResponse !== null) {
+      //   dispatch({ type: 'CREATE_RECKOTASK', payload: addResponse });
+      // }
+      // console.log(addResponse);
+    } catch (error) {
+      console.error(error);
+      setAddTaskFromKanbanState((prev) => {
+        return {
+          ...prev,
+          errorMessage: 'Coś poszło nie tak :(',
+        };
+      });
+    } finally {
+      handleLoadingStateChange('isAddEmptyLoading', false);
+
+      setAddTaskFromKanbanState((prev) => {
+        return {
+          ...prev,
+          successMessage: 'Zlecenie utworzone!',
+        };
+      });
+    }
+  };
+
   const renderReckoTasks = () => {
     if (taskLoadingState.isGetMyTasksLoading) {
       return <SkeletonUsersLoading />;
@@ -145,7 +316,13 @@ function ReckoningView() {
       return reckoTasks.map((reckTask, index) => {
         // console.log(reckTask.participants[0].hours);
         return (
-          <ReckoningTile key={reckTask._id} reckTask={reckTask} index={index} />
+          <ReckoningTile
+            key={reckTask._id}
+            reckTask={reckTask}
+            index={index}
+            selectedMonthIndex={selectedMonthIndex}
+            // assigneStudioTaskId={reckTask.idOfAssignedStudioTask}
+          />
         );
       });
     }
@@ -171,8 +348,125 @@ function ReckoningView() {
     );
   };
 
+  const studioTasksAssignedTome = studioTasks.filter((task) => {
+    return task.participants.some((participant) => {
+      return participant._id === currentUserId;
+    });
+  });
+
   return (
     <>
+      <ModalTemplate
+        isOpen={showModal}
+        onClose={() => {
+          closeModal();
+          // handleLoadingStateChange('isFinalMessage', false);
+          // setFormValue(initialTaskObject);
+        }}
+        exitAnim={exitAnim}
+      >
+        <h3>Aktywne zlecenia</h3>
+
+        <div className={styles.tasksWrapper}>
+          {studioTasksAssignedTome.map((studioTask) => {
+            const companyClass = studioTask.client.split(' ').join(' ');
+            return (
+              <div
+                className={styles.studioTaskContainer}
+                key={studioTask._id}
+                onMouseEnter={() => {
+                  setHoveredCardId(studioTask._id);
+                }}
+                onMouseLeave={() => {
+                  setHoveredCardId(null);
+                  setAddTaskFromKanbanState((prev) => {
+                    return {
+                      ...prev,
+                      successMessage: '',
+                      isAlreadyExist: false,
+                      errorMessage: '',
+                    };
+                  });
+                }}
+              >
+                <div
+                  className={`${styles.contentWrapper} ${
+                    hoveredCardId === studioTask._id
+                      ? styles.fadeOut
+                      : styles.fadeIn
+                  }`}
+                >
+                  <div className={styles.batchWrapper}>
+                    <CompanyBatch
+                      companyClass={companyClass}
+                      isClientPerson={false}
+                      isBigger={false}
+                    >
+                      {studioTask.client}
+                    </CompanyBatch>
+                    <CompanyBatch
+                      companyClass={null}
+                      isClientPerson
+                      isBigger={false}
+                    >
+                      {studioTask.clientPerson}
+                    </CompanyBatch>
+                  </div>
+                  <p className={styles.searchIDel}>#{studioTask.searchID}</p>
+                  <p className={styles.studioTaskTitle}>{studioTask.title}</p>
+                  <div className={styles.userDisplayWrapper}>
+                    <UsersDisplay
+                      data={studioTask}
+                      usersArray={studioTask.participants}
+                    />
+                  </div>
+                </div>
+                <div
+                  className={`${styles.ctaContainer} ${
+                    hoveredCardId === studioTask._id
+                      ? styles.fadeIn
+                      : styles.fadeOut
+                  }`}
+                >
+                  <CTA
+                    onClick={() => {
+                      handleAddFromKanban(
+                        studioTask as {
+                          _id: string;
+                          searchID: number;
+                          client: string;
+                          clientPerson: string;
+                          title: string;
+                          description: string;
+                          participants: any[];
+                        }
+                      );
+                    }}
+                  >
+                    Dodaj
+                  </CTA>
+                  <div className={styles.loaderWrapper}>
+                    {taskLoadingState.isAddEmptyLoading && <CheckboxLoader />}
+                  </div>
+                  {addTaskFromKanbanState.successMessage.length > 0 && (
+                    <p className={styles.successMessage}>
+                      {!addTaskFromKanbanState.isAlreadyExist &&
+                        addTaskFromKanbanState.successMessage}
+                      {addTaskFromKanbanState.isAlreadyExist && 'Już istnieje'}
+                    </p>
+                  )}
+
+                  {addTaskFromKanbanState.errorMessage.length > 0 && (
+                    <p className={styles.errorMessage}>
+                      {addTaskFromKanbanState.errorMessage}
+                    </p>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </ModalTemplate>
       <ControlBar>
         <ControlBarTitle>Rozliczenie</ControlBarTitle>
         <Select
@@ -191,7 +485,9 @@ function ReckoningView() {
           <p>{totalHours}</p>
         </div>
         <div className={styles.ctaWrapper}>
-          <CTA type="button">Dodaj ze zleceń</CTA>
+          <CTA type="button" onClick={openModal}>
+            Dodaj ze zleceń
+          </CTA>
         </div>
       </ControlBar>
       <ViewContainer>
@@ -223,24 +519,6 @@ function ReckoningView() {
                 })}
               </div>
             </div>
-
-            {/* {!taskLoadingState.isGetMyTasksLoading ? (
-              reckoTasks.length > 0 ? (
-                reckoTasks.map((reckTask, index) => {
-                  return (
-                    <ReckoningTile
-                      key={reckTask._id}
-                      reckTask={reckTask}
-                      index={index}
-                    />
-                  );
-                })
-              ) : (
-                <p>brak zadan</p>
-              )
-            ) : (
-              <SkeletonUsersLoading />
-            )} */}
             {renderReckoTasks()}
             {reckoTasks.length > 0 && !taskLoadingState.isGetMyTasksLoading && (
               <div className={styles.addNewReckoTaskWrapper}>
@@ -251,6 +529,7 @@ function ReckoningView() {
                 >
                   Dodaj wiersz..
                 </button>
+
                 {taskLoadingState.isAddEmptyLoading && <CheckboxLoader />}
               </div>
             )}

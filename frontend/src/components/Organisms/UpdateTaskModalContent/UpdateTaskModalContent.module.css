@@ -19,6 +19,7 @@
   width: 85%;
   min-width: 400px;
   max-width: 650px;
+  max-height: 800px;
   padding: 20px 10px;
 }
 
@@ -280,6 +281,125 @@
 
 .checkInput {
   cursor: pointer;
+}
+
+.reckoSectionWrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-left: 25%;
+  display: flex;
+  gap: 10%;
+  margin-bottom: 30px;
+}
+
+.reckoSectionElementContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  p {
+    margin: 0;
+  }
+}
+
+.reckoSectionPartName {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.heroImg {
+  cursor: pointer;
+  width: 30px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.noRecordsTitle {
+  font-size: 14px;
+}
+
+/* .summaryHoursWrapper {
+  display: flex;
+  gap: 15px;
+  padding-left: 10px;
+
+  transform: translateY(-10px);
+}
+
+.monthContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  p:first-child {
+    font-weight: 600;
+    font-size: 14px;
+  }
+} */
+
+.reckoTableWrapper {
+  display: flex;
+  flex-direction: column;
+  /* padding-left: 25%; */
+  margin-bottom: 30px;
+  width: 80%;
+  max-height: 150px;
+  overflow-y: scroll;
+}
+
+.reckoTable {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  overflow-x: scroll;
+}
+
+.reckoTableRow {
+  display: flex;
+  align-items: center;
+  background-color: var(--color-shadow);
+  border-radius: 15px;
+  padding-left: 10px;
+
+  /* overflow-x: scroll; */
+}
+
+.reckoUserCell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 130px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.reckoMonthCells {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.reckoMonthCell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 20px;
+  text-align: center;
+
+  p {
+    margin: 0;
+  }
+}
+
+.reckoMonthCell p:first-child {
+  font-weight: 600;
+  font-size: 14px;
 }
 
 @keyframes appear {

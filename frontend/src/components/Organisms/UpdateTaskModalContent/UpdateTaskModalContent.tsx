@@ -1,5 +1,6 @@
 import { Icon } from '@iconify/react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import DateFormatter from '../../../utils/dateFormatter';
 import CheckboxLoader from '../../Atoms/CheckboxLoader/CheckboxLoader';
 import ModalSectionTitle from '../../Atoms/ModalSectionTitle/ModalSectionTitle';
@@ -10,6 +11,10 @@ import useStudioTaskUpdate from '../../../hooks/useStudioTaskUpdate';
 import useSubtask from '../../../hooks/useSubtasks';
 import useAuth from '../../../hooks/useAuth';
 import checkIfUserAssigned from '../../../utils/checkIfUserAssigned';
+import CompanyBatch from '../../Atoms/CompanyBatch/CompanyBatch';
+import { getReckoningTask } from '../../../services/reckoning-view-service';
+import summarizeHours from '../../../utils/SummarizeHours';
+import { months } from '../../../hooks/useCurrentDate';
 
 function UpdateTaskModalContent({
   task,
@@ -17,6 +22,7 @@ function UpdateTaskModalContent({
   setDeleteCaptcha,
   companyClass,
 }) {
+  const [assignedReckoTask, setAssignedReckoTask] = useState([]);
   const {
     users,
     companies,
@@ -49,10 +55,23 @@ function UpdateTaskModalContent({
 
   const { user: currentUser } = useAuth();
 
+  const getAssignedReckoTask = async () => {
+    if (task.reckoTaskID) {
+      const reckoTask = await getReckoningTask(task.reckoTaskID);
+      // console.log(reckoTask);
+      if (reckoTask !== null) {
+        setAssignedReckoTask([reckoTask]);
+      } else {
+        setAssignedReckoTask([]);
+      }
+    }
+  };
+
   useEffect(() => {
     setIsUserAssigned(
       checkIfUserAssigned(task.participants, currentUser[0]._id)
     );
+    getAssignedReckoTask();
   }, []);
 
   return (
@@ -87,14 +106,17 @@ function UpdateTaskModalContent({
             <div>
               <p className={styles.sectionTitle}>Klient</p>
               <div className={styles.clientContainer}>
-                <p
-                  className={`${styles.modalCompanyBatch} ${[
-                    `${companyClass}`,
-                  ]}`}
+                <CompanyBatch
+                  companyClass={companyClass}
+                  isClientPerson={false}
+                  isBigger
                 >
                   {task.client}
-                </p>
-                <p className={styles.modalClientBatch}>{task.clientPerson}</p>
+                </CompanyBatch>
+
+                <CompanyBatch companyClass={null} isClientPerson isBigger>
+                  {task.clientPerson}
+                </CompanyBatch>
               </div>
             </div>
           </div>
@@ -124,6 +146,63 @@ function UpdateTaskModalContent({
               <p className={styles.sectionTitle}>Numer</p>
               <p className={styles.cardNumber}>#{task.searchID}</p>
             </div>
+          </div>
+
+          <ModalSectionTitle iconName="mdi:account-clock-outline">
+            <p className={styles.descriptionTitle}>Rozliczenie</p>
+          </ModalSectionTitle>
+
+          <div className={styles.reckoTableWrapper}>
+            {assignedReckoTask.length > 0 ? (
+              <div className={styles.reckoTable}>
+                {assignedReckoTask[0].participants.map((art) =>
+                  art.isVisible ? (
+                    <div className={styles.reckoTableRow} key={art._id}>
+                      <Link
+                        className={styles.reckoUserCell}
+                        to={`/użytkownicy/${art._id}`}
+                      >
+                        <img
+                          className={styles.heroImg}
+                          src={`${art.img}`}
+                          alt=""
+                        />
+                        <p className={styles.reckoSectionPartName}>
+                          {art.name}:
+                        </p>
+                      </Link>
+
+                      <div className={styles.reckoMonthCells}>
+                        {art.months
+                          .sort(
+                            (a, b) =>
+                              new Date(a.createdAt).getTime() -
+                              new Date(b.createdAt).getTime()
+                          )
+                          .map((m) => {
+                            const monthIndex = new Date(
+                              m.createdAt
+                            ).getUTCMonth();
+                            return (
+                              <div
+                                key={m._id}
+                                className={styles.reckoMonthCell}
+                              >
+                                <p>{months[monthIndex].slice(0, 3)}</p>
+                                <p>{summarizeHours(m.hours)}h</p>
+                              </div>
+                            );
+                          })}
+                      </div>
+                    </div>
+                  ) : null
+                )}
+              </div>
+            ) : (
+              <p className={styles.noRecordsTitle}>
+                Brak pozycji w rozliczeniu
+              </p>
+            )}
           </div>
 
           <ModalSectionTitle iconName="fluent:text-description-ltr-24-filled">

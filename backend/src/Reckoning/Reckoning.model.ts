@@ -5,10 +5,10 @@ export const ReckoningTaskModel = mongoose.model(
   new mongoose.Schema({
     searchID: {
       type: Number,
-      required: true,
-      unique: true,
     },
-
+    idOfAssignedStudioTask: {
+      type: String,
+    },
     client: {
       type: String,
     },
@@ -68,15 +68,27 @@ export const ReckoningTaskModel = mongoose.model(
           type: String,
         },
         // if one user adds task from kanban all assigned users gets fetched to participants but only user that added task to reckoning has isVisible to true and rest is false that other users can decide if they want to see this task from kanban in their reckoning
-        isVisible: Boolean,
+        isVisible: {
+          type: Boolean,
+        },
         name: {
           type: String,
         },
-        hours: [
+        img: {
+          type: String,
+        },
+
+        months: [
           {
             _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
-            hourNum: Number,
-            isWeekend: Boolean,
+            hours: [
+              {
+                _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
+                hourNum: Number,
+                isWeekend: Boolean,
+              },
+            ],
+            createdAt: Date,
           },
         ],
       },
@@ -86,8 +98,8 @@ export const ReckoningTaskModel = mongoose.model(
       type: Date,
       required: true,
     },
-    deadline: {
-      type: String,
-    },
+    // deadline: {
+    //   type: String,
+    // },
   }),
 );

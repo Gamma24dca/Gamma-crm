@@ -31,7 +31,7 @@ export async function signUp({
   };
 
   const response = await fetch(
-    'https://gamma-crm.onrender.com/api/auth/signup',
+    `${import.meta.env.VITE_API_URL}/api/auth/signup`,
     {
       method: 'POST',
       headers: {
@@ -54,7 +54,7 @@ type SignInProps = {
 
 export async function signIn({ email, password }: SignInProps): Promise<void> {
   const response = await fetch(
-    'https://gamma-crm.onrender.com/api/auth/signin',
+    `${import.meta.env.VITE_API_URL}/api/auth/signin`,
     {
       method: 'POST',
       credentials: 'include',
@@ -76,7 +76,7 @@ export async function signIn({ email, password }: SignInProps): Promise<void> {
 
 export async function signOut(): Promise<void> {
   const response = await fetch(
-    'https://gamma-crm.onrender.com/api/auth/signout',
+    `${import.meta.env.VITE_API_URL}/api/auth/signout`,
     {
       method: 'POST',
       credentials: 'include',

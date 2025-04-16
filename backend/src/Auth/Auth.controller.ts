@@ -10,6 +10,7 @@ export const AuthController = {
   },
   async signUser(email: string, password: string): Promise<null | string> {
     const user = await UserModel.findOne({ email }).exec();
+
     if (!user) {
       return null;
     }

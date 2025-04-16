@@ -14,7 +14,7 @@ export type TaskTypes = {
 
 export async function getAllTasks(): Promise<TaskTypes[] | null> {
   try {
-    const response = await fetch('https://gamma-crm.onrender.com/api/tasks', {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/tasks`, {
       method: 'GET',
       credentials: 'include',
       headers: {
@@ -37,7 +37,7 @@ export async function getAllTasks(): Promise<TaskTypes[] | null> {
 export async function getTaskById(id: string): Promise<TaskTypes | null> {
   try {
     const response = await fetch(
-      `https://gamma-crm.onrender.com/api/tasks/${id}`,
+      `${import.meta.env.VITE_API_URL}/api/tasks/${id}`,
       {
         method: 'GET',
         credentials: 'include',
@@ -79,7 +79,7 @@ export async function addTask({
     formData.append('status', status);
     formData.append('deadline', deadline);
 
-    const response = await fetch('https://gamma-crm.onrender.com/api/tasks', {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/tasks`, {
       method: 'POST',
       credentials: 'include',
       body: formData,

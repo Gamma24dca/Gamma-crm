@@ -13,7 +13,7 @@ export type User = {
 
 export async function getAllUsers(): Promise<User[] | null> {
   try {
-    const response = await fetch('https://gamma-crm.onrender.com/api/users', {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/users`, {
       method: 'GET',
       credentials: 'include',
       headers: {
@@ -35,7 +35,7 @@ export async function getAllUsers(): Promise<User[] | null> {
 export async function getUserById(id: string): Promise<User | null> {
   try {
     const response = await fetch(
-      `https://gamma-crm.onrender.com/api/users/${id}`,
+      `${import.meta.env.VITE_API_URL}/api/users/${id}`,
       {
         method: 'GET',
         credentials: 'include',
@@ -59,7 +59,7 @@ export async function getUserById(id: string): Promise<User | null> {
 export async function getCurrentUser(): Promise<User | null> {
   try {
     const response = await fetch(
-      'https://gamma-crm.onrender.com/api/users/me',
+      `${import.meta.env.VITE_API_URL}/api/users/me`,
       {
         credentials: 'include',
       }
@@ -79,7 +79,7 @@ export async function getCurrentUser(): Promise<User | null> {
 export async function deleteUser(id: string) {
   try {
     const response = await fetch(
-      `https://gamma-crm.onrender.com/api/users/${id}`,
+      `${import.meta.env.VITE_API_URL}/api/users/${id}`,
       {
         method: 'DELETE',
         credentials: 'include',
