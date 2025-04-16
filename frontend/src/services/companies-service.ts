@@ -21,7 +21,7 @@ export type CompaniesType = {
 export async function getAllCompanies(): Promise<CompaniesType[] | null> {
   try {
     const response = await fetch(
-      'https://gamma-crm.onrender.com/api/companies',
+      `${import.meta.env.VITE_API_URL}/api/companies`,
       {
         method: 'GET',
         credentials: 'include',
@@ -45,7 +45,7 @@ export async function getAllCompanies(): Promise<CompaniesType[] | null> {
 export async function getCurrentCompany(id): Promise<CompaniesType | null> {
   try {
     const response = await fetch(
-      `https://gamma-crm.onrender.com/api/companies/${id}`,
+      `${import.meta.env.VITE_API_URL}/api/companies/${id}`,
       {
         method: 'GET',
         credentials: 'include',
@@ -86,7 +86,7 @@ export async function addCompany({
 
   try {
     const response = await fetch(
-      'https://gamma-crm.onrender.com/api/companies',
+      `${import.meta.env.VITE_API_URL}/api/companies`,
       {
         method: 'POST',
         credentials: 'include',
@@ -114,7 +114,7 @@ export async function addCompany({
 export async function deleteCompany(id) {
   try {
     const response = await fetch(
-      `https://gamma-crm.onrender.com/api/companies/${id}`,
+      `${import.meta.env.VITE_API_URL}/api/companies/${id}`,
       {
         method: 'DELETE',
         credentials: 'include',
@@ -144,7 +144,7 @@ export async function UpdateCompany({ id, companyData }) {
 
   try {
     const response = await fetch(
-      `https://gamma-crm.onrender.com/api/companies/${id}`,
+      `${import.meta.env.VITE_API_URL}/api/companies/${id}`,
       {
         method: 'PATCH',
         credentials: 'include',
@@ -173,7 +173,7 @@ export async function SearchCompany(query) {
       return [];
     }
     const response = await fetch(
-      `https://gamma-crm.onrender.com/api/companies/search/${query}`,
+      `${import.meta.env.VITE_API_URL}/api/companies/search/${query}`,
       {
         method: 'GET',
         credentials: 'include',

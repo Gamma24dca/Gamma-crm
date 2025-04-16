@@ -9,6 +9,7 @@ type Subtask = {
 export type StudioTaskTypes = {
   _id?: string;
   searchID: number;
+  reckoTaskID: string;
   title: string;
   client: string;
   clientPerson: string;
@@ -31,7 +32,32 @@ export type StudioTaskTypes = {
 export async function getAllStudioTasks() {
   try {
     const response = await fetch(
-      'https://gamma-crm.onrender.com/api/studiotasks',
+      `${import.meta.env.VITE_API_URL}/api/studiotasks`,
+      {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    if (response.ok) {
+      return await response.json();
+    }
+    throw new Error(`${response.status} ${response.statusText}`);
+  } catch (error) {
+    if (Config.isDev) {
+      throw new Error('Get users', error.message);
+    }
+    console.error(error.message);
+    return null;
+  }
+}
+
+export async function getStudioTask(id: string) {
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/studiotasks/${id}`,
       {
         method: 'GET',
         credentials: 'include',
@@ -55,6 +81,7 @@ export async function getAllStudioTasks() {
 
 export async function addStudioTask({
   searchID,
+  reckoTaskID,
   title,
   client,
   clientPerson,
@@ -70,6 +97,7 @@ export async function addStudioTask({
 }: StudioTaskTypes) {
   const formData = {
     searchID,
+    reckoTaskID,
     title,
     client,
     clientPerson,
@@ -86,7 +114,7 @@ export async function addStudioTask({
 
   try {
     const response = await fetch(
-      'https://gamma-crm.onrender.com/api/studiotasks',
+      `${import.meta.env.VITE_API_URL}/api/studiotasks`,
       {
         method: 'POST',
         credentials: 'include',
@@ -117,7 +145,7 @@ export async function UpdateStudioTask({ id, studioTaskData }) {
 
   try {
     const response = await fetch(
-      `https://gamma-crm.onrender.com/api/studiotasks/${id}`,
+      `${import.meta.env.VITE_API_URL}/api/studiotasks/${id}`,
       {
         method: 'PATCH',
         credentials: 'include',
@@ -143,7 +171,7 @@ export async function UpdateStudioTask({ id, studioTaskData }) {
 export async function deleteTask(id: string) {
   try {
     const response = await fetch(
-      `https://gamma-crm.onrender.com/api/studiotasks/${id}`,
+      `${import.meta.env.VITE_API_URL}/api/studiotasks/${id}`,
       {
         method: 'DELETE',
         credentials: 'include',
@@ -171,7 +199,7 @@ export async function addSubtask({ taskId, content, done }) {
       done,
     };
     const response = await fetch(
-      `https://gamma-crm.onrender.com/api/studiotasks/${taskId}/subtasks`,
+      `${import.meta.env.VITE_API_URL}/api/studiotasks/${taskId}/subtasks`,
       {
         method: 'POST',
         credentials: 'include',
@@ -199,7 +227,9 @@ export async function updateSubtask({ taskId, subtaskId, subtaskData }) {
       ...subtaskData,
     };
     const response = await fetch(
-      `https://gamma-crm.onrender.com/api/studiotasks/${taskId}/subtasks/${subtaskId}`,
+      `${
+        import.meta.env.VITE_API_URL
+      }/api/studiotasks/${taskId}/subtasks/${subtaskId}`,
       {
         method: 'PATCH',
         credentials: 'include',
@@ -224,7 +254,9 @@ export async function updateSubtask({ taskId, subtaskId, subtaskData }) {
 export async function deleteSubtask(taskId: string, subtaskId: string) {
   try {
     const response = await fetch(
-      `https://gamma-crm.onrender.com/api/studiotasks/${taskId}/subtasks/${subtaskId}`,
+      `${
+        import.meta.env.VITE_API_URL
+      }/api/studiotasks/${taskId}/subtasks/${subtaskId}`,
       {
         method: 'DELETE',
         credentials: 'include',

@@ -6,7 +6,10 @@ export const StudioTaskModel = mongoose.model(
     searchID: {
       type: Number,
       required: true,
-      unique: true,
+      // unique: true,
+    },
+    reckoTaskID: {
+      type: String,
     },
     title: {
       type: String,

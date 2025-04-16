@@ -84,8 +84,10 @@ app.get('/api/status', (req, res) => res.status(200).json({ ok: true }));
 io.on('connection', (socket) => {
   console.log(`User connected: ${socket.id}`);
 
+  ///////////////STUDIO TASKS SOCKETS///////////////////////
+
   socket.on('taskUpdated', (task) => {
-    io.emit('refreshTasks', task); // Broadcast to all clients
+    io.emit('refreshTasks', task);
   });
 
   socket.on('tasksUpdated', (tasks) => {
