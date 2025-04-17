@@ -7,6 +7,7 @@ import styles from './CompanyProfile.module.css';
 import {
   CompaniesType,
   deleteCompany,
+  getAssignedReckoTasks,
   getCurrentCompany,
 } from '../../services/companies-service';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
@@ -285,8 +286,17 @@ function CompanyProfile() {
       });
   }, [params.id]);
 
+  const fetchAssignedReckoTasks = async () => {
+    const reckoTasks = await getAssignedReckoTasks({
+      company: 'Premio',
+      monthIndex: 4,
+    });
+    console.log(reckoTasks);
+  };
+
   useEffect(() => {
     fetchCompanyData();
+    fetchAssignedReckoTasks();
   }, [fetchCompanyData]);
 
   const handleDeleteCompany = async (id) => {
