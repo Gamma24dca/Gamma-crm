@@ -129,3 +129,22 @@ CompanyRouter.get(
     }
   },
 );
+
+CompanyRouter.get(
+  '/reckoning/:company/:monthIndex',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const company = req.params.company || '';
+      const monthIndex = req.params.monthIndex;
+      const reckoTasks = await CompanyController.getCompanyReckoTasks(
+        company,
+        monthIndex,
+      );
+      res.status(StatusCodes.ACCEPTED).json({ reckoTasks });
+    } catch (error) {
+      console.error('Error', error.message);
+      res.status(StatusCodes.BAD_GATEWAY).json({ message: error.message });
+    }
+  },
+);
