@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import ListContainer from '../../components/Atoms/ListContainer/ListContainer';
@@ -21,235 +21,9 @@ import Captcha from '../../components/Molecules/Captcha/Captcha';
 import CompanyProfileControlBar from '../../components/Organisms/CompanyProfileControlBar/CompanyProfileControlBar';
 import useCompaniesContext from '../../hooks/Context/useCompaniesContext';
 
-const mockedTasks = [
-  {
-    _id: 'ig35c',
-    worker: 'Bartek',
-    month: 'marzec',
-    company: 'Aksil',
-    createdAt: '2024.03.03',
-    client: 'Stachowiczk Joanna',
-    taskTitle: 'AKSIL_KATALOG_PRODUKTOW 2024',
-    hours: 19,
-    comment: 'projekt, poprawki i pliki do druku',
-    printWhere: '',
-    printSpec: '',
-    isSettled: true,
-  },
-  {
-    _id: 'fps32',
-    worker: 'Edyta',
-    month: 'wrzesień',
-    company: 'Santander',
-    createdAt: '2024.05.01',
-    client: 'Badowska Alicja',
-    taskTitle: 'Baner industry 1070x2125',
-    hours: 12,
-    comment: 'Zaliczka 12',
-    printWhere: '',
-    printSpec: '',
-    isSettled: false,
-  },
-  {
-    _id: '3x8[2',
-    worker: 'Edyta',
-    month: 'kwiecień',
-    company: 'Santander',
-    createdAt: '2024.04.08',
-    client: 'Ożóg Joanna',
-    taskTitle: 'Avik Animation 4k',
-    hours: 39,
-    comment: '',
-    printWhere: '',
-    printSpec: '',
-    isSettled: true,
-  },
-  {
-    _id: '71x71',
-    worker: 'Weronika',
-    month: 'kwiecień',
-    company: 'Santander',
-    createdAt: '2024.07.10',
-    client: 'Ożóg Joanna',
-    taskTitle: 'test data',
-    hours: 15,
-    comment: '',
-    printWhere: '',
-    printSpec: '',
-    isSettled: false,
-  },
-  {
-    _id: 'k3px4',
-    worker: 'Jagoda',
-    month: 'październik',
-    company: 'Santander',
-    createdAt: '2024.04.08',
-    client: 'Ożóg Joanna',
-    taskTitle: 'Avik Animation 4k',
-    hours: 19,
-    comment: '',
-    printWhere: '',
-    printSpec: '',
-    isSettled: false,
-  },
-  {
-    _id: 'fds32',
-    worker: 'Edyta',
-    month: 'wrzesień',
-    company: 'Santander',
-    createdAt: '2024.05.01',
-    client: 'Badowska Alicja',
-    taskTitle: 'Baner industry 1070x2125',
-    hours: 52,
-    comment: 'Zaliczka 12',
-    printWhere: '',
-    printSpec: '',
-    isSettled: false,
-  },
-  {
-    _id: '368a2',
-    worker: 'Edyta',
-    month: 'kwiecień',
-    company: 'Santander',
-    createdAt: '2024.03.08',
-    client: 'Ożóg Joanna',
-    taskTitle: 'Avik Animation 4k',
-    hours: 39,
-    comment: '',
-    printWhere: '',
-    printSpec: '',
-    isSettled: true,
-  },
-  {
-    _id: '73x71',
-    worker: 'Weronika',
-    month: 'kwiecień',
-    company: 'Santander',
-    createdAt: '2024.09.10',
-    client: 'Ożóg Joanna',
-    taskTitle: 'test data',
-    hours: 15,
-    comment: '',
-    printWhere: '',
-    printSpec: '',
-    isSettled: false,
-  },
-  {
-    _id: 'k3hx4',
-    worker: 'Jagoda',
-    month: 'październik',
-    company: 'Santander',
-    createdAt: '2024.05.08',
-    client: 'Ożóg Joanna',
-    taskTitle: 'Avik Animation 4k',
-    hours: 19,
-    comment: '',
-    printWhere: '',
-    printSpec: '',
-    isSettled: false,
-  },
-  {
-    _id: 'fss32',
-    worker: 'Edyta',
-    month: 'wrzesień',
-    company: 'Santander',
-    createdAt: '2023.02.01',
-    client: 'Badowska Alicja',
-    taskTitle: 'Baner industry 1070x2125',
-    hours: 12,
-    comment: 'Zaliczka 12',
-    printWhere: '',
-    printSpec: '',
-    isSettled: false,
-  },
-  {
-    _id: '3d8a2',
-    worker: 'Edyta',
-    month: 'kwiecień',
-    company: 'Santander',
-    createdAt: '2024.04.08',
-    client: 'Ożóg Joanna',
-    taskTitle: 'Avik Animation 4k',
-    hours: 39,
-    comment: '',
-    printWhere: '',
-    printSpec: '',
-    isSettled: true,
-  },
-  {
-    _id: '7lx71',
-    worker: 'Weronika',
-    month: 'kwiecień',
-    company: 'Santander',
-    createdAt: '2024.01.20',
-    client: 'Ożóg Joanna',
-    taskTitle: 'test data',
-    hours: 15,
-    comment: '',
-    printWhere: '',
-    printSpec: '',
-    isSettled: false,
-  },
-  {
-    _id: 'kfpx4',
-    worker: 'Jagoda',
-    month: 'październik',
-    company: 'Santander',
-    createdAt: '2023.04.08',
-    client: 'Ożóg Joanna',
-    taskTitle: 'Avik Animation 4k',
-    hours: 19,
-    comment: '',
-    printWhere: '',
-    printSpec: '',
-    isSettled: false,
-  },
-  {
-    _id: 'knpx4',
-    worker: 'Jagoda',
-    month: 'październik',
-    company: 'Santander',
-    createdAt: '2023.04.08',
-    client: 'Ożóg Joanna',
-    taskTitle: 'Avik Animation 4k',
-    hours: 19,
-    comment: '',
-    printWhere: '',
-    printSpec: '',
-    isSettled: false,
-  },
-  {
-    _id: 'kfp34',
-    worker: 'Jagoda',
-    month: 'październik',
-    company: 'Santander',
-    createdAt: '2023.04.08',
-    client: 'Ożóg Joanna',
-    taskTitle: 'Avik Animation 4k',
-    hours: 19,
-    comment: '',
-    printWhere: '',
-    printSpec: '',
-    isSettled: false,
-  },
-  {
-    _id: 'kfpv4',
-    worker: 'Jagoda',
-    month: 'październik',
-    company: 'Santander',
-    createdAt: '2023.04.08',
-    client: 'Ożóg Joanna',
-    taskTitle: 'Avik Animation 4k',
-    hours: 19,
-    comment: '',
-    printWhere: '',
-    printSpec: '',
-    isSettled: false,
-  },
-];
-
 function CompanyProfile() {
   const [company, setCompany] = useState<CompaniesType>();
+  const [reckoningTasks, setReckoningTasks] = useState([]);
   const { showModal, exitAnim, openModal, closeModal } = useModal();
   const [deleteCaptcha, setDeleteCaptcha] = useState(false);
 
@@ -258,7 +32,7 @@ function CompanyProfile() {
   const navigate = useNavigate();
 
   const { sortedData, sortColumn, sortOrder, handleSortChange } =
-    useSort(mockedTasks);
+    useSort(reckoningTasks);
 
   const {
     currentPage,
@@ -276,28 +50,22 @@ function CompanyProfile() {
   const is1600 = useWindowSize('1600');
   const is1350 = useWindowSize('1350');
 
-  const fetchCompanyData = useCallback(() => {
-    getCurrentCompany(params.id)
-      .then((currentCompany: CompaniesType) => {
-        setCompany(currentCompany);
-      })
-      .catch((error) => {
-        console.error('Error fetching company:', error);
-      });
-  }, [params.id]);
+  const fetchCompany = async () => {
+    const currentCompany = await getCurrentCompany(params.id);
 
-  const fetchAssignedReckoTasks = async () => {
-    const reckoTasks = await getAssignedReckoTasks({
-      company: 'Premio',
-      monthIndex: 4,
-    });
-    console.log(reckoTasks);
+    if (currentCompany) {
+      setCompany(currentCompany);
+      const reckoTasks = await getAssignedReckoTasks({
+        company: currentCompany.name,
+        monthIndex: 4,
+      });
+      setReckoningTasks(reckoTasks.reckoTasks);
+    }
   };
 
   useEffect(() => {
-    fetchCompanyData();
-    fetchAssignedReckoTasks();
-  }, [fetchCompanyData]);
+    fetchCompany();
+  }, []);
 
   const handleDeleteCompany = async (id) => {
     await deleteCompany(id);
@@ -344,7 +112,7 @@ function CompanyProfile() {
               currentCompany={company}
               closeModal={closeModal}
               openCaptcha={setDeleteCaptcha}
-              refreshCompanyData={fetchCompanyData}
+              refreshCompanyData={fetchCompany}
             />
           </>
         )}
@@ -353,7 +121,7 @@ function CompanyProfile() {
         <CompanyProfileControlBar
           company={company}
           openModal={openModal}
-          tasks={mockedTasks}
+          tasks={reckoningTasks}
         />
       </ControlBar>
 
@@ -378,7 +146,7 @@ function CompanyProfile() {
                 }}
               >
                 <p>
-                  Pracownik{' '}
+                  Firma{' '}
                   {sortColumn === 'worker' && (sortOrder === 'asc' ? '↑' : '↓')}
                 </p>
               </div>
@@ -394,7 +162,7 @@ function CompanyProfile() {
                 }}
               >
                 <p>
-                  Miesiąc{' '}
+                  Klient{' '}
                   {sortColumn === 'month' && (sortOrder === 'asc' ? '↑' : '↓')}
                 </p>
               </div>
@@ -522,9 +290,36 @@ function CompanyProfile() {
               return (
                 <div key={task._id} className={styles.reckoningTaskListElement}>
                   <div className={styles.reckoningTaskListElementTile}>
-                    <p>{task._id}</p>
+                    <p>{task.searchID}</p>
                   </div>
                   <div className={styles.reckoningTaskListElementTile}>
+                    <p>{task.client}</p>
+                  </div>
+                  <div className={styles.reckoningTaskListElementTile}>
+                    <p>{task.clientPerson}</p>
+                  </div>
+                  <div className={styles.reckoningTaskListElementTile}>
+                    <p>{task.month}</p>
+                  </div>
+                  <div className={styles.reckoningTaskListElementTile}>
+                    <p>{task.createdAt}</p>
+                  </div>
+                  <div className={styles.reckoningTaskListElementTile}>
+                    <p>{task.title}</p>
+                  </div>
+                  <div className={styles.reckoningTaskListElementTile}>
+                    <p>{task.month}</p>
+                  </div>
+                  <div className={styles.reckoningTaskListElementTile}>
+                    <p>{task.description}</p>
+                  </div>
+                  <div className={styles.reckoningTaskListElementTile}>
+                    <p>{task.printWhat}</p>
+                  </div>
+                  <div className={styles.reckoningTaskListElementTile}>
+                    <p>{task.printWhere}</p>
+                  </div>
+                  {/* <div className={styles.reckoningTaskListElementTile}>
                     <p>{task.worker}</p>
                   </div>
                   <div className={styles.reckoningTaskListElementTile}>
@@ -550,7 +345,7 @@ function CompanyProfile() {
                   </div>
                   <div className={styles.reckoningTaskListElementTile}>
                     <p>{task.printWhere}</p>
-                  </div>
+                  </div> */}
                 </div>
               );
             })}
