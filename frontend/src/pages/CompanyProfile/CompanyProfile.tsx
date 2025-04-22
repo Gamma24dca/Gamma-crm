@@ -20,6 +20,7 @@ import UpdateCompanyModalContent from '../../components/Organisms/UpdateCompanyM
 import Captcha from '../../components/Molecules/Captcha/Captcha';
 import CompanyProfileControlBar from '../../components/Organisms/CompanyProfileControlBar/CompanyProfileControlBar';
 import useCompaniesContext from '../../hooks/Context/useCompaniesContext';
+import summarizeHours from '../../utils/SummarizeHours';
 
 function CompanyProfile() {
   const [company, setCompany] = useState<CompaniesType>();
@@ -287,6 +288,7 @@ function CompanyProfile() {
           </div>
           <>
             {currentTasks.map((task) => {
+              console.log(task.participants[0].months);
               return (
                 <div key={task._id} className={styles.reckoningTaskListElement}>
                   <div className={styles.reckoningTaskListElementTile}>
@@ -308,8 +310,9 @@ function CompanyProfile() {
                     <p>{task.title}</p>
                   </div>
                   <div className={styles.reckoningTaskListElementTile}>
-                    <p>{task.month}</p>
+                    <p>{summarizeHours(task.participants)}</p>
                   </div>
+
                   <div className={styles.reckoningTaskListElementTile}>
                     <p>{task.description}</p>
                   </div>
