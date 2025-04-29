@@ -3,19 +3,19 @@ import BackButton from '../../Atoms/BackButton/BackButton';
 import styles from './CompanyProfileControlBar.module.css';
 import CTA from '../../Atoms/CTA/CTA';
 import Select from '../../Atoms/Select/Select';
-import useCurrentDate from '../../../hooks/useCurrentDate';
 import summarizeHours from '../../../utils/SummarizeHours';
 
-function CompanyProfileControlBar({ company, openModal, tasks }) {
-  const {
-    selectedMonth,
-    selectedYear,
-    handleMonthChange,
-    handleYearChange,
-    months,
-    years,
-  } = useCurrentDate();
-
+function CompanyProfileControlBar({
+  company,
+  openModal,
+  tasks,
+  selectedMonth,
+  selectedYear,
+  handleMonthChange,
+  handleYearChange,
+  months,
+  years,
+}) {
   const totalHours = summarizeHours(tasks);
 
   return (

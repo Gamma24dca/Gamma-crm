@@ -110,6 +110,23 @@
   transform: rotate(180deg) translateX(-5px);
 }
 
+.iconWrapper {
+  height: 100%;
+  display: flex;
+  align-items: center;
+
+  p {
+    font-weight: 600;
+  }
+}
+.loadingIcon {
+  color: var(--color-orange);
+}
+
+.errorIcon {
+  color: var(--color-error);
+}
+
 @media (max-width: 1700px) {
   .containersWrapper {
     gap: 20px;
