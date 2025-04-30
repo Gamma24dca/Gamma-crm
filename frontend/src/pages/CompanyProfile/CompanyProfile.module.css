@@ -81,6 +81,7 @@
 }
 .reckoningTaskListElementTile:nth-child(5) {
   width: 9%;
+  padding-left: 10px;
 }
 .reckoningTaskListElementTile:nth-child(6) {
   width: 20%;
