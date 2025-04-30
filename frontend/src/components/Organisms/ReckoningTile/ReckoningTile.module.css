@@ -8,6 +8,7 @@
   /* grid-template-columns: repeat(7, 1fr); */
   grid-template-rows: 1fr;
   align-items: center;
+  animation: appear 0.3s ease forwards;
 }
 
 .reckTaskItem,
@@ -169,4 +170,13 @@
 .highlightCurrentDay {
   background-color: var(--color-navButton);
   color: var(--color-lighter);
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

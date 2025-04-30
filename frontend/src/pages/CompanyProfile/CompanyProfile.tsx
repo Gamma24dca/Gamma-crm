@@ -135,9 +135,6 @@ function CompanyProfile() {
 
   const navigate = useNavigate();
 
-  const { sortedData, sortColumn, sortOrder, handleSortChange } =
-    useSort(reckoningTasks);
-
   const {
     selectedMonth,
     selectedYear,
@@ -148,6 +145,11 @@ function CompanyProfile() {
   } = useCurrentDate();
 
   const currentMonthIndex = months.indexOf(selectedMonth);
+
+  const { sortedData, sortColumn, sortOrder, handleSortChange } = useSort(
+    reckoningTasks,
+    currentMonthIndex
+  );
 
   const {
     currentPage,
@@ -185,7 +187,7 @@ function CompanyProfile() {
         });
         setReckoningTasks(reckoTasks.reckoTasks);
       } catch (error) {
-        errorHappened = true; // <<< zmieniamy flagę w catchu
+        errorHappened = true;
         setLoadingState(() => ({
           isLoading: false,
           isError: true,
@@ -281,32 +283,33 @@ function CompanyProfile() {
                 className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
                 role="button"
                 tabIndex={0}
-                onClick={() => handleSortChange('worker')}
+                onClick={() => handleSortChange('client')}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
-                    handleSortChange('worker');
+                    handleSortChange('client');
                   }
                 }}
               >
                 <p>
                   Firma{' '}
-                  {sortColumn === 'worker' && (sortOrder === 'asc' ? '↑' : '↓')}
+                  {sortColumn === 'client' && (sortOrder === 'asc' ? '↑' : '↓')}
                 </p>
               </div>
               <div
                 className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
                 role="button"
                 tabIndex={0}
-                onClick={() => handleSortChange('month')}
+                onClick={() => handleSortChange('clientPerson')}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
-                    handleSortChange('month');
+                    handleSortChange('clientPerson');
                   }
                 }}
               >
                 <p>
                   Klient{' '}
-                  {sortColumn === 'month' && (sortOrder === 'asc' ? '↑' : '↓')}
+                  {sortColumn === 'clientPerson' &&
+                    (sortOrder === 'asc' ? '↑' : '↓')}
                 </p>
               </div>
               <div
@@ -346,49 +349,32 @@ function CompanyProfile() {
                 className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
                 role="button"
                 tabIndex={0}
-                onClick={() => handleSortChange('taskTitle')}
+                onClick={() => handleSortChange('title')}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
-                    handleSortChange('taskTitle');
+                    handleSortChange('title');
                   }
                 }}
               >
                 <p>
                   Tytuł{' '}
-                  {sortColumn === 'taskTitle' &&
-                    (sortOrder === 'asc' ? '↑' : '↓')}
+                  {sortColumn === 'title' && (sortOrder === 'asc' ? '↑' : '↓')}
                 </p>
               </div>
               <div
                 className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
                 role="button"
                 tabIndex={0}
-                onClick={() => handleSortChange('hours')}
+                onClick={() => handleSortChange('participants')}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
-                    handleSortChange('hours');
+                    handleSortChange('participants');
                   }
                 }}
               >
                 <p>
                   Sum{' '}
-                  {sortColumn === 'hours' && (sortOrder === 'asc' ? '↑' : '↓')}
-                </p>
-              </div>
-              <div
-                className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
-                role="button"
-                tabIndex={0}
-                onClick={() => handleSortChange('comment')}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    handleSortChange('comment');
-                  }
-                }}
-              >
-                <p>
-                  Komentarz{' '}
-                  {sortColumn === 'comment' &&
+                  {sortColumn === 'participants' &&
                     (sortOrder === 'asc' ? '↑' : '↓')}
                 </p>
               </div>
@@ -396,16 +382,33 @@ function CompanyProfile() {
                 className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
                 role="button"
                 tabIndex={0}
-                onClick={() => handleSortChange('printSpec')}
+                onClick={() => handleSortChange('description')}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
-                    handleSortChange('printSpec');
+                    handleSortChange('description');
+                  }
+                }}
+              >
+                <p>
+                  Komentarz{' '}
+                  {sortColumn === 'description' &&
+                    (sortOrder === 'asc' ? '↑' : '↓')}
+                </p>
+              </div>
+              <div
+                className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
+                role="button"
+                tabIndex={0}
+                onClick={() => handleSortChange('printWhat')}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    handleSortChange('printWhat');
                   }
                 }}
               >
                 <p>
                   DRUK(spec){' '}
-                  {sortColumn === 'printSpec' &&
+                  {sortColumn === 'printWhat' &&
                     (sortOrder === 'asc' ? '↑' : '↓')}
                 </p>
               </div>
