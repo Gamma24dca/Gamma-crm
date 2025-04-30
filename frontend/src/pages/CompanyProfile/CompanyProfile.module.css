@@ -110,6 +110,18 @@
   transform: rotate(180deg) translateX(-5px);
 }
 
+.noTasksContainer {
+  height: 120px;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  gap: 15px;
+
+  p {
+    font-weight: 600;
+  }
+}
+
 .iconWrapper {
   height: 100%;
   display: flex;
