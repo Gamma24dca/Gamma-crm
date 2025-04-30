@@ -23,6 +23,12 @@ import useCompaniesContext from '../../hooks/Context/useCompaniesContext';
 // import summarizeHours from '../../utils/SummarizeHours';
 import useCurrentDate from '../../hooks/useCurrentDate';
 
+const tileClass = (tileIndex) => {
+  return tileIndex % 2 === 0
+    ? styles.reckoningTaskListElement
+    : styles.darkerReckoningTaskListElement;
+};
+
 function ViewComponent({ loadingState, currentTasks, currentMonthIndex }) {
   if (loadingState.isError) {
     return (
@@ -56,23 +62,23 @@ function ViewComponent({ loadingState, currentTasks, currentMonthIndex }) {
     !loadingState.isLoading &&
     currentTasks.length > 0
   ) {
-    return currentTasks.map((task) => {
+    return currentTasks.map((task, index) => {
       return (
-        <div key={task._id} className={styles.reckoningTaskListElement}>
+        <div key={task._id} className={`${tileClass(index)}`}>
           <div className={styles.reckoningTaskListElementTile}>
             <p>{task.searchID}</p>
           </div>
-          <div className={styles.reckoningTaskListElementTile}>
+          <div className={`${styles.reckoningTaskListElementTile}`}>
             <p>{task.client}</p>
           </div>
           <div className={styles.reckoningTaskListElementTile}>
             <p>{task.clientPerson}</p>
           </div>
           <div className={styles.reckoningTaskListElementTile}>
-            <p>{task.month}</p>
+            <p>{task.startDate.slice(0, 10)}</p>
           </div>
           <div className={styles.reckoningTaskListElementTile}>
-            <p>{task.createdAt}</p>
+            <p>{}</p>
           </div>
           <div className={styles.reckoningTaskListElementTile}>
             <p>{task.title}</p>
@@ -331,17 +337,9 @@ function CompanyProfile() {
               </div>
               <div
                 className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
-                role="button"
-                tabIndex={0}
-                onClick={() => handleSortChange('client')}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    handleSortChange('client');
-                  }
-                }}
               >
                 <p>
-                  Klient{' '}
+                  Graficy{' '}
                   {sortColumn === 'client' && (sortOrder === 'asc' ? '↑' : '↓')}
                 </p>
               </div>
