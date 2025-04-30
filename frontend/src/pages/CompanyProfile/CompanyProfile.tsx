@@ -51,60 +51,74 @@ function ViewComponent({ loadingState, currentTasks, currentMonthIndex }) {
     );
   }
 
-  return currentTasks.map((task) => {
-    return (
-      <div key={task._id} className={styles.reckoningTaskListElement}>
-        <div className={styles.reckoningTaskListElementTile}>
-          <p>{task.searchID}</p>
-        </div>
-        <div className={styles.reckoningTaskListElementTile}>
-          <p>{task.client}</p>
-        </div>
-        <div className={styles.reckoningTaskListElementTile}>
-          <p>{task.clientPerson}</p>
-        </div>
-        <div className={styles.reckoningTaskListElementTile}>
-          <p>{task.month}</p>
-        </div>
-        <div className={styles.reckoningTaskListElementTile}>
-          <p>{task.createdAt}</p>
-        </div>
-        <div className={styles.reckoningTaskListElementTile}>
-          <p>{task.title}</p>
-        </div>
-        <div className={styles.reckoningTaskListElementTile}>
-          <p>
-            {task.participants.reduce((totalHours, participant) => {
-              return (
-                totalHours +
-                participant.months.reduce((monthSum, month) => {
-                  const date = new Date(month.createdAt);
-                  const monthMatches = date.getUTCMonth() === currentMonthIndex;
+  if (
+    !loadingState.isError &&
+    !loadingState.isLoading &&
+    currentTasks.length > 0
+  ) {
+    return currentTasks.map((task) => {
+      return (
+        <div key={task._id} className={styles.reckoningTaskListElement}>
+          <div className={styles.reckoningTaskListElementTile}>
+            <p>{task.searchID}</p>
+          </div>
+          <div className={styles.reckoningTaskListElementTile}>
+            <p>{task.client}</p>
+          </div>
+          <div className={styles.reckoningTaskListElementTile}>
+            <p>{task.clientPerson}</p>
+          </div>
+          <div className={styles.reckoningTaskListElementTile}>
+            <p>{task.month}</p>
+          </div>
+          <div className={styles.reckoningTaskListElementTile}>
+            <p>{task.createdAt}</p>
+          </div>
+          <div className={styles.reckoningTaskListElementTile}>
+            <p>{task.title}</p>
+          </div>
+          <div className={styles.reckoningTaskListElementTile}>
+            <p>
+              {task.participants.reduce((totalHours, participant) => {
+                return (
+                  totalHours +
+                  participant.months.reduce((monthSum, month) => {
+                    const date = new Date(month.createdAt);
+                    const monthMatches =
+                      date.getUTCMonth() === currentMonthIndex;
 
-                  if (!monthMatches) return monthSum;
+                    if (!monthMatches) return monthSum;
 
-                  const hoursSum = month.hours.reduce((hourSum, hour) => {
-                    return hourSum + (hour.hourNum || 0);
-                  }, 0);
-                  return hoursSum + monthSum;
-                }, 0)
-              );
-            }, 0)}
-          </p>
-        </div>
+                    const hoursSum = month.hours.reduce((hourSum, hour) => {
+                      return hourSum + (hour.hourNum || 0);
+                    }, 0);
+                    return hoursSum + monthSum;
+                  }, 0)
+                );
+              }, 0)}
+            </p>
+          </div>
 
-        <div className={styles.reckoningTaskListElementTile}>
-          <p>{task.description}</p>
+          <div className={styles.reckoningTaskListElementTile}>
+            <p>{task.description}</p>
+          </div>
+          <div className={styles.reckoningTaskListElementTile}>
+            <p>{task.printWhat}</p>
+          </div>
+          <div className={styles.reckoningTaskListElementTile}>
+            <p>{task.printWhere}</p>
+          </div>
         </div>
-        <div className={styles.reckoningTaskListElementTile}>
-          <p>{task.printWhat}</p>
-        </div>
-        <div className={styles.reckoningTaskListElementTile}>
-          <p>{task.printWhere}</p>
-        </div>
-      </div>
-    );
-  });
+      );
+    });
+  }
+
+  return (
+    <div className={styles.noTasksContainer}>
+      <p>Brak zleceń</p>
+      <Icon icon="line-md:coffee-loop" width="24" height="24" />
+    </div>
+  );
 }
 
 function CompanyProfile() {
