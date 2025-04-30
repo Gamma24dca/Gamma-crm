@@ -22,6 +22,7 @@ import CompanyProfileControlBar from '../../components/Organisms/CompanyProfileC
 import useCompaniesContext from '../../hooks/Context/useCompaniesContext';
 // import summarizeHours from '../../utils/SummarizeHours';
 import useCurrentDate from '../../hooks/useCurrentDate';
+import UsersDisplay from '../../components/Organisms/UsersDisplay/UsersDisplay';
 
 const tileClass = (tileIndex) => {
   return tileIndex % 2 === 0
@@ -78,7 +79,7 @@ function ViewComponent({ loadingState, currentTasks, currentMonthIndex }) {
             <p>{task.startDate.slice(0, 10)}</p>
           </div>
           <div className={styles.reckoningTaskListElementTile}>
-            <p>{}</p>
+            <UsersDisplay data={task} usersArray={task.participants} />
           </div>
           <div className={styles.reckoningTaskListElementTile}>
             <p>{task.title}</p>
