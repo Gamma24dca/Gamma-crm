@@ -1,10 +1,11 @@
 .reckoningTaskListElement {
   width: 100%;
-  font-size: 14px;
+  font-size: 13px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   transition: all 0.3s ease;
+  animation: appear 0.3s ease forwards;
 }
 
 .reckoningTaskListElement:not(:first-child) {
@@ -31,12 +32,15 @@
 .companyInfoBarTile {
   background-color: transparent;
   width: 10%;
-  height: 40px;
+  height: 30px;
   text-align: center;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
   border: 1px solid var(--color-shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .companyInfoBarTile {
@@ -149,5 +153,14 @@
     h3 {
       font-size: 16px;
     }
+  }
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
