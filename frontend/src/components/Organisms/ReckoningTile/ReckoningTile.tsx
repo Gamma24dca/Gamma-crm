@@ -14,11 +14,6 @@ import Overlay from '../../Atoms/Overlay/Overlay';
 import useReckoTasksContext from '../../../hooks/Context/useReckoTasksContext';
 import CheckboxLoader from '../../Atoms/CheckboxLoader/CheckboxLoader';
 import summarizeHours from '../../../utils/SummarizeHours';
-// import {
-//   getStudioTask,
-//   UpdateStudioTask,
-// } from '../../../services/studio-tasks-service';
-// import socket from '../../../socket';
 
 function ReckoningTile({ reckTask, index, selectedMonthIndex }) {
   const [formValue, setFormValue] = useState(reckTask);
@@ -141,29 +136,6 @@ function ReckoningTile({ reckTask, index, selectedMonthIndex }) {
     }
   };
 
-  const handleDeleteReckoTask = async (id) => {
-    try {
-      setIsTaskDeleteLoading(true);
-      setIsEditOpen(false);
-
-      const currentParticipant = reckTask.participants.find(
-        (p) => p._id === currentUserId
-      );
-
-      const currentMonth = currentParticipant.months.find((m) => {
-        const date = new Date(m.createdAt);
-        return date.getMonth() === selectedMonthIndex;
-      });
-
-      const response = await deleteReckoningTask(id, currentMonth._id);
-      dispatch({ type: 'DELETE_RECKOTASK', payload: response });
-    } catch (error) {
-      console.error('Error saving value:', error);
-    } finally {
-      setIsTaskDeleteLoading(false);
-    }
-  };
-
   const handleHoursClear = async () => {
     const findUser = reckTask.participants.find((part) => {
       return part._id === currentUserId;
@@ -201,6 +173,29 @@ function ReckoningTile({ reckTask, index, selectedMonthIndex }) {
       taskId: reckTask._id,
       value: { participants: updatedParticipants },
     });
+  };
+
+  const handleDeleteReckoTask = async (id) => {
+    try {
+      setIsTaskDeleteLoading(true);
+      setIsEditOpen(false);
+
+      const currentParticipant = reckTask.participants.find(
+        (p) => p._id === currentUserId
+      );
+
+      const currentMonth = currentParticipant.months.find((m) => {
+        const date = new Date(m.createdAt);
+        return date.getMonth() === selectedMonthIndex;
+      });
+
+      const response = await deleteReckoningTask(id, currentMonth._id);
+      dispatch({ type: 'DELETE_RECKOTASK', payload: response });
+    } catch (error) {
+      console.error('Error saving value:', error);
+    } finally {
+      setIsTaskDeleteLoading(false);
+    }
   };
 
   return (
@@ -242,7 +237,47 @@ function ReckoningTile({ reckTask, index, selectedMonthIndex }) {
                   width="20"
                   height="20"
                 />
-                <p>Usuń</p>
+                <p>Usuń zlecenie</p>
+              </div>
+              <div
+                className={styles.deleteWrapper}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    handleDeleteReckoTask(reckTask._id);
+                  }
+                }}
+                onClick={() => {
+                  handleBlur(reckTask._id, {
+                    client: 'Wybierz firme',
+                    clientPerson: 'Wybierz klienta',
+                    title: '',
+                    description: '',
+                    printWhat: '',
+                    printWhere: '',
+                  });
+                  setFormValue((prev) => {
+                    return {
+                      ...prev,
+                      client: 'Wybierz firme',
+                      clientPerson: 'Wybierz klienta',
+                      title: '',
+                      description: '',
+                      printWhat: '',
+                      printWhere: '',
+                    };
+                  });
+                  handleHoursClear();
+                }}
+              >
+                <Icon
+                  className={styles.trashIcon}
+                  icon="mdi:clock-minus-outline"
+                  width="20"
+                  height="20"
+                />
+                <p>Wyczyść godziny</p>
               </div>
               <div
                 className={styles.deleteWrapper}
@@ -282,7 +317,7 @@ function ReckoningTile({ reckTask, index, selectedMonthIndex }) {
                   width="20"
                   height="20"
                 />
-                <p>Wyczyść</p>
+                <p>Wyczyść zlecenie</p>
               </div>
             </div>
           </>
