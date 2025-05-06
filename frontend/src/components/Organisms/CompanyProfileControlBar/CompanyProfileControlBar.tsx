@@ -1,9 +1,14 @@
+import { useState } from 'react';
 import { Icon } from '@iconify/react';
 import BackButton from '../../Atoms/BackButton/BackButton';
 import styles from './CompanyProfileControlBar.module.css';
 import CTA from '../../Atoms/CTA/CTA';
 import Select from '../../Atoms/Select/Select';
 import summarizeCompanyProfHours from '../../../utils/summarizeCompanyProfHours';
+import FilterDropdownContainer from '../../Atoms/FilterDropdownContainer/FilterDropdownContainer';
+import Overlay from '../../Atoms/Overlay/Overlay';
+import DropdownHeader from '../../Atoms/DropdownHeader/DropdownHeader';
+import MultiselectDropdown from '../../Molecules/MultiselectDropdown/MultiselectDropdown';
 
 function CompanyProfileControlBar({
   company,
@@ -17,6 +22,8 @@ function CompanyProfileControlBar({
   years,
   currentMonthIndex,
 }) {
+  const [filterDropdown, setFilterDropdown] = useState(false);
+  const [isSelectOpen, setIsSelectOpen] = useState(false);
   const total =
     tasks.length > 0
       ? tasks.reduce((tasksTotalHours, task) => {
@@ -78,8 +85,31 @@ function CompanyProfileControlBar({
       <div className={styles.totalHoursContainer}>
         <p>{total}</p>
       </div>
+      {filterDropdown && (
+        <>
+          <Overlay closeFunction={setFilterDropdown} />
+          <FilterDropdownContainer>
+            <DropdownHeader>Filtr</DropdownHeader>
+            <br />
+            <MultiselectDropdown
+              label="Klienci"
+              isSelectOpen={isSelectOpen}
+              setIsSelectOpen={setIsSelectOpen}
+            >
+              {company.clientPerson.map((cp) => {
+                return <p key={cp._id}>{cp.value}</p>;
+              })}
+            </MultiselectDropdown>
+          </FilterDropdownContainer>
+        </>
+      )}
       <div className={styles.controlBarBtnsWrapper}>
-        <CTA type="button" onClick={() => {}}>
+        <CTA
+          type="button"
+          onClick={() => {
+            setFilterDropdown((prev) => !prev);
+          }}
+        >
           Filtry
         </CTA>
       </div>

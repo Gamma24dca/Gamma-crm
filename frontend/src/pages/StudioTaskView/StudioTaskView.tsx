@@ -28,6 +28,8 @@ import socket from '../../socket';
 import { SearchArchivedTask } from '../../services/archived-studio-tasks-service';
 import SearchInput from '../../components/Atoms/ControlBar/SearchInput/SearchInput';
 import Overlay from '../../components/Atoms/Overlay/Overlay';
+import FilterDropdownContainer from '../../components/Atoms/FilterDropdownContainer/FilterDropdownContainer';
+import DropdownHeader from '../../components/Atoms/DropdownHeader/DropdownHeader';
 
 const initialTaskObject: StudioTaskTypes = {
   searchID: 0,
@@ -388,8 +390,8 @@ function StudioTaskView() {
         {filterDropdown && (
           <>
             <Overlay closeFunction={setFilterDropdown} />
-            <div className={styles.filterDropdownContainer}>
-              <h3 className={styles.dropdownHeader}>Filtr</h3>
+            <FilterDropdownContainer>
+              <DropdownHeader>Filtr</DropdownHeader>
               <div className={styles.assignedToMeWrapper}>
                 <input
                   type="checkbox"
@@ -539,7 +541,7 @@ function StudioTaskView() {
               >
                 Wyczyść
               </button>
-            </div>
+            </FilterDropdownContainer>
           </>
         )}
       </ControlBar>

@@ -208,12 +208,14 @@ function ReckoningTile({ reckTask, index, selectedMonthIndex }) {
   };
 
   function ReckoTaskEditSelect(position) {
-    if (!position) return;
+    if (!position) return null;
+
+    const { top, left } = position;
 
     const style: React.CSSProperties = {
       position: 'absolute' as const,
-      top: position.top,
-      left: position.left,
+      top,
+      left,
     };
 
     return ReactDOM.createPortal(

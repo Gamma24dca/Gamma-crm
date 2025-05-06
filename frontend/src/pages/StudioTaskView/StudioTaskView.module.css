@@ -17,29 +17,6 @@
   gap: 15px;
 }
 
-.filterDropdownContainer {
-  position: fixed;
-  right: 100px;
-  top: 190px;
-  width: 220px;
-  /* height: 350px; */
-  background-color: var(--color-lighter);
-  box-shadow: 0 0px 3px var(--color-shadow);
-  border-radius: 15px;
-  z-index: 200;
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-  align-items: center;
-  padding: 20px 15px 100px 15px;
-  animation: appear 0.3s ease forwards;
-}
-
-.dropdownHeader {
-  font-size: 16px;
-  margin: 0;
-}
-
 .assignedToMeWrapper {
   display: flex;
   align-items: center;
