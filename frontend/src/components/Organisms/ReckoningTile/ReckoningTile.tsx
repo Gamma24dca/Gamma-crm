@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
 // import useShowLabel from '../../../hooks/useShowLabel';
 import { Icon } from '@iconify/react';
 import styles from './ReckoningTile.module.css';
@@ -19,7 +20,10 @@ function ReckoningTile({ reckTask, index, selectedMonthIndex }) {
   const [formValue, setFormValue] = useState(reckTask);
   const [isTaskDeleteLoading, setIsTaskDeleteLoading] = useState(false);
   const { companies, dispatch: companiesDispatch } = useCompaniesContext();
-  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState({
+    isOpen: false,
+    position: null,
+  });
   const { dispatch } = useReckoTasksContext();
   const currentDate = new Date();
 
@@ -178,7 +182,12 @@ function ReckoningTile({ reckTask, index, selectedMonthIndex }) {
   const handleDeleteReckoTask = async (id) => {
     try {
       setIsTaskDeleteLoading(true);
-      setIsEditOpen(false);
+      setIsEditOpen((prev) => {
+        return {
+          ...prev,
+          isOpen: false,
+        };
+      });
 
       const currentParticipant = reckTask.participants.find(
         (p) => p._id === currentUserId
@@ -198,14 +207,146 @@ function ReckoningTile({ reckTask, index, selectedMonthIndex }) {
     }
   };
 
+  function ReckoTaskEditSelect(position) {
+    if (!position) return;
+
+    const style: React.CSSProperties = {
+      position: 'absolute' as const,
+      top: position.top,
+      left: position.left,
+    };
+
+    return ReactDOM.createPortal(
+      <>
+        <Overlay closeFunction={setIsEditOpen} />
+        <div className={styles.editModal} style={style}>
+          <div
+            className={styles.deleteWrapper}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                handleDeleteReckoTask(reckTask._id);
+              }
+            }}
+            onClick={() => {
+              handleDeleteReckoTask(reckTask._id);
+            }}
+          >
+            <Icon
+              className={styles.trashIcon}
+              icon="line-md:document-delete"
+              width="20"
+              height="20"
+            />
+            <p>Usuń zlecenie</p>
+          </div>
+          <div
+            className={styles.deleteWrapper}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                handleDeleteReckoTask(reckTask._id);
+              }
+            }}
+            onClick={() => {
+              handleBlur(reckTask._id, {
+                client: 'Wybierz firme',
+                clientPerson: 'Wybierz klienta',
+                title: '',
+                description: '',
+                printWhat: '',
+                printWhere: '',
+              });
+              setFormValue((prev) => {
+                return {
+                  ...prev,
+                  client: 'Wybierz firme',
+                  clientPerson: 'Wybierz klienta',
+                  title: '',
+                  description: '',
+                  printWhat: '',
+                  printWhere: '',
+                };
+              });
+              handleHoursClear();
+            }}
+          >
+            <Icon
+              className={styles.trashIcon}
+              icon="mdi:clock-minus-outline"
+              width="20"
+              height="20"
+            />
+            <p>Wyczyść godziny</p>
+          </div>
+          <div
+            className={styles.deleteWrapper}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                handleDeleteReckoTask(reckTask._id);
+              }
+            }}
+            onClick={() => {
+              handleBlur(reckTask._id, {
+                client: 'Wybierz firme',
+                clientPerson: 'Wybierz klienta',
+                title: '',
+                description: '',
+                printWhat: '',
+                printWhere: '',
+              });
+              setFormValue((prev) => {
+                return {
+                  ...prev,
+                  client: 'Wybierz firme',
+                  clientPerson: 'Wybierz klienta',
+                  title: '',
+                  description: '',
+                  printWhat: '',
+                  printWhere: '',
+                };
+              });
+              handleHoursClear();
+            }}
+          >
+            <Icon
+              className={styles.trashIcon}
+              icon="line-md:file-document-off"
+              width="20"
+              height="20"
+            />
+            <p>Wyczyść zlecenie</p>
+          </div>
+        </div>
+      </>,
+
+      document.getElementById('select-root')
+    );
+  }
+
   return (
     <div className={styles.reckoningItemContainer}>
       <div className={styles.editButtonWrapper}>
         <button
           type="button"
           className={styles.moreButton}
-          onClick={() => {
-            setIsEditOpen((prev) => !prev);
+          onClick={(e) => {
+            const rect = (
+              e.target as HTMLButtonElement
+            ).getBoundingClientRect();
+            setIsEditOpen((prev) => {
+              return {
+                position: {
+                  top: rect.bottom + 5 + window.scrollY,
+                  left: rect.left + window.scrollX,
+                },
+                isOpen: !prev.isOpen,
+              };
+            });
           }}
         >
           {isTaskDeleteLoading ? (
@@ -214,114 +355,115 @@ function ReckoningTile({ reckTask, index, selectedMonthIndex }) {
             <Icon icon="ic:outline-more-vert" width="24" height="24" />
           )}
         </button>
-        {isEditOpen && (
-          <>
-            <Overlay closeFunction={setIsEditOpen} />
-            <div className={styles.editModal}>
-              <div
-                className={styles.deleteWrapper}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    handleDeleteReckoTask(reckTask._id);
-                  }
-                }}
-                onClick={() => {
-                  handleDeleteReckoTask(reckTask._id);
-                }}
-              >
-                <Icon
-                  className={styles.trashIcon}
-                  icon="line-md:document-delete"
-                  width="20"
-                  height="20"
-                />
-                <p>Usuń zlecenie</p>
-              </div>
-              <div
-                className={styles.deleteWrapper}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    handleDeleteReckoTask(reckTask._id);
-                  }
-                }}
-                onClick={() => {
-                  handleBlur(reckTask._id, {
-                    client: 'Wybierz firme',
-                    clientPerson: 'Wybierz klienta',
-                    title: '',
-                    description: '',
-                    printWhat: '',
-                    printWhere: '',
-                  });
-                  setFormValue((prev) => {
-                    return {
-                      ...prev,
-                      client: 'Wybierz firme',
-                      clientPerson: 'Wybierz klienta',
-                      title: '',
-                      description: '',
-                      printWhat: '',
-                      printWhere: '',
-                    };
-                  });
-                  handleHoursClear();
-                }}
-              >
-                <Icon
-                  className={styles.trashIcon}
-                  icon="mdi:clock-minus-outline"
-                  width="20"
-                  height="20"
-                />
-                <p>Wyczyść godziny</p>
-              </div>
-              <div
-                className={styles.deleteWrapper}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    handleDeleteReckoTask(reckTask._id);
-                  }
-                }}
-                onClick={() => {
-                  handleBlur(reckTask._id, {
-                    client: 'Wybierz firme',
-                    clientPerson: 'Wybierz klienta',
-                    title: '',
-                    description: '',
-                    printWhat: '',
-                    printWhere: '',
-                  });
-                  setFormValue((prev) => {
-                    return {
-                      ...prev,
-                      client: 'Wybierz firme',
-                      clientPerson: 'Wybierz klienta',
-                      title: '',
-                      description: '',
-                      printWhat: '',
-                      printWhere: '',
-                    };
-                  });
-                  handleHoursClear();
-                }}
-              >
-                <Icon
-                  className={styles.trashIcon}
-                  icon="line-md:file-document-off"
-                  width="20"
-                  height="20"
-                />
-                <p>Wyczyść zlecenie</p>
-              </div>
-            </div>
-          </>
-        )}
+        {
+          isEditOpen && <>{ReckoTaskEditSelect(isEditOpen.position)}</>
+          // <>
+          //   <Overlay closeFunction={setIsEditOpen} />
+          //   <div className={styles.editModal}>
+          //     <div
+          //       className={styles.deleteWrapper}
+          //       role="button"
+          //       tabIndex={0}
+          //       onKeyDown={(e) => {
+          //         if (e.key === 'Enter' || e.key === ' ') {
+          //           handleDeleteReckoTask(reckTask._id);
+          //         }
+          //       }}
+          //       onClick={() => {
+          //         handleDeleteReckoTask(reckTask._id);
+          //       }}
+          //     >
+          //       <Icon
+          //         className={styles.trashIcon}
+          //         icon="line-md:document-delete"
+          //         width="20"
+          //         height="20"
+          //       />
+          //       <p>Usuń zlecenie</p>
+          //     </div>
+          //     <div
+          //       className={styles.deleteWrapper}
+          //       role="button"
+          //       tabIndex={0}
+          //       onKeyDown={(e) => {
+          //         if (e.key === 'Enter' || e.key === ' ') {
+          //           handleDeleteReckoTask(reckTask._id);
+          //         }
+          //       }}
+          //       onClick={() => {
+          //         handleBlur(reckTask._id, {
+          //           client: 'Wybierz firme',
+          //           clientPerson: 'Wybierz klienta',
+          //           title: '',
+          //           description: '',
+          //           printWhat: '',
+          //           printWhere: '',
+          //         });
+          //         setFormValue((prev) => {
+          //           return {
+          //             ...prev,
+          //             client: 'Wybierz firme',
+          //             clientPerson: 'Wybierz klienta',
+          //             title: '',
+          //             description: '',
+          //             printWhat: '',
+          //             printWhere: '',
+          //           };
+          //         });
+          //         handleHoursClear();
+          //       }}
+          //     >
+          //       <Icon
+          //         className={styles.trashIcon}
+          //         icon="mdi:clock-minus-outline"
+          //         width="20"
+          //         height="20"
+          //       />
+          //       <p>Wyczyść godziny</p>
+          //     </div>
+          //     <div
+          //       className={styles.deleteWrapper}
+          //       role="button"
+          //       tabIndex={0}
+          //       onKeyDown={(e) => {
+          //         if (e.key === 'Enter' || e.key === ' ') {
+          //           handleDeleteReckoTask(reckTask._id);
+          //         }
+          //       }}
+          //       onClick={() => {
+          //         handleBlur(reckTask._id, {
+          //           client: 'Wybierz firme',
+          //           clientPerson: 'Wybierz klienta',
+          //           title: '',
+          //           description: '',
+          //           printWhat: '',
+          //           printWhere: '',
+          //         });
+          //         setFormValue((prev) => {
+          //           return {
+          //             ...prev,
+          //             client: 'Wybierz firme',
+          //             clientPerson: 'Wybierz klienta',
+          //             title: '',
+          //             description: '',
+          //             printWhat: '',
+          //             printWhere: '',
+          //           };
+          //         });
+          //         handleHoursClear();
+          //       }}
+          //     >
+          //       <Icon
+          //         className={styles.trashIcon}
+          //         icon="line-md:file-document-off"
+          //         width="20"
+          //         height="20"
+          //       />
+          //       <p>Wyczyść zlecenie</p>
+          //     </div>
+          //   </div>
+          // </>
+        }
       </div>
 
       <select

@@ -149,6 +149,7 @@
   flex-direction: column;
   justify-content: start;
   align-items: start;
+  animation: appear 0.3s ease forwards;
 }
 
 .deleteWrapper {
