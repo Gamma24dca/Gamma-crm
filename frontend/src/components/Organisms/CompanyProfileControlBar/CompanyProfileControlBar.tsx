@@ -3,7 +3,7 @@ import BackButton from '../../Atoms/BackButton/BackButton';
 import styles from './CompanyProfileControlBar.module.css';
 import CTA from '../../Atoms/CTA/CTA';
 import Select from '../../Atoms/Select/Select';
-import summarizeHours from '../../../utils/SummarizeHours';
+import summarizeCompanyProfHours from '../../../utils/summarizeCompanyProfHours';
 
 function CompanyProfileControlBar({
   company,
@@ -15,8 +15,16 @@ function CompanyProfileControlBar({
   handleYearChange,
   months,
   years,
+  currentMonthIndex,
 }) {
-  const totalHours = summarizeHours(tasks);
+  const total =
+    tasks.length > 0
+      ? tasks.reduce((tasksTotalHours, task) => {
+          return (
+            tasksTotalHours + summarizeCompanyProfHours(task, currentMonthIndex)
+          );
+        }, 0)
+      : 0;
 
   return (
     <>
@@ -68,7 +76,7 @@ function CompanyProfileControlBar({
         <p className={styles.summPar}>Suma:</p>
       </div>
       <div className={styles.totalHoursContainer}>
-        <p>{totalHours}</p>
+        <p>{total}</p>
       </div>
       <div className={styles.controlBarBtnsWrapper}>
         <CTA type="button" onClick={() => {}}>
