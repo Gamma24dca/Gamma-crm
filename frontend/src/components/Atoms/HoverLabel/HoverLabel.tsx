@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import styles from './HoverLabel.module.css';
 
-function HoverLabel({ children, position }) {
+function HoverLabel({ children, position, root }) {
   if (!position) return null;
 
   const style: React.CSSProperties = {
@@ -15,7 +15,7 @@ function HoverLabel({ children, position }) {
     <div className={styles.graphicName} style={style}>
       <p>{children}</p>
     </div>,
-    document.getElementById('label-root')
+    document.getElementById(root)
   );
 }
 

@@ -30,7 +30,10 @@ function UsersDisplay({ data, usersArray }) {
               {labelState.isLabel &&
                 labelState.labelValue === data.name &&
                 labelState.labelId === user.name && (
-                  <HoverLabel position={labelState.mousePosition}>
+                  <HoverLabel
+                    position={labelState.mousePosition}
+                    root="label-root"
+                  >
                     {user.name}
                   </HoverLabel>
                 )}
