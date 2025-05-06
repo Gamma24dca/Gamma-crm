@@ -23,6 +23,7 @@ import useCompaniesContext from '../../hooks/Context/useCompaniesContext';
 // import summarizeHours from '../../utils/SummarizeHours';
 import useCurrentDate from '../../hooks/useCurrentDate';
 import UsersDisplay from '../../components/Organisms/UsersDisplay/UsersDisplay';
+import summarizeCompanyProfHours from '../../utils/summarizeCompanyProfHours';
 
 const tileClass = (tileIndex) => {
   return tileIndex % 2 === 0
@@ -85,25 +86,7 @@ function ViewComponent({ loadingState, currentTasks, currentMonthIndex }) {
             <p>{task.title}</p>
           </div>
           <div className={styles.reckoningTaskListElementTile}>
-            <p>
-              {task.participants.reduce((totalHours, participant) => {
-                return (
-                  totalHours +
-                  participant.months.reduce((monthSum, month) => {
-                    const date = new Date(month.createdAt);
-                    const monthMatches =
-                      date.getUTCMonth() === currentMonthIndex;
-
-                    if (!monthMatches) return monthSum;
-
-                    const hoursSum = month.hours.reduce((hourSum, hour) => {
-                      return hourSum + (hour.hourNum || 0);
-                    }, 0);
-                    return hoursSum + monthSum;
-                  }, 0)
-                );
-              }, 0)}
-            </p>
+            <p>{summarizeCompanyProfHours(task, currentMonthIndex)}</p>
           </div>
 
           <div className={styles.reckoningTaskListElementTile}>
@@ -274,6 +257,7 @@ function CompanyProfile() {
           handleYearChange={handleYearChange}
           months={months}
           years={years}
+          currentMonthIndex={currentMonthIndex}
         />
       </ControlBar>
 
