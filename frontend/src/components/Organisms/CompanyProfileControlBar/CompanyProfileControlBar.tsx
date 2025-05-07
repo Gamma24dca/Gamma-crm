@@ -10,6 +10,7 @@ import Overlay from '../../Atoms/Overlay/Overlay';
 import DropdownHeader from '../../Atoms/DropdownHeader/DropdownHeader';
 import MultiselectDropdown from '../../Molecules/MultiselectDropdown/MultiselectDropdown';
 import FilterCheckbox from '../../Molecules/FilterCheckbox/FilterCheckbox';
+import SearchInput from '../../Atoms/ControlBar/SearchInput/SearchInput';
 
 function CompanyProfileControlBar({
   company,
@@ -24,6 +25,8 @@ function CompanyProfileControlBar({
   currentMonthIndex,
   clientPersonToFilter,
   setClientPersonToFilter,
+  searchInputValue,
+  setSearchInputValue,
 }) {
   const [filterDropdown, setFilterDropdown] = useState(false);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
@@ -88,12 +91,19 @@ function CompanyProfileControlBar({
         />
       </div>
       <div className={styles.center}>
-        <input
+        {/* <input
           className={styles.navInput}
           type="text"
           placeholder="Szukaj"
           name="task-search"
           id="task-search"
+        /> */}
+
+        <SearchInput
+          value={searchInputValue}
+          onChange={(e) => {
+            setSearchInputValue(e.target.value);
+          }}
         />
 
         <p className={styles.summPar}>Suma:</p>
