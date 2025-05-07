@@ -9,6 +9,7 @@ import FilterDropdownContainer from '../../Atoms/FilterDropdownContainer/FilterD
 import Overlay from '../../Atoms/Overlay/Overlay';
 import DropdownHeader from '../../Atoms/DropdownHeader/DropdownHeader';
 import MultiselectDropdown from '../../Molecules/MultiselectDropdown/MultiselectDropdown';
+import FilterCheckbox from '../../Molecules/FilterCheckbox/FilterCheckbox';
 
 function CompanyProfileControlBar({
   company,
@@ -21,9 +22,12 @@ function CompanyProfileControlBar({
   months,
   years,
   currentMonthIndex,
+  clientPersonToFilter,
+  setClientPersonToFilter,
 }) {
   const [filterDropdown, setFilterDropdown] = useState(false);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
+
   const total =
     tasks.length > 0
       ? tasks.reduce((tasksTotalHours, task) => {
@@ -32,6 +36,18 @@ function CompanyProfileControlBar({
           );
         }, 0)
       : 0;
+
+  const toggleClientPerson = (clientPerson) => {
+    if (clientPersonToFilter.includes(clientPerson.value)) {
+      setClientPersonToFilter(
+        clientPersonToFilter.filter((part) => part !== clientPerson.value)
+      );
+    } else {
+      setClientPersonToFilter((prev) => {
+        return [...prev, clientPerson.value];
+      });
+    }
+  };
 
   return (
     <>
@@ -97,7 +113,15 @@ function CompanyProfileControlBar({
               setIsSelectOpen={setIsSelectOpen}
             >
               {company.clientPerson.map((cp) => {
-                return <p key={cp._id}>{cp.value}</p>;
+                return (
+                  <FilterCheckbox
+                    key={cp._id}
+                    name={cp.value}
+                    isSelected={clientPersonToFilter.includes(cp.value)}
+                    toggleCompany={toggleClientPerson}
+                    filterVariable={cp}
+                  />
+                );
               })}
             </MultiselectDropdown>
           </FilterDropdownContainer>

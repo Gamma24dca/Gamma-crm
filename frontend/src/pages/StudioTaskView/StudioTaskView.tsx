@@ -30,6 +30,7 @@ import SearchInput from '../../components/Atoms/ControlBar/SearchInput/SearchInp
 import Overlay from '../../components/Atoms/Overlay/Overlay';
 import FilterDropdownContainer from '../../components/Atoms/FilterDropdownContainer/FilterDropdownContainer';
 import DropdownHeader from '../../components/Atoms/DropdownHeader/DropdownHeader';
+import FilterCheckbox from '../../components/Molecules/FilterCheckbox/FilterCheckbox';
 
 const initialTaskObject: StudioTaskTypes = {
   searchID: 0,
@@ -254,6 +255,22 @@ function StudioTaskView() {
     }
   };
 
+  const toogleCompany = (name: string) => {
+    if (companiesToFilter.includes(name)) {
+      setCompaniesToFilter((prev) => {
+        return prev.filter((company) => {
+          return company !== name;
+        });
+      });
+    } else {
+      setCompaniesToFilter((prev) => {
+        return [...prev, name];
+      });
+    }
+
+    setIsCompaniesSelectOpen(true);
+  };
+
   const {
     isOpen,
     getMenuProps,
@@ -423,32 +440,15 @@ function StudioTaskView() {
                   {users.map((userOnDrop) => {
                     return (
                       user._id !== user[0]._id && (
-                        <div
+                        <FilterCheckbox
                           key={userOnDrop._id}
-                          className={styles.userWrapper}
-                          role="button"
-                          tabIndex={0}
-                          onClick={() => {
-                            handleUserAssign(userOnDrop);
-                          }}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter' || e.key === ' ') {
-                              handleUserAssign(userOnDrop);
-                            }
-                          }}
-                        >
-                          <input
-                            className={styles.checkInput}
-                            type="checkbox"
-                            checked={participantsToFilter.includes(
-                              userOnDrop._id
-                            )}
-                            onChange={() => {
-                              handleUserAssign(userOnDrop);
-                            }}
-                          />
-                          <p>{userOnDrop.name}</p>
-                        </div>
+                          name={userOnDrop.name}
+                          isSelected={participantsToFilter.includes(
+                            userOnDrop._id
+                          )}
+                          toggleCompany={handleUserAssign}
+                          filterVariable={userOnDrop}
+                        />
                       )
                     );
                   })}
@@ -463,69 +463,13 @@ function StudioTaskView() {
                 >
                   {companies.map((company) => {
                     return (
-                      <div
+                      <FilterCheckbox
                         key={company._id}
-                        className={styles.userWrapper}
-                        role="button"
-                        tabIndex={0}
-                        onClick={() => {
-                          if (companiesToFilter.includes(company.name)) {
-                            setCompaniesToFilter(
-                              companiesToFilter.filter(
-                                (part) => part !== company.name
-                              )
-                            );
-
-                            setIsCompaniesSelectOpen(true);
-                          } else {
-                            setCompaniesToFilter((prev) => {
-                              return [...prev, company.name];
-                            });
-                            setIsCompaniesSelectOpen(true);
-                          }
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' || e.key === ' ') {
-                            if (companiesToFilter.includes(company.name)) {
-                              setCompaniesToFilter(
-                                companiesToFilter.filter(
-                                  (part) => part !== company.name
-                                )
-                              );
-
-                              setIsCompaniesSelectOpen(true);
-                            } else {
-                              setCompaniesToFilter((prev) => {
-                                return [...prev, company.name];
-                              });
-                              setIsCompaniesSelectOpen(true);
-                            }
-                          }
-                        }}
-                      >
-                        <input
-                          className={styles.checkInput}
-                          type="checkbox"
-                          checked={companiesToFilter.includes(company.name)}
-                          onChange={() => {
-                            if (companiesToFilter.includes(company.name)) {
-                              setCompaniesToFilter(
-                                companiesToFilter.filter(
-                                  (part) => part !== company.name
-                                )
-                              );
-
-                              setIsCompaniesSelectOpen(true);
-                            } else {
-                              setCompaniesToFilter((prev) => {
-                                return [...prev, company.name];
-                              });
-                              setIsCompaniesSelectOpen(true);
-                            }
-                          }}
-                        />
-                        <p>{company.name}</p>
-                      </div>
+                        name={company.name}
+                        isSelected={companiesToFilter.includes(company.name)}
+                        toggleCompany={toogleCompany}
+                        filterVariable={company.name}
+                      />
                     );
                   })}
                 </MultiselectDropdown>

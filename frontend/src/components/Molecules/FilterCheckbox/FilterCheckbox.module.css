@@ -1,0 +1,35 @@
+.userWrapper {
+  cursor: pointer;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  z-index: 205;
+  transition: all 0.3s ease;
+
+  &:hover {
+    color: var(--color-orange);
+  }
+
+  p {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+}
+
+.checkInput {
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.userWrapper:hover .checkInput {
+  transform: scale(1.1);
+}
+
+.checkInput:hover .userWrapper {
+  color: var(--color-orange);
+}

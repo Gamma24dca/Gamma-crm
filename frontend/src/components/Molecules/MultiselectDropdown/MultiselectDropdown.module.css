@@ -58,6 +58,7 @@
   z-index: 200;
   cursor: default;
   box-shadow: 0 0px 3px var(--color-shadow);
+  animation: appear 0.3s ease forwards;
 }
 
 .selectContainer::-webkit-scrollbar {
@@ -79,5 +80,14 @@
   }
   to {
     transform: rotate(0);
+  }
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }

@@ -113,6 +113,9 @@ function ViewComponent({ loadingState, currentTasks, currentMonthIndex }) {
 
 function CompanyProfile() {
   const [company, setCompany] = useState<CompaniesType>();
+  const [clientPersonToFilter, setClientPersonToFilter] = useState<string[]>(
+    []
+  );
   const [reckoningTasks, setReckoningTasks] = useState([]);
   const { showModal, exitAnim, openModal, closeModal } = useModal();
   const [deleteCaptcha, setDeleteCaptcha] = useState(false);
@@ -218,6 +221,13 @@ function CompanyProfile() {
     }
   }, [is1800, is1600, is1350, setItemsPerPage]);
 
+  const filteredTasks =
+    clientPersonToFilter.length > 0
+      ? currentTasks.filter((ct) => {
+          return clientPersonToFilter.includes(ct.clientPerson);
+        })
+      : currentTasks;
+
   return (
     <>
       <ModalTemplate
@@ -250,7 +260,7 @@ function CompanyProfile() {
         <CompanyProfileControlBar
           company={company}
           openModal={openModal}
-          tasks={reckoningTasks}
+          tasks={filteredTasks}
           selectedMonth={selectedMonth}
           selectedYear={selectedYear}
           handleMonthChange={handleMonthChange}
@@ -258,6 +268,8 @@ function CompanyProfile() {
           months={months}
           years={years}
           currentMonthIndex={currentMonthIndex}
+          setClientPersonToFilter={setClientPersonToFilter}
+          clientPersonToFilter={clientPersonToFilter}
         />
       </ControlBar>
 
@@ -417,7 +429,7 @@ function CompanyProfile() {
 
           <ViewComponent
             loadingState={loadingState}
-            currentTasks={currentTasks}
+            currentTasks={filteredTasks}
             currentMonthIndex={currentMonthIndex}
           />
 
