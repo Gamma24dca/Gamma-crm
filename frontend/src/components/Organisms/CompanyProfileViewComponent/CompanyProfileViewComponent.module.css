@@ -94,34 +94,33 @@
   width: 10%;
 }
 
-.paginationControls {
+.noTasksContainer {
+  height: 120px;
   display: flex;
-  font-weight: bold;
-  position: absolute;
-  bottom: 5px;
+  flex-direction: row-reverse;
+  align-items: center;
+  gap: 15px;
+
+  p {
+    font-weight: 600;
+  }
 }
 
-.paginationButton {
-  background-color: transparent;
-  cursor: pointer;
+.iconWrapper {
+  height: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin: 0 5px;
-  border: none;
-  transition: all 0.3s ease;
+
+  p {
+    font-weight: 600;
+  }
+}
+.loadingIcon {
+  color: var(--color-orange);
 }
 
-.prevPaginationButton:hover {
-  transform: translateX(-5px);
-}
-
-.nextPaginationButton {
-  transform: rotate(180deg);
-}
-
-.nextPaginationButton:hover {
-  transform: rotate(180deg) translateX(-5px);
+.errorIcon {
+  color: var(--color-error);
 }
 
 @media (max-width: 1700px) {

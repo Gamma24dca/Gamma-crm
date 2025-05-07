@@ -15,7 +15,7 @@
   scrollbar-width: none;
 }
 
-@media (min-width: 2400px) {
+/* @media (min-width: 2400px) {
   .listContainer {
     max-height: 1050px;
   }
@@ -43,4 +43,4 @@
   .listContainer {
     max-height: 400px;
   }
-}
+} */

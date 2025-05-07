@@ -13,7 +13,7 @@ import {
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
 import useModal from '../../hooks/useModal';
 import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplate';
-import useWindowSize from '../../hooks/useWindowSize';
+// import useWindowSize from '../../hooks/useWindowSize';
 import usePagination from '../../hooks/usePagination';
 import useSort from '../../hooks/useSort';
 import UpdateCompanyModalContent from '../../components/Organisms/UpdateCompanyModalContent/UpdateCompanyModalContent';
@@ -22,94 +22,8 @@ import CompanyProfileControlBar from '../../components/Organisms/CompanyProfileC
 import useCompaniesContext from '../../hooks/Context/useCompaniesContext';
 // import summarizeHours from '../../utils/SummarizeHours';
 import useCurrentDate from '../../hooks/useCurrentDate';
-import UsersDisplay from '../../components/Organisms/UsersDisplay/UsersDisplay';
-import summarizeCompanyProfHours from '../../utils/summarizeCompanyProfHours';
-
-const tileClass = (tileIndex) => {
-  return tileIndex % 2 === 0
-    ? styles.reckoningTaskListElement
-    : styles.darkerReckoningTaskListElement;
-};
-
-function ViewComponent({ loadingState, currentTasks, currentMonthIndex }) {
-  if (loadingState.isError) {
-    return (
-      <div className={styles.iconWrapper}>
-        <Icon
-          icon="line-md:close-small"
-          width="70"
-          height="70"
-          className={styles.errorIcon}
-        />
-        <p>Coś poszło nie tak :(</p>
-      </div>
-    );
-  }
-
-  if (!loadingState.isError && loadingState.isLoading) {
-    return (
-      <div className={styles.iconWrapper}>
-        <Icon
-          icon="line-md:loading-twotone-loop"
-          width="121"
-          height="121"
-          className={styles.loadingIcon}
-        />
-      </div>
-    );
-  }
-
-  if (
-    !loadingState.isError &&
-    !loadingState.isLoading &&
-    currentTasks.length > 0
-  ) {
-    return currentTasks.map((task, index) => {
-      return (
-        <div key={task._id} className={`${tileClass(index)}`}>
-          <div className={styles.reckoningTaskListElementTile}>
-            <p>{task.searchID}</p>
-          </div>
-          <div className={`${styles.reckoningTaskListElementTile}`}>
-            <p>{task.client}</p>
-          </div>
-          <div className={styles.reckoningTaskListElementTile}>
-            <p>{task.clientPerson}</p>
-          </div>
-          {/* <div className={styles.reckoningTaskListElementTile}>
-            <p>{task.startDate.slice(0, 10)}</p>
-          </div> */}
-          <div className={styles.reckoningTaskListElementTile}>
-            <UsersDisplay data={task} usersArray={task.participants} />
-          </div>
-          <div className={styles.reckoningTaskListElementTile}>
-            <p>{task.title}</p>
-          </div>
-          <div className={styles.reckoningTaskListElementTile}>
-            <p>{summarizeCompanyProfHours(task, currentMonthIndex)}</p>
-          </div>
-
-          <div className={styles.reckoningTaskListElementTile}>
-            <p>{task.description}</p>
-          </div>
-          <div className={styles.reckoningTaskListElementTile}>
-            <p>{task.printWhat}</p>
-          </div>
-          <div className={styles.reckoningTaskListElementTile}>
-            <p>{task.printWhere}</p>
-          </div>
-        </div>
-      );
-    });
-  }
-
-  return (
-    <div className={styles.noTasksContainer}>
-      <p>Brak zleceń</p>
-      <Icon icon="line-md:coffee-loop" width="24" height="24" />
-    </div>
-  );
-}
+import useViewportHeight from '../../hooks/useViewportHeight';
+import CompanyProfileViewComponent from '../../components/Organisms/CompanyProfileViewComponent/CompanyProfileViewComponent';
 
 function CompanyProfile() {
   const [company, setCompany] = useState<CompaniesType>();
@@ -145,6 +59,8 @@ function CompanyProfile() {
     currentMonthIndex
   );
 
+  const viewportHeight = useViewportHeight();
+
   const {
     currentPage,
     totalPages,
@@ -157,9 +73,21 @@ function CompanyProfile() {
   const params = useParams();
   const companyID = params.id;
 
-  const is1800 = useWindowSize('1800');
-  const is1600 = useWindowSize('1600');
-  const is1350 = useWindowSize('1350');
+  useEffect(() => {
+    const tileHeight = 35;
+    const headerHeight = 300;
+    const availableHeight = viewportHeight - headerHeight;
+
+    console.log(
+      'viewportHeight:',
+      viewportHeight,
+      'available:',
+      availableHeight
+    );
+
+    const itemsPerPage = Math.floor(availableHeight / tileHeight);
+    setItemsPerPage(itemsPerPage > 0 ? itemsPerPage : 1);
+  }, [viewportHeight]);
 
   const fetchCompany = async () => {
     let errorHappened = false;
@@ -206,21 +134,6 @@ function CompanyProfile() {
     closeModal();
     navigate('/firmy');
   };
-
-  useEffect(() => {
-    if (is1350) {
-      setItemsPerPage(8);
-    }
-    if (is1600 && !is1350) {
-      setItemsPerPage(10);
-    }
-    if (is1800 && !is1600) {
-      setItemsPerPage(12);
-    }
-    if (!is1800 && !is1600) {
-      setItemsPerPage(15);
-    }
-  }, [is1800, is1600, is1350, setItemsPerPage]);
 
   const filteredTasks =
     clientPersonToFilter.length > 0
@@ -305,19 +218,8 @@ function CompanyProfile() {
               </div>
               <div
                 className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
-                role="button"
-                tabIndex={0}
-                onClick={() => handleSortChange('client')}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    handleSortChange('client');
-                  }
-                }}
               >
-                <p>
-                  Firma{' '}
-                  {sortColumn === 'client' && (sortOrder === 'asc' ? '↑' : '↓')}
-                </p>
+                <p>Firma </p>
               </div>
               <div
                 className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
@@ -448,7 +350,7 @@ function CompanyProfile() {
             </div>
           </div>
 
-          <ViewComponent
+          <CompanyProfileViewComponent
             loadingState={loadingState}
             currentTasks={matchedTasksFromSearchInput}
             currentMonthIndex={currentMonthIndex}
