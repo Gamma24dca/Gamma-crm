@@ -77,23 +77,20 @@
 }
 
 .reckoningTaskListElementTile:nth-child(4) {
-  width: 5%;
-}
-.reckoningTaskListElementTile:nth-child(5) {
-  width: 9%;
+  width: 11%;
   padding-left: 10px;
 }
-.reckoningTaskListElementTile:nth-child(6) {
-  width: 20%;
+.reckoningTaskListElementTile:nth-child(5) {
+  width: 23%;
 }
-.reckoningTaskListElementTile:nth-child(7) {
+.reckoningTaskListElementTile:nth-child(6) {
   width: 3%;
   font-weight: 600;
 }
-.reckoningTaskListElementTile:nth-child(8) {
+.reckoningTaskListElementTile:nth-child(7) {
   width: 20%;
 }
-.reckoningTaskListElementTile:nth-child(9) {
+.reckoningTaskListElementTile:nth-child(8) {
   width: 10%;
 }
 

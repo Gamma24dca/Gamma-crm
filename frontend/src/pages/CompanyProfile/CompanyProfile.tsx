@@ -76,9 +76,9 @@ function ViewComponent({ loadingState, currentTasks, currentMonthIndex }) {
           <div className={styles.reckoningTaskListElementTile}>
             <p>{task.clientPerson}</p>
           </div>
-          <div className={styles.reckoningTaskListElementTile}>
+          {/* <div className={styles.reckoningTaskListElementTile}>
             <p>{task.startDate.slice(0, 10)}</p>
-          </div>
+          </div> */}
           <div className={styles.reckoningTaskListElementTile}>
             <UsersDisplay data={task} usersArray={task.participants} />
           </div>
@@ -116,6 +116,7 @@ function CompanyProfile() {
   const [clientPersonToFilter, setClientPersonToFilter] = useState<string[]>(
     []
   );
+  const [searchInputValue, setSearchInputValue] = useState('');
   const [reckoningTasks, setReckoningTasks] = useState([]);
   const { showModal, exitAnim, openModal, closeModal } = useModal();
   const [deleteCaptcha, setDeleteCaptcha] = useState(false);
@@ -228,6 +229,24 @@ function CompanyProfile() {
         })
       : currentTasks;
 
+  const matchedTasksFromSearchInput = searchInputValue
+    ? filteredTasks.filter((cts) => {
+        return (
+          cts.title.toLowerCase().includes(searchInputValue.toLowerCase()) ||
+          cts.description
+            .toLowerCase()
+            .includes(searchInputValue.toLowerCase()) ||
+          cts.clientPerson
+            .toLowerCase()
+            .includes(searchInputValue.toLowerCase()) ||
+          cts.searchID.toString().includes(searchInputValue) ||
+          cts.participants.some((member) =>
+            member.name.toLowerCase().includes(searchInputValue.toLowerCase())
+          )
+        );
+      })
+    : filteredTasks;
+
   return (
     <>
       <ModalTemplate
@@ -270,6 +289,8 @@ function CompanyProfile() {
           currentMonthIndex={currentMonthIndex}
           setClientPersonToFilter={setClientPersonToFilter}
           clientPersonToFilter={clientPersonToFilter}
+          searchInputValue={searchInputValue}
+          setSearchInputValue={setSearchInputValue}
         />
       </ControlBar>
 
@@ -315,7 +336,7 @@ function CompanyProfile() {
                     (sortOrder === 'asc' ? '↑' : '↓')}
                 </p>
               </div>
-              <div
+              {/* <div
                 className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
                 role="button"
                 tabIndex={0}
@@ -331,7 +352,7 @@ function CompanyProfile() {
                   {sortColumn === 'createdAt' &&
                     (sortOrder === 'asc' ? '↑' : '↓')}
                 </p>
-              </div>
+              </div> */}
               <div
                 className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
               >
@@ -429,7 +450,7 @@ function CompanyProfile() {
 
           <ViewComponent
             loadingState={loadingState}
-            currentTasks={filteredTasks}
+            currentTasks={matchedTasksFromSearchInput}
             currentMonthIndex={currentMonthIndex}
           />
 
