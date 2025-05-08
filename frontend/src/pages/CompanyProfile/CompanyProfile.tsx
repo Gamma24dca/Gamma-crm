@@ -283,23 +283,6 @@ function CompanyProfile() {
                 className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
                 role="button"
                 tabIndex={0}
-                onClick={() => handleSortChange('participants')}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    handleSortChange('participants');
-                  }
-                }}
-              >
-                <p>
-                  Sum{' '}
-                  {sortColumn === 'participants' &&
-                    (sortOrder === 'asc' ? '↑' : '↓')}
-                </p>
-              </div>
-              <div
-                className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
-                role="button"
-                tabIndex={0}
                 onClick={() => handleSortChange('description')}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
@@ -313,6 +296,24 @@ function CompanyProfile() {
                     (sortOrder === 'asc' ? '↑' : '↓')}
                 </p>
               </div>
+              <div
+                className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
+                role="button"
+                tabIndex={0}
+                onClick={() => handleSortChange('participants')}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    handleSortChange('participants');
+                  }
+                }}
+              >
+                <p>
+                  Sum{' '}
+                  {sortColumn === 'participants' &&
+                    (sortOrder === 'asc' ? '↑' : '↓')}
+                </p>
+              </div>
+
               <div
                 className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
                 role="button"

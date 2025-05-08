@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Icon } from '@iconify/react';
 import styles from './CompanyProfileViewComponent.module.css';
 import UsersDisplay from '../UsersDisplay/UsersDisplay';
@@ -14,6 +15,10 @@ function CompanyProfileViewComponent({
   currentTasks,
   currentMonthIndex,
 }) {
+  const [isChecked, setIsChecked] = useState({
+    checkedID: '',
+    checkedValue: false,
+  });
   if (loadingState.isError) {
     return (
       <div className={styles.iconWrapper}>
@@ -41,6 +46,19 @@ function CompanyProfileViewComponent({
     );
   }
 
+  const handleCheckboxChange = (e, id) => {
+    setIsChecked(() => {
+      return {
+        checkedID: id,
+        checkedValue: e.target.checked,
+      };
+    });
+  };
+
+  const reckoTileBgColor = isChecked.checkedValue
+    ? styles.checked
+    : styles.notChecked;
+
   if (
     !loadingState.isError &&
     !loadingState.isLoading &&
@@ -48,10 +66,23 @@ function CompanyProfileViewComponent({
   ) {
     return currentTasks.map((task, index) => {
       return (
-        <div key={task._id} className={`${tileClass(index)}`}>
+        <div
+          key={task._id}
+          className={`${tileClass(index)} ${
+            isChecked.checkedID === task._id && reckoTileBgColor
+          }`}
+        >
           <div className={styles.reckoningTaskListElementTile}>
+            <input
+              type="checkbox"
+              className={styles.cprtCheckbox}
+              onChange={(e) => {
+                handleCheckboxChange(e, task._id);
+              }}
+            />
             <p>{task.searchID}</p>
           </div>
+
           <div className={`${styles.reckoningTaskListElementTile}`}>
             <p>{task.client}</p>
           </div>
@@ -67,13 +98,14 @@ function CompanyProfileViewComponent({
           <div className={styles.reckoningTaskListElementTile}>
             <p>{task.title}</p>
           </div>
-          <div className={styles.reckoningTaskListElementTile}>
-            <p>{summarizeCompanyProfHours(task, currentMonthIndex)}</p>
-          </div>
 
           <div className={styles.reckoningTaskListElementTile}>
             <p>{task.description}</p>
           </div>
+          <div className={styles.reckoningTaskListElementTile}>
+            <p>{summarizeCompanyProfHours(task, currentMonthIndex)}</p>
+          </div>
+
           <div className={styles.reckoningTaskListElementTile}>
             <p>{task.printWhat}</p>
           </div>
