@@ -13,6 +13,11 @@
   background-color: var(--color-shadow);
 }
 
+.checked {
+  background-color: var(--color-green);
+  opacity: 0.8;
+}
+
 .reckoningTaskListElement:not(:first-child),
 .darkerReckoningTaskListElement:not(:first-child) {
   cursor: pointer;
@@ -56,6 +61,16 @@
   transition: all 0.3s ease;
 }
 
+.cprtCheckbox {
+  margin-left: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
 .companyInfoBarTile:hover:not(:first-child) {
   cursor: pointer;
   color: var(--color-orange);
@@ -64,6 +79,14 @@
 .reckoningTaskListElementTile:nth-child(1) {
   width: 4.5%;
   font-weight: 600;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  min-width: 65px;
+
+  p {
+    font-size: 10px;
+  }
 }
 
 .reckoningTaskListElementTile:nth-child(2) {
@@ -84,11 +107,11 @@
   width: 23%;
 }
 .reckoningTaskListElementTile:nth-child(6) {
-  width: 3%;
-  font-weight: 600;
+  width: 20%;
 }
 .reckoningTaskListElementTile:nth-child(7) {
-  width: 20%;
+  width: 3%;
+  font-weight: 600;
 }
 .reckoningTaskListElementTile:nth-child(8) {
   width: 10%;
@@ -121,6 +144,17 @@
 
 .errorIcon {
   color: var(--color-error);
+}
+
+.cprtWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.reckoTileCheckbox {
+  z-index: 100;
+  position: absolute;
+  /* left: -5px; */
 }
 
 @media (max-width: 1700px) {
