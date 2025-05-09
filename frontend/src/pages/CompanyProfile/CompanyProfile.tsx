@@ -137,13 +137,13 @@ function CompanyProfile() {
 
   const filteredTasks =
     clientPersonToFilter.length > 0
-      ? currentTasks.filter((ct) => {
+      ? reckoningTasks.filter((ct) => {
           return clientPersonToFilter.includes(ct.clientPerson);
         })
       : currentTasks;
 
   const matchedTasksFromSearchInput = searchInputValue
-    ? filteredTasks.filter((cts) => {
+    ? reckoningTasks.filter((cts) => {
         return (
           cts.title.toLowerCase().includes(searchInputValue.toLowerCase()) ||
           cts.description
