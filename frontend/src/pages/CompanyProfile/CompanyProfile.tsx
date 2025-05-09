@@ -13,14 +13,12 @@ import {
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
 import useModal from '../../hooks/useModal';
 import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplate';
-// import useWindowSize from '../../hooks/useWindowSize';
 import usePagination from '../../hooks/usePagination';
 import useSort from '../../hooks/useSort';
 import UpdateCompanyModalContent from '../../components/Organisms/UpdateCompanyModalContent/UpdateCompanyModalContent';
 import Captcha from '../../components/Molecules/Captcha/Captcha';
 import CompanyProfileControlBar from '../../components/Organisms/CompanyProfileControlBar/CompanyProfileControlBar';
 import useCompaniesContext from '../../hooks/Context/useCompaniesContext';
-// import summarizeHours from '../../utils/SummarizeHours';
 import useCurrentDate from '../../hooks/useCurrentDate';
 import useViewportHeight from '../../hooks/useViewportHeight';
 import CompanyProfileViewComponent from '../../components/Organisms/CompanyProfileViewComponent/CompanyProfileViewComponent';
@@ -160,6 +158,17 @@ function CompanyProfile() {
       })
     : filteredTasks;
 
+  const dataToSummarize = () => {
+    if (clientPersonToFilter.length > 0) {
+      return filteredTasks;
+    }
+    if (searchInputValue.length > 0) {
+      return matchedTasksFromSearchInput;
+    }
+
+    return reckoningTasks;
+  };
+
   return (
     <>
       <ModalTemplate
@@ -192,7 +201,7 @@ function CompanyProfile() {
         <CompanyProfileControlBar
           company={company}
           openModal={openModal}
-          tasks={filteredTasks}
+          tasks={dataToSummarize()}
           selectedMonth={selectedMonth}
           selectedYear={selectedYear}
           handleMonthChange={handleMonthChange}
