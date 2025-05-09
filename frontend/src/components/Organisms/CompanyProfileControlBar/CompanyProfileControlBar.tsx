@@ -91,14 +91,6 @@ function CompanyProfileControlBar({
         />
       </div>
       <div className={styles.center}>
-        {/* <input
-          className={styles.navInput}
-          type="text"
-          placeholder="Szukaj"
-          name="task-search"
-          id="task-search"
-        /> */}
-
         <SearchInput
           value={searchInputValue}
           onChange={(e) => {
