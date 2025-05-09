@@ -24,25 +24,28 @@ function ReckoningTile({ reckTask, index, selectedMonthIndex }) {
     isOpen: false,
     position: null,
   });
+
   const { dispatch } = useReckoTasksContext();
   const currentDate = new Date();
 
   const { user } = useAuth();
   const currentUserId = user[0]._id;
 
-  const filteredParticipants = reckTask.participants.filter((part) => {
-    return part._id === currentUserId;
-  });
+  const filteredParticipants =
+    reckTask.participants?.filter((part) => part._id === currentUserId) || [];
 
-  const filteredHours = filteredParticipants[0].months.filter((obj) => {
-    const monthIndex = new Date(obj.createdAt).getUTCMonth() + 1;
-    return monthIndex === selectedMonthIndex;
-  });
+  const filteredHours =
+    filteredParticipants.length > 0
+      ? filteredParticipants[0].months?.filter((obj) => {
+          const monthIndex = new Date(obj.createdAt).getUTCMonth() + 1;
+          return monthIndex === selectedMonthIndex;
+        }) || []
+      : [];
 
   const [days, setDays] = useState(filteredHours);
   // const { labelState, handleMouseEnter, handleMouseLeave } = useShowLabel();
 
-  const totalHours = summarizeHours(days[0].hours);
+  const totalHours = days.length > 0 ? summarizeHours(days[0].hours) : 0;
 
   useEffect(() => {
     const updatedFilteredParticipants = reckTask.participants.filter((part) => {
@@ -357,115 +360,7 @@ function ReckoningTile({ reckTask, index, selectedMonthIndex }) {
             <Icon icon="ic:outline-more-vert" width="24" height="24" />
           )}
         </button>
-        {
-          isEditOpen && <>{ReckoTaskEditSelect(isEditOpen.position)}</>
-          // <>
-          //   <Overlay closeFunction={setIsEditOpen} />
-          //   <div className={styles.editModal}>
-          //     <div
-          //       className={styles.deleteWrapper}
-          //       role="button"
-          //       tabIndex={0}
-          //       onKeyDown={(e) => {
-          //         if (e.key === 'Enter' || e.key === ' ') {
-          //           handleDeleteReckoTask(reckTask._id);
-          //         }
-          //       }}
-          //       onClick={() => {
-          //         handleDeleteReckoTask(reckTask._id);
-          //       }}
-          //     >
-          //       <Icon
-          //         className={styles.trashIcon}
-          //         icon="line-md:document-delete"
-          //         width="20"
-          //         height="20"
-          //       />
-          //       <p>Usuń zlecenie</p>
-          //     </div>
-          //     <div
-          //       className={styles.deleteWrapper}
-          //       role="button"
-          //       tabIndex={0}
-          //       onKeyDown={(e) => {
-          //         if (e.key === 'Enter' || e.key === ' ') {
-          //           handleDeleteReckoTask(reckTask._id);
-          //         }
-          //       }}
-          //       onClick={() => {
-          //         handleBlur(reckTask._id, {
-          //           client: 'Wybierz firme',
-          //           clientPerson: 'Wybierz klienta',
-          //           title: '',
-          //           description: '',
-          //           printWhat: '',
-          //           printWhere: '',
-          //         });
-          //         setFormValue((prev) => {
-          //           return {
-          //             ...prev,
-          //             client: 'Wybierz firme',
-          //             clientPerson: 'Wybierz klienta',
-          //             title: '',
-          //             description: '',
-          //             printWhat: '',
-          //             printWhere: '',
-          //           };
-          //         });
-          //         handleHoursClear();
-          //       }}
-          //     >
-          //       <Icon
-          //         className={styles.trashIcon}
-          //         icon="mdi:clock-minus-outline"
-          //         width="20"
-          //         height="20"
-          //       />
-          //       <p>Wyczyść godziny</p>
-          //     </div>
-          //     <div
-          //       className={styles.deleteWrapper}
-          //       role="button"
-          //       tabIndex={0}
-          //       onKeyDown={(e) => {
-          //         if (e.key === 'Enter' || e.key === ' ') {
-          //           handleDeleteReckoTask(reckTask._id);
-          //         }
-          //       }}
-          //       onClick={() => {
-          //         handleBlur(reckTask._id, {
-          //           client: 'Wybierz firme',
-          //           clientPerson: 'Wybierz klienta',
-          //           title: '',
-          //           description: '',
-          //           printWhat: '',
-          //           printWhere: '',
-          //         });
-          //         setFormValue((prev) => {
-          //           return {
-          //             ...prev,
-          //             client: 'Wybierz firme',
-          //             clientPerson: 'Wybierz klienta',
-          //             title: '',
-          //             description: '',
-          //             printWhat: '',
-          //             printWhere: '',
-          //           };
-          //         });
-          //         handleHoursClear();
-          //       }}
-          //     >
-          //       <Icon
-          //         className={styles.trashIcon}
-          //         icon="line-md:file-document-off"
-          //         width="20"
-          //         height="20"
-          //       />
-          //       <p>Wyczyść zlecenie</p>
-          //     </div>
-          //   </div>
-          // </>
-        }
+        {isEditOpen && <>{ReckoTaskEditSelect(isEditOpen.position)}</>}
       </div>
 
       <select
@@ -574,33 +469,34 @@ function ReckoningTile({ reckTask, index, selectedMonthIndex }) {
       <div className={styles.daysWrapper}>
         <div className={styles.summHoursContainer}>{totalHours}</div>
 
-        {days[0].hours.map((dayTile, dayIndex) => {
-          return (
-            <input
-              className={`${
-                dayTile.isWeekend ? styles.weekendDayTile : styles.dayTile
-              } ${
-                dayIndex + 1 === currentDate.getDate() &&
-                styles.highlightCurrentDay
-              }`}
-              key={dayIndex}
-              value={dayTile.hourNum === 0 ? '' : dayTile.hourNum}
-              onChange={(e) => {
-                // console.log(typeof e.target.value);
-                handleHourChange(dayTile._id, e);
-                handleDayUpdate(
-                  reckTask._id,
-                  currentUserId,
-                  dayTile._id,
-                  {
-                    hourNum: e.target.value !== '' ? e.target.value : 0,
-                  },
-                  selectedMonthIndex
-                );
-              }}
-            />
-          );
-        })}
+        {days.length > 0 &&
+          days[0].hours.map((dayTile, dayIndex) => {
+            return (
+              <input
+                className={`${
+                  dayTile.isWeekend ? styles.weekendDayTile : styles.dayTile
+                } ${
+                  dayIndex + 1 === currentDate.getDate() &&
+                  styles.highlightCurrentDay
+                }`}
+                key={dayIndex}
+                value={dayTile.hourNum === 0 ? '' : dayTile.hourNum}
+                onChange={(e) => {
+                  // console.log(typeof e.target.value);
+                  handleHourChange(dayTile._id, e);
+                  handleDayUpdate(
+                    reckTask._id,
+                    currentUserId,
+                    dayTile._id,
+                    {
+                      hourNum: e.target.value !== '' ? e.target.value : 0,
+                    },
+                    selectedMonthIndex
+                  );
+                }}
+              />
+            );
+          })}
       </div>
     </div>
   );
