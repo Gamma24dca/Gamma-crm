@@ -1,24 +1,13 @@
-import { useState } from 'react';
+// import { useState } from 'react';
 import { Icon } from '@iconify/react';
 import styles from './CompanyProfileViewComponent.module.css';
-import UsersDisplay from '../UsersDisplay/UsersDisplay';
-import summarizeCompanyProfHours from '../../../utils/summarizeCompanyProfHours';
-
-const tileClass = (tileIndex) => {
-  return tileIndex % 2 === 0
-    ? styles.reckoningTaskListElement
-    : styles.darkerReckoningTaskListElement;
-};
+import CompanyProfileRow from '../CompanyProfileRow/CompanyProfileRow';
 
 function CompanyProfileViewComponent({
   loadingState,
   currentTasks,
   currentMonthIndex,
 }) {
-  const [isChecked, setIsChecked] = useState({
-    checkedID: '',
-    checkedValue: false,
-  });
   if (loadingState.isError) {
     return (
       <div className={styles.iconWrapper}>
@@ -46,19 +35,6 @@ function CompanyProfileViewComponent({
     );
   }
 
-  const handleCheckboxChange = (e, id) => {
-    setIsChecked(() => {
-      return {
-        checkedID: id,
-        checkedValue: e.target.checked,
-      };
-    });
-  };
-
-  const reckoTileBgColor = isChecked.checkedValue
-    ? styles.checked
-    : styles.notChecked;
-
   if (
     !loadingState.isError &&
     !loadingState.isLoading &&
@@ -66,53 +42,12 @@ function CompanyProfileViewComponent({
   ) {
     return currentTasks.map((task, index) => {
       return (
-        <div
+        <CompanyProfileRow
           key={task._id}
-          className={`${tileClass(index)} ${
-            isChecked.checkedID === task._id && reckoTileBgColor
-          }`}
-        >
-          <div className={styles.reckoningTaskListElementTile}>
-            <input
-              type="checkbox"
-              className={styles.cprtCheckbox}
-              onChange={(e) => {
-                handleCheckboxChange(e, task._id);
-              }}
-            />
-            <p>{task.searchID}</p>
-          </div>
-
-          <div className={`${styles.reckoningTaskListElementTile}`}>
-            <p>{task.client}</p>
-          </div>
-          <div className={styles.reckoningTaskListElementTile}>
-            <p>{task.clientPerson}</p>
-          </div>
-          {/* <div className={styles.reckoningTaskListElementTile}>
-              <p>{task.startDate.slice(0, 10)}</p>
-            </div> */}
-          <div className={styles.reckoningTaskListElementTile}>
-            <UsersDisplay data={task} usersArray={task.participants} />
-          </div>
-          <div className={styles.reckoningTaskListElementTile}>
-            <p>{task.title}</p>
-          </div>
-
-          <div className={styles.reckoningTaskListElementTile}>
-            <p>{task.description}</p>
-          </div>
-          <div className={styles.reckoningTaskListElementTile}>
-            <p>{summarizeCompanyProfHours(task, currentMonthIndex)}</p>
-          </div>
-
-          <div className={styles.reckoningTaskListElementTile}>
-            <p>{task.printWhat}</p>
-          </div>
-          <div className={styles.reckoningTaskListElementTile}>
-            <p>{task.printWhere}</p>
-          </div>
-        </div>
+          task={task}
+          index={index}
+          currentMonthIndex={currentMonthIndex}
+        />
       );
     });
   }

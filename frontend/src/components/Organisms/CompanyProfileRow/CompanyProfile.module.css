@@ -1,7 +1,7 @@
 .reckoningTaskListElement,
 .darkerReckoningTaskListElement {
   width: 100%;
-  font-size: 13px;
+  font-size: 12px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -63,9 +63,11 @@
 }
 
 .cprtCheckbox {
-  margin-left: 5px;
+  /* margin-left: 5px; */
   cursor: pointer;
   transition: all 0.3s ease;
+  left: 10px;
+  position: absolute;
 
   &:hover {
     transform: scale(1.1);
@@ -78,14 +80,17 @@
 }
 
 .reckoningTaskListElementTile:nth-child(1) {
+  position: relative;
   width: 4.5%;
   font-weight: 600;
-  display: flex;
+  /* display: flex;
   justify-content: center;
-  gap: 5px;
+  gap: 5px; */
   min-width: 65px;
 
   p {
+    position: absolute;
+    left: 30px;
     font-size: 10px;
   }
 }
