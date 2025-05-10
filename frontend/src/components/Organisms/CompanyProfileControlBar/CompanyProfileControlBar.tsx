@@ -30,6 +30,7 @@ function CompanyProfileControlBar({
 }) {
   const [filterDropdown, setFilterDropdown] = useState(false);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
+  const [isSecondSelectOpen, setIsSecondSelectOpen] = useState(false);
 
   const total =
     tasks.length > 0
@@ -125,6 +126,16 @@ function CompanyProfileControlBar({
                   />
                 );
               })}
+            </MultiselectDropdown>
+            <div className={styles.spacer} />
+            <MultiselectDropdown
+              label="Rozliczone"
+              isSelectOpen={isSecondSelectOpen}
+              setIsSelectOpen={setIsSecondSelectOpen}
+            >
+              <p>Wszystkie</p>
+              <p>Rozliczone</p>
+              <p>Nierozliczone</p>
             </MultiselectDropdown>
           </FilterDropdownContainer>
         </>
