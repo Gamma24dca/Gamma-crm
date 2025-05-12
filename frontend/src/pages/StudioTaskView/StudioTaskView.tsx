@@ -31,6 +31,7 @@ import Overlay from '../../components/Atoms/Overlay/Overlay';
 import FilterDropdownContainer from '../../components/Atoms/FilterDropdownContainer/FilterDropdownContainer';
 import DropdownHeader from '../../components/Atoms/DropdownHeader/DropdownHeader';
 import FilterCheckbox from '../../components/Molecules/FilterCheckbox/FilterCheckbox';
+import FiltersClearButton from '../../components/Atoms/FiltersClearButton/FiltersClearButton';
 
 const initialTaskObject: StudioTaskTypes = {
   searchID: 0,
@@ -475,16 +476,12 @@ function StudioTaskView() {
                 </MultiselectDropdown>
               </div>
 
-              <button
-                type="button"
-                className={styles.clearButton}
-                onClick={() => {
+              <FiltersClearButton
+                handleClear={() => {
                   setParticipantsToFilter([]);
                   setCompaniesToFilter([]);
                 }}
-              >
-                Wyczyść
-              </button>
+              />
             </FilterDropdownContainer>
           </>
         )}

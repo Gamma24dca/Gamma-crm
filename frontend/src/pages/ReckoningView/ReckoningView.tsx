@@ -57,6 +57,7 @@ function ReckoningView() {
   //   isHover: false,
   //   cardId: '',
   // });
+  const [searchInputValue, setSearchInputValue] = useState('');
   const [hoveredCardId, setHoveredCardId] = useState(null);
   const [addTaskFromKanbanState, setAddTaskFromKanbanState] = useState({
     errorMessage: '',
@@ -135,6 +136,25 @@ function ReckoningView() {
     }
   };
 
+  const matchedTasksFromSearchInput = searchInputValue
+    ? reckoTasks.filter((cts) => {
+        return (
+          cts.title.toLowerCase().includes(searchInputValue.toLowerCase()) ||
+          cts.client.toLowerCase().includes(searchInputValue.toLowerCase()) ||
+          cts.description
+            .toLowerCase()
+            .includes(searchInputValue.toLowerCase()) ||
+          cts.clientPerson
+            .toLowerCase()
+            .includes(searchInputValue.toLowerCase()) ||
+          cts.searchID.toString().includes(searchInputValue) ||
+          cts.participants.some((member) =>
+            member.name.toLowerCase().includes(searchInputValue.toLowerCase())
+          )
+        );
+      })
+    : reckoTasks;
+
   useEffect(() => {
     const fetchCompanies = async () => {
       if (companies.length === 0) {
@@ -167,7 +187,7 @@ function ReckoningView() {
     }
   }, [selectedMonth]);
 
-  const totalHours = reckoTasks
+  const totalHours = matchedTasksFromSearchInput
     .flatMap(
       (task) =>
         task.participants?.flatMap(
@@ -328,8 +348,11 @@ function ReckoningView() {
       return <SkeletonUsersLoading />;
     }
 
-    if (reckoTasks.length > 0 && !taskLoadingState.isGetMyTasksLoading) {
-      return reckoTasks.map((reckTask, index) => {
+    if (
+      matchedTasksFromSearchInput.length > 0 &&
+      !taskLoadingState.isGetMyTasksLoading
+    ) {
+      return matchedTasksFromSearchInput.map((reckTask, index) => {
         return (
           <ReckoningTile
             key={reckTask._id}
@@ -496,7 +519,12 @@ function ReckoningView() {
           handleValueChange={handleYearChange}
           optionData={years}
         />
-        <SearchInput />
+        <SearchInput
+          value={searchInputValue}
+          onChange={(e) => {
+            setSearchInputValue(e.target.value);
+          }}
+        />
         <div className={styles.totalHoursContainer}>
           <p>{totalHours}</p>
         </div>

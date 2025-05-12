@@ -28,6 +28,7 @@ function CompanyProfile() {
   const [clientPersonToFilter, setClientPersonToFilter] = useState<string[]>(
     []
   );
+  const [settleStateFilter, setSettleStateFilter] = useState<string>('');
   const [searchInputValue, setSearchInputValue] = useState('');
   const [reckoningTasks, setReckoningTasks] = useState([]);
   const { showModal, exitAnim, openModal, closeModal } = useModal();
@@ -52,8 +53,53 @@ function CompanyProfile() {
 
   const currentMonthIndex = months.indexOf(selectedMonth);
 
+  const filteredTasks =
+    clientPersonToFilter.length > 0
+      ? reckoningTasks.filter((ct) => {
+          return clientPersonToFilter.includes(ct.clientPerson);
+        })
+      : reckoningTasks;
+
+  const filteredBySettleValTasks = () => {
+    if (settleStateFilter.length > 0 && clientPersonToFilter.length > 0) {
+      return filteredTasks.filter((cp) => {
+        if (settleStateFilter === 'Rozliczone') return cp.isSettled;
+        if (settleStateFilter === 'Nierozliczone') return !cp.isSettled;
+
+        return true;
+      });
+    }
+
+    return settleStateFilter.length > 0
+      ? reckoningTasks.filter((cp) => {
+          if (settleStateFilter === 'Rozliczone') return cp.isSettled;
+          if (settleStateFilter === 'Nierozliczone') return !cp.isSettled;
+
+          return true;
+        })
+      : filteredTasks;
+  };
+
+  const matchedTasksFromSearchInput = searchInputValue
+    ? reckoningTasks.filter((cts) => {
+        return (
+          cts.title.toLowerCase().includes(searchInputValue.toLowerCase()) ||
+          cts.description
+            .toLowerCase()
+            .includes(searchInputValue.toLowerCase()) ||
+          cts.clientPerson
+            .toLowerCase()
+            .includes(searchInputValue.toLowerCase()) ||
+          cts.searchID.toString().includes(searchInputValue) ||
+          cts.participants.some((member) =>
+            member.name.toLowerCase().includes(searchInputValue.toLowerCase())
+          )
+        );
+      })
+    : filteredBySettleValTasks();
+
   const { sortedData, sortColumn, sortOrder, handleSortChange } = useSort(
-    reckoningTasks,
+    matchedTasksFromSearchInput,
     currentMonthIndex
   );
 
@@ -105,6 +151,7 @@ function CompanyProfile() {
           company: currentCompany.name,
           monthIndex: currentMonthIndex + 1,
         });
+
         setReckoningTasks(reckoTasks.reckoTasks);
       } catch (error) {
         errorHappened = true;
@@ -132,31 +179,6 @@ function CompanyProfile() {
     closeModal();
     navigate('/firmy');
   };
-
-  const filteredTasks =
-    clientPersonToFilter.length > 0
-      ? reckoningTasks.filter((ct) => {
-          return clientPersonToFilter.includes(ct.clientPerson);
-        })
-      : currentTasks;
-
-  const matchedTasksFromSearchInput = searchInputValue
-    ? reckoningTasks.filter((cts) => {
-        return (
-          cts.title.toLowerCase().includes(searchInputValue.toLowerCase()) ||
-          cts.description
-            .toLowerCase()
-            .includes(searchInputValue.toLowerCase()) ||
-          cts.clientPerson
-            .toLowerCase()
-            .includes(searchInputValue.toLowerCase()) ||
-          cts.searchID.toString().includes(searchInputValue) ||
-          cts.participants.some((member) =>
-            member.name.toLowerCase().includes(searchInputValue.toLowerCase())
-          )
-        );
-      })
-    : filteredTasks;
 
   const dataToSummarize = () => {
     if (clientPersonToFilter.length > 0) {
@@ -213,6 +235,8 @@ function CompanyProfile() {
           clientPersonToFilter={clientPersonToFilter}
           searchInputValue={searchInputValue}
           setSearchInputValue={setSearchInputValue}
+          settleStateFilter={settleStateFilter}
+          setSettleStateFilter={setSettleStateFilter}
         />
       </ControlBar>
 
@@ -362,7 +386,7 @@ function CompanyProfile() {
 
           <CompanyProfileViewComponent
             loadingState={loadingState}
-            currentTasks={matchedTasksFromSearchInput}
+            currentTasks={currentTasks}
             currentMonthIndex={currentMonthIndex}
           />
 
