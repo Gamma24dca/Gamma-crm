@@ -9,17 +9,14 @@ import {
   updateReckoningTask,
 } from '../../../services/reckoning-view-service';
 import useAuth from '../../../hooks/useAuth';
-import useCompaniesContext from '../../../hooks/Context/useCompaniesContext';
-import { getAllCompanies } from '../../../services/companies-service';
 import Overlay from '../../Atoms/Overlay/Overlay';
 import useReckoTasksContext from '../../../hooks/Context/useReckoTasksContext';
 import CheckboxLoader from '../../Atoms/CheckboxLoader/CheckboxLoader';
 import summarizeHours from '../../../utils/SummarizeHours';
 
-function ReckoningTile({ reckTask, index, selectedMonthIndex }) {
+function ReckoningTile({ reckTask, index, selectedMonthIndex, companies }) {
   const [formValue, setFormValue] = useState(reckTask);
   const [isTaskDeleteLoading, setIsTaskDeleteLoading] = useState(false);
-  const { companies, dispatch: companiesDispatch } = useCompaniesContext();
   const [isEditOpen, setIsEditOpen] = useState({
     isOpen: false,
     position: null,
@@ -61,21 +58,6 @@ function ReckoningTile({ reckTask, index, selectedMonthIndex }) {
 
     setDays(updatedFilteredHours);
   }, [reckTask.participants, selectedMonthIndex, currentUserId]);
-
-  useEffect(() => {
-    const fetchCompanies = async () => {
-      if (companies.length === 0) {
-        try {
-          const allCompanies = await getAllCompanies();
-          companiesDispatch({ type: 'SET_COMPANIES', payload: allCompanies });
-        } catch (error) {
-          console.error('Error fetching users:', error);
-        }
-      }
-    };
-
-    fetchCompanies();
-  }, [companiesDispatch, companies]);
 
   const handleFormValueChange = (e, key) => {
     setFormValue((prev) => {
@@ -482,7 +464,6 @@ function ReckoningTile({ reckTask, index, selectedMonthIndex }) {
                 key={dayIndex}
                 value={dayTile.hourNum === 0 ? '' : dayTile.hourNum}
                 onChange={(e) => {
-                  // console.log(typeof e.target.value);
                   handleHourChange(dayTile._id, e);
                   handleDayUpdate(
                     reckTask._id,

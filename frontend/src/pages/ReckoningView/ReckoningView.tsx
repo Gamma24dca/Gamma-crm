@@ -33,6 +33,8 @@ import CompanyBatch from '../../components/Atoms/CompanyBatch/CompanyBatch';
 import UsersDisplay from '../../components/Organisms/UsersDisplay/UsersDisplay';
 import socket from '../../socket';
 import generateDaysArray from '../../utils/generateDaysArray';
+import useCompaniesContext from '../../hooks/Context/useCompaniesContext';
+import { getAllCompanies } from '../../services/companies-service';
 
 // function generateDaysArray(month, year) {
 //   const daysInMonth = new Date(year, month, 0).getDate();
@@ -81,6 +83,8 @@ function ReckoningView() {
   const { studioTasks, dispatch: studioTasksDispatch } =
     useStudioTasksContext();
 
+  const { companies, dispatch: companiesDispatch } = useCompaniesContext();
+
   const { user } = useAuth();
   const currentUserId = user[0]._id;
   const monthIndex = new Date().getMonth();
@@ -96,7 +100,6 @@ function ReckoningView() {
   };
 
   const fetchReckoningTasks = async (index) => {
-    // console.log('client month index:', index);
     try {
       handleLoadingStateChange('isGetMyTasksLoading', true);
 
@@ -133,6 +136,21 @@ function ReckoningView() {
   };
 
   useEffect(() => {
+    const fetchCompanies = async () => {
+      if (companies.length === 0) {
+        try {
+          const allCompanies = await getAllCompanies();
+          companiesDispatch({ type: 'SET_COMPANIES', payload: allCompanies });
+        } catch (error) {
+          console.error('Error fetching users:', error);
+        }
+      }
+    };
+
+    fetchCompanies();
+  }, [companiesDispatch, companies]);
+
+  useEffect(() => {
     fetchReckoningTasks(monthIndex);
     fetchTasksFromKanban();
   }, []);
@@ -154,12 +172,15 @@ function ReckoningView() {
       (task) =>
         task.participants?.flatMap(
           (p) =>
-            p.months?.flatMap((m) => {
-              const monthIndexToSumm = new Date(m.createdAt).getUTCMonth() + 1;
-              return monthIndexToSumm === selectedMonthIndex
-                ? m.hours || []
-                : [];
-            }) || []
+            (p._id === currentUserId &&
+              p.months?.flatMap((m) => {
+                const monthIndexToSumm =
+                  new Date(m.createdAt).getUTCMonth() + 1;
+                return monthIndexToSumm === selectedMonthIndex
+                  ? m.hours || []
+                  : [];
+              })) ||
+            []
         ) || []
     )
     .reduce((sum, hourObj) => sum + hourObj.hourNum, 0);
@@ -282,11 +303,6 @@ function ReckoningView() {
         // setReckoningTasks(response);
         dispatch({ type: 'SET_RECKOTASKS', payload: response });
       }
-
-      // if (addResponse !== null) {
-      //   dispatch({ type: 'CREATE_RECKOTASK', payload: addResponse });
-      // }
-      // console.log(addResponse);
     } catch (error) {
       console.error(error);
       setAddTaskFromKanbanState((prev) => {
@@ -314,13 +330,13 @@ function ReckoningView() {
 
     if (reckoTasks.length > 0 && !taskLoadingState.isGetMyTasksLoading) {
       return reckoTasks.map((reckTask, index) => {
-        // console.log(reckTask.participants[0].hours);
         return (
           <ReckoningTile
             key={reckTask._id}
             reckTask={reckTask}
             index={index}
             selectedMonthIndex={selectedMonthIndex}
+            companies={companies}
             // assigneStudioTaskId={reckTask.idOfAssignedStudioTask}
           />
         );
