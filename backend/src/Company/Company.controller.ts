@@ -1,3 +1,4 @@
+import { ReckoningTaskModel } from '../Reckoning/Reckoning.model';
 import { CompanyModel } from './Company.model';
 
 export const CompanyController = {
@@ -65,5 +66,23 @@ export const CompanyController = {
     });
 
     return filteredCompanies;
+  },
+
+  async getCompanyReckoTasks(company, monthIndex) {
+    const month = parseInt(monthIndex);
+    const year = new Date().getFullYear(); // lub podaj jako parametr
+
+    const startDate = new Date(Date.UTC(year, month - 1, 1));
+    const endDate = new Date(Date.UTC(year, month, 1));
+
+    const tasks = await ReckoningTaskModel.find({
+      client: company,
+      'participants.months.createdAt': {
+        $gte: startDate,
+        $lt: endDate,
+      },
+    }).exec();
+
+    return tasks;
   },
 };

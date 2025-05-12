@@ -15,6 +15,7 @@ export type ReckoningTaskTypes = {
   clientPerson: string;
   title: string;
   description: string;
+  isSettled?: boolean;
   author: Omit<User, 'password'>;
   printWhat: string;
   printWhere: string;

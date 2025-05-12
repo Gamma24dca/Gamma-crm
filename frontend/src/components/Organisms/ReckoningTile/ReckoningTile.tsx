@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
 // import useShowLabel from '../../../hooks/useShowLabel';
 import { Icon } from '@iconify/react';
 import styles from './ReckoningTile.module.css';
@@ -14,36 +15,37 @@ import Overlay from '../../Atoms/Overlay/Overlay';
 import useReckoTasksContext from '../../../hooks/Context/useReckoTasksContext';
 import CheckboxLoader from '../../Atoms/CheckboxLoader/CheckboxLoader';
 import summarizeHours from '../../../utils/SummarizeHours';
-// import {
-//   getStudioTask,
-//   UpdateStudioTask,
-// } from '../../../services/studio-tasks-service';
-// import socket from '../../../socket';
 
 function ReckoningTile({ reckTask, index, selectedMonthIndex }) {
   const [formValue, setFormValue] = useState(reckTask);
   const [isTaskDeleteLoading, setIsTaskDeleteLoading] = useState(false);
   const { companies, dispatch: companiesDispatch } = useCompaniesContext();
-  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState({
+    isOpen: false,
+    position: null,
+  });
+
   const { dispatch } = useReckoTasksContext();
   const currentDate = new Date();
 
   const { user } = useAuth();
   const currentUserId = user[0]._id;
 
-  const filteredParticipants = reckTask.participants.filter((part) => {
-    return part._id === currentUserId;
-  });
+  const filteredParticipants =
+    reckTask.participants?.filter((part) => part._id === currentUserId) || [];
 
-  const filteredHours = filteredParticipants[0].months.filter((obj) => {
-    const monthIndex = new Date(obj.createdAt).getUTCMonth() + 1;
-    return monthIndex === selectedMonthIndex;
-  });
+  const filteredHours =
+    filteredParticipants.length > 0
+      ? filteredParticipants[0].months?.filter((obj) => {
+          const monthIndex = new Date(obj.createdAt).getUTCMonth() + 1;
+          return monthIndex === selectedMonthIndex;
+        }) || []
+      : [];
 
   const [days, setDays] = useState(filteredHours);
   // const { labelState, handleMouseEnter, handleMouseLeave } = useShowLabel();
 
-  const totalHours = summarizeHours(days[0].hours);
+  const totalHours = days.length > 0 ? summarizeHours(days[0].hours) : 0;
 
   useEffect(() => {
     const updatedFilteredParticipants = reckTask.participants.filter((part) => {
@@ -141,29 +143,6 @@ function ReckoningTile({ reckTask, index, selectedMonthIndex }) {
     }
   };
 
-  const handleDeleteReckoTask = async (id) => {
-    try {
-      setIsTaskDeleteLoading(true);
-      setIsEditOpen(false);
-
-      const currentParticipant = reckTask.participants.find(
-        (p) => p._id === currentUserId
-      );
-
-      const currentMonth = currentParticipant.months.find((m) => {
-        const date = new Date(m.createdAt);
-        return date.getMonth() === selectedMonthIndex;
-      });
-
-      const response = await deleteReckoningTask(id, currentMonth._id);
-      dispatch({ type: 'DELETE_RECKOTASK', payload: response });
-    } catch (error) {
-      console.error('Error saving value:', error);
-    } finally {
-      setIsTaskDeleteLoading(false);
-    }
-  };
-
   const handleHoursClear = async () => {
     const findUser = reckTask.participants.find((part) => {
       return part._id === currentUserId;
@@ -203,14 +182,176 @@ function ReckoningTile({ reckTask, index, selectedMonthIndex }) {
     });
   };
 
+  const handleDeleteReckoTask = async (id) => {
+    try {
+      setIsTaskDeleteLoading(true);
+      setIsEditOpen((prev) => {
+        return {
+          ...prev,
+          isOpen: false,
+        };
+      });
+
+      const currentParticipant = reckTask.participants.find(
+        (p) => p._id === currentUserId
+      );
+
+      const currentMonth = currentParticipant.months.find((m) => {
+        const date = new Date(m.createdAt);
+        return date.getMonth() === selectedMonthIndex;
+      });
+
+      const response = await deleteReckoningTask(id, currentMonth._id);
+      dispatch({ type: 'DELETE_RECKOTASK', payload: response });
+    } catch (error) {
+      console.error('Error saving value:', error);
+    } finally {
+      setIsTaskDeleteLoading(false);
+    }
+  };
+
+  function ReckoTaskEditSelect(position) {
+    if (!position) return null;
+
+    const { top, left } = position;
+
+    const style: React.CSSProperties = {
+      position: 'absolute' as const,
+      top,
+      left,
+    };
+
+    return ReactDOM.createPortal(
+      <>
+        <Overlay closeFunction={setIsEditOpen} />
+        <div className={styles.editModal} style={style}>
+          <div
+            className={styles.deleteWrapper}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                handleDeleteReckoTask(reckTask._id);
+              }
+            }}
+            onClick={() => {
+              handleDeleteReckoTask(reckTask._id);
+            }}
+          >
+            <Icon
+              className={styles.trashIcon}
+              icon="line-md:document-delete"
+              width="20"
+              height="20"
+            />
+            <p>Usuń zlecenie</p>
+          </div>
+          <div
+            className={styles.deleteWrapper}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                handleDeleteReckoTask(reckTask._id);
+              }
+            }}
+            onClick={() => {
+              handleBlur(reckTask._id, {
+                client: 'Wybierz firme',
+                clientPerson: 'Wybierz klienta',
+                title: '',
+                description: '',
+                printWhat: '',
+                printWhere: '',
+              });
+              setFormValue((prev) => {
+                return {
+                  ...prev,
+                  client: 'Wybierz firme',
+                  clientPerson: 'Wybierz klienta',
+                  title: '',
+                  description: '',
+                  printWhat: '',
+                  printWhere: '',
+                };
+              });
+              handleHoursClear();
+            }}
+          >
+            <Icon
+              className={styles.trashIcon}
+              icon="mdi:clock-minus-outline"
+              width="20"
+              height="20"
+            />
+            <p>Wyczyść godziny</p>
+          </div>
+          <div
+            className={styles.deleteWrapper}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                handleDeleteReckoTask(reckTask._id);
+              }
+            }}
+            onClick={() => {
+              handleBlur(reckTask._id, {
+                client: 'Wybierz firme',
+                clientPerson: 'Wybierz klienta',
+                title: '',
+                description: '',
+                printWhat: '',
+                printWhere: '',
+              });
+              setFormValue((prev) => {
+                return {
+                  ...prev,
+                  client: 'Wybierz firme',
+                  clientPerson: 'Wybierz klienta',
+                  title: '',
+                  description: '',
+                  printWhat: '',
+                  printWhere: '',
+                };
+              });
+              handleHoursClear();
+            }}
+          >
+            <Icon
+              className={styles.trashIcon}
+              icon="line-md:file-document-off"
+              width="20"
+              height="20"
+            />
+            <p>Wyczyść zlecenie</p>
+          </div>
+        </div>
+      </>,
+
+      document.getElementById('select-root')
+    );
+  }
+
   return (
     <div className={styles.reckoningItemContainer}>
       <div className={styles.editButtonWrapper}>
         <button
           type="button"
           className={styles.moreButton}
-          onClick={() => {
-            setIsEditOpen((prev) => !prev);
+          onClick={(e) => {
+            const rect = (
+              e.target as HTMLButtonElement
+            ).getBoundingClientRect();
+            setIsEditOpen((prev) => {
+              return {
+                position: {
+                  top: rect.bottom + 5 + window.scrollY,
+                  left: rect.left + window.scrollX,
+                },
+                isOpen: !prev.isOpen,
+              };
+            });
           }}
         >
           {isTaskDeleteLoading ? (
@@ -219,74 +360,7 @@ function ReckoningTile({ reckTask, index, selectedMonthIndex }) {
             <Icon icon="ic:outline-more-vert" width="24" height="24" />
           )}
         </button>
-        {isEditOpen && (
-          <>
-            <Overlay closeFunction={setIsEditOpen} />
-            <div className={styles.editModal}>
-              <div
-                className={styles.deleteWrapper}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    handleDeleteReckoTask(reckTask._id);
-                  }
-                }}
-                onClick={() => {
-                  handleDeleteReckoTask(reckTask._id);
-                }}
-              >
-                <Icon
-                  className={styles.trashIcon}
-                  icon="line-md:document-delete"
-                  width="20"
-                  height="20"
-                />
-                <p>Usuń</p>
-              </div>
-              <div
-                className={styles.deleteWrapper}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    handleDeleteReckoTask(reckTask._id);
-                  }
-                }}
-                onClick={() => {
-                  handleBlur(reckTask._id, {
-                    client: 'Wybierz firme',
-                    clientPerson: 'Wybierz klienta',
-                    title: '',
-                    description: '',
-                    printWhat: '',
-                    printWhere: '',
-                  });
-                  setFormValue((prev) => {
-                    return {
-                      ...prev,
-                      client: 'Wybierz firme',
-                      clientPerson: 'Wybierz klienta',
-                      title: '',
-                      description: '',
-                      printWhat: '',
-                      printWhere: '',
-                    };
-                  });
-                  handleHoursClear();
-                }}
-              >
-                <Icon
-                  className={styles.trashIcon}
-                  icon="line-md:file-document-off"
-                  width="20"
-                  height="20"
-                />
-                <p>Wyczyść</p>
-              </div>
-            </div>
-          </>
-        )}
+        {isEditOpen && <>{ReckoTaskEditSelect(isEditOpen.position)}</>}
       </div>
 
       <select
@@ -395,33 +469,34 @@ function ReckoningTile({ reckTask, index, selectedMonthIndex }) {
       <div className={styles.daysWrapper}>
         <div className={styles.summHoursContainer}>{totalHours}</div>
 
-        {days[0].hours.map((dayTile, dayIndex) => {
-          return (
-            <input
-              className={`${
-                dayTile.isWeekend ? styles.weekendDayTile : styles.dayTile
-              } ${
-                dayIndex + 1 === currentDate.getDate() &&
-                styles.highlightCurrentDay
-              }`}
-              key={dayIndex}
-              value={dayTile.hourNum === 0 ? '' : dayTile.hourNum}
-              onChange={(e) => {
-                // console.log(typeof e.target.value);
-                handleHourChange(dayTile._id, e);
-                handleDayUpdate(
-                  reckTask._id,
-                  currentUserId,
-                  dayTile._id,
-                  {
-                    hourNum: e.target.value !== '' ? e.target.value : 0,
-                  },
-                  selectedMonthIndex
-                );
-              }}
-            />
-          );
-        })}
+        {days.length > 0 &&
+          days[0].hours.map((dayTile, dayIndex) => {
+            return (
+              <input
+                className={`${
+                  dayTile.isWeekend ? styles.weekendDayTile : styles.dayTile
+                } ${
+                  dayIndex + 1 === currentDate.getDate() &&
+                  styles.highlightCurrentDay
+                }`}
+                key={dayIndex}
+                value={dayTile.hourNum === 0 ? '' : dayTile.hourNum}
+                onChange={(e) => {
+                  // console.log(typeof e.target.value);
+                  handleHourChange(dayTile._id, e);
+                  handleDayUpdate(
+                    reckTask._id,
+                    currentUserId,
+                    dayTile._id,
+                    {
+                      hourNum: e.target.value !== '' ? e.target.value : 0,
+                    },
+                    selectedMonthIndex
+                  );
+                }}
+              />
+            );
+          })}
       </div>
     </div>
   );

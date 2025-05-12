@@ -10,13 +10,7 @@ type ModalTypes = {
   exitAnim: boolean;
 };
 
-function ModalTemplate({
-  isOpen,
-  onClose,
-
-  children,
-  exitAnim,
-}: ModalTypes) {
+function ModalTemplate({ isOpen, onClose, children, exitAnim }: ModalTypes) {
   return !exitAnim ? (
     <ReactModal
       isOpen={isOpen}

@@ -20,8 +20,8 @@ function UsersDisplay({ data, usersArray }) {
                 className={styles.userImg}
                 src={user.img}
                 alt="user"
-                onMouseEnter={() => {
-                  handleMouseEnter(user.name, data.name);
+                onMouseEnter={(e) => {
+                  handleMouseEnter(user.name, data.name, e);
                 }}
                 onMouseLeave={() => {
                   handleMouseLeave();
@@ -30,7 +30,12 @@ function UsersDisplay({ data, usersArray }) {
               {labelState.isLabel &&
                 labelState.labelValue === data.name &&
                 labelState.labelId === user.name && (
-                  <HoverLabel>{user.name}</HoverLabel>
+                  <HoverLabel
+                    position={labelState.mousePosition}
+                    root="label-root"
+                  >
+                    {user.name}
+                  </HoverLabel>
                 )}
             </Link>
           );

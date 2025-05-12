@@ -137,7 +137,21 @@ export const ReckoningTaskController = {
       if (paticipantOfTask.months.length <= 1) {
         taskToDelete.participants = taskToDelete.participants.map((part) => {
           return part._id === userId && part.isVisible
-            ? { ...part, isVisible: false }
+            ? {
+                ...part,
+                months: part.months.map((m) => {
+                  if (String(m._id) === monthId) {
+                    return {
+                      ...m,
+                      hours: m.hours.map((h) => {
+                        return h.hourNum > 0 ? { ...h, hourNum: 0 } : h;
+                      }),
+                    };
+                  }
+                  return m;
+                }),
+                isVisible: false,
+              }
             : part;
         });
 
