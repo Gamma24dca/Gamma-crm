@@ -11,6 +11,7 @@ import DropdownHeader from '../../Atoms/DropdownHeader/DropdownHeader';
 import MultiselectDropdown from '../../Molecules/MultiselectDropdown/MultiselectDropdown';
 import FilterCheckbox from '../../Molecules/FilterCheckbox/FilterCheckbox';
 import SearchInput from '../../Atoms/ControlBar/SearchInput/SearchInput';
+import FiltersClearButton from '../../Atoms/FiltersClearButton/FiltersClearButton';
 
 function CompanyProfileControlBar({
   company,
@@ -27,6 +28,8 @@ function CompanyProfileControlBar({
   setClientPersonToFilter,
   searchInputValue,
   setSearchInputValue,
+  settleStateFilter,
+  setSettleStateFilter,
 }) {
   const [filterDropdown, setFilterDropdown] = useState(false);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
@@ -41,6 +44,17 @@ function CompanyProfileControlBar({
         }, 0)
       : 0;
 
+  const settleDropdownData = [
+    {
+      id: 2,
+      value: 'Rozliczone',
+    },
+    {
+      id: 3,
+      value: 'Nierozliczone',
+    },
+  ];
+
   const toggleClientPerson = (clientPerson) => {
     if (clientPersonToFilter.includes(clientPerson.value)) {
       setClientPersonToFilter(
@@ -52,6 +66,17 @@ function CompanyProfileControlBar({
       });
     }
   };
+
+  const toggleSettleValue = (settleValue) => {
+    if (settleStateFilter) {
+      console.log('saifuhsdiuhsdagiusda');
+      setSettleStateFilter('');
+    } else {
+      setSettleStateFilter(settleValue.value);
+    }
+  };
+
+  console.log(settleStateFilter);
 
   return (
     <>
@@ -133,10 +158,25 @@ function CompanyProfileControlBar({
               isSelectOpen={isSecondSelectOpen}
               setIsSelectOpen={setIsSecondSelectOpen}
             >
-              <p>Wszystkie</p>
-              <p>Rozliczone</p>
-              <p>Nierozliczone</p>
+              {settleDropdownData.map((sdd) => {
+                return (
+                  <FilterCheckbox
+                    key={sdd.id}
+                    name={sdd.value}
+                    isSelected={settleStateFilter === sdd.value}
+                    toggleCompany={toggleSettleValue}
+                    filterVariable={sdd}
+                  />
+                );
+              })}
             </MultiselectDropdown>
+
+            <FiltersClearButton
+              handleClear={() => {
+                setClientPersonToFilter([]);
+                setSettleStateFilter('');
+              }}
+            />
           </FilterDropdownContainer>
         </>
       )}

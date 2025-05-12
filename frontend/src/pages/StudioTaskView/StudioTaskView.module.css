@@ -49,25 +49,6 @@
   width: 60%;
 }
 
-.clearButton {
-  position: absolute;
-  bottom: 20px;
-  border: none;
-  background-color: var(--color-shadow);
-  padding: 7px 15px;
-  border-radius: 15px;
-  cursor: pointer;
-  font-weight: 600;
-  font-family: Montserrat;
-  font-size: 14px;
-  transition: all 0.3s ease;
-
-  &:hover {
-    background-color: var(--color-lighter);
-    box-shadow: 0 0 0 1px var(--color-shadow);
-  }
-}
-
 .searchContainer {
   position: relative;
   max-width: 300px;
