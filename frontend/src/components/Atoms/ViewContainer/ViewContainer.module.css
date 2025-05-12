@@ -1,7 +1,9 @@
 .viewContainer {
   position: relative;
   width: 100%;
+  flex-grow: 1;
   display: flex;
-  margin-top: 20px;
   justify-content: center;
+  min-height: 0; /* ważne! */
+  overflow: hidden; /* ważne! */
 }

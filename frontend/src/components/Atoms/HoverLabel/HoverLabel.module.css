@@ -1,18 +1,18 @@
 .graphicName {
   position: absolute;
-  top: 35px;
-  right: -20px;
+  max-width: 150px;
   display: flex;
   align-items: center;
   background-color: var(--color-black);
   opacity: 0;
   border-radius: 5px;
+
   height: 30px;
   padding: 0px 20px;
   color: var(--color-lighter);
   font-size: 13px;
   animation: appear 0.3s ease forwards;
-  z-index: 30;
+  z-index: 9999;
 }
 
 @keyframes appear {

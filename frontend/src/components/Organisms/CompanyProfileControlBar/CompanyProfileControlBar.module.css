@@ -44,8 +44,6 @@
   }
 }
 
-
-
 .companyNameLoader {
   width: 80px;
   height: 30px;
@@ -57,7 +55,7 @@
 
 .center {
   position: relative;
-  width: 32.5%;
+  width: 52.5%;
   display: flex;
   gap: 10px;
   align-items: center;
@@ -100,7 +98,11 @@
 }
 
 .controlBarBtnsWrapper {
-  width: 30%;
+  width: 10%;
   display: flex;
   justify-content: flex-end;
+}
+
+.spacer {
+  height: 10px;
 }

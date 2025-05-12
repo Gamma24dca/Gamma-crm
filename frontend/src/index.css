@@ -10,6 +10,8 @@
   --color-navButton: #828fa3;
   --color-border: #e4ebfa;
   --color-title: #030136;
+  --color-error: #ff0033;
+  --color-green: #adebb3;
 
   font-family: Montserrat, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -166,11 +168,11 @@ select {
 }
 
 .Goodyear {
-  background-color: rgb(0, 78, 168);
+  background-color: rgb(0, 78, 168) !important;
 }
 
 .Axa {
-  background-color: green;
+  background-color: green !important;
   opacity: 0.8;
 }
 
@@ -178,23 +180,23 @@ select {
 .ShellSFS,
 .ShellCRT,
 .ShellGlobalProduct {
-  background-color: #ffc600;
+  background-color: #ffc600 !important;
   opacity: 0.8;
 }
 .Wybierz {
   background-color: var(--color-navButton);
 }
 .Mateo {
-  background-color: #892f23;
+  background-color: #892f23 !important;
   opacity: 0.8;
 }
 
 .Premio {
-  background-color: #002855;
+  background-color: #002855 !important;
   opacity: 0.8;
 }
 
 .Santander {
-  background-color: #ec0000;
+  background-color: #ec0000 !important;
   opacity: 0.8;
 }

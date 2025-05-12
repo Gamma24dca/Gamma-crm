@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import ListContainer from '../../components/Atoms/ListContainer/ListContainer';
@@ -7,257 +7,57 @@ import styles from './CompanyProfile.module.css';
 import {
   CompaniesType,
   deleteCompany,
+  getAssignedReckoTasks,
   getCurrentCompany,
 } from '../../services/companies-service';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
 import useModal from '../../hooks/useModal';
 import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplate';
-import useWindowSize from '../../hooks/useWindowSize';
 import usePagination from '../../hooks/usePagination';
 import useSort from '../../hooks/useSort';
 import UpdateCompanyModalContent from '../../components/Organisms/UpdateCompanyModalContent/UpdateCompanyModalContent';
 import Captcha from '../../components/Molecules/Captcha/Captcha';
 import CompanyProfileControlBar from '../../components/Organisms/CompanyProfileControlBar/CompanyProfileControlBar';
 import useCompaniesContext from '../../hooks/Context/useCompaniesContext';
-
-const mockedTasks = [
-  {
-    _id: 'ig35c',
-    worker: 'Bartek',
-    month: 'marzec',
-    company: 'Aksil',
-    createdAt: '2024.03.03',
-    client: 'Stachowiczk Joanna',
-    taskTitle: 'AKSIL_KATALOG_PRODUKTOW 2024',
-    hours: 19,
-    comment: 'projekt, poprawki i pliki do druku',
-    printWhere: '',
-    printSpec: '',
-    isSettled: true,
-  },
-  {
-    _id: 'fps32',
-    worker: 'Edyta',
-    month: 'wrzesień',
-    company: 'Santander',
-    createdAt: '2024.05.01',
-    client: 'Badowska Alicja',
-    taskTitle: 'Baner industry 1070x2125',
-    hours: 12,
-    comment: 'Zaliczka 12',
-    printWhere: '',
-    printSpec: '',
-    isSettled: false,
-  },
-  {
-    _id: '3x8[2',
-    worker: 'Edyta',
-    month: 'kwiecień',
-    company: 'Santander',
-    createdAt: '2024.04.08',
-    client: 'Ożóg Joanna',
-    taskTitle: 'Avik Animation 4k',
-    hours: 39,
-    comment: '',
-    printWhere: '',
-    printSpec: '',
-    isSettled: true,
-  },
-  {
-    _id: '71x71',
-    worker: 'Weronika',
-    month: 'kwiecień',
-    company: 'Santander',
-    createdAt: '2024.07.10',
-    client: 'Ożóg Joanna',
-    taskTitle: 'test data',
-    hours: 15,
-    comment: '',
-    printWhere: '',
-    printSpec: '',
-    isSettled: false,
-  },
-  {
-    _id: 'k3px4',
-    worker: 'Jagoda',
-    month: 'październik',
-    company: 'Santander',
-    createdAt: '2024.04.08',
-    client: 'Ożóg Joanna',
-    taskTitle: 'Avik Animation 4k',
-    hours: 19,
-    comment: '',
-    printWhere: '',
-    printSpec: '',
-    isSettled: false,
-  },
-  {
-    _id: 'fds32',
-    worker: 'Edyta',
-    month: 'wrzesień',
-    company: 'Santander',
-    createdAt: '2024.05.01',
-    client: 'Badowska Alicja',
-    taskTitle: 'Baner industry 1070x2125',
-    hours: 52,
-    comment: 'Zaliczka 12',
-    printWhere: '',
-    printSpec: '',
-    isSettled: false,
-  },
-  {
-    _id: '368a2',
-    worker: 'Edyta',
-    month: 'kwiecień',
-    company: 'Santander',
-    createdAt: '2024.03.08',
-    client: 'Ożóg Joanna',
-    taskTitle: 'Avik Animation 4k',
-    hours: 39,
-    comment: '',
-    printWhere: '',
-    printSpec: '',
-    isSettled: true,
-  },
-  {
-    _id: '73x71',
-    worker: 'Weronika',
-    month: 'kwiecień',
-    company: 'Santander',
-    createdAt: '2024.09.10',
-    client: 'Ożóg Joanna',
-    taskTitle: 'test data',
-    hours: 15,
-    comment: '',
-    printWhere: '',
-    printSpec: '',
-    isSettled: false,
-  },
-  {
-    _id: 'k3hx4',
-    worker: 'Jagoda',
-    month: 'październik',
-    company: 'Santander',
-    createdAt: '2024.05.08',
-    client: 'Ożóg Joanna',
-    taskTitle: 'Avik Animation 4k',
-    hours: 19,
-    comment: '',
-    printWhere: '',
-    printSpec: '',
-    isSettled: false,
-  },
-  {
-    _id: 'fss32',
-    worker: 'Edyta',
-    month: 'wrzesień',
-    company: 'Santander',
-    createdAt: '2023.02.01',
-    client: 'Badowska Alicja',
-    taskTitle: 'Baner industry 1070x2125',
-    hours: 12,
-    comment: 'Zaliczka 12',
-    printWhere: '',
-    printSpec: '',
-    isSettled: false,
-  },
-  {
-    _id: '3d8a2',
-    worker: 'Edyta',
-    month: 'kwiecień',
-    company: 'Santander',
-    createdAt: '2024.04.08',
-    client: 'Ożóg Joanna',
-    taskTitle: 'Avik Animation 4k',
-    hours: 39,
-    comment: '',
-    printWhere: '',
-    printSpec: '',
-    isSettled: true,
-  },
-  {
-    _id: '7lx71',
-    worker: 'Weronika',
-    month: 'kwiecień',
-    company: 'Santander',
-    createdAt: '2024.01.20',
-    client: 'Ożóg Joanna',
-    taskTitle: 'test data',
-    hours: 15,
-    comment: '',
-    printWhere: '',
-    printSpec: '',
-    isSettled: false,
-  },
-  {
-    _id: 'kfpx4',
-    worker: 'Jagoda',
-    month: 'październik',
-    company: 'Santander',
-    createdAt: '2023.04.08',
-    client: 'Ożóg Joanna',
-    taskTitle: 'Avik Animation 4k',
-    hours: 19,
-    comment: '',
-    printWhere: '',
-    printSpec: '',
-    isSettled: false,
-  },
-  {
-    _id: 'knpx4',
-    worker: 'Jagoda',
-    month: 'październik',
-    company: 'Santander',
-    createdAt: '2023.04.08',
-    client: 'Ożóg Joanna',
-    taskTitle: 'Avik Animation 4k',
-    hours: 19,
-    comment: '',
-    printWhere: '',
-    printSpec: '',
-    isSettled: false,
-  },
-  {
-    _id: 'kfp34',
-    worker: 'Jagoda',
-    month: 'październik',
-    company: 'Santander',
-    createdAt: '2023.04.08',
-    client: 'Ożóg Joanna',
-    taskTitle: 'Avik Animation 4k',
-    hours: 19,
-    comment: '',
-    printWhere: '',
-    printSpec: '',
-    isSettled: false,
-  },
-  {
-    _id: 'kfpv4',
-    worker: 'Jagoda',
-    month: 'październik',
-    company: 'Santander',
-    createdAt: '2023.04.08',
-    client: 'Ożóg Joanna',
-    taskTitle: 'Avik Animation 4k',
-    hours: 19,
-    comment: '',
-    printWhere: '',
-    printSpec: '',
-    isSettled: false,
-  },
-];
+import useCurrentDate from '../../hooks/useCurrentDate';
+import useViewportHeight from '../../hooks/useViewportHeight';
+import CompanyProfileViewComponent from '../../components/Organisms/CompanyProfileViewComponent/CompanyProfileViewComponent';
 
 function CompanyProfile() {
   const [company, setCompany] = useState<CompaniesType>();
+  const [clientPersonToFilter, setClientPersonToFilter] = useState<string[]>(
+    []
+  );
+  const [searchInputValue, setSearchInputValue] = useState('');
+  const [reckoningTasks, setReckoningTasks] = useState([]);
   const { showModal, exitAnim, openModal, closeModal } = useModal();
   const [deleteCaptcha, setDeleteCaptcha] = useState(false);
+  const [loadingState, setLoadingState] = useState({
+    isLoading: false,
+    isError: false,
+  });
 
   const { dispatch } = useCompaniesContext();
 
   const navigate = useNavigate();
 
-  const { sortedData, sortColumn, sortOrder, handleSortChange } =
-    useSort(mockedTasks);
+  const {
+    selectedMonth,
+    selectedYear,
+    handleMonthChange,
+    handleYearChange,
+    months,
+    years,
+  } = useCurrentDate();
+
+  const currentMonthIndex = months.indexOf(selectedMonth);
+
+  const { sortedData, sortColumn, sortOrder, handleSortChange } = useSort(
+    reckoningTasks,
+    currentMonthIndex
+  );
+
+  const viewportHeight = useViewportHeight();
 
   const {
     currentPage,
@@ -271,23 +71,60 @@ function CompanyProfile() {
   const params = useParams();
   const companyID = params.id;
 
-  const is1800 = useWindowSize('1800');
-  const is1600 = useWindowSize('1600');
-  const is1350 = useWindowSize('1350');
+  useEffect(() => {
+    const tileHeight = 35;
+    const headerHeight = 300;
+    const availableHeight = viewportHeight - headerHeight;
 
-  const fetchCompanyData = useCallback(() => {
-    getCurrentCompany(params.id)
-      .then((currentCompany: CompaniesType) => {
-        setCompany(currentCompany);
-      })
-      .catch((error) => {
-        console.error('Error fetching company:', error);
-      });
-  }, [params.id]);
+    console.log(
+      'viewportHeight:',
+      viewportHeight,
+      'available:',
+      availableHeight
+    );
+
+    const itemsPerPage = Math.floor(availableHeight / tileHeight);
+    setItemsPerPage(itemsPerPage > 0 ? itemsPerPage : 1);
+  }, [viewportHeight]);
+
+  const fetchCompany = async () => {
+    let errorHappened = false;
+
+    const currentCompany = await getCurrentCompany(params.id);
+
+    if (currentCompany) {
+      setCompany(currentCompany);
+
+      try {
+        setLoadingState(() => ({
+          isLoading: true,
+          isError: false,
+        }));
+
+        const reckoTasks = await getAssignedReckoTasks({
+          company: currentCompany.name,
+          monthIndex: currentMonthIndex + 1,
+        });
+        setReckoningTasks(reckoTasks.reckoTasks);
+      } catch (error) {
+        errorHappened = true;
+        setLoadingState(() => ({
+          isLoading: false,
+          isError: true,
+        }));
+      } finally {
+        setLoadingState((prevState) => ({
+          ...prevState,
+          isLoading: false,
+          isError: errorHappened ? true : prevState.isError,
+        }));
+      }
+    }
+  };
 
   useEffect(() => {
-    fetchCompanyData();
-  }, [fetchCompanyData]);
+    fetchCompany();
+  }, [currentMonthIndex]);
 
   const handleDeleteCompany = async (id) => {
     await deleteCompany(id);
@@ -296,20 +133,41 @@ function CompanyProfile() {
     navigate('/firmy');
   };
 
-  useEffect(() => {
-    if (is1350) {
-      setItemsPerPage(8);
+  const filteredTasks =
+    clientPersonToFilter.length > 0
+      ? reckoningTasks.filter((ct) => {
+          return clientPersonToFilter.includes(ct.clientPerson);
+        })
+      : currentTasks;
+
+  const matchedTasksFromSearchInput = searchInputValue
+    ? reckoningTasks.filter((cts) => {
+        return (
+          cts.title.toLowerCase().includes(searchInputValue.toLowerCase()) ||
+          cts.description
+            .toLowerCase()
+            .includes(searchInputValue.toLowerCase()) ||
+          cts.clientPerson
+            .toLowerCase()
+            .includes(searchInputValue.toLowerCase()) ||
+          cts.searchID.toString().includes(searchInputValue) ||
+          cts.participants.some((member) =>
+            member.name.toLowerCase().includes(searchInputValue.toLowerCase())
+          )
+        );
+      })
+    : filteredTasks;
+
+  const dataToSummarize = () => {
+    if (clientPersonToFilter.length > 0) {
+      return filteredTasks;
     }
-    if (is1600 && !is1350) {
-      setItemsPerPage(10);
+    if (searchInputValue.length > 0) {
+      return matchedTasksFromSearchInput;
     }
-    if (is1800 && !is1600) {
-      setItemsPerPage(12);
-    }
-    if (!is1800 && !is1600) {
-      setItemsPerPage(15);
-    }
-  }, [is1800, is1600, is1350, setItemsPerPage]);
+
+    return reckoningTasks;
+  };
 
   return (
     <>
@@ -334,7 +192,7 @@ function CompanyProfile() {
               currentCompany={company}
               closeModal={closeModal}
               openCaptcha={setDeleteCaptcha}
-              refreshCompanyData={fetchCompanyData}
+              refreshCompanyData={fetchCompany}
             />
           </>
         )}
@@ -343,7 +201,18 @@ function CompanyProfile() {
         <CompanyProfileControlBar
           company={company}
           openModal={openModal}
-          tasks={mockedTasks}
+          tasks={dataToSummarize()}
+          selectedMonth={selectedMonth}
+          selectedYear={selectedYear}
+          handleMonthChange={handleMonthChange}
+          handleYearChange={handleYearChange}
+          months={months}
+          years={years}
+          currentMonthIndex={currentMonthIndex}
+          setClientPersonToFilter={setClientPersonToFilter}
+          clientPersonToFilter={clientPersonToFilter}
+          searchInputValue={searchInputValue}
+          setSearchInputValue={setSearchInputValue}
         />
       </ControlBar>
 
@@ -358,37 +227,27 @@ function CompanyProfile() {
               </div>
               <div
                 className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
-                role="button"
-                tabIndex={0}
-                onClick={() => handleSortChange('worker')}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    handleSortChange('worker');
-                  }
-                }}
               >
-                <p>
-                  Pracownik{' '}
-                  {sortColumn === 'worker' && (sortOrder === 'asc' ? '↑' : '↓')}
-                </p>
+                <p>Firma </p>
               </div>
               <div
                 className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
                 role="button"
                 tabIndex={0}
-                onClick={() => handleSortChange('month')}
+                onClick={() => handleSortChange('clientPerson')}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
-                    handleSortChange('month');
+                    handleSortChange('clientPerson');
                   }
                 }}
               >
                 <p>
-                  Miesiąc{' '}
-                  {sortColumn === 'month' && (sortOrder === 'asc' ? '↑' : '↓')}
+                  Klient{' '}
+                  {sortColumn === 'clientPerson' &&
+                    (sortOrder === 'asc' ? '↑' : '↓')}
                 </p>
               </div>
-              <div
+              {/* <div
                 className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
                 role="button"
                 tabIndex={0}
@@ -404,20 +263,12 @@ function CompanyProfile() {
                   {sortColumn === 'createdAt' &&
                     (sortOrder === 'asc' ? '↑' : '↓')}
                 </p>
-              </div>
+              </div> */}
               <div
                 className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
-                role="button"
-                tabIndex={0}
-                onClick={() => handleSortChange('client')}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    handleSortChange('client');
-                  }
-                }}
               >
                 <p>
-                  Klient{' '}
+                  Graficy{' '}
                   {sortColumn === 'client' && (sortOrder === 'asc' ? '↑' : '↓')}
                 </p>
               </div>
@@ -425,49 +276,32 @@ function CompanyProfile() {
                 className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
                 role="button"
                 tabIndex={0}
-                onClick={() => handleSortChange('taskTitle')}
+                onClick={() => handleSortChange('title')}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
-                    handleSortChange('taskTitle');
+                    handleSortChange('title');
                   }
                 }}
               >
                 <p>
                   Tytuł{' '}
-                  {sortColumn === 'taskTitle' &&
-                    (sortOrder === 'asc' ? '↑' : '↓')}
+                  {sortColumn === 'title' && (sortOrder === 'asc' ? '↑' : '↓')}
                 </p>
               </div>
               <div
                 className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
                 role="button"
                 tabIndex={0}
-                onClick={() => handleSortChange('hours')}
+                onClick={() => handleSortChange('description')}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
-                    handleSortChange('hours');
-                  }
-                }}
-              >
-                <p>
-                  Sum{' '}
-                  {sortColumn === 'hours' && (sortOrder === 'asc' ? '↑' : '↓')}
-                </p>
-              </div>
-              <div
-                className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
-                role="button"
-                tabIndex={0}
-                onClick={() => handleSortChange('comment')}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    handleSortChange('comment');
+                    handleSortChange('description');
                   }
                 }}
               >
                 <p>
                   Komentarz{' '}
-                  {sortColumn === 'comment' &&
+                  {sortColumn === 'description' &&
                     (sortOrder === 'asc' ? '↑' : '↓')}
                 </p>
               </div>
@@ -475,16 +309,34 @@ function CompanyProfile() {
                 className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
                 role="button"
                 tabIndex={0}
-                onClick={() => handleSortChange('printSpec')}
+                onClick={() => handleSortChange('participants')}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
-                    handleSortChange('printSpec');
+                    handleSortChange('participants');
+                  }
+                }}
+              >
+                <p>
+                  Sum{' '}
+                  {sortColumn === 'participants' &&
+                    (sortOrder === 'asc' ? '↑' : '↓')}
+                </p>
+              </div>
+
+              <div
+                className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
+                role="button"
+                tabIndex={0}
+                onClick={() => handleSortChange('printWhat')}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    handleSortChange('printWhat');
                   }
                 }}
               >
                 <p>
                   DRUK(spec){' '}
-                  {sortColumn === 'printSpec' &&
+                  {sortColumn === 'printWhat' &&
                     (sortOrder === 'asc' ? '↑' : '↓')}
                 </p>
               </div>
@@ -507,44 +359,13 @@ function CompanyProfile() {
               </div>
             </div>
           </div>
-          <>
-            {currentTasks.map((task) => {
-              return (
-                <div key={task._id} className={styles.reckoningTaskListElement}>
-                  <div className={styles.reckoningTaskListElementTile}>
-                    <p>{task._id}</p>
-                  </div>
-                  <div className={styles.reckoningTaskListElementTile}>
-                    <p>{task.worker}</p>
-                  </div>
-                  <div className={styles.reckoningTaskListElementTile}>
-                    <p>{task.month}</p>
-                  </div>
-                  <div className={styles.reckoningTaskListElementTile}>
-                    <p>{task.createdAt}</p>
-                  </div>
-                  <div className={styles.reckoningTaskListElementTile}>
-                    <p>{task.client}</p>
-                  </div>
-                  <div className={styles.reckoningTaskListElementTile}>
-                    <p>{task.taskTitle}</p>
-                  </div>
-                  <div className={styles.reckoningTaskListElementTile}>
-                    <p>{task.hours}</p>
-                  </div>
-                  <div className={styles.reckoningTaskListElementTile}>
-                    <p>{task.comment}</p>
-                  </div>
-                  <div className={styles.reckoningTaskListElementTile}>
-                    <p>{task.printSpec}</p>
-                  </div>
-                  <div className={styles.reckoningTaskListElementTile}>
-                    <p>{task.printWhere}</p>
-                  </div>
-                </div>
-              );
-            })}
-          </>
+
+          <CompanyProfileViewComponent
+            loadingState={loadingState}
+            currentTasks={matchedTasksFromSearchInput}
+            currentMonthIndex={currentMonthIndex}
+          />
+
           <div className={styles.paginationControls}>
             <button
               onClick={handlePreviousPage}

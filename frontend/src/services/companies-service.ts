@@ -192,3 +192,28 @@ export async function SearchCompany(query) {
     }
   }
 }
+export async function getAssignedReckoTasks({ company, monthIndex }) {
+  try {
+    const response = await fetch(
+      `${
+        import.meta.env.VITE_API_URL
+      }/api/companies/reckoning/${company}/${monthIndex}`,
+      {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    if (response.ok) {
+      return await response.json();
+    }
+    throw new Error(`${response.status} ${response.statusText}`);
+  } catch (error) {
+    if (Config.isDev) {
+      throw new Error('Get Companies', error.message);
+    }
+    return null;
+  }
+}

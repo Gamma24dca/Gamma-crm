@@ -1,22 +1,57 @@
+import { useState } from 'react';
 import { Icon } from '@iconify/react';
 import BackButton from '../../Atoms/BackButton/BackButton';
 import styles from './CompanyProfileControlBar.module.css';
 import CTA from '../../Atoms/CTA/CTA';
 import Select from '../../Atoms/Select/Select';
-import useCurrentDate from '../../../hooks/useCurrentDate';
-import summarizeHours from '../../../utils/SummarizeHours';
+import summarizeCompanyProfHours from '../../../utils/summarizeCompanyProfHours';
+import FilterDropdownContainer from '../../Atoms/FilterDropdownContainer/FilterDropdownContainer';
+import Overlay from '../../Atoms/Overlay/Overlay';
+import DropdownHeader from '../../Atoms/DropdownHeader/DropdownHeader';
+import MultiselectDropdown from '../../Molecules/MultiselectDropdown/MultiselectDropdown';
+import FilterCheckbox from '../../Molecules/FilterCheckbox/FilterCheckbox';
+import SearchInput from '../../Atoms/ControlBar/SearchInput/SearchInput';
 
-function CompanyProfileControlBar({ company, openModal, tasks }) {
-  const {
-    selectedMonth,
-    selectedYear,
-    handleMonthChange,
-    handleYearChange,
-    months,
-    years,
-  } = useCurrentDate();
+function CompanyProfileControlBar({
+  company,
+  openModal,
+  tasks,
+  selectedMonth,
+  selectedYear,
+  handleMonthChange,
+  handleYearChange,
+  months,
+  years,
+  currentMonthIndex,
+  clientPersonToFilter,
+  setClientPersonToFilter,
+  searchInputValue,
+  setSearchInputValue,
+}) {
+  const [filterDropdown, setFilterDropdown] = useState(false);
+  const [isSelectOpen, setIsSelectOpen] = useState(false);
+  const [isSecondSelectOpen, setIsSecondSelectOpen] = useState(false);
 
-  const totalHours = summarizeHours(tasks);
+  const total =
+    tasks.length > 0
+      ? tasks.reduce((tasksTotalHours, task) => {
+          return (
+            tasksTotalHours + summarizeCompanyProfHours(task, currentMonthIndex)
+          );
+        }, 0)
+      : 0;
+
+  const toggleClientPerson = (clientPerson) => {
+    if (clientPersonToFilter.includes(clientPerson.value)) {
+      setClientPersonToFilter(
+        clientPersonToFilter.filter((part) => part !== clientPerson.value)
+      );
+    } else {
+      setClientPersonToFilter((prev) => {
+        return [...prev, clientPerson.value];
+      });
+    }
+  };
 
   return (
     <>
@@ -57,21 +92,61 @@ function CompanyProfileControlBar({ company, openModal, tasks }) {
         />
       </div>
       <div className={styles.center}>
-        <input
-          className={styles.navInput}
-          type="text"
-          placeholder="Szukaj"
-          name="task-search"
-          id="task-search"
+        <SearchInput
+          value={searchInputValue}
+          onChange={(e) => {
+            setSearchInputValue(e.target.value);
+          }}
         />
 
         <p className={styles.summPar}>Suma:</p>
       </div>
       <div className={styles.totalHoursContainer}>
-        <p>{totalHours}</p>
+        <p>{total}</p>
       </div>
+      {filterDropdown && (
+        <>
+          <Overlay closeFunction={setFilterDropdown} />
+          <FilterDropdownContainer>
+            <DropdownHeader>Filtr</DropdownHeader>
+            <br />
+            <MultiselectDropdown
+              label="Klienci"
+              isSelectOpen={isSelectOpen}
+              setIsSelectOpen={setIsSelectOpen}
+            >
+              {company.clientPerson.map((cp) => {
+                return (
+                  <FilterCheckbox
+                    key={cp._id}
+                    name={cp.value}
+                    isSelected={clientPersonToFilter.includes(cp.value)}
+                    toggleCompany={toggleClientPerson}
+                    filterVariable={cp}
+                  />
+                );
+              })}
+            </MultiselectDropdown>
+            <div className={styles.spacer} />
+            <MultiselectDropdown
+              label="Rozliczone"
+              isSelectOpen={isSecondSelectOpen}
+              setIsSelectOpen={setIsSecondSelectOpen}
+            >
+              <p>Wszystkie</p>
+              <p>Rozliczone</p>
+              <p>Nierozliczone</p>
+            </MultiselectDropdown>
+          </FilterDropdownContainer>
+        </>
+      )}
       <div className={styles.controlBarBtnsWrapper}>
-        <CTA type="button" onClick={() => {}}>
+        <CTA
+          type="button"
+          onClick={() => {
+            setFilterDropdown((prev) => !prev);
+          }}
+        >
           Filtry
         </CTA>
       </div>

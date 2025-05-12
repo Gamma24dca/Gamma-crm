@@ -100,7 +100,7 @@ function ReckoningView() {
     try {
       handleLoadingStateChange('isGetMyTasksLoading', true);
 
-      // DODANE +1 PO ZMIANIE REQUESTOW NA LOCALHOST NIE WIEM DLACZEGO, PEWNIE TRZEBA ZMIENIC TAK JAK BYLO NA MAINE I FETCHOW Z CHMURY
+      // DODANE +1 PO ZMIANIE REQUESTOW NA LOCALHOST NIE WIEM DLACZEGO, PEWNIE TRZEBA ZMIENIC TAK JAK BYLO NA MAINE I FETCHOW Z API
 
       const response = await getMyReckoningTasks(
         currentUserId,

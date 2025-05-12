@@ -2,6 +2,7 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  z-index: 1;
 }
 
 .tileElement:first-child {
@@ -13,6 +14,7 @@
   max-height: 30px;
   border-radius: 50%;
   transition: all 0.3s ease;
+  z-index: 1;
 }
 
 .userImg:hover {
@@ -24,13 +26,15 @@
   display: flex;
   gap: 5px;
   flex-wrap: wrap;
+  z-index: 1;
 }
 
 .userWrapper {
-  position: relative; /* Establish positioning context for label */
+  position: relative;
   display: flex;
   align-items: center;
   gap: 10px;
+  z-index: 10;
 }
 
 /* .graphicName {

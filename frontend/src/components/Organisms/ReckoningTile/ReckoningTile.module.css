@@ -8,6 +8,7 @@
   /* grid-template-columns: repeat(7, 1fr); */
   grid-template-rows: 1fr;
   align-items: center;
+  animation: appear 0.3s ease forwards;
 }
 
 .reckTaskItem,
@@ -77,6 +78,7 @@
   font-family: Montserrat;
   font-weight: 600;
   color: var(--color-lighter);
+  background-color: var(--color-navButton);
 }
 
 .clientPersonTile {
@@ -136,7 +138,7 @@
   z-index: 330;
   position: absolute;
   padding: 5px 10px;
-  width: 100px;
+  width: 150px;
   /* height: 70px; */
   background-color: var(--color-lighter);
   box-shadow: 0 0px 3px var(--color-shadow);
@@ -147,6 +149,7 @@
   flex-direction: column;
   justify-content: start;
   align-items: start;
+  animation: appear 0.3s ease forwards;
 }
 
 .deleteWrapper {
@@ -169,4 +172,13 @@
 .highlightCurrentDay {
   background-color: var(--color-navButton);
   color: var(--color-lighter);
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

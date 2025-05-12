@@ -1,7 +1,7 @@
 .reckoningTaskListElement,
 .darkerReckoningTaskListElement {
   width: 100%;
-  font-size: 13px;
+  font-size: 12px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -13,6 +13,11 @@
   background-color: var(--color-shadow);
 }
 
+.checked {
+  background-color: var(--color-green);
+  opacity: 0.8;
+}
+
 .reckoningTaskListElement:not(:first-child),
 .darkerReckoningTaskListElement:not(:first-child) {
   cursor: pointer;
@@ -22,6 +27,7 @@
 .darkerReckoningTaskListElement:hover:not(:first-child) {
   background-color: var(--color-orange);
   color: var(--color-lighter);
+  opacity: 1;
 }
 
 .companyInfoBar {
@@ -56,15 +62,37 @@
   transition: all 0.3s ease;
 }
 
+.cprtCheckbox {
+  /* margin-left: 5px; */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  left: 10px;
+  position: absolute;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
 .companyInfoBarTile:hover:not(:first-child) {
   cursor: pointer;
   color: var(--color-orange);
 }
 
 .reckoningTaskListElementTile:nth-child(1) {
+  position: relative;
   width: 4.5%;
   font-weight: 600;
+  /* display: flex;
+  justify-content: center;
+  gap: 5px; */
   min-width: 65px;
+
+  p {
+    position: absolute;
+    left: 30px;
+    font-size: 10px;
+  }
 }
 
 .reckoningTaskListElementTile:nth-child(2) {
@@ -95,34 +123,44 @@
   width: 10%;
 }
 
-.paginationControls {
+.noTasksContainer {
+  height: 120px;
   display: flex;
-  font-weight: bold;
-  position: absolute;
-  bottom: 5px;
+  flex-direction: row-reverse;
+  align-items: center;
+  gap: 15px;
+
+  p {
+    font-weight: 600;
+  }
 }
 
-.paginationButton {
-  background-color: transparent;
-  cursor: pointer;
+.iconWrapper {
+  height: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin: 0 5px;
-  border: none;
-  transition: all 0.3s ease;
+
+  p {
+    font-weight: 600;
+  }
+}
+.loadingIcon {
+  color: var(--color-orange);
 }
 
-.prevPaginationButton:hover {
-  transform: translateX(-5px);
+.errorIcon {
+  color: var(--color-error);
 }
 
-.nextPaginationButton {
-  transform: rotate(180deg);
+.cprtWrapper {
+  position: relative;
+  width: 100%;
 }
 
-.nextPaginationButton:hover {
-  transform: rotate(180deg) translateX(-5px);
+.reckoTileCheckbox {
+  z-index: 100;
+  position: absolute;
+  /* left: -5px; */
 }
 
 @media (max-width: 1700px) {
