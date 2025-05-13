@@ -20,3 +20,20 @@ ChartsRouter.get(
     }
   },
 );
+
+ChartsRouter.get(
+  '/reckoning/user-per-day-hours/:month/:year',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const month = req.params.month;
+    const year = req.params.year;
+
+    try {
+      const result = await ChartsController.getUsersMonthSummary(month, year);
+      res.status(StatusCodes.ACCEPTED).json(result);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Server error');
+    }
+  },
+);

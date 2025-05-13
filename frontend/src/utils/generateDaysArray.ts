@@ -7,6 +7,7 @@ function generateDaysArray(month, year) {
     daysArray.push({
       hourNum: 0,
       isWeekend: dayOfWeek === 0 || dayOfWeek === 6,
+      dayIndex: i,
     });
   }
 

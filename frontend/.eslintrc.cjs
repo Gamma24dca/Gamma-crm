@@ -50,6 +50,7 @@ module.exports = {
     'jsx-a11y/control-has-associated-label': 'off',
     'react/no-array-index-key': 'off',
     'react/require-default-props': 'off',
+    'import/prefer-default-export': 'off',
 
     'react/jsx-filename-extension': [
       1,
