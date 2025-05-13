@@ -12,6 +12,7 @@ import CompanyProfile from '../CompanyProfile/CompanyProfile';
 import StudioTaskView from '../StudioTaskView/StudioTaskView';
 import TasksView from '../TasksView/TasksView';
 import ReckoningView from '../ReckoningView/ReckoningView';
+import Dashboard from '../Dashboard/Dashboard';
 
 function App() {
   const { user } = useAuth();
@@ -22,7 +23,7 @@ function App() {
         <Route path="*" element={<HomePage />} />
         <Route path="/signin" element={<Navigate to="/pulpit" />} />
         <Route path="/" element={<Navigate to="/pulpit" />} />
-        <Route path="/pulpit" element={<HomePage />} />
+        <Route path="/pulpit" element={<Dashboard />} />
         <Route path="/użytkownicy" element={<UsersView />} />
         <Route path="/użytkownicy/:id" element={<UserProfile />} />
         <Route path="/zlecenia" element={<StudioTaskView />} />
