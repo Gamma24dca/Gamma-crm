@@ -1,4 +1,3 @@
-// eslint-disable-next-line
 export const Config = {
   isDev: import.meta.env.DEV,
   isProd: import.meta.env.PROD,
