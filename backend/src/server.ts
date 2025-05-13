@@ -19,6 +19,7 @@ import {
 import { Server } from 'socket.io';
 import { createServer } from 'node:http';
 import { ReckoningTaskRouter } from './Reckoning/Reckoning.router';
+import { ChartsRouter } from './Charts/Charts.router';
 
 var corsOptions = {
   origin: ['https://gamma-crm-frontend.onrender.com', 'http://localhost:5173'],
@@ -78,6 +79,7 @@ app.use('/api/reckoningtasks', ReckoningTaskRouter);
 app.use('/api/archivedstudiotasks', ArchivedStudioTaskRouter);
 app.use('/api/move-studiotask', MoveStudioTaskRouter);
 app.use('/api/unarchive-sudiotask', unArchiveStudioTaskRouter);
+app.use('/api/dashboard', ChartsRouter);
 app.get('/api/status', (req, res) => res.status(200).json({ ok: true }));
 
 ////Socket
