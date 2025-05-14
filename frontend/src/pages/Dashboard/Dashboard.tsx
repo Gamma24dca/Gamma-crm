@@ -99,6 +99,7 @@ function Dashboard() {
                 <p className={styles.infoUsersPar}>Grafik - {selectedMonth}</p>
               </div>
               <div className={styles.infoDayWrapper}>
+                <div className={styles.emptyTile}>sum</div>
                 {usersMonthSummary.length > 0 &&
                   usersMonthSummary[0].days.map((infoDay) => {
                     return (

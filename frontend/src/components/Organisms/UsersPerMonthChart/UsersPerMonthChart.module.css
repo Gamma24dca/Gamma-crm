@@ -46,7 +46,8 @@
 }
 
 .dayTile,
-.weekendDay {
+.weekendDay,
+.sumTile {
   width: 16px;
   padding: 3px 0;
   background-color: var(--color-shadow);
@@ -64,11 +65,16 @@
 }
 
 .daysRow {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 5px;
 }
 
+.sumTile {
+  width: 30px;
+  background-color: var(--color-green);
+}
 @keyframes appear {
   from {
     opacity: 0;

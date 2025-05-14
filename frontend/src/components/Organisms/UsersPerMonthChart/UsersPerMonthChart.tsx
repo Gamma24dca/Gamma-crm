@@ -25,6 +25,11 @@ function UsersPerMonthChart({ usersMonthSummary, isLoading }) {
           </div>
 
           <div className={styles.daysRow}>
+            <div className={styles.sumTile}>
+              {user.days.reduce((summ, days) => {
+                return Number(summ) + Number(days.totalHours);
+              }, 0)}
+            </div>
             {user.days.map((day) => {
               return (
                 <div
