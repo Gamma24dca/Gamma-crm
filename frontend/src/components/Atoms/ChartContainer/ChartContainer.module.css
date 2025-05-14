@@ -1,0 +1,15 @@
+.chartContainer {
+  position: relative;
+  width: 50%;
+  height: 50%;
+  background-color: var(--color-lighter);
+  border-radius: 10px;
+  box-shadow: 0 0px 3px var(--color-shadow);
+  margin: 0 auto;
+  padding-top: 20px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+  padding-left: 20px;
+}
