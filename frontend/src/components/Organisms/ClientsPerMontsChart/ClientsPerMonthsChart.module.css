@@ -1,0 +1,8 @@
+.noTasksContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: absolute;
+  top: 40%;
+  left: 45%;
+}

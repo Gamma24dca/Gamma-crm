@@ -1,16 +1,4 @@
 import { useEffect, useState } from 'react';
-import {
-  BarChart,
-  Bar,
-  Rectangle,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from 'recharts';
-import { Icon } from '@iconify/react';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
 import ControlBarTitle from '../../components/Atoms/ControlBar/Title/ControlBarTitle';
 import Select from '../../components/Atoms/Select/Select';
@@ -18,14 +6,23 @@ import useCurrentDate from '../../hooks/useCurrentDate';
 import {
   ClientsMonthSummaryTypes,
   getClientsMonthSummary,
+  getUsersMonthSummary,
+  UsersMonthSummaryTypes,
 } from '../../services/dashboard-service';
 import styles from './Dashboard.module.css';
+import ClientsPerMonthsChart from '../../components/Organisms/ClientsPerMontsChart/ClientsPerMonthsChart';
+import ChartContainer from '../../components/Atoms/ChartContainer/ChartContainer';
+import UsersPerMonthChart from '../../components/Organisms/UsersPerMonthChart/UsersPerMonthChart';
 
 function Dashboard() {
   const [clientsMonthSummary, setClientsMonthSummary] = useState<
     ClientsMonthSummaryTypes[]
   >([]);
-  const [chartKey, setChartKey] = useState(0); // 👈 key to force remount for animation
+  const [usersMonthSummary, setUsersMonthSummary] = useState<
+    UsersMonthSummaryTypes[]
+  >([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [dataReady, setDataReady] = useState(false);
   const {
     selectedMonth,
     selectedYear,
@@ -37,26 +34,40 @@ function Dashboard() {
 
   const currentMonthIndex = months.indexOf(selectedMonth);
 
-  const fetchClientsMonthSummary = async () => {
-    try {
-      const response = await getClientsMonthSummary(
-        currentMonthIndex + 1,
-        selectedYear
-      );
-      if (response.length > 0) {
-        setClientsMonthSummary(response);
-        // 👇 force chart to remount, triggering animation
-        setChartKey((prev) => prev + 1);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
+  // Reset on new month/year
   useEffect(() => {
-    fetchClientsMonthSummary();
+    setDataReady(false);
   }, [selectedMonth, selectedYear]);
 
+  // Fetch both datasets, THEN render chart
+  useEffect(() => {
+    const fetchAll = async () => {
+      try {
+        setIsLoading(true);
+        const clients = await getClientsMonthSummary(
+          currentMonthIndex + 1,
+          selectedYear
+        );
+        setClientsMonthSummary(clients);
+
+        const users = await getUsersMonthSummary(
+          currentMonthIndex + 1,
+          selectedYear
+        );
+        setUsersMonthSummary(users);
+
+        if (clients.length > 0 && users.length > 0) {
+          setDataReady(true);
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAll();
+  }, [selectedMonth, selectedYear]);
   return (
     <>
       <ControlBar>
@@ -76,43 +87,35 @@ function Dashboard() {
         <p>Graficy</p>
       </ControlBar>
 
-      <div className={styles.chartContainer}>
-        {clientsMonthSummary.length > 0 ? (
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              key={chartKey} // 👈 force animation
-              width={500}
-              height={300}
-              data={clientsMonthSummary}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="_id" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar
-                dataKey="Suma_godzin"
-                fill="#828fa3"
-                activeBar={<Rectangle fill="#f68c1e" stroke="#f68c1e" />}
-                animationBegin={0}
-                animationDuration={500}
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        ) : (
-          <Icon
-            icon="line-md:loading-twotone-loop"
-            width="121"
-            height="121"
-            className={styles.loadingIcon}
-          />
-        )}
+      <div className={styles.chartsWrapper}>
+        <ClientsPerMonthsChart
+          dataReady={dataReady}
+          clientsMonthSummary={clientsMonthSummary}
+        />
+        <ChartContainer>
+          <div className={styles.usersMonthSummaryContainer}>
+            <div className={styles.infoMonthSummaryRow}>
+              <div className={styles.userWrapper}>
+                <p className={styles.infoUsersPar}>Grafik - {selectedMonth}</p>
+              </div>
+              <div className={styles.infoDayWrapper}>
+                {usersMonthSummary.length > 0 &&
+                  usersMonthSummary[0].days.map((infoDay) => {
+                    return (
+                      <div className={styles.infoDayNumber} key={infoDay.day}>
+                        {infoDay.day}
+                      </div>
+                    );
+                  })}
+              </div>
+            </div>
+
+            <UsersPerMonthChart
+              isLoading={isLoading}
+              usersMonthSummary={usersMonthSummary}
+            />
+          </div>
+        </ChartContainer>
       </div>
     </>
   );

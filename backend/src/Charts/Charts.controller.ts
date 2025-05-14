@@ -61,7 +61,9 @@ export const ChartsController = {
 
       {
         $addFields: {
+          userId: '$participants._id',
           day: '$participants.months.hours.dayIndex',
+          isWeekend: '$participants.months.hours.isWeekend',
           month: { $month: '$date' },
           year: { $year: '$date' },
         },
@@ -77,17 +79,23 @@ export const ChartsController = {
       {
         $group: {
           _id: {
+            userId: '$userId',
             name: '$participants.name',
+            img: '$participants.img',
             day: '$day',
+            isWeekend: '$isWeekend',
           },
           totalHours: { $sum: '$participants.months.hours.hourNum' },
         },
       },
       {
         $group: {
-          _id: '$_id.name',
+          _id: '$_id.userId',
+          name: { $first: '$_id.name' },
+          img: { $first: '$_id.img' },
           days: {
             $push: {
+              isWeekend: '$_id.isWeekend',
               day: '$_id.day',
               totalHours: '$totalHours',
             },
@@ -102,6 +110,8 @@ export const ChartsController = {
       {
         $group: {
           _id: '$_id',
+          name: { $first: '$name' },
+          img: { $first: '$img' },
           days: { $push: '$days' },
         },
       },

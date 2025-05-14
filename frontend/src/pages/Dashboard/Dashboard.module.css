@@ -1,3 +1,36 @@
+.chartsWrapper {
+  margin: 0 auto;
+  width: 95%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.usersMonthSummaryContainer {
+  overflow-x: scroll;
+}
+
+.usersMonthSummaryRow,
+.infoMonthSummaryRow {
+  opacity: 0;
+  display: flex;
+  animation: appear 0.3s ease forwards;
+  animation-delay: 0.5s;
+  margin-bottom: 7px;
+}
+
+.infoMonthSummaryRow {
+  border-bottom: 1px solid var(--color-shadow);
+  margin-bottom: 10px;
+}
+
+.daysRow {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
 .chartContainer {
   width: 50%;
   height: 50%;
@@ -11,6 +44,85 @@
   align-items: center;
 }
 
+.infoDayWrapper {
+  display: flex;
+  gap: 5px;
+  max-height: 30px;
+}
+
+.infoUsersPar {
+  font-size: 14px;
+}
+
+.infoDayNumber {
+  font-size: 14px;
+  width: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dayTile,
+.weekendDay {
+  width: 16px;
+  padding: 3px 0;
+  background-color: var(--color-shadow);
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.weekendDay {
+  background-color: var(--color-orange);
+  opacity: 0.7;
+}
+
+.userWrapper {
+  width: 120px;
+  max-height: 30px;
+  display: flex;
+  height: 100%;
+  align-items: center;
+  gap: 5px;
+}
+
+.userName {
+  font-size: 14px;
+  font-weight: 600;
+  width: 100px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  margin: 0;
+}
+
+.userImg {
+  max-width: 20px;
+  max-height: 20px;
+  border-radius: 50%;
+}
+
+.loaderWrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: absolute;
+  top: 40%;
+  left: 45%;
+}
+
 .loadingIcon {
   color: var(--color-orange);
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
