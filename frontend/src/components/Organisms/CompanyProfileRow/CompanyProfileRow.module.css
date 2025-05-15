@@ -120,7 +120,8 @@
   font-weight: 600;
 }
 .reckoningTaskListElementTile:nth-child(8) {
-  width: 10%;
+  width: 5%;
+  font-weight: 600;
 }
 
 .noTasksContainer {

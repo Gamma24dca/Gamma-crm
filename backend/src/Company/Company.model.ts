@@ -24,6 +24,7 @@ export const CompanyModel = mongoose.model(
         value: { type: String },
       },
     ],
+    hourRate: String,
     teamMembers: [
       {
         _id: {

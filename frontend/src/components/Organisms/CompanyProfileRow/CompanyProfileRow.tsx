@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { updateReckoningTask } from '../../../services/reckoning-view-service';
 import summarizeCompanyProfHours from '../../../utils/summarizeCompanyProfHours';
 import UsersDisplay from '../UsersDisplay/UsersDisplay';
-import styles from './CompanyProfile.module.css';
+import styles from './CompanyProfileRow.module.css';
 
 const tileClass = (tileIndex) => {
   return tileIndex % 2 === 0
@@ -10,7 +10,12 @@ const tileClass = (tileIndex) => {
     : styles.darkerReckoningTaskListElement;
 };
 
-function CompanyProfileRow({ task, index, currentMonthIndex }) {
+function CompanyProfileRow({
+  task,
+  index,
+  currentMonthIndex,
+  companyHourRate,
+}) {
   const [isChecked, setIsChecked] = useState({
     checkedID: task._id,
     checkedValue: task.isSettled,
@@ -81,7 +86,11 @@ function CompanyProfileRow({ task, index, currentMonthIndex }) {
       </div>
 
       <div className={styles.reckoningTaskListElementTile}>
-        <p>{task.printWhat}</p>
+        <p>
+          {summarizeCompanyProfHours(task, currentMonthIndex) *
+            Number(companyHourRate)}{' '}
+          zł
+        </p>
       </div>
       <div className={styles.reckoningTaskListElementTile}>
         <p>{task.printWhere}</p>

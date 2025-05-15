@@ -76,7 +76,7 @@ function CompanyProfileControlBar({
     }
   };
 
-  console.log(settleStateFilter);
+  const viewData = ['Główne', 'Dodatkowe'];
 
   return (
     <>
@@ -107,6 +107,12 @@ function CompanyProfileControlBar({
         <Select
           value={selectedMonth}
           handleValueChange={handleMonthChange}
+          optionData={viewData}
+        />
+
+        <Select
+          value={selectedMonth}
+          handleValueChange={handleMonthChange}
           optionData={months}
         />
 
@@ -123,11 +129,16 @@ function CompanyProfileControlBar({
             setSearchInputValue(e.target.value);
           }}
         />
-
-        <p className={styles.summPar}>Suma:</p>
       </div>
       <div className={styles.totalHoursContainer}>
-        <p>{total}</p>
+        <p className={styles.summPar}>Suma:</p>
+        <div className={styles.summWrapper}>
+          <p className={styles.summValue}>{total}h</p>
+
+          <p className={styles.summValue}>
+            {company && total * Number(company.hourRate)}zł
+          </p>
+        </div>
       </div>
       {filterDropdown && (
         <>

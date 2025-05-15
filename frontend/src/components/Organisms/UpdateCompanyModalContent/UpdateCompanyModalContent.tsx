@@ -18,6 +18,7 @@ const initialCompanyObject = {
   teamMembers: [],
   website: '',
   clientPerson: [],
+  hourRate: '',
 };
 
 function UpdateCompanyModalContent({
@@ -49,6 +50,7 @@ function UpdateCompanyModalContent({
       mail: currentCompany.mail || '',
       teamMembers: currentCompany.teamMembers || [],
       clientPerson: currentCompany.clientPerson || [],
+      hourRate: currentCompany.hourRate || '',
       website: currentCompany.website || '',
     });
   }, [currentCompany, setFormValue]);
@@ -140,6 +142,25 @@ function UpdateCompanyModalContent({
             }}
             className={styles.companyInput}
           />
+        </div>
+        <div className={styles.hourRateContainer}>
+          <label htmlFor="hourRate">
+            <strong>Stawka:</strong>
+          </label>
+
+          <span className={styles.hourRateInputWrapper}>
+            <input
+              type="text"
+              name="hourRate"
+              id="hourRate"
+              value={formValue.hourRate}
+              onChange={(e) => {
+                handleFormChange(e, 'hourRate');
+              }}
+              className={styles.hourRateInput}
+            />
+            <span className={styles.rateLabel}>zł</span>
+          </span>
         </div>
       </div>
       <ClientSelect
