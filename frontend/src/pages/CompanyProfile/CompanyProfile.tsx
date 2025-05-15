@@ -100,7 +100,8 @@ function CompanyProfile() {
 
   const { sortedData, sortColumn, sortOrder, handleSortChange } = useSort(
     matchedTasksFromSearchInput,
-    currentMonthIndex
+    currentMonthIndex,
+    company && company.hourRate
   );
 
   const viewportHeight = useViewportHeight();
@@ -349,20 +350,8 @@ function CompanyProfile() {
 
               <div
                 className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
-                role="button"
-                tabIndex={0}
-                onClick={() => handleSortChange('printWhat')}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    handleSortChange('printWhat');
-                  }
-                }}
               >
-                <p>
-                  DRUK(spec){' '}
-                  {sortColumn === 'printWhat' &&
-                    (sortOrder === 'asc' ? '↑' : '↓')}
-                </p>
+                <p>Przychód</p>
               </div>
               <div
                 className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
@@ -388,6 +377,7 @@ function CompanyProfile() {
             loadingState={loadingState}
             currentTasks={currentTasks}
             currentMonthIndex={currentMonthIndex}
+            companyHourRate={company && company.hourRate}
           />
 
           <div className={styles.paginationControls}>

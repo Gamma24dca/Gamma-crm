@@ -50,11 +50,12 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
       phone: '',
       mail: '',
       website: '',
+      hourRate: '',
     },
     validationSchema: createCompanySchema,
     onSubmit: async (values) => {
       try {
-        const { name, phone, mail, website } = values;
+        const { name, phone, mail, website, hourRate } = values;
 
         const memberObject = formValue.teamMembers.map((member) => {
           return member;
@@ -76,6 +77,7 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
           mail,
           website,
           clientPerson: clientsObject,
+          hourRate,
           teamMembers: memberObject,
         });
 
@@ -119,6 +121,12 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
       type: 'url',
       placeholder: 'Strona',
       inValue: formik.values.website,
+    },
+    {
+      id: 'hourRate',
+      type: 'text',
+      placeholder: 'Stawka godzinowa',
+      inValue: formik.values.hourRate,
     },
   ];
   return (

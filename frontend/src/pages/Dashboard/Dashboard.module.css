@@ -48,7 +48,6 @@
 .emptyTile {
   width: 30px;
   font-size: 11px;
-  justify-content: flex-end;
 }
 
 .userWrapper {

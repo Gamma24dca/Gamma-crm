@@ -79,7 +79,8 @@
   gap: 15px;
 }
 
-.companyInput {
+.companyInput,
+.hourRateInput {
   width: 90%;
   border: 0;
   border-bottom: 2px solid gray;
@@ -87,6 +88,23 @@
   font-size: 14px;
   padding: 7px 0;
   background: transparent;
+}
+
+.hourRateInputWrapper {
+  display: flex;
+  width: 90%;
+  border-bottom: 2px solid gray;
+}
+
+.hourRateInput {
+  width: 14%;
+  border-bottom: none;
+}
+
+.rateLabel {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
 }
 
 @media (max-width: 1700px) {
