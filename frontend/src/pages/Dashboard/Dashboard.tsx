@@ -7,6 +7,7 @@ import {
   PolarAngleAxis,
   PolarRadiusAxis,
   ResponsiveContainer,
+  Label,
 } from 'recharts';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
 import ControlBarTitle from '../../components/Atoms/ControlBar/Title/ControlBarTitle';
@@ -190,13 +191,15 @@ function Dashboard() {
             </div>
 
             <div className={styles.radarChartContainer}>
-              <ResponsiveContainer width="100%" height="100%">
+              <p>Typy aktywnych zleceń</p>
+              <ResponsiveContainer width="100%" height="85%">
                 <RadarChart
                   cx="50%"
                   cy="50%"
                   outerRadius="80%"
                   data={tasksTypeSummary}
                 >
+                  <Label value="any" />
                   <PolarGrid />
                   <PolarAngleAxis dataKey="taskType" />
                   <PolarRadiusAxis />
