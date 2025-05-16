@@ -140,4 +140,45 @@ export const ChartsController = {
 
     return await tasksByType;
   },
+
+  async getHoursPerDay(month, year) {
+    const monthHoursSummary = await ReckoningTaskModel.aggregate([
+      {
+        $unwind: '$participants',
+      },
+      {
+        $unwind: '$participants.months',
+      },
+      {
+        $unwind: '$participants.months.hours',
+      },
+      {
+        $addFields: {
+          monthDate: {
+            $toDate: '$participants.months.createdAt',
+          },
+        },
+      },
+      {
+        $addFields: {
+          month: { $month: '$monthDate' },
+          year: { $year: '$monthDate' },
+        },
+      },
+      {
+        $match: {
+          ...(month ? { month: parseInt(month) } : {}),
+          ...(year ? { year: parseInt(year) } : {}),
+        },
+      },
+
+      {
+        $group: {
+          totalHours: { $sum: '$participants.months.hours.hourNum' },
+        },
+      },
+    ]);
+
+    return await monthHoursSummary;
+  },
 };
