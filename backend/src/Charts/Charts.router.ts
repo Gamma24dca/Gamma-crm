@@ -37,3 +37,17 @@ ChartsRouter.get(
     }
   },
 );
+
+ChartsRouter.get(
+  '/studioTasks/tasks-per-type',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const result = await ChartsController.getStudioTasksTypesSummary();
+      res.status(StatusCodes.ACCEPTED).json(result);
+    } catch (err) {
+      console.error(err);
+      res.status(StatusCodes.BAD_REQUEST).send('Server error, check API');
+    }
+  },
+);

@@ -73,3 +73,31 @@ export async function getUsersMonthSummary(month: number, year: number) {
     return null;
   }
 }
+
+export async function getTasksTypeSummary() {
+  try {
+    const response = await fetch(
+      `${
+        import.meta.env.VITE_API_URL
+      }/api/dashboard/studioTasks/tasks-per-type`,
+      {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    if (response.ok) {
+      return await response.json();
+    }
+    throw new Error(`${response.status} ${response.statusText}`);
+  } catch (error) {
+    if (Config.isDev) {
+      throw new Error('Get users', error.message);
+    }
+    console.error(error.message);
+    return null;
+  }
+}
