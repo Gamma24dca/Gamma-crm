@@ -59,6 +59,47 @@
   gap: 5px;
 }
 
+.leftColumn {
+  width: 100%;
+}
+
+.summaryTile {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+  gap: 20px;
+  margin-top: 10px;
+  padding-top: 10px;
+  width: 25%;
+  height: 100px;
+  background-color: var(--color-lighter);
+  border-radius: 10px;
+  box-shadow: 0 0px 3px var(--color-shadow);
+
+  p {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+  }
+}
+
+.summaryTilesWrapper {
+  display: flex;
+  gap: 10px;
+}
+
+.summaryValueWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.summaryValueIcon {
+  color: var(--color-green);
+}
+
 @keyframes appear {
   from {
     opacity: 0;

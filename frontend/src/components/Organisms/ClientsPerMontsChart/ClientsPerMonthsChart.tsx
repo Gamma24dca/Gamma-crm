@@ -10,19 +10,50 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
+import { useState } from 'react';
 import { Icon } from '@iconify/react';
-import ChartContainer from '../../Atoms/ChartContainer/ChartContainer';
+// import ChartContainer from '../../Atoms/ChartContainer/ChartContainer';
 import styles from './ClientsPerMonthsChart.module.css';
+import Select from '../../Atoms/Select/Select';
 
-function ClientsPerMonthsChart({ dataReady, clientsMonthSummary }) {
+const selectValues = ['Godziny', 'Przychód'];
+
+function ClientsPerMonthsChart({
+  dataReady,
+  clientsMonthSummary,
+  selectedMonth,
+  clientsMonthSummaryByRevenue,
+}) {
+  const [selectValue, setSelectValue] = useState('Godziny');
+
+  const handleSelectValue = (e) => {
+    e.preventDefault();
+    setSelectValue(e.target.value);
+  };
+
   return (
-    <ChartContainer>
+    <div className={styles.container}>
+      <div className={styles.chartInfoContainer}>
+        <Select
+          value={selectValue}
+          handleValueChange={handleSelectValue}
+          optionData={selectValues}
+        />
+        <p>{`${
+          selectValue === 'Godziny' ? '[h]' : '[zł]'
+        } Podsumowanie klientów - ${selectedMonth}`}</p>
+      </div>
+
       {dataReady ? (
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             width={500}
             height={300}
-            data={clientsMonthSummary}
+            data={
+              selectValue === 'Godziny'
+                ? clientsMonthSummary
+                : clientsMonthSummaryByRevenue
+            }
             margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
@@ -31,8 +62,8 @@ function ClientsPerMonthsChart({ dataReady, clientsMonthSummary }) {
             <Tooltip />
             <Legend />
             <Bar
-              dataKey="Suma_godzin"
-              fill="#828fa3"
+              dataKey={selectValue === 'Godziny' ? 'Suma_godzin' : 'przychód'}
+              fill={selectValue === 'Godziny' ? '#8884d8' : '#82ca9d'}
               activeBar={<Rectangle fill="#f68c1e" stroke="#f68c1e" />}
               animationBegin={0}
               animationDuration={500}
@@ -45,7 +76,7 @@ function ClientsPerMonthsChart({ dataReady, clientsMonthSummary }) {
           <Icon icon="line-md:coffee-loop" width="24" height="24" />
         </div>
       )}
-    </ChartContainer>
+    </div>
   );
 }
 

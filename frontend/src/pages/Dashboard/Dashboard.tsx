@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Icon } from '@iconify/react';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
 import ControlBarTitle from '../../components/Atoms/ControlBar/Title/ControlBarTitle';
 import Select from '../../components/Atoms/Select/Select';
@@ -13,6 +14,8 @@ import styles from './Dashboard.module.css';
 import ClientsPerMonthsChart from '../../components/Organisms/ClientsPerMontsChart/ClientsPerMonthsChart';
 import ChartContainer from '../../components/Atoms/ChartContainer/ChartContainer';
 import UsersPerMonthChart from '../../components/Organisms/UsersPerMonthChart/UsersPerMonthChart';
+import useCompaniesContext from '../../hooks/Context/useCompaniesContext';
+import { getAllCompanies } from '../../services/companies-service';
 
 function Dashboard() {
   const [clientsMonthSummary, setClientsMonthSummary] = useState<
@@ -23,6 +26,8 @@ function Dashboard() {
   >([]);
   const [isLoading, setIsLoading] = useState(false);
   const [dataReady, setDataReady] = useState(false);
+  const { companies, dispatch: companiesDispatch } = useCompaniesContext();
+
   const {
     selectedMonth,
     selectedYear,
@@ -33,6 +38,21 @@ function Dashboard() {
   } = useCurrentDate();
 
   const currentMonthIndex = months.indexOf(selectedMonth);
+
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      if (companies.length === 0) {
+        try {
+          const allCompanies = await getAllCompanies();
+          companiesDispatch({ type: 'SET_COMPANIES', payload: allCompanies });
+        } catch (error) {
+          console.error('Error fetching users:', error);
+        }
+      }
+    };
+
+    fetchCompanies();
+  }, [companiesDispatch, companies]);
 
   // Reset on new month/year
   useEffect(() => {
@@ -68,6 +88,36 @@ function Dashboard() {
 
     fetchAll();
   }, [selectedMonth, selectedYear]);
+
+  const clientsMonthSummaryByRevenue = clientsMonthSummary.map((client) => {
+    const [filteredCompany] = companies.filter(
+      (com) => com.name === client._id
+    );
+
+    if (!filteredCompany) {
+      console.warn(`Company not found for client ID: ${client._id}`);
+      return {
+        ...client,
+        przychód: 0,
+      };
+    }
+
+    const { hourRate } = filteredCompany;
+
+    return {
+      ...client,
+      przychód: client.Suma_godzin * Number(hourRate),
+    };
+  });
+
+  const summedHours = clientsMonthSummary.reduce((summ, cms) => {
+    return Number(summ) + Number(cms.Suma_godzin);
+  }, 0);
+
+  const summedRevenue = clientsMonthSummaryByRevenue.reduce((summ, cms) => {
+    return Number(summ) + Number(cms.przychód);
+  }, 0);
+
   return (
     <>
       <ControlBar>
@@ -88,10 +138,43 @@ function Dashboard() {
       </ControlBar>
 
       <div className={styles.chartsWrapper}>
-        <ClientsPerMonthsChart
-          dataReady={dataReady}
-          clientsMonthSummary={clientsMonthSummary}
-        />
+        <div className={styles.leftColumn}>
+          <ClientsPerMonthsChart
+            dataReady={dataReady}
+            clientsMonthSummary={clientsMonthSummary}
+            selectedMonth={selectedMonth}
+            clientsMonthSummaryByRevenue={clientsMonthSummaryByRevenue}
+          />
+
+          <div className={styles.summaryTilesWrapper}>
+            <div className={styles.summaryTile}>
+              <p>Suma godzin</p>
+
+              <div className={styles.summaryValueWrapper}>
+                <Icon
+                  icon="ic:baseline-access-time"
+                  width="16"
+                  height="16"
+                  className={styles.summaryValueIcon}
+                />
+                <p>{`${summedHours} h`}</p>
+              </div>
+            </div>
+            <div className={styles.summaryTile}>
+              <p>Suma przychodów</p>
+              <div className={styles.summaryValueWrapper}>
+                <Icon
+                  icon="ic:outline-monetization-on"
+                  width="16"
+                  height="16"
+                  className={styles.summaryValueIcon}
+                />
+                <p>{`${summedRevenue} zł`}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <ChartContainer>
           <div className={styles.usersMonthSummaryContainer}>
             <div className={styles.infoMonthSummaryRow}>

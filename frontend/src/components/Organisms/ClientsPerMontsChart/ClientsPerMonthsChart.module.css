@@ -1,3 +1,12 @@
+.container {
+  width: 100%;
+  background-color: var(--color-lighter);
+  border-radius: 10px;
+  box-shadow: 0 0px 3px var(--color-shadow);
+  height: 50%;
+  padding-bottom: 60px;
+}
+
 .noTasksContainer {
   display: flex;
   align-items: center;
@@ -9,4 +18,23 @@
 
 .test {
   margin: 0;
+}
+
+.chartInfoContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 15px 0px 10px 0;
+
+  select {
+    transform: translateX(70%);
+  }
+
+  p {
+    margin: 0;
+    flex-grow: 2;
+    text-align: center;
+    font-weight: 600;
+  }
 }

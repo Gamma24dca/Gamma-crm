@@ -101,6 +101,15 @@
   justify-content: space-around;
   align-items: center;
   background-color: var(--color-orange);
+
+  &::after {
+    content: '';
+    position: absolute;
+    height: 60px;
+    width: 3px;
+    background-color: var(--color-lighter);
+    transform: translateX(-15px);
+  }
 }
 
 .controlBarBtnsWrapper {
