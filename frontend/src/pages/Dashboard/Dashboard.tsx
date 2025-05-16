@@ -1,5 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Icon } from '@iconify/react';
+import {
+  Radar,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  ResponsiveContainer,
+} from 'recharts';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
 import ControlBarTitle from '../../components/Atoms/ControlBar/Title/ControlBarTitle';
 import Select from '../../components/Atoms/Select/Select';
@@ -7,6 +15,7 @@ import useCurrentDate from '../../hooks/useCurrentDate';
 import {
   ClientsMonthSummaryTypes,
   getClientsMonthSummary,
+  getTasksTypeSummary,
   getUsersMonthSummary,
   UsersMonthSummaryTypes,
 } from '../../services/dashboard-service';
@@ -24,6 +33,8 @@ function Dashboard() {
   const [usersMonthSummary, setUsersMonthSummary] = useState<
     UsersMonthSummaryTypes[]
   >([]);
+
+  const [tasksTypeSummary, setTasksTypeSummary] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [dataReady, setDataReady] = useState(false);
   const { companies, dispatch: companiesDispatch } = useCompaniesContext();
@@ -75,6 +86,9 @@ function Dashboard() {
           selectedYear
         );
         setUsersMonthSummary(users);
+
+        const tasks = await getTasksTypeSummary();
+        setTasksTypeSummary(tasks);
 
         if (clients.length > 0 && users.length > 0) {
           setDataReady(true);
@@ -146,31 +160,55 @@ function Dashboard() {
             clientsMonthSummaryByRevenue={clientsMonthSummaryByRevenue}
           />
 
-          <div className={styles.summaryTilesWrapper}>
-            <div className={styles.summaryTile}>
-              <p>Suma godzin</p>
+          <div className={styles.leftColumnSecondRowContainer}>
+            <div className={styles.summaryTilesWrapper}>
+              <div className={styles.summaryTile}>
+                <p>Suma godzin</p>
 
-              <div className={styles.summaryValueWrapper}>
-                <Icon
-                  icon="ic:baseline-access-time"
-                  width="16"
-                  height="16"
-                  className={styles.summaryValueIcon}
-                />
-                <p>{`${summedHours} h`}</p>
+                <div className={styles.summaryValueWrapper}>
+                  <Icon
+                    icon="ic:baseline-access-time"
+                    width="16"
+                    height="16"
+                    className={styles.summaryValueIcon}
+                  />
+                  <p>{`${summedHours} h`}</p>
+                </div>
+              </div>
+              <div className={styles.summaryTile}>
+                <p>Suma przychodów</p>
+                <div className={styles.summaryValueWrapper}>
+                  <Icon
+                    icon="ic:outline-monetization-on"
+                    width="16"
+                    height="16"
+                    className={styles.summaryValueIcon}
+                  />
+                  <p>{`${summedRevenue} zł`}</p>
+                </div>
               </div>
             </div>
-            <div className={styles.summaryTile}>
-              <p>Suma przychodów</p>
-              <div className={styles.summaryValueWrapper}>
-                <Icon
-                  icon="ic:outline-monetization-on"
-                  width="16"
-                  height="16"
-                  className={styles.summaryValueIcon}
-                />
-                <p>{`${summedRevenue} zł`}</p>
-              </div>
+
+            <div className={styles.radarChartContainer}>
+              <ResponsiveContainer width="100%" height="100%">
+                <RadarChart
+                  cx="50%"
+                  cy="50%"
+                  outerRadius="80%"
+                  data={tasksTypeSummary}
+                >
+                  <PolarGrid />
+                  <PolarAngleAxis dataKey="taskType" />
+                  <PolarRadiusAxis />
+                  <Radar
+                    name="Mike"
+                    dataKey="count"
+                    stroke="#8884d8"
+                    fill="#8884d8"
+                    fillOpacity={0.6}
+                  />
+                </RadarChart>
+              </ResponsiveContainer>{' '}
             </div>
           </div>
         </div>

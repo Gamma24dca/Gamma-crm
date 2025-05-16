@@ -1,10 +1,12 @@
 .container {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   background-color: var(--color-lighter);
   border-radius: 10px;
   box-shadow: 0 0px 3px var(--color-shadow);
   height: 50%;
-  padding-bottom: 60px;
+  padding: 10px 0;
 }
 
 .noTasksContainer {

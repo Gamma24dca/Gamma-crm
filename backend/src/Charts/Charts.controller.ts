@@ -1,4 +1,5 @@
 import { ReckoningTaskModel } from '../Reckoning/Reckoning.model';
+import { StudioTaskModel } from '../StudioTask/StudioTask.model';
 
 export const ChartsController = {
   async getClientsPerHour(month, year) {
@@ -118,5 +119,25 @@ export const ChartsController = {
     ]);
 
     return await usersMonthSummary;
+  },
+
+  async getStudioTasksTypesSummary() {
+    const tasksByType = await StudioTaskModel.aggregate([
+      {
+        $group: {
+          _id: '$taskType',
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          taskType: '$_id',
+          count: 1,
+        },
+      },
+    ]);
+
+    return await tasksByType;
   },
 };
