@@ -1,14 +1,16 @@
 .chartsWrapper {
   margin: 0 auto;
   width: 95%;
-  height: 100%;
+  /* height: 80vh; */
+  flex-grow: 1;
   display: flex;
   justify-content: center;
   gap: 20px;
+  /* flex-wrap: wrap; */
 }
 
 .usersMonthSummaryContainer {
-  overflow-x: scroll;
+  overflow: scroll;
 }
 
 .infoMonthSummaryRow {
@@ -64,11 +66,10 @@
 .leftColumn,
 .rightColumn {
   width: 100%;
-  height: 100%;
+  height: 97%;
 }
 
-.leftColumnSecondRowContainer,
-.lineChartContainer {
+.leftColumnSecondRowContainer {
   display: flex;
   justify-content: space-between;
   gap: 10px;
@@ -77,64 +78,10 @@
   height: 45%;
 }
 
-.lineChartContainer {
-  background-color: var(--color-lighter);
-  border-radius: 10px;
-  box-shadow: 0 0px 3px var(--color-shadow);
-  flex-direction: column;
-}
-
 .summaryTilesWrapper {
   display: flex;
   gap: 10px;
   width: 50%;
-}
-
-.summaryTile {
-  display: flex;
-  flex-direction: column;
-  /* justify-content: center; */
-  align-items: center;
-  gap: 20px;
-  padding-top: 10px;
-  width: 50%;
-  height: 100px;
-  background-color: var(--color-lighter);
-  border-radius: 10px;
-  box-shadow: 0 0px 3px var(--color-shadow);
-
-  p {
-    font-size: 16px;
-    font-weight: 600;
-    margin: 0;
-  }
-}
-
-.summaryValueWrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-}
-
-.summaryValueIcon {
-  color: var(--color-green);
-}
-
-.radarChartContainer {
-  background-color: var(--color-lighter);
-  border-radius: 10px;
-  box-shadow: 0 0px 3px var(--color-shadow);
-  width: 50%;
-  height: 100%;
-}
-
-.containerTitle {
-  width: 100%;
-  text-align: center;
-  font-size: 16px;
-  font-weight: 600;
-  margin: 10px 0 5px 0;
 }
 
 @keyframes appear {
@@ -143,5 +90,11 @@
   }
   to {
     opacity: 1;
+  }
+}
+
+@media (max-width: 1400px) {
+  .chartsWrapper {
+    flex-direction: column-reverse;
   }
 }
