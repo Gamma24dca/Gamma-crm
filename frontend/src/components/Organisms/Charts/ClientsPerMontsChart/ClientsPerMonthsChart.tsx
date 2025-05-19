@@ -14,7 +14,7 @@ import { useState } from 'react';
 import { Icon } from '@iconify/react';
 // import ChartContainer from '../../Atoms/ChartContainer/ChartContainer';
 import styles from './ClientsPerMonthsChart.module.css';
-import Select from '../../Atoms/Select/Select';
+import Select from '../../../Atoms/Select/Select';
 
 const selectValues = ['Godziny', 'Przychód'];
 

@@ -1,0 +1,7 @@
+.radarChartContainer {
+  background-color: var(--color-lighter);
+  border-radius: 10px;
+  box-shadow: 0 0px 3px var(--color-shadow);
+  width: 50%;
+  height: 100%;
+}

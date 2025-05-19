@@ -1,0 +1,30 @@
+.summaryTile {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+  gap: 20px;
+  padding-top: 10px;
+  width: 50%;
+  height: 100px;
+  background-color: var(--color-lighter);
+  border-radius: 10px;
+  box-shadow: 0 0px 3px var(--color-shadow);
+
+  p {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+  }
+}
+
+.summaryValueWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.summaryValueIcon {
+  color: var(--color-green);
+}

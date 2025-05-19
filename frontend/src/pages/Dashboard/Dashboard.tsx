@@ -1,21 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Icon } from '@iconify/react';
-import {
-  Radar,
-  RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
-  ResponsiveContainer,
-  Label,
-  LineChart,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Line,
-  Legend,
-} from 'recharts';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
 import ControlBarTitle from '../../components/Atoms/ControlBar/Title/ControlBarTitle';
 import Select from '../../components/Atoms/Select/Select';
@@ -30,11 +13,14 @@ import {
   UsersMonthSummaryTypes,
 } from '../../services/dashboard-service';
 import styles from './Dashboard.module.css';
-import ClientsPerMonthsChart from '../../components/Organisms/ClientsPerMontsChart/ClientsPerMonthsChart';
+import ClientsPerMonthsChart from '../../components/Organisms/Charts/ClientsPerMontsChart/ClientsPerMonthsChart';
 import ChartContainer from '../../components/Atoms/ChartContainer/ChartContainer';
 import UsersPerMonthChart from '../../components/Organisms/UsersPerMonthChart/UsersPerMonthChart';
 import useCompaniesContext from '../../hooks/Context/useCompaniesContext';
 import { getAllCompanies } from '../../services/companies-service';
+import MonthPerDaySummaryChart from '../../components/Organisms/Charts/MonthPerDaySummaryChart/MonthPerDaySummaryChart';
+import TypesRadarChart from '../../components/Organisms/Charts/TypesRadarChart/TypesRadarChart';
+import SummaryTile from '../../components/Organisms/Charts/SummaryTile/SummaryTile';
 
 function Dashboard() {
   const [clientsMonthSummary, setClientsMonthSummary] = useState<
@@ -182,56 +168,17 @@ function Dashboard() {
 
           <div className={styles.leftColumnSecondRowContainer}>
             <div className={styles.summaryTilesWrapper}>
-              <div className={styles.summaryTile}>
-                <p>Suma godzin</p>
-
-                <div className={styles.summaryValueWrapper}>
-                  <Icon
-                    icon="ic:baseline-access-time"
-                    width="16"
-                    height="16"
-                    className={styles.summaryValueIcon}
-                  />
-                  <p>{`${summedHours} h`}</p>
-                </div>
-              </div>
-              <div className={styles.summaryTile}>
-                <p>Suma przychodów</p>
-                <div className={styles.summaryValueWrapper}>
-                  <Icon
-                    icon="ic:outline-monetization-on"
-                    width="16"
-                    height="16"
-                    className={styles.summaryValueIcon}
-                  />
-                  <p>{`${summedRevenue} zł`}</p>
-                </div>
-              </div>
+              <SummaryTile
+                title="Suma godzin"
+                iconValue="ic:baseline-access-time"
+              >{`${summedHours} h`}</SummaryTile>
+              <SummaryTile
+                title="Suma przychodów"
+                iconValue="ic:outline-monetization-on"
+              >{`${summedRevenue} zł`}</SummaryTile>
             </div>
 
-            <div className={styles.radarChartContainer}>
-              <p className={styles.containerTitle}>Typy aktywnych zleceń</p>
-              <ResponsiveContainer width="100%" height="85%">
-                <RadarChart
-                  cx="50%"
-                  cy="50%"
-                  outerRadius="80%"
-                  data={tasksTypeSummary}
-                >
-                  <Label value="any" />
-                  <PolarGrid />
-                  <PolarAngleAxis dataKey="taskType" />
-                  <PolarRadiusAxis />
-                  <Radar
-                    name="Mike"
-                    dataKey="count"
-                    stroke="#8884d8"
-                    fill="#8884d8"
-                    fillOpacity={0.6}
-                  />
-                </RadarChart>
-              </ResponsiveContainer>{' '}
-            </div>
+            <TypesRadarChart tasksTypeSummary={tasksTypeSummary} />
           </div>
         </div>
 
@@ -264,36 +211,10 @@ function Dashboard() {
             </div>
           </ChartContainer>
 
-          <div className={styles.lineChartContainer}>
-            <p
-              className={styles.containerTitle}
-            >{`Podsumowanie miesiąca - ${selectedMonth}`}</p>
-            <ResponsiveContainer width="100%" height="85%">
-              <LineChart
-                width={500}
-                height={300}
-                data={monthDaysSummary}
-                margin={{
-                  top: 5,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="day" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Line
-                  type="monotone"
-                  dataKey="totalHours"
-                  stroke="#8884d8"
-                  activeDot={{ r: 8 }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
+          <MonthPerDaySummaryChart
+            selectedMonth={selectedMonth}
+            monthDaysSummary={monthDaysSummary}
+          />
         </div>
       </div>
     </>
