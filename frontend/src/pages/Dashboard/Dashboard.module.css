@@ -17,6 +17,8 @@
   animation: appear 0.3s ease forwards;
   animation-delay: 0.5s;
   margin-bottom: 7px;
+  /* padding: 0 10px; */
+  padding-left: 10px;
 }
 
 .infoMonthSummaryRow {
@@ -59,18 +61,27 @@
   gap: 5px;
 }
 
-.leftColumn {
+.leftColumn,
+.rightColumn {
   width: 100%;
   height: 100%;
 }
 
-.leftColumnSecondRowContainer {
+.leftColumnSecondRowContainer,
+.lineChartContainer {
   display: flex;
   justify-content: space-between;
   gap: 10px;
   margin-top: 10px;
   width: 100%;
   height: 45%;
+}
+
+.lineChartContainer {
+  background-color: var(--color-lighter);
+  border-radius: 10px;
+  box-shadow: 0 0px 3px var(--color-shadow);
+  flex-direction: column;
 }
 
 .summaryTilesWrapper {
@@ -114,17 +125,16 @@
   background-color: var(--color-lighter);
   border-radius: 10px;
   box-shadow: 0 0px 3px var(--color-shadow);
-
   width: 50%;
   height: 100%;
+}
 
-  p {
-    width: 100%;
-    text-align: center;
-    font-size: 16px;
-    font-weight: 600;
-    margin: 10px 0 5px 0;
-  }
+.containerTitle {
+  width: 100%;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 10px 0 5px 0;
 }
 
 @keyframes appear {

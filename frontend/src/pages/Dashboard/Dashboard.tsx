@@ -8,6 +8,13 @@ import {
   PolarRadiusAxis,
   ResponsiveContainer,
   Label,
+  LineChart,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Line,
+  Legend,
 } from 'recharts';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
 import ControlBarTitle from '../../components/Atoms/ControlBar/Title/ControlBarTitle';
@@ -16,8 +23,10 @@ import useCurrentDate from '../../hooks/useCurrentDate';
 import {
   ClientsMonthSummaryTypes,
   getClientsMonthSummary,
+  getMonthDaysSummary,
   getTasksTypeSummary,
   getUsersMonthSummary,
+  MonthPerDaySummary,
   UsersMonthSummaryTypes,
 } from '../../services/dashboard-service';
 import styles from './Dashboard.module.css';
@@ -36,8 +45,12 @@ function Dashboard() {
   >([]);
 
   const [tasksTypeSummary, setTasksTypeSummary] = useState([]);
+  const [monthDaysSummary, setMonthDaysSummary] = useState<
+    MonthPerDaySummary[]
+  >([]);
   const [isLoading, setIsLoading] = useState(false);
   const [dataReady, setDataReady] = useState(false);
+
   const { companies, dispatch: companiesDispatch } = useCompaniesContext();
 
   const {
@@ -90,6 +103,12 @@ function Dashboard() {
 
         const tasks = await getTasksTypeSummary();
         setTasksTypeSummary(tasks);
+
+        const monthDays = await getMonthDaysSummary(
+          currentMonthIndex + 1,
+          selectedYear
+        );
+        setMonthDaysSummary(monthDays);
 
         if (clients.length > 0 && users.length > 0) {
           setDataReady(true);
@@ -191,7 +210,7 @@ function Dashboard() {
             </div>
 
             <div className={styles.radarChartContainer}>
-              <p>Typy aktywnych zleceń</p>
+              <p className={styles.containerTitle}>Typy aktywnych zleceń</p>
               <ResponsiveContainer width="100%" height="85%">
                 <RadarChart
                   cx="50%"
@@ -216,31 +235,66 @@ function Dashboard() {
           </div>
         </div>
 
-        <ChartContainer>
-          <div className={styles.usersMonthSummaryContainer}>
-            <div className={styles.infoMonthSummaryRow}>
-              <div className={styles.userWrapper}>
-                <p className={styles.infoUsersPar}>Grafik - {selectedMonth}</p>
+        <div className={styles.rightColumn}>
+          <ChartContainer>
+            <div className={styles.usersMonthSummaryContainer}>
+              <div className={styles.infoMonthSummaryRow}>
+                <div className={styles.userWrapper}>
+                  <p className={styles.infoUsersPar}>
+                    Grafik - {selectedMonth}
+                  </p>
+                </div>
+                <div className={styles.infoDayWrapper}>
+                  <div className={styles.emptyTile}>sum</div>
+                  {usersMonthSummary.length > 0 &&
+                    usersMonthSummary[0].days.map((infoDay) => {
+                      return (
+                        <div className={styles.infoDayNumber} key={infoDay.day}>
+                          {infoDay.day}
+                        </div>
+                      );
+                    })}
+                </div>
               </div>
-              <div className={styles.infoDayWrapper}>
-                <div className={styles.emptyTile}>sum</div>
-                {usersMonthSummary.length > 0 &&
-                  usersMonthSummary[0].days.map((infoDay) => {
-                    return (
-                      <div className={styles.infoDayNumber} key={infoDay.day}>
-                        {infoDay.day}
-                      </div>
-                    );
-                  })}
-              </div>
-            </div>
 
-            <UsersPerMonthChart
-              isLoading={isLoading}
-              usersMonthSummary={usersMonthSummary}
-            />
+              <UsersPerMonthChart
+                isLoading={isLoading}
+                usersMonthSummary={usersMonthSummary}
+              />
+            </div>
+          </ChartContainer>
+
+          <div className={styles.lineChartContainer}>
+            <p
+              className={styles.containerTitle}
+            >{`Podsumowanie miesiąca - ${selectedMonth}`}</p>
+            <ResponsiveContainer width="100%" height="85%">
+              <LineChart
+                width={500}
+                height={300}
+                data={monthDaysSummary}
+                margin={{
+                  top: 5,
+                  right: 30,
+                  left: 20,
+                  bottom: 5,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="day" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line
+                  type="monotone"
+                  dataKey="totalHours"
+                  stroke="#8884d8"
+                  activeDot={{ r: 8 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
-        </ChartContainer>
+        </div>
       </div>
     </>
   );
