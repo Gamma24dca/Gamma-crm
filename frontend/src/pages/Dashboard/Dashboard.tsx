@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+// import { round } from 'lodash';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
 import ControlBarTitle from '../../components/Atoms/ControlBar/Title/ControlBarTitle';
 import Select from '../../components/Atoms/Select/Select';
@@ -23,6 +24,7 @@ import TypesRadarChart from '../../components/Organisms/Charts/TypesRadarChart/T
 import SummaryTile from '../../components/Organisms/Charts/SummaryTile/SummaryTile';
 
 function Dashboard() {
+  const [viewVariable, setViewVariable] = useState('Miesięczne');
   const [clientsMonthSummary, setClientsMonthSummary] = useState<
     ClientsMonthSummaryTypes[]
   >([]);
@@ -34,6 +36,9 @@ function Dashboard() {
   const [monthDaysSummary, setMonthDaysSummary] = useState<
     MonthPerDaySummary[]
   >([]);
+  // const [compareData, setCompareData] = useState<ClientsMonthSummaryTypes[]>(
+  //   []
+  // );
   const [isLoading, setIsLoading] = useState(false);
   const [dataReady, setDataReady] = useState(false);
 
@@ -47,6 +52,18 @@ function Dashboard() {
     months,
     years,
   } = useCurrentDate();
+
+  const viewVariableSelectValue = ['Miesięczne', 'Roczne', 'Graficy'];
+
+  const handleViewVariableChange = (e) => {
+    setViewVariable(e.target.value);
+  };
+
+  // const {
+  //   selectedMonth: compareSelectedMonth,
+  //   handleMonthChange: compareHandleMonthChange,
+  //   months: compareMonths,
+  // } = useCurrentDate();
 
   const currentMonthIndex = months.indexOf(selectedMonth);
 
@@ -109,6 +126,25 @@ function Dashboard() {
     fetchAll();
   }, [selectedMonth, selectedYear]);
 
+  // useEffect(() => {
+  //   const fetchToCompare = async () => {
+  //     const compareSelectedMonthIndex = months.indexOf(compareSelectedMonth);
+  //     try {
+  //       if (compareSelectedMonth === selectedMonth) return;
+  //       const clientsToCompare = await getClientsMonthSummary(
+  //         compareSelectedMonthIndex + 1,
+  //         selectedYear
+  //       );
+
+  //       setCompareData(clientsToCompare);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+
+  //   fetchToCompare();
+  // }, [compareSelectedMonth]);
+
   const clientsMonthSummaryByRevenue = clientsMonthSummary.map((client) => {
     const [filteredCompany] = companies.filter(
       (com) => com.name === client._id
@@ -142,19 +178,24 @@ function Dashboard() {
     <>
       <ControlBar>
         <ControlBarTitle>Pulpit</ControlBarTitle>
-        <Select
-          value={selectedMonth}
-          handleValueChange={handleMonthChange}
-          optionData={months}
-        />
+        {viewVariable === 'Miesięczne' && (
+          <Select
+            value={selectedMonth}
+            handleValueChange={handleMonthChange}
+            optionData={months}
+          />
+        )}
+
         <Select
           value={selectedYear}
           handleValueChange={handleYearChange}
           optionData={years}
         />
-        <p>Miesięczne</p>
-        <p>Roczne</p>
-        <p>Graficy</p>
+        <Select
+          value={viewVariable}
+          handleValueChange={handleViewVariableChange}
+          optionData={viewVariableSelectValue}
+        />
       </ControlBar>
 
       <div className={styles.chartsWrapper}>
@@ -168,17 +209,51 @@ function Dashboard() {
 
           <div className={styles.leftColumnSecondRowContainer}>
             <div className={styles.summaryTilesWrapper}>
-              <SummaryTile
-                title="Suma godzin"
-                iconValue="ic:baseline-access-time"
-              >{`${summedHours} h`}</SummaryTile>
-              <SummaryTile
-                title="Suma przychodów"
-                iconValue="ic:outline-monetization-on"
-              >{`${summedRevenue} zł`}</SummaryTile>
+              <div className={styles.firstRowTiles}>
+                <SummaryTile
+                  title="Suma godzin"
+                  iconValue="ic:baseline-access-time"
+                >{`${summedHours} h`}</SummaryTile>
+                <SummaryTile
+                  title="Suma przychodów"
+                  iconValue="ic:outline-monetization-on"
+                >{`${summedRevenue} zł`}</SummaryTile>
+              </div>
+              {/* <div className={styles.compareTitle}>
+                <p>W porównaniu do</p>
+                <Select
+                  value={compareSelectedMonth}
+                  handleValueChange={compareHandleMonthChange}
+                  optionData={compareMonths}
+                />
+              </div>
+
+              <div className={styles.firstRowTiles}>
+                <SummaryTile
+                  title="Suma godzin"
+                  iconValue="material-symbols:chart-data-rounded"
+                >{`${
+                  selectedMonth === compareSelectedMonth
+                    ? '100%'
+                    : round(
+                        (compareData.reduce((summ, cms) => {
+                          return Number(summ) + Number(cms.Suma_godzin);
+                        }, 0) *
+                          100) /
+                          summedHours
+                      )
+                } `}</SummaryTile>
+                <SummaryTile
+                  title="Suma przychodów"
+                  iconValue="ic:outline-monetization-on"
+                >{`${summedRevenue} zł`}</SummaryTile>
+              </div> */}
             </div>
 
-            <TypesRadarChart tasksTypeSummary={tasksTypeSummary} />
+            <TypesRadarChart
+              tasksTypeSummary={tasksTypeSummary}
+              dataReady={dataReady}
+            />
           </div>
         </div>
 
@@ -214,6 +289,7 @@ function Dashboard() {
           <MonthPerDaySummaryChart
             selectedMonth={selectedMonth}
             monthDaysSummary={monthDaysSummary}
+            dataReady={dataReady}
           />
         </div>
       </div>

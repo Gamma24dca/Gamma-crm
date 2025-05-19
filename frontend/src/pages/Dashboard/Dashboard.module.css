@@ -79,9 +79,23 @@
 }
 
 .summaryTilesWrapper {
+  /* display: flex; */
+  width: 50%;
+}
+
+.firstRowTiles {
   display: flex;
   gap: 10px;
-  width: 50%;
+}
+
+.compareTitle {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  p {
+    font-weight: 600;
+  }
 }
 
 @keyframes appear {

@@ -27,4 +27,5 @@
 
 .summaryValueIcon {
   color: var(--color-green);
+  /* transform: scale(1, -1); */
 }
