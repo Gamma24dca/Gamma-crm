@@ -11,11 +11,17 @@ type DayType = {
   isWeekend: boolean;
 };
 
+type MonthType = {
+  month: number;
+  totalHours: number;
+};
+
 export type UsersMonthSummaryTypes = {
   _id: string;
   name: string;
   img: string;
-  days: DayType[];
+  days?: DayType[];
+  months?: MonthType[];
 };
 
 export type MonthPerDaySummary = {
@@ -23,20 +29,22 @@ export type MonthPerDaySummary = {
   day: number;
 };
 
-export async function getClientsMonthSummary(month: number, year: number) {
+export async function getClientsMonthSummary(
+  month: number,
+  year: number,
+  yearlySummary: boolean
+) {
+  const fetchUrl = yearlySummary
+    ? `/api/dashboard/reckoning/client-per-hour-yearly/${year}`
+    : `/api/dashboard/reckoning/client-per-hour/${month}/${year}`;
   try {
-    const response = await fetch(
-      `${
-        import.meta.env.VITE_API_URL
-      }/api/dashboard/reckoning/client-per-hour/${month}/${year}`,
-      {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    const response = await fetch(`${import.meta.env.VITE_API_URL}${fetchUrl}`, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
     if (response.ok) {
       return await response.json();
@@ -51,20 +59,22 @@ export async function getClientsMonthSummary(month: number, year: number) {
   }
 }
 
-export async function getUsersMonthSummary(month: number, year: number) {
+export async function getUsersMonthSummary(
+  month: number,
+  year: number,
+  yearlySummary: boolean
+) {
+  const fetchUrl = yearlySummary
+    ? `/api/dashboard/reckoning/user-per-day-hours-yearly/${year}`
+    : `/api/dashboard/reckoning/user-per-day-hours/${month}/${year}`;
   try {
-    const response = await fetch(
-      `${
-        import.meta.env.VITE_API_URL
-      }/api/dashboard/reckoning/user-per-day-hours/${month}/${year}`,
-      {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    const response = await fetch(`${import.meta.env.VITE_API_URL}${fetchUrl}`, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
     if (response.ok) {
       return await response.json();
@@ -79,20 +89,18 @@ export async function getUsersMonthSummary(month: number, year: number) {
   }
 }
 
-export async function getTasksTypeSummary() {
+export async function getTasksTypeSummary(yearlySummary: boolean) {
+  const fetchUrl = yearlySummary
+    ? `/api/dashboard/archivedStudioTasks/tasks-per-type`
+    : `/api/dashboard/studioTasks/tasks-per-type`;
   try {
-    const response = await fetch(
-      `${
-        import.meta.env.VITE_API_URL
-      }/api/dashboard/studioTasks/tasks-per-type`,
-      {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    const response = await fetch(`${import.meta.env.VITE_API_URL}${fetchUrl}`, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
     if (response.ok) {
       return await response.json();
@@ -107,20 +115,22 @@ export async function getTasksTypeSummary() {
   }
 }
 
-export async function getMonthDaysSummary(month: number, year: number) {
+export async function getMonthDaysSummary(
+  month: number,
+  year: number,
+  yearlySummary: boolean
+) {
+  const fetchUrl = yearlySummary
+    ? `/api/dashboard/reckoning/month-hours-per-year/${year}`
+    : `/api/dashboard/reckoning/month-hours-per-day/${month}/${year}`;
   try {
-    const response = await fetch(
-      `${
-        import.meta.env.VITE_API_URL
-      }/api/dashboard/reckoning/month-hours-per-day/${month}/${year}`,
-      {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    const response = await fetch(`${import.meta.env.VITE_API_URL}${fetchUrl}`, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
     if (response.ok) {
       return await response.json();

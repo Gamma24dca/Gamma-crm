@@ -40,6 +40,7 @@
 }
 
 .infoDayNumber,
+.yearlyInfoDayNumber,
 .emptyTile {
   font-size: 14px;
   width: 16px;
@@ -49,9 +50,22 @@
   font-weight: 600;
 }
 
-.emptyTile {
+.yearlyInfoDayNumber {
+  width: 32px;
+}
+
+.emptyTile,
+.yearlyEmptyTile {
   width: 30px;
   font-size: 11px;
+}
+
+.yearlyEmptyTile {
+  font-weight: 600;
+  width: 50px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
 }
 
 .userWrapper {
