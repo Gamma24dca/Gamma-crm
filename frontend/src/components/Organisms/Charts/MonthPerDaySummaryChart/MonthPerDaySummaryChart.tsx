@@ -16,16 +16,51 @@ function MonthPerDaySummaryChart({
   selectedMonth,
   monthDaysSummary,
   dataReady,
+  isYearly,
+  year,
 }) {
+  const chartTitle = isYearly
+    ? `[h] Podsumowanie roku - ${year}`
+    : `[h] Podsumowanie miesiąca - ${selectedMonth}`;
+
+  const dataKey = isYearly ? 'month' : 'day';
+
+  const fullYearArray = [
+    { month: 1, totalHours: 0 },
+    { month: 2, totalHours: 0 },
+    { month: 3, totalHours: 0 },
+    { month: 4, totalHours: 0 },
+    { month: 5, totalHours: 0 },
+    { month: 6, totalHours: 0 },
+    { month: 7, totalHours: 0 },
+    { month: 8, totalHours: 0 },
+    { month: 9, totalHours: 0 },
+    { month: 10, totalHours: 0 },
+    { month: 11, totalHours: 0 },
+    { month: 12, totalHours: 0 },
+  ];
+
+  const chartData = isYearly
+    ? fullYearArray.map(({ month }) => {
+        const updated = monthDaysSummary.find(
+          (m) => Number(m.month) === Number(month)
+        );
+        return {
+          month,
+          totalHours: updated ? updated.totalHours : 0,
+        };
+      })
+    : monthDaysSummary;
+
   return (
     <div className={styles.lineChartContainer}>
-      <DashboardContainerTitle>{`[h] Podsumowanie miesiąca - ${selectedMonth}`}</DashboardContainerTitle>
+      <DashboardContainerTitle>{chartTitle}</DashboardContainerTitle>
       {dataReady ? (
         <ResponsiveContainer width="100%" height="85%">
           <LineChart
             width={500}
             height={300}
-            data={monthDaysSummary}
+            data={chartData}
             margin={{
               top: 5,
               right: 30,
@@ -34,7 +69,7 @@ function MonthPerDaySummaryChart({
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="day" />
+            <XAxis dataKey={dataKey} />
             <YAxis />
             <Tooltip />
             <Legend />

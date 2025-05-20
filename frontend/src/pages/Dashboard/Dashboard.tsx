@@ -16,12 +16,13 @@ import {
 import styles from './Dashboard.module.css';
 import ClientsPerMonthsChart from '../../components/Organisms/Charts/ClientsPerMontsChart/ClientsPerMonthsChart';
 import ChartContainer from '../../components/Atoms/ChartContainer/ChartContainer';
-import UsersPerMonthChart from '../../components/Organisms/UsersPerMonthChart/UsersPerMonthChart';
 import useCompaniesContext from '../../hooks/Context/useCompaniesContext';
 import { getAllCompanies } from '../../services/companies-service';
 import MonthPerDaySummaryChart from '../../components/Organisms/Charts/MonthPerDaySummaryChart/MonthPerDaySummaryChart';
 import TypesRadarChart from '../../components/Organisms/Charts/TypesRadarChart/TypesRadarChart';
 import SummaryTile from '../../components/Organisms/Charts/SummaryTile/SummaryTile';
+import UsersPerMonthChart from '../../components/Organisms/Charts/UsersPerMonthChart/UsersPerMonthChart';
+import CheckboxLoader from '../../components/Atoms/CheckboxLoader/CheckboxLoader';
 
 function Dashboard() {
   const [viewVariable, setViewVariable] = useState('Miesięczne');
@@ -94,22 +95,25 @@ function Dashboard() {
         setIsLoading(true);
         const clients = await getClientsMonthSummary(
           currentMonthIndex + 1,
-          selectedYear
+          selectedYear,
+          viewVariable === 'Roczne'
         );
         setClientsMonthSummary(clients);
 
         const users = await getUsersMonthSummary(
           currentMonthIndex + 1,
-          selectedYear
+          selectedYear,
+          viewVariable === 'Roczne'
         );
         setUsersMonthSummary(users);
 
-        const tasks = await getTasksTypeSummary();
+        const tasks = await getTasksTypeSummary(viewVariable === 'Roczne');
         setTasksTypeSummary(tasks);
 
         const monthDays = await getMonthDaysSummary(
           currentMonthIndex + 1,
-          selectedYear
+          selectedYear,
+          viewVariable === 'Roczne'
         );
         setMonthDaysSummary(monthDays);
 
@@ -124,7 +128,7 @@ function Dashboard() {
     };
 
     fetchAll();
-  }, [selectedMonth, selectedYear]);
+  }, [selectedMonth, selectedYear, viewVariable]);
 
   // useEffect(() => {
   //   const fetchToCompare = async () => {
@@ -174,6 +178,40 @@ function Dashboard() {
     return Number(summ) + Number(cms.przychód);
   }, 0);
 
+  const usersChartInfoBar = () => {
+    if (
+      usersMonthSummary.length > 0 &&
+      usersMonthSummary[0].days &&
+      viewVariable === 'Miesięczne' &&
+      !isLoading
+    ) {
+      return usersMonthSummary[0].days.map((infoDay) => {
+        return (
+          <div className={styles.infoDayNumber} key={infoDay.day}>
+            {infoDay.day}
+          </div>
+        );
+      });
+    }
+
+    if (
+      usersMonthSummary.length > 0 &&
+      usersMonthSummary[0].months &&
+      viewVariable === 'Roczne' &&
+      !isLoading
+    ) {
+      return usersMonthSummary[0].months.map((month) => {
+        return (
+          <div className={styles.yearlyInfoDayNumber} key={month.month}>
+            {month.month}
+          </div>
+        );
+      });
+    }
+
+    return <CheckboxLoader />;
+  };
+
   return (
     <>
       <ControlBar>
@@ -205,6 +243,8 @@ function Dashboard() {
             clientsMonthSummary={clientsMonthSummary}
             selectedMonth={selectedMonth}
             clientsMonthSummaryByRevenue={clientsMonthSummaryByRevenue}
+            isYearly={viewVariable === 'Roczne'}
+            year={selectedYear}
           />
 
           <div className={styles.leftColumnSecondRowContainer}>
@@ -253,6 +293,7 @@ function Dashboard() {
             <TypesRadarChart
               tasksTypeSummary={tasksTypeSummary}
               dataReady={dataReady}
+              isYearly={viewVariable === 'Roczne'}
             />
           </div>
         </div>
@@ -263,25 +304,38 @@ function Dashboard() {
               <div className={styles.infoMonthSummaryRow}>
                 <div className={styles.userWrapper}>
                   <p className={styles.infoUsersPar}>
-                    Grafik - {selectedMonth}
+                    {viewVariable === 'Miesięczne'
+                      ? `Grafik - ${selectedMonth}`
+                      : `Grafik - ${selectedYear}`}
                   </p>
                 </div>
                 <div className={styles.infoDayWrapper}>
-                  <div className={styles.emptyTile}>sum</div>
-                  {usersMonthSummary.length > 0 &&
+                  <div
+                    className={`${
+                      viewVariable === 'Miesięczne'
+                        ? styles.emptyTile
+                        : styles.yearlyEmptyTile
+                    }`}
+                  >
+                    sum
+                  </div>
+
+                  {/* {usersMonthSummary.length > 0 &&
                     usersMonthSummary[0].days.map((infoDay) => {
                       return (
                         <div className={styles.infoDayNumber} key={infoDay.day}>
                           {infoDay.day}
                         </div>
                       );
-                    })}
+                    })} */}
+                  {usersChartInfoBar()}
                 </div>
               </div>
 
               <UsersPerMonthChart
                 isLoading={isLoading}
                 usersMonthSummary={usersMonthSummary}
+                isYearly={viewVariable === 'Roczne'}
               />
             </div>
           </ChartContainer>
@@ -290,6 +344,8 @@ function Dashboard() {
             selectedMonth={selectedMonth}
             monthDaysSummary={monthDaysSummary}
             dataReady={dataReady}
+            isYearly={viewVariable === 'Roczne'}
+            year={selectedYear}
           />
         </div>
       </div>

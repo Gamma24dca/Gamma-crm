@@ -22,6 +22,23 @@ ChartsRouter.get(
 );
 
 ChartsRouter.get(
+  '/reckoning/client-per-hour-yearly/:year',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const year = req.params.year;
+    try {
+      const result = await ChartsController.getClientsPerHourYearly(year);
+      res.status(StatusCodes.ACCEPTED).json(result);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Server error');
+    }
+  },
+);
+
+/////USERS PER DAY//////
+
+ChartsRouter.get(
   '/reckoning/user-per-day-hours/:month/:year',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
@@ -39,6 +56,24 @@ ChartsRouter.get(
 );
 
 ChartsRouter.get(
+  '/reckoning/user-per-day-hours-yearly/:year',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const year = req.params.year;
+
+    try {
+      const result = await ChartsController.getUsersMonthSummaryYearly(year);
+      res.status(StatusCodes.ACCEPTED).json(result);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Server error');
+    }
+  },
+);
+
+/////TASK TYPES//////
+
+ChartsRouter.get(
   '/studioTasks/tasks-per-type',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
@@ -53,6 +88,23 @@ ChartsRouter.get(
 );
 
 ChartsRouter.get(
+  '/archivedStudioTasks/tasks-per-type',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const result =
+        await ChartsController.getArchivedStudioTasksTypesSummary();
+      res.status(StatusCodes.ACCEPTED).json(result);
+    } catch (err) {
+      console.error(err);
+      res.status(StatusCodes.BAD_REQUEST).send('Server error, check API');
+    }
+  },
+);
+
+/////MONTH PER DAY/////
+
+ChartsRouter.get(
   '/reckoning/month-hours-per-day/:month/:year',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
@@ -61,6 +113,22 @@ ChartsRouter.get(
 
     try {
       const result = await ChartsController.getHoursPerDay(month, year);
+      res.status(StatusCodes.ACCEPTED).json(result);
+    } catch (err) {
+      console.error(err);
+      res.status(StatusCodes.BAD_REQUEST).send('Server error, check API');
+    }
+  },
+);
+
+ChartsRouter.get(
+  '/reckoning/month-hours-per-year/:year',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const year = req.params.year;
+
+    try {
+      const result = await ChartsController.getHoursPerMonthYearly(year);
       res.status(StatusCodes.ACCEPTED).json(result);
     } catch (err) {
       console.error(err);

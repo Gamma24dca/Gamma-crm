@@ -11,10 +11,14 @@ import { Icon } from '@iconify/react';
 import DashboardContainerTitle from '../../../Atoms/DashboardContainerTitle/DashboardContainerTitle';
 import styles from './TypesRadarChart.module.css';
 
-function TypesRadarChart({ tasksTypeSummary, dataReady }) {
+function TypesRadarChart({ tasksTypeSummary, dataReady, isYearly }) {
+  const chartTitle = isYearly
+    ? `Typy archiwalnych zleceń`
+    : `Typy aktywnych zleceń`;
+
   return (
     <div className={styles.radarChartContainer}>
-      <DashboardContainerTitle>Typy aktywnych zleceń</DashboardContainerTitle>
+      <DashboardContainerTitle>{chartTitle}</DashboardContainerTitle>
       {dataReady ? (
         <ResponsiveContainer width="100%" height="85%">
           <RadarChart

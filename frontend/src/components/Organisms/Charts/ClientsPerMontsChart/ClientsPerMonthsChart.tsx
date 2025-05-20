@@ -23,6 +23,8 @@ function ClientsPerMonthsChart({
   clientsMonthSummary,
   selectedMonth,
   clientsMonthSummaryByRevenue,
+  isYearly,
+  year,
 }) {
   const [selectValue, setSelectValue] = useState('Godziny');
 
@@ -30,6 +32,10 @@ function ClientsPerMonthsChart({
     e.preventDefault();
     setSelectValue(e.target.value);
   };
+
+  const chartTitle = isYearly
+    ? `Podsumowanie klientów - ${year}`
+    : `Podsumowanie klientów - ${selectedMonth}`;
 
   return (
     <div className={styles.container}>
@@ -39,9 +45,7 @@ function ClientsPerMonthsChart({
           handleValueChange={handleSelectValue}
           optionData={selectValues}
         />
-        <p>{`${
-          selectValue === 'Godziny' ? '[h]' : '[zł]'
-        } Podsumowanie klientów - ${selectedMonth}`}</p>
+        <p>{`${selectValue === 'Godziny' ? '[h]' : '[zł]'}  ${chartTitle}`}</p>
       </div>
 
       {dataReady ? (

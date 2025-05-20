@@ -48,8 +48,10 @@
 }
 
 .dayTile,
+.yearDayTile,
 .weekendDay,
-.sumTile {
+.sumTile,
+.yearSumTile {
   width: 16px;
   padding: 3px 0;
   background-color: var(--color-shadow);
@@ -59,6 +61,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.yearDayTile {
+  width: 32px;
+  font-size: 12px;
 }
 
 .weekendDay {
@@ -73,9 +80,14 @@
   gap: 5px;
 }
 
-.sumTile {
+.sumTile,
+.yearSumTile {
   width: 30px;
   background-color: var(--color-green);
+}
+
+.yearSumTile {
+  width: 50px;
 }
 @keyframes appear {
   from {
