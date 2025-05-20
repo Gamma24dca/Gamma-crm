@@ -11,16 +11,18 @@
 
 .usersMonthSummaryContainer {
   overflow: scroll;
+  width: 100%;
 }
 
 .infoMonthSummaryRow {
+  width: 100%;
   opacity: 0;
   display: flex;
   animation: appear 0.3s ease forwards;
   animation-delay: 0.5s;
   margin-bottom: 7px;
   /* padding: 0 10px; */
-  padding-left: 10px;
+  /* padding-left: 10px; */
 }
 
 .infoMonthSummaryRow {
@@ -29,21 +31,23 @@
 }
 
 .infoDayWrapper {
+  width: 100%;
   display: flex;
-  gap: 5px;
+  gap: 10px;
   max-height: 30px;
 }
 
 .infoUsersPar {
   font-size: 14px;
   font-weight: 600;
+  margin: 0 0 5px 5px;
 }
 
 .infoDayNumber,
 .yearlyInfoDayNumber,
 .emptyTile {
-  font-size: 14px;
-  width: 16px;
+  font-size: 11px;
+  width: 7%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -51,29 +55,32 @@
 }
 
 .yearlyInfoDayNumber {
-  width: 32px;
+  width: 7%;
 }
 
 .emptyTile,
 .yearlyEmptyTile {
-  width: 30px;
+  width: 7%;
   font-size: 11px;
 }
 
 .yearlyEmptyTile {
   font-weight: 600;
-  width: 50px;
+  width: 10%;
   font-size: 13px;
   display: flex;
+  justify-content: center;
   align-items: center;
 }
 
 .userWrapper {
-  width: 120px;
+  width: 130px;
   max-height: 30px;
   display: flex;
   height: 100%;
   align-items: center;
+  /* justify-content: center; */
+  margin-left: 5px;
   gap: 5px;
 }
 
