@@ -47,7 +47,7 @@ function CompanyProfileRow({
       className={`${tileClass(index)}  ${
         isChecked.checkedValue && isChecked.checkedID === task._id
           ? styles.checked
-          : 'dupa'
+          : null
       }`}
     >
       <div className={styles.reckoningTaskListElementTile}>

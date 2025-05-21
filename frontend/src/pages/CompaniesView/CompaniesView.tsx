@@ -226,8 +226,14 @@ function CompaniesView() {
           </InfoBar>
           {companies?.length ? (
             <>
-              {companies.map((company) => {
-                return <CompanyTile key={company._id} company={company} />;
+              {companies.map((company, index) => {
+                return (
+                  <CompanyTile
+                    key={company._id}
+                    company={company}
+                    index={index}
+                  />
+                );
               })}
             </>
           ) : (
