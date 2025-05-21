@@ -13,6 +13,7 @@ import StudioTaskView from '../StudioTaskView/StudioTaskView';
 import TasksView from '../TasksView/TasksView';
 import ReckoningView from '../ReckoningView/ReckoningView';
 import Dashboard from '../Dashboard/Dashboard';
+import ClientsView from '../ClientsView/ClientsView';
 
 function App() {
   const { user } = useAuth();
@@ -31,6 +32,7 @@ function App() {
         <Route path="/rozliczenie" element={<ReckoningView />} />
         <Route path="/firmy" element={<CompaniesView />} />
         <Route path="/firmy/:id" element={<CompanyProfile />} />
+        <Route path="/klienci" element={<ClientsView />} />
         <Route path="/magazyn" element={<TasksView />} />
       </Routes>
     </MainTemplate>
