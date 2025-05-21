@@ -5,6 +5,7 @@ type DaysArray = {
   _id?: string;
   hourNum: number;
   isWeekend: boolean;
+  dayIndex: number;
 };
 
 export type ReckoningTaskTypes = {

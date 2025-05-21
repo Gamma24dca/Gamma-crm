@@ -238,25 +238,6 @@ function ReckoningTile({ reckTask, index, selectedMonthIndex, companies }) {
               }
             }}
             onClick={() => {
-              handleBlur(reckTask._id, {
-                client: 'Wybierz firme',
-                clientPerson: 'Wybierz klienta',
-                title: '',
-                description: '',
-                printWhat: '',
-                printWhere: '',
-              });
-              setFormValue((prev) => {
-                return {
-                  ...prev,
-                  client: 'Wybierz firme',
-                  clientPerson: 'Wybierz klienta',
-                  title: '',
-                  description: '',
-                  printWhat: '',
-                  printWhere: '',
-                };
-              });
               handleHoursClear();
             }}
           >
@@ -461,6 +442,8 @@ function ReckoningTile({ reckTask, index, selectedMonthIndex, companies }) {
                   dayIndex + 1 === currentDate.getDate() &&
                   styles.highlightCurrentDay
                 }`}
+                type="number"
+                min="0"
                 key={dayIndex}
                 value={dayTile.hourNum === 0 ? '' : dayTile.hourNum}
                 onChange={(e) => {

@@ -1,0 +1,170 @@
+.chartsWrapper {
+  margin: 0 auto;
+  width: 95%;
+  /* height: 80vh; */
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  /* flex-wrap: wrap; */
+}
+
+.usersMonthSummaryContainer {
+  overflow: scroll;
+  width: 100%;
+}
+
+.infoMonthSummaryRow {
+  width: 100%;
+  opacity: 0;
+  display: flex;
+  animation: appear 0.3s ease forwards;
+  animation-delay: 0.5s;
+  margin-bottom: 7px;
+  /* padding: 0 10px; */
+  /* padding-left: 10px; */
+}
+
+.infoMonthSummaryRow {
+  border-bottom: 1px solid var(--color-shadow);
+  margin-bottom: 10px;
+}
+
+.infoDayWrapper {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  max-height: 30px;
+}
+
+.infoUsersPar {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 5px 5px;
+}
+
+.infoDayNumber,
+.yearlyInfoDayNumber,
+.emptyTile {
+  font-size: 11px;
+  width: 7%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+}
+
+.yearlyInfoDayNumber {
+  width: 7%;
+}
+
+.emptyTile,
+.yearlyEmptyTile {
+  width: 7%;
+  font-size: 11px;
+}
+
+.yearlyEmptyTile {
+  font-weight: 600;
+  width: 10%;
+  font-size: 13px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.userWrapper {
+  width: 130px;
+  max-height: 30px;
+  display: flex;
+  height: 100%;
+  align-items: center;
+  /* justify-content: center; */
+  margin-left: 5px;
+  gap: 5px;
+}
+
+.leftColumn,
+.rightColumn {
+  width: 100%;
+  height: 97%;
+}
+
+.leftColumnSecondRowContainer {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
+  width: 100%;
+  height: 45%;
+}
+
+.summaryTilesWrapper {
+  /* display: flex; */
+  width: 50%;
+}
+
+.firstRowTiles {
+  display: flex;
+  gap: 10px;
+}
+
+.compareTitle {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  p {
+    font-weight: 600;
+  }
+}
+
+.titleWrapper {
+  display: flex;
+  position: absolute;
+  gap: 30px;
+  justify-content: center;
+  width: 100%;
+}
+
+.pieChartsContainer {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 95%;
+  margin: 0 auto;
+  overflow-y: scroll;
+}
+
+.pieChartWrapper {
+  position: relative;
+  width: 30%;
+  min-width: 420px;
+  height: 370px;
+  background-color: var(--color-lighter);
+  border-radius: 10px;
+  box-shadow: 0 0px 3px var(--color-shadow);
+
+  p {
+    text-align: center;
+    margin: 10px 0;
+    font-weight: 600;
+  }
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 1400px) {
+  .chartsWrapper {
+    flex-direction: column-reverse;
+  }
+}

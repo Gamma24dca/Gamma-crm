@@ -1,0 +1,101 @@
+.loaderWrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: absolute;
+  top: 40%;
+  left: 45%;
+}
+
+.loadingIcon {
+  color: var(--color-orange);
+}
+
+.usersMonthSummaryRow,
+.infoMonthSummaryRow {
+  width: 100%;
+  opacity: 0;
+  display: flex;
+  animation: appear 0.3s ease forwards;
+  animation-delay: 0.5s;
+  margin-bottom: 7px;
+  /* padding: 0 10px; */
+  /* padding-left: 10px; */
+}
+
+.userWrapper {
+  width: 120px;
+  max-height: 30px;
+  display: flex;
+  height: 100%;
+  align-items: center;
+  gap: 5px;
+}
+
+.userName {
+  font-size: 14px;
+  font-weight: 600;
+  width: 100px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  margin: 0;
+}
+
+.userImg {
+  max-width: 20px;
+  max-height: 20px;
+  border-radius: 50%;
+}
+
+.dayTile,
+.yearDayTile,
+.weekendDay,
+.sumTile,
+.yearSumTile {
+  width: 5%;
+  padding: 3px 0;
+  background-color: var(--color-shadow);
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.yearDayTile {
+  width: 7%;
+  font-size: 12px;
+}
+
+.weekendDay {
+  background-color: var(--color-orange);
+  opacity: 0.7;
+}
+
+.daysRow {
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.sumTile,
+.yearSumTile {
+  width: 7%;
+  background-color: var(--color-green);
+}
+
+.yearSumTile {
+  width: 10%;
+}
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

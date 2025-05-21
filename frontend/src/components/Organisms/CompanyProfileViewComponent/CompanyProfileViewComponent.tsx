@@ -7,6 +7,7 @@ function CompanyProfileViewComponent({
   loadingState,
   currentTasks,
   currentMonthIndex,
+  companyHourRate,
 }) {
   if (loadingState.isError) {
     return (
@@ -47,6 +48,7 @@ function CompanyProfileViewComponent({
           task={task}
           index={index}
           currentMonthIndex={currentMonthIndex}
+          companyHourRate={companyHourRate}
         />
       );
     });

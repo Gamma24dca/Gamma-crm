@@ -1,18 +1,23 @@
 .tileWrapper {
   width: 90%;
-  min-height: 60px;
+  height: 40px;
   display: flex;
   align-items: center;
   background-color: var(--color-bg);
   border-radius: 10px;
   gap: 30px;
   padding-left: 30px;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   transition: all 0.3s ease;
   cursor: pointer;
+  font-size: 14px;
 }
 
 .tileWrapper:hover {
   transform: scale(1.01);
   background-color: rgba(99, 95, 199, 0.25);
+}
+
+.darkerReckoningTaskListElement {
+  background-color: var(--color-shadow);
 }

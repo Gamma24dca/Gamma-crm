@@ -58,7 +58,7 @@ export const StudioTaskModel = mongoose.model(
       },
     },
     // For Example Druk, Szwalnia, Mulimedia, social media
-    TaskType: {
+    taskType: {
       type: String,
     },
     participants: [

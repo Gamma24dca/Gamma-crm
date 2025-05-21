@@ -37,7 +37,7 @@ const compareValues = (a, b, order = 'asc') => {
   return 0;
 };
 
-const useSort = (data, currentMonthIndex) => {
+const useSort = (data, currentMonthIndex, companyHourRate) => {
   const [sortColumn, setSortColumn] = useState('');
   const [sortOrder, setSortOrder] = useState('asc');
 
@@ -48,6 +48,8 @@ const useSort = (data, currentMonthIndex) => {
       let aVal = a[sortColumn];
       let bVal = b[sortColumn];
 
+      console.log(aVal, bVal);
+
       if (sortColumn === 'createdAt') {
         aVal = new Date(aVal);
         bVal = new Date(bVal);
@@ -56,6 +58,13 @@ const useSort = (data, currentMonthIndex) => {
       if (sortColumn === 'participants') {
         aVal = getSummedHours(aVal, currentMonthIndex);
         bVal = getSummedHours(bVal, currentMonthIndex);
+      }
+
+      if (sortColumn === 'hourRate' && companyHourRate) {
+        aVal =
+          getSummedHours(aVal, currentMonthIndex) * Number(companyHourRate);
+        bVal =
+          getSummedHours(bVal, currentMonthIndex) * Number(companyHourRate);
       }
 
       return compareValues(aVal, bVal, sortOrder);

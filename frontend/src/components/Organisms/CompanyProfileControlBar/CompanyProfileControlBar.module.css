@@ -74,26 +74,41 @@
   margin-left: 10%;
 }
 
+.summWrapper {
+  display: flex;
+  gap: 30px;
+}
+
 .summPar {
+  color: var(--color-title);
   position: absolute;
-  right: 15px;
+  left: -60%;
   font-size: 20px;
+  font-weight: 700;
+}
+.summValue {
+  font-size: 16px;
+  color: var(--color-lighter);
   font-weight: 700;
 }
 
 .totalHoursContainer {
-  max-height: 60px;
-  width: 4%;
-  transform: translateX(-10%);
+  position: relative;
+  max-height: 50px;
+  width: 8%;
+  transform: translateX(5%);
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   background-color: var(--color-orange);
 
-  p {
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--color-lighter);
+  &::after {
+    content: '';
+    position: absolute;
+    height: 60px;
+    width: 3px;
+    background-color: var(--color-lighter);
+    transform: translateX(-15px);
   }
 }
 
