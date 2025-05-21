@@ -152,9 +152,13 @@ function TasksView() {
           </InfoBar>
 
           {sortedTasks.length > 0 ? (
-            sortedTasks.map((task) => {
+            sortedTasks.map((task, index) => {
               return (
-                <TileWrapper key={task._id} linkPath={`/zlecenia/${task._id}`}>
+                <TileWrapper
+                  key={task._id}
+                  linkPath={`/zlecenia/${task._id}`}
+                  index={index}
+                >
                   <div className={styles.tileContentWrapper}>
                     <p>{task.date.split('T')[0]}</p>
                   </div>

@@ -6,15 +6,25 @@ import styles from './TileWrapper.module.css';
 type TileWrapperProps = {
   children: ReactNode | ReactNode[];
   linkPath?: string;
+  index: number;
 };
 
-function TileWrapper({ children, linkPath }: TileWrapperProps) {
+const tileClass = (tileIndex) => {
+  return tileIndex % 2 === 0
+    ? styles.reckoningTaskListElement
+    : styles.darkerReckoningTaskListElement;
+};
+
+function TileWrapper({ children, linkPath, index }: TileWrapperProps) {
   return linkPath ? (
-    <Link className={styles.tileWrapper} to={linkPath}>
+    <Link className={`${styles.tileWrapper} ${tileClass(index)}`} to={linkPath}>
       {children}
     </Link>
   ) : (
-    <div className={styles.tileWrapper}> {children}</div>
+    <div className={`${styles.tileWrapper} ${tileClass(index)}`}>
+      {' '}
+      {children}
+    </div>
   );
 }
 TileWrapper.defaultProps = {

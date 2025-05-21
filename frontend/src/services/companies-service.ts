@@ -14,6 +14,7 @@ export type CompaniesType = {
   mail: string;
   website: string;
   clientPerson: ClientPerson[];
+  hourRate: string;
   activeTasks?: number;
   teamMembers: User[];
 };
@@ -73,6 +74,7 @@ export async function addCompany({
   mail,
   website,
   clientPerson,
+  hourRate,
   teamMembers,
 }) {
   const formData = {
@@ -81,6 +83,7 @@ export async function addCompany({
     mail,
     website,
     clientPerson,
+    hourRate,
     teamMembers,
   };
 

@@ -12,25 +12,24 @@ export const ReckoningTaskController = {
   },
 
   async getFilteredReckoningTasks(userId, year, month) {
-    const reckoningTasks = await ReckoningTaskModel.find().exec();
+    const startDate = new Date(Date.UTC(Number(year), Number(month) - 1, 1));
+    const endDate = new Date(Date.UTC(Number(year), Number(month), 1));
 
-    const filteredReckoningTasks = reckoningTasks.filter((task) => {
-      return task.participants.some((participant) => {
-        if (participant._id !== userId || !participant.isVisible) {
-          return false;
-        }
+    const tasks = await ReckoningTaskModel.find({
+      participants: {
+        $elemMatch: {
+          _id: userId,
+          isVisible: true,
+          months: {
+            $elemMatch: {
+              createdAt: { $gte: startDate, $lt: endDate },
+            },
+          },
+        },
+      },
+    }).exec();
 
-        return participant.months.some((monthObj) => {
-          const monthDate = new Date(monthObj.createdAt);
-          return (
-            monthDate.getFullYear() === Number(year) &&
-            monthDate.getUTCMonth() + 1 === Number(month)
-          );
-        });
-      });
-    });
-
-    return filteredReckoningTasks;
+    return tasks;
   },
 
   async addReckoningTask(taskData) {

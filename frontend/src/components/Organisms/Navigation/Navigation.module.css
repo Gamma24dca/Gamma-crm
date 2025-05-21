@@ -1,6 +1,6 @@
 .navWrapper {
   /* width: 100vw; */
-  min-height: 90px;
+  min-height: 60px;
   border-bottom: 1px solid var(--color-border);
   background-color: var(--color-lighter);
   display: flex;
@@ -18,7 +18,7 @@
   font-weight: 600;
   border: none;
   background-color: var(--color-orange);
-  padding: 12px 45px;
+  padding: 8px 35px;
   border-radius: 30px;
   cursor: pointer;
   color: var(--color-lighter);
@@ -59,14 +59,14 @@
 }
 
 .name {
-  font-size: 18px;
+  font-size: 16px;
   color: var(--color-title);
 }
 .job {
-  font-size: 14px;
+  font-size: 12px;
 }
 .workerImg {
-  max-width: 50px;
+  max-width: 30px;
   border-radius: 200%;
   border: 1px solid var(--color-border);
   padding: 5px;

@@ -45,6 +45,7 @@ CompanyRouter.post(
         mail: req.body.mail,
         website: req.body.website,
         clientPerson: req.body.clientPerson,
+        hourRate: req.body.hourRate,
         activeTasks: req.body.activeTasks,
         teamMembers: req.body.teamMembers,
       });

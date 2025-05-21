@@ -22,6 +22,7 @@ import useSelectUser from '../../hooks/useSelectUser';
 import AddCompanyForm from '../../components/Organisms/AddCompanyForm/AddCompanyForm';
 import CompanyTile from '../../components/Organisms/CompanyTile/CompanyTile';
 import SearchInput from '../../components/Atoms/ControlBar/SearchInput/SearchInput';
+import Select from '../../components/Atoms/Select/Select';
 
 const initialCompanyObject = {
   name: '',
@@ -33,6 +34,7 @@ const initialCompanyObject = {
 };
 
 function CompaniesView() {
+  const [clientState, setClientState] = useState<string>('');
   const [successMessage, setSuccessMessage] = useState('');
   const [matchingCompanies, setMatchingCompanies] = useState([]);
   const { showModal, exitAnim, openModal, closeModal } = useModal();
@@ -57,6 +59,8 @@ function CompaniesView() {
     }
     if (!inputValue) setMatchingCompanies([]);
   }, 200);
+
+  const clientStateSelectValues = ['Aktywni', 'Potencjalni', 'Archiwum'];
 
   const {
     isOpen,
@@ -99,6 +103,11 @@ function CompaniesView() {
     }));
   };
 
+  const handleClientStateChange = (e) => {
+    e.preventDefault();
+    setClientState(e.target.value);
+  };
+
   return (
     <>
       <ModalTemplate
@@ -118,6 +127,13 @@ function CompaniesView() {
       </ModalTemplate>
       <ControlBar>
         <ControlBarTitle>Firmy</ControlBarTitle>
+
+        <Select
+          value={clientState}
+          handleValueChange={handleClientStateChange}
+          optionData={clientStateSelectValues}
+        />
+
         {/* <SearchInput
           // onChange={(e) => {
           //   handleSearchQuery(e);
@@ -210,8 +226,14 @@ function CompaniesView() {
           </InfoBar>
           {companies?.length ? (
             <>
-              {companies.map((company) => {
-                return <CompanyTile key={company._id} company={company} />;
+              {companies.map((company, index) => {
+                return (
+                  <CompanyTile
+                    key={company._id}
+                    company={company}
+                    index={index}
+                  />
+                );
               })}
             </>
           ) : (
