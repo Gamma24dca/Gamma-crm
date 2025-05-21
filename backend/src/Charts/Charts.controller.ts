@@ -396,4 +396,124 @@ export const ChartsController = {
 
     return await tasksByType;
   },
+
+  ///////USERS PER COMPANY/////////////
+
+  async getUsersPerCompany(month, year) {
+    const usersPerCompany = ReckoningTaskModel.aggregate([
+      { $unwind: '$participants' },
+      { $unwind: '$participants.months' },
+      { $unwind: '$participants.months.hours' },
+
+      {
+        $addFields: {
+          date: {
+            $toDate: '$participants.months.createdAt',
+          },
+        },
+      },
+
+      {
+        $addFields: {
+          userId: '$participants._id',
+          month: { $month: '$date' },
+          year: { $year: '$date' },
+        },
+      },
+
+      {
+        $match: {
+          ...(month ? { month: parseInt(month) } : {}),
+          ...(year ? { year: parseInt(year) } : {}),
+        },
+      },
+
+      {
+        $group: {
+          _id: {
+            userId: '$userId',
+            name: '$participants.name',
+            company: '$client',
+          },
+
+          totalHours: { $sum: '$participants.months.hours.hourNum' },
+        },
+      },
+
+      {
+        $group: {
+          _id: {
+            name: '$_id.name',
+            userId: '$_id.userId',
+          },
+          companies: {
+            $push: {
+              name: '$_id.company',
+              totalHours: '$totalHours',
+            },
+          },
+        },
+      },
+    ]);
+
+    return await usersPerCompany;
+  },
+
+  async getUsersPerCompanyYearly(year) {
+    const usersPerCompany = ReckoningTaskModel.aggregate([
+      { $unwind: '$participants' },
+      { $unwind: '$participants.months' },
+      { $unwind: '$participants.months.hours' },
+
+      {
+        $addFields: {
+          date: {
+            $toDate: '$participants.months.createdAt',
+          },
+        },
+      },
+
+      {
+        $addFields: {
+          userId: '$participants._id',
+          year: { $year: '$date' },
+        },
+      },
+
+      {
+        $match: {
+          ...(year ? { year: parseInt(year) } : {}),
+        },
+      },
+
+      {
+        $group: {
+          _id: {
+            userId: '$userId',
+            name: '$participants.name',
+            company: '$client',
+          },
+
+          totalHours: { $sum: '$participants.months.hours.hourNum' },
+        },
+      },
+
+      {
+        $group: {
+          _id: {
+            name: '$_id.name',
+            userId: '$_id.userId',
+          },
+          companies: {
+            $push: {
+              name: '$_id.company',
+              totalHours: '$totalHours',
+            },
+          },
+        },
+      },
+    ]);
+
+    return await usersPerCompany;
+  },
 };

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 // import { round } from 'lodash';
+import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
 import ControlBarTitle from '../../components/Atoms/ControlBar/Title/ControlBarTitle';
 import Select from '../../components/Atoms/Select/Select';
@@ -10,8 +11,10 @@ import {
   getMonthDaysSummary,
   getTasksTypeSummary,
   getUsersMonthSummary,
+  getUsersPerCompany,
   MonthPerDaySummary,
   UsersMonthSummaryTypes,
+  UsersPerCompanyTypes,
 } from '../../services/dashboard-service';
 import styles from './Dashboard.module.css';
 import ClientsPerMonthsChart from '../../components/Organisms/Charts/ClientsPerMontsChart/ClientsPerMonthsChart';
@@ -36,6 +39,12 @@ function Dashboard() {
   const [tasksTypeSummary, setTasksTypeSummary] = useState([]);
   const [monthDaysSummary, setMonthDaysSummary] = useState<
     MonthPerDaySummary[]
+  >([]);
+  const [usersPerCompanyMonthly, setUsersPerCompanyMonthly] = useState<
+    UsersPerCompanyTypes[]
+  >([]);
+  const [usersPerCompanyYearly, setUsersPerCompanyYearly] = useState<
+    UsersPerCompanyTypes[]
   >([]);
   // const [compareData, setCompareData] = useState<ClientsMonthSummaryTypes[]>(
   //   []
@@ -93,6 +102,25 @@ function Dashboard() {
     const fetchAll = async () => {
       try {
         setIsLoading(true);
+
+        if (viewVariable === 'Graficy') {
+          const pieChartsDataMontly = await getUsersPerCompany(
+            currentMonthIndex + 1,
+            selectedYear,
+            false
+          );
+
+          setUsersPerCompanyMonthly(pieChartsDataMontly);
+
+          const pieChartsDataYearly = await getUsersPerCompany(
+            currentMonthIndex + 1,
+            selectedYear,
+            true
+          );
+
+          setUsersPerCompanyYearly(pieChartsDataYearly);
+          return;
+        }
         const clients = await getClientsMonthSummary(
           currentMonthIndex + 1,
           selectedYear,
@@ -129,6 +157,13 @@ function Dashboard() {
 
     fetchAll();
   }, [selectedMonth, selectedYear, viewVariable]);
+
+  // console.log(
+  //   'monthly:',
+  //   usersPerCompanyMonthly,
+  //   'yearly:',
+  //   usersPerCompanyYearly
+  // );
 
   // useEffect(() => {
   //   const fetchToCompare = async () => {
@@ -211,18 +246,36 @@ function Dashboard() {
 
     return <CheckboxLoader />;
   };
+  const COLORS = [
+    '#7B9ACC', // muted blue
+    '#91C7B1', // soft green
+    '#D3A87C', // soft brown/orange
+    '#E2C290', // beige/golden
+    '#B1A8C7', // muted purple
+    '#A4D2D7', // pale cyan
+    '#CDAF95', // sand
+    '#A6C6AA', // light olive
+    '#D3C0D6', // lavender
+    '#BFD7D5', // muted teal
+    '#D6B5A9', // soft coral
+    '#C0C9E2', // desaturated periwinkle
+    '#AAC3B0', // sage
+    '#C4B9E0', // pastel violet
+    '#E0C8B9',
+  ];
 
   return (
     <>
       <ControlBar>
         <ControlBarTitle>Pulpit</ControlBarTitle>
-        {viewVariable === 'Miesięczne' && (
+
+        {viewVariable === 'Miesięczne' || viewVariable === 'Graficy' ? (
           <Select
             value={selectedMonth}
             handleValueChange={handleMonthChange}
             optionData={months}
           />
-        )}
+        ) : null}
 
         <Select
           value={selectedYear}
@@ -235,31 +288,95 @@ function Dashboard() {
           optionData={viewVariableSelectValue}
         />
       </ControlBar>
+      {viewVariable === 'Graficy' ? (
+        <div className={styles.pieChartsContainer}>
+          {usersPerCompanyMonthly.map((upcm) => {
+            const isVisible = upcm.companies.reduce((sum, com) => {
+              return sum + com.totalHours;
+            }, 0);
 
-      <div className={styles.chartsWrapper}>
-        <div className={styles.leftColumn}>
-          <ClientsPerMonthsChart
-            dataReady={dataReady}
-            clientsMonthSummary={clientsMonthSummary}
-            selectedMonth={selectedMonth}
-            clientsMonthSummaryByRevenue={clientsMonthSummaryByRevenue}
-            isYearly={viewVariable === 'Roczne'}
-            year={selectedYear}
-          />
+            const matchedYearSummary = usersPerCompanyYearly.find(
+              (upcy) => upcy._id.userId === upcm._id.userId
+            );
 
-          <div className={styles.leftColumnSecondRowContainer}>
-            <div className={styles.summaryTilesWrapper}>
-              <div className={styles.firstRowTiles}>
-                <SummaryTile
-                  title="Suma godzin"
-                  iconValue="ic:baseline-access-time"
-                >{`${summedHours} h`}</SummaryTile>
-                <SummaryTile
-                  title="Suma przychodów"
-                  iconValue="ic:outline-monetization-on"
-                >{`${summedRevenue} zł`}</SummaryTile>
-              </div>
-              {/* <div className={styles.compareTitle}>
+            return (
+              isVisible > 0 && (
+                <div className={styles.pieChartWrapper} key={upcm._id.userId}>
+                  <p>{upcm._id.name}</p>
+                  <div className={styles.titleWrapper}>
+                    <p>Miesięczne</p>
+                    <p>Roczne</p>
+                  </div>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart width={400} height={400}>
+                      <Pie
+                        dataKey="totalHours"
+                        data={upcm.companies}
+                        cx="40%"
+                        cy="55%"
+                        outerRadius={80}
+                        fill="#8884d8"
+                        label
+                      >
+                        {upcm.companies.map((entry, index) => (
+                          <Cell
+                            key={`cell-${index}`}
+                            fill={COLORS[index % COLORS.length]}
+                          />
+                        ))}
+                      </Pie>
+                      {matchedYearSummary && (
+                        <Pie
+                          dataKey="totalHours"
+                          data={matchedYearSummary.companies}
+                          cx={300}
+                          cy={120}
+                          innerRadius={40}
+                          outerRadius={80}
+                          fill="#82ca9d"
+                        >
+                          {matchedYearSummary.companies.map((entry, index) => (
+                            <Cell
+                              key={`cell-${index}`}
+                              fill={COLORS[index % COLORS.length]}
+                            />
+                          ))}
+                        </Pie>
+                      )}
+
+                      <Tooltip />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              )
+            );
+          })}
+        </div>
+      ) : (
+        <div className={styles.chartsWrapper}>
+          <div className={styles.leftColumn}>
+            <ClientsPerMonthsChart
+              dataReady={dataReady}
+              clientsMonthSummary={clientsMonthSummary}
+              selectedMonth={selectedMonth}
+              clientsMonthSummaryByRevenue={clientsMonthSummaryByRevenue}
+              isYearly={viewVariable === 'Roczne'}
+              year={selectedYear}
+            />
+
+            <div className={styles.leftColumnSecondRowContainer}>
+              <div className={styles.summaryTilesWrapper}>
+                <div className={styles.firstRowTiles}>
+                  <SummaryTile
+                    title="Suma godzin"
+                    iconValue="ic:baseline-access-time"
+                  >{`${summedHours} h`}</SummaryTile>
+                  <SummaryTile
+                    title="Suma przychodów"
+                    iconValue="ic:outline-monetization-on"
+                  >{`${summedRevenue} zł`}</SummaryTile>
+                </div>
+                {/* <div className={styles.compareTitle}>
                 <p>W porównaniu do</p>
                 <Select
                   value={compareSelectedMonth}
@@ -288,39 +405,39 @@ function Dashboard() {
                   iconValue="ic:outline-monetization-on"
                 >{`${summedRevenue} zł`}</SummaryTile>
               </div> */}
+              </div>
+
+              <TypesRadarChart
+                tasksTypeSummary={tasksTypeSummary}
+                dataReady={dataReady}
+                isYearly={viewVariable === 'Roczne'}
+              />
             </div>
-
-            <TypesRadarChart
-              tasksTypeSummary={tasksTypeSummary}
-              dataReady={dataReady}
-              isYearly={viewVariable === 'Roczne'}
-            />
           </div>
-        </div>
 
-        <div className={styles.rightColumn}>
-          <ChartContainer>
-            <div className={styles.usersMonthSummaryContainer}>
-              <div className={styles.infoMonthSummaryRow}>
-                <div className={styles.userWrapper}>
-                  <p className={styles.infoUsersPar}>
-                    {viewVariable === 'Miesięczne'
-                      ? `Grafik - ${selectedMonth}`
-                      : `Grafik - ${selectedYear}`}
-                  </p>
-                </div>
-                <div className={styles.infoDayWrapper}>
-                  <div
-                    className={`${
-                      viewVariable === 'Miesięczne'
-                        ? styles.emptyTile
-                        : styles.yearlyEmptyTile
-                    }`}
-                  >
-                    sum
+          <div className={styles.rightColumn}>
+            <ChartContainer>
+              <div className={styles.usersMonthSummaryContainer}>
+                <div className={styles.infoMonthSummaryRow}>
+                  <div className={styles.userWrapper}>
+                    <p className={styles.infoUsersPar}>
+                      {viewVariable === 'Miesięczne'
+                        ? `Grafik - ${selectedMonth}`
+                        : `Grafik - ${selectedYear}`}
+                    </p>
                   </div>
+                  <div className={styles.infoDayWrapper}>
+                    <div
+                      className={`${
+                        viewVariable === 'Miesięczne'
+                          ? styles.emptyTile
+                          : styles.yearlyEmptyTile
+                      }`}
+                    >
+                      sum
+                    </div>
 
-                  {/* {usersMonthSummary.length > 0 &&
+                    {/* {usersMonthSummary.length > 0 &&
                     usersMonthSummary[0].days.map((infoDay) => {
                       return (
                         <div className={styles.infoDayNumber} key={infoDay.day}>
@@ -328,27 +445,28 @@ function Dashboard() {
                         </div>
                       );
                     })} */}
-                  {usersChartInfoBar()}
+                    {usersChartInfoBar()}
+                  </div>
                 </div>
+
+                <UsersPerMonthChart
+                  isLoading={isLoading}
+                  usersMonthSummary={usersMonthSummary}
+                  isYearly={viewVariable === 'Roczne'}
+                />
               </div>
+            </ChartContainer>
 
-              <UsersPerMonthChart
-                isLoading={isLoading}
-                usersMonthSummary={usersMonthSummary}
-                isYearly={viewVariable === 'Roczne'}
-              />
-            </div>
-          </ChartContainer>
-
-          <MonthPerDaySummaryChart
-            selectedMonth={selectedMonth}
-            monthDaysSummary={monthDaysSummary}
-            dataReady={dataReady}
-            isYearly={viewVariable === 'Roczne'}
-            year={selectedYear}
-          />
+            <MonthPerDaySummaryChart
+              selectedMonth={selectedMonth}
+              monthDaysSummary={monthDaysSummary}
+              dataReady={dataReady}
+              isYearly={viewVariable === 'Roczne'}
+              year={selectedYear}
+            />
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 }
