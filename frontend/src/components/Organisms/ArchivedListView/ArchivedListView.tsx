@@ -98,9 +98,9 @@ function ArchivedListView({
         ) : (
           tasksArray.length > 0 && (
             <>
-              {tasksArray.map((studioTask) => {
+              {tasksArray.map((studioTask, index) => {
                 return (
-                  <TileWrapper key={studioTask._id}>
+                  <TileWrapper key={studioTask._id} index={index}>
                     <div className={styles.tileContainer}>
                       <div className={styles.taskID}>
                         <p>{studioTask.searchID}</p>

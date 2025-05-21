@@ -272,11 +272,12 @@ function UsersView() {
             {users.length === 0 ? (
               <SkeletonUsersLoading />
             ) : (
-              users.map((user) => {
+              users.map((user, index) => {
                 return (
                   <TileWrapper
                     key={user._id}
                     linkPath={`/użytkownicy/${user._id}`}
+                    index={index}
                   >
                     <div className={styles.taskAuthorCreatorWrapper}>
                       <img
