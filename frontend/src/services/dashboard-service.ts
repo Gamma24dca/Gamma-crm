@@ -29,6 +29,21 @@ export type MonthPerDaySummary = {
   day: number;
 };
 
+type UserPerCompanyId = {
+  name: string;
+  userId: string;
+};
+
+type CompanyType = {
+  company: string;
+  totalHours: number;
+};
+
+export type UsersPerCompanyTypes = {
+  _id: UserPerCompanyId;
+  companies: CompanyType[];
+};
+
 export async function getClientsMonthSummary(
   month: number,
   year: number,
@@ -123,6 +138,37 @@ export async function getMonthDaysSummary(
   const fetchUrl = yearlySummary
     ? `/api/dashboard/reckoning/month-hours-per-year/${year}`
     : `/api/dashboard/reckoning/month-hours-per-day/${month}/${year}`;
+  try {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}${fetchUrl}`, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      return await response.json();
+    }
+    throw new Error(`${response.status} ${response.statusText}`);
+  } catch (error) {
+    if (Config.isDev) {
+      throw new Error('Get month summary', error.message);
+    }
+    console.error(error.message);
+    return null;
+  }
+}
+
+export async function getUsersPerCompany(
+  month: number,
+  year: number,
+  yearlySummary: boolean
+) {
+  const fetchUrl = yearlySummary
+    ? `/api/dashboard/reckoning/users-per-company-yearly/${year}`
+    : `/api/dashboard/reckoning/users-per-company/${month}/${year}`;
+
   try {
     const response = await fetch(`${import.meta.env.VITE_API_URL}${fetchUrl}`, {
       method: 'GET',

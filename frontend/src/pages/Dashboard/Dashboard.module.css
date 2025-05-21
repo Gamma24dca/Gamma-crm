@@ -119,6 +119,41 @@
   }
 }
 
+.titleWrapper {
+  display: flex;
+  position: absolute;
+  gap: 30px;
+  justify-content: center;
+  width: 100%;
+}
+
+.pieChartsContainer {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 95%;
+  margin: 0 auto;
+  overflow-y: scroll;
+}
+
+.pieChartWrapper {
+  position: relative;
+  width: 30%;
+  min-width: 420px;
+  height: 370px;
+  background-color: var(--color-lighter);
+  border-radius: 10px;
+  box-shadow: 0 0px 3px var(--color-shadow);
+
+  p {
+    text-align: center;
+    margin: 10px 0;
+    font-weight: 600;
+  }
+}
+
 @keyframes appear {
   from {
     opacity: 0;
