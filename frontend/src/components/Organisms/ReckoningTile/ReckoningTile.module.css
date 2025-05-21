@@ -116,7 +116,9 @@
 }
 
 .dayTile::-webkit-outer-spin-button,
-.dayTile::-webkit-inner-spin-button {
+.dayTile::-webkit-inner-spin-button,
+.weekendDayTile::-webkit-outer-spin-button,
+.weekendDayTile::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
