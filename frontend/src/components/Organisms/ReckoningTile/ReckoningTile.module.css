@@ -115,6 +115,12 @@
   opacity: 0.7;
 }
 
+.dayTile::-webkit-outer-spin-button,
+.dayTile::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .summHoursContainer {
   min-width: 10px;
   height: 30px;
