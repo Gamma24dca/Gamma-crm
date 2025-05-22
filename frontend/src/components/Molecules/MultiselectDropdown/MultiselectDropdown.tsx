@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { Icon } from '@iconify/react';
 import styles from './MultiselectDropdown.module.css';
 import Overlay from '../../Atoms/Overlay/Overlay';
@@ -7,7 +8,18 @@ function MultiselectDropdown({
   isSelectOpen,
   setIsSelectOpen,
   label,
+  inputKey,
+  inputValue,
+  handleInputValue,
 }) {
+  const selectInputRef = useRef(null);
+
+  useEffect(() => {
+    if (isSelectOpen && selectInputRef.current) {
+      selectInputRef.current.focus();
+    }
+  }, [isSelectOpen]);
+
   return (
     <button
       type="button"
@@ -20,7 +32,7 @@ function MultiselectDropdown({
         className={styles.labelWrapper}
         role="button"
         onClick={() => {
-          setIsSelectOpen((prev) => !prev);
+          setIsSelectOpen(true);
         }}
         tabIndex={0}
         onKeyDown={(e) => {
@@ -29,7 +41,18 @@ function MultiselectDropdown({
           }
         }}
       >
-        <p className={styles.buttonLabel}>{label}</p>
+        {isSelectOpen ? (
+          <input
+            type="text"
+            ref={selectInputRef}
+            className={styles.selectFilterInput}
+            value={inputValue}
+            onChange={(e) => handleInputValue(e, inputKey)}
+            onClick={() => setIsSelectOpen(true)}
+          />
+        ) : (
+          <p className={styles.buttonLabel}>{label}</p>
+        )}
 
         <Icon
           icon="material-symbols:keyboard-arrow-down-rounded"
