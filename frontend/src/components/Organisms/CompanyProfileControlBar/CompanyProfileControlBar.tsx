@@ -34,6 +34,10 @@ function CompanyProfileControlBar({
   const [filterDropdown, setFilterDropdown] = useState(false);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
   const [isSecondSelectOpen, setIsSecondSelectOpen] = useState(false);
+  const [selectFilterValue, setSelectFilterValue] = useState({
+    client: '',
+    settled: '',
+  });
 
   const total =
     tasks.length > 0
@@ -77,6 +81,30 @@ function CompanyProfileControlBar({
   };
 
   const viewData = ['Główne', 'Dodatkowe'];
+
+  const handleFilterDropdownInputValue = (e, key) => {
+    const { value } = e.target;
+    setSelectFilterValue((prev) => {
+      return {
+        ...prev,
+        [key]: value,
+      };
+    });
+  };
+
+  const filteredClientsForDropdown =
+    company &&
+    company.clientPerson.filter((u) => {
+      return u.value
+        .toLocaleLowerCase()
+        .includes(selectFilterValue.client.toLocaleLowerCase());
+    });
+
+  const filteredSettledForDropdown = settleDropdownData.filter((s) => {
+    return s.value
+      .toLocaleLowerCase()
+      .includes(selectFilterValue.settled.toLocaleLowerCase());
+  });
 
   return (
     <>
@@ -150,8 +178,11 @@ function CompanyProfileControlBar({
               label="Klienci"
               isSelectOpen={isSelectOpen}
               setIsSelectOpen={setIsSelectOpen}
+              inputKey="client"
+              inputValue={selectFilterValue.client}
+              handleInputValue={handleFilterDropdownInputValue}
             >
-              {company.clientPerson.map((cp) => {
+              {filteredClientsForDropdown.map((cp) => {
                 return (
                   <FilterCheckbox
                     key={cp._id}
@@ -168,8 +199,11 @@ function CompanyProfileControlBar({
               label="Rozliczone"
               isSelectOpen={isSecondSelectOpen}
               setIsSelectOpen={setIsSecondSelectOpen}
+              inputKey="settled"
+              inputValue={selectFilterValue.settled}
+              handleInputValue={handleFilterDropdownInputValue}
             >
-              {settleDropdownData.map((sdd) => {
+              {filteredSettledForDropdown.map((sdd) => {
                 return (
                   <FilterCheckbox
                     key={sdd.id}

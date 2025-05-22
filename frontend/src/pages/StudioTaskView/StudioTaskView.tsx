@@ -69,6 +69,10 @@ function StudioTaskView() {
   const [isUsersSelectOpen, setIsUsersSelectOpen] = useState(false);
   const [isCompaniesSelectOpen, setIsCompaniesSelectOpen] = useState(false);
   const [matchingTasks, setMatchingTasks] = useState([]);
+  const [selectFilterValue, setSelectFilterValue] = useState({
+    user: '',
+    company: '',
+  });
 
   const [loadingState, setLoadingState] = useState({
     isLoading: false,
@@ -290,6 +294,28 @@ function StudioTaskView() {
     itemToString: (item) => (item ? item.name : ''),
   });
 
+  const handleFilterDropdownInputValue = (e, key) => {
+    const { value } = e.target;
+    setSelectFilterValue((prev) => {
+      return {
+        ...prev,
+        [key]: value,
+      };
+    });
+  };
+
+  const filteredUsersForDropdown = users.filter((u) => {
+    return u.name
+      .toLocaleLowerCase()
+      .includes(selectFilterValue.user.toLocaleLowerCase());
+  });
+
+  const filteredCompaniesForDropdown = companies.filter((c) => {
+    return c.name
+      .toLocaleLowerCase()
+      .includes(selectFilterValue.company.toLocaleLowerCase());
+  });
+
   return (
     <>
       <ModalTemplate
@@ -437,8 +463,11 @@ function StudioTaskView() {
                   isSelectOpen={isUsersSelectOpen}
                   setIsSelectOpen={setIsUsersSelectOpen}
                   label="Członkowie"
+                  inputKey="user"
+                  inputValue={selectFilterValue.user}
+                  handleInputValue={handleFilterDropdownInputValue}
                 >
-                  {users.map((userOnDrop) => {
+                  {filteredUsersForDropdown.map((userOnDrop) => {
                     return (
                       user._id !== user[0]._id && (
                         <FilterCheckbox
@@ -461,8 +490,11 @@ function StudioTaskView() {
                   isSelectOpen={isCompaniesSelectOpen}
                   setIsSelectOpen={setIsCompaniesSelectOpen}
                   label="Firmy"
+                  inputKey="company"
+                  inputValue={selectFilterValue.company}
+                  handleInputValue={handleFilterDropdownInputValue}
                 >
-                  {companies.map((company) => {
+                  {filteredCompaniesForDropdown.map((company) => {
                     return (
                       <FilterCheckbox
                         key={company._id}

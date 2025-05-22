@@ -24,6 +24,9 @@ function UpdateTaskModalContent({
 }) {
   const [assignedReckoTask, setAssignedReckoTask] = useState([]);
   const [isReckoTaskLoading, setIsReckoTaskLoading] = useState(false);
+  const [selectFilterValue, setSelectFilterValue] = useState({
+    user: '',
+  });
   const {
     users,
     companies,
@@ -81,6 +84,22 @@ function UpdateTaskModalContent({
     );
     getAssignedReckoTask();
   }, []);
+
+  const handleFilterDropdownInputValue = (e, key) => {
+    const { value } = e.target;
+    setSelectFilterValue((prev) => {
+      return {
+        ...prev,
+        [key]: value,
+      };
+    });
+  };
+
+  const filteredUsersForDropdown = users.filter((u) => {
+    return u.name
+      .toLocaleLowerCase()
+      .includes(selectFilterValue.user.toLocaleLowerCase());
+  });
 
   const renderReckoSection = () => {
     if (isReckoTaskLoading) {
@@ -388,8 +407,11 @@ function UpdateTaskModalContent({
             isSelectOpen={isSelectOpen}
             setIsSelectOpen={setIsSelectOpen}
             label="Członkowie"
+            inputKey="user"
+            inputValue={selectFilterValue.user}
+            handleInputValue={handleFilterDropdownInputValue}
           >
-            {users.map((user) => {
+            {filteredUsersForDropdown.map((user) => {
               const isUserChecked = checkIfUserAssigned(
                 task.participants,
                 user._id
@@ -418,7 +440,32 @@ function UpdateTaskModalContent({
                       />
                     )}
 
-                    <p>{user.name}</p>
+                    <p
+                      role="button"
+                      tabIndex={0}
+                      className={styles.userPar}
+                      onClick={() => {
+                        if (isUserChecked) {
+                          handleDeleteMember(user._id, 'Select');
+                          setIsSelectOpen(true);
+                        } else {
+                          handleAddMember(user._id, 'Select');
+                          setIsSelectOpen(true);
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          if (isUserChecked) {
+                            handleDeleteMember(user._id, 'Select');
+                          } else {
+                            handleAddMember(user._id, 'Select');
+                          }
+                          setIsSelectOpen(true);
+                        }
+                      }}
+                    >
+                      {user.name}
+                    </p>
                   </div>
                 )
               );

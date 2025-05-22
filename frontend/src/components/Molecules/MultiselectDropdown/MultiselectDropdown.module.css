@@ -65,6 +65,14 @@
   display: none;
 }
 
+.selectFilterInput {
+  z-index: 900;
+  left: 5px;
+  position: absolute;
+  border: none;
+  width: 75%;
+}
+
 @keyframes rotateUp {
   from {
     transform: rotate(0);
