@@ -5,7 +5,7 @@ import styles from './StudioTaskView.module.css';
 import { getTasksByStatus, statuses, statusNames } from '../../statuses';
 import useStudioTasksContext from '../../hooks/Context/useStudioTasksContext';
 import {
-  addStudioTask,
+  // addStudioTask,
   getAllStudioTasks,
   StudioTaskTypes,
 } from '../../services/studio-tasks-service';
@@ -17,7 +17,7 @@ import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplat
 import AddStudioTaskModalContent from '../../components/Organisms/AddStudioTaskModalContent/AddStudioTaskModalContent';
 import useSelectUser from '../../hooks/useSelectUser';
 import useAuth from '../../hooks/useAuth';
-import generateSearchID from '../../utils/generateSearchId';
+// import generateSearchID from '../../utils/generateSearchId';
 import useCompaniesContext from '../../hooks/Context/useCompaniesContext';
 import { getAllCompanies } from '../../services/companies-service';
 import Select from '../../components/Atoms/Select/Select';
@@ -72,13 +72,14 @@ function StudioTaskView() {
   const [selectFilterValue, setSelectFilterValue] = useState({
     user: '',
     company: '',
+    userAdd: '',
   });
 
-  const [loadingState, setLoadingState] = useState({
-    isLoading: false,
-    isFinalMessage: false,
-    finalMessage: '',
-  });
+  // const [loadingState, setLoadingState] = useState({
+  //   isLoading: false,
+  //   isFinalMessage: false,
+  //   finalMessage: '',
+  // });
   const [filterDropdown, setFilterDropdown] = useState<boolean>(false);
   const [participantsToFilter, setParticipantsToFilter] = useState<string[]>(
     () => {
@@ -129,83 +130,83 @@ function StudioTaskView() {
 
   const {
     users,
-    formValue,
-    setFormValue,
-    handleAddMember,
-    handleDeleteMember,
+    // formValue,
+    // setFormValue,
+    // handleAddMember,
+    // handleDeleteMember,
   } = useSelectUser<StudioTaskTypes>({
     initialValue: initialTaskObject,
     objectKey: 'participants',
   });
 
-  const handleLoadingStateChange = (key, val) => {
-    setLoadingState((prev) => ({
-      ...prev,
-      [key]: val,
-    }));
-  };
+  // const handleLoadingStateChange = (key, val) => {
+  //   setLoadingState((prev) => ({
+  //     ...prev,
+  //     [key]: val,
+  //   }));
+  // };
 
-  const handleFormChange = (e, key) => {
-    setFormValue((prev) => ({
-      ...prev,
-      [key]: e.target.value,
-    }));
-  };
+  // const handleFormChange = (e, key) => {
+  //   setFormValue((prev) => ({
+  //     ...prev,
+  //     [key]: e.target.value,
+  //   }));
+  // };
 
   const handleViewChange = (e) => {
     setViewVariable(e.target.value);
   };
 
-  const createTaskHandler = async () => {
-    try {
-      handleLoadingStateChange('isLoading', true);
-      const searchID = generateSearchID();
-      const currentDate = new Date();
-      const statusValue: StudioTaskTypes['status'] =
-        formValue.status as StudioTaskTypes['status'];
+  // const createTaskHandler = async () => {
+  //   try {
+  //     handleLoadingStateChange('isLoading', true);
+  //     const searchID = generateSearchID();
+  //     const currentDate = new Date();
+  //     const statusValue: StudioTaskTypes['status'] =
+  //       formValue.status as StudioTaskTypes['status'];
 
-      let indexOfNewTask;
-      if (tasksByStatus[statusValue].length > 0) {
-        indexOfNewTask =
-          tasksByStatus[statusValue][tasksByStatus[statusValue].length - 1]
-            .index + 1;
-      }
-      if (tasksByStatus[statusValue].length === 0) {
-        indexOfNewTask = tasksByStatus[statusValue].length + 1;
-      }
-      const response = await addStudioTask({
-        searchID,
-        reckoTaskID: '',
-        title: formValue.title,
-        client: formValue.client,
-        clientPerson: formValue.clientPerson,
-        status: statusValue,
-        index: indexOfNewTask,
-        author: user[0],
-        taskType: formValue.taskType,
-        participants: formValue.participants,
-        description: formValue.description,
-        subtasks: [],
-        deadline: formValue.deadline,
-        startDate: currentDate,
-      });
+  //     let indexOfNewTask;
+  //     if (tasksByStatus[statusValue].length > 0) {
+  //       indexOfNewTask =
+  //         tasksByStatus[statusValue][tasksByStatus[statusValue].length - 1]
+  //           .index + 1;
+  //     }
+  //     if (tasksByStatus[statusValue].length === 0) {
+  //       indexOfNewTask = tasksByStatus[statusValue].length + 1;
+  //     }
+  //     const response = await addStudioTask({
+  //       searchID,
+  //       reckoTaskID: '',
+  //       title: formValue.title,
+  //       client: formValue.client,
+  //       clientPerson: formValue.clientPerson,
+  //       status: statusValue,
+  //       index: indexOfNewTask,
+  //       author: user[0],
+  //       taskType: formValue.taskType,
+  //       participants: formValue.participants,
+  //       description: formValue.description,
+  //       subtasks: [],
+  //       deadline: formValue.deadline,
+  //       startDate: currentDate,
+  //     });
 
-      if (response !== null) {
-        handleLoadingStateChange('finalMessage', 'Zlecenie utworzone!');
-        setFormValue(initialTaskObject);
-        socket.emit('taskAdded', response); // Emit updated tasks
-        dispatch({ type: 'CREATE_STUDIOTASK', payload: response });
-      } else {
-        handleLoadingStateChange('finalMessage', 'Coś poszło nie tak :(');
-      }
-    } catch (error) {
-      console.error(error);
-      handleLoadingStateChange('isLoading', false);
-    } finally {
-      handleLoadingStateChange('isLoading', false);
-      handleLoadingStateChange('isFinalMessage', true);
-    }
-  };
+  //     if (response !== null) {
+  //       handleLoadingStateChange('finalMessage', 'Zlecenie utworzone!');
+  //       setFormValue(initialTaskObject);
+  //       socket.emit('taskAdded', response); // Emit updated tasks
+  //       dispatch({ type: 'CREATE_STUDIOTASK', payload: response });
+  //     } else {
+  //       handleLoadingStateChange('finalMessage', 'Coś poszło nie tak :(');
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //     handleLoadingStateChange('isLoading', false);
+  //   } finally {
+  //     handleLoadingStateChange('isLoading', false);
+  //     handleLoadingStateChange('isFinalMessage', true);
+  //   }
+  // };
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -316,29 +317,31 @@ function StudioTaskView() {
       .includes(selectFilterValue.company.toLocaleLowerCase());
   });
 
+  // const filteredUsersToAddForDropdown = users.filter((c) => {
+  //   return c.name
+  //     .toLocaleLowerCase()
+  //     .includes(selectFilterValue.company.toLocaleLowerCase());
+  // });
+
   return (
     <>
       <ModalTemplate
         isOpen={showModal}
         onClose={() => {
           closeModal();
-          handleLoadingStateChange('isFinalMessage', false);
-          setFormValue(initialTaskObject);
+          // handleLoadingStateChange('isFinalMessage', false);
+          // setFormValue(initialTaskObject);
         }}
         exitAnim={exitAnim}
       >
         <AddStudioTaskModalContent
-          loadingState={loadingState}
-          formValue={formValue}
-          handleFormChange={handleFormChange}
+          tasksByStatus={tasksByStatus}
           companies={companies}
-          statuses={statuses}
           statusNames={statusNames}
-          users={users}
-          handleAddMember={handleAddMember}
-          handleDeleteMember={handleDeleteMember}
-          createTaskHandler={createTaskHandler}
-          setFormValue={setFormValue}
+          statuses={statuses}
+          selectFilterValue={selectFilterValue}
+          filteredUsersForDropdown={filteredUsersForDropdown}
+          handleFilterDropdownInputValue={handleFilterDropdownInputValue}
         />
       </ModalTemplate>
       <ControlBar>
