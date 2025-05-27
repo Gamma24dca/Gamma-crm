@@ -15,9 +15,9 @@
 
 .submitbtn {
   margin-top: 20px;
-  font-size: 1.4rem;
-  width: 180px;
-  height: 50px;
+  font-size: 16px;
+  width: 120px;
+  height: 40px;
 }
 
 .submitbtn:hover,
