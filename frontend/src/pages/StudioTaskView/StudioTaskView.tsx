@@ -469,6 +469,7 @@ function StudioTaskView() {
                   inputKey="user"
                   inputValue={selectFilterValue.user}
                   handleInputValue={handleFilterDropdownInputValue}
+                  isSquare={false}
                 >
                   {filteredUsersForDropdown.map((userOnDrop) => {
                     return (
@@ -496,6 +497,7 @@ function StudioTaskView() {
                   inputKey="company"
                   inputValue={selectFilterValue.company}
                   handleInputValue={handleFilterDropdownInputValue}
+                  isSquare={false}
                 >
                   {filteredCompaniesForDropdown.map((company) => {
                     return (

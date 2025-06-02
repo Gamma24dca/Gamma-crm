@@ -237,7 +237,6 @@ function AddStudioTaskModalContent({
                 }
               >
                 <option value="">
-                  {' '}
                   {formik.touched.clientPerson && formik.errors.clientPerson ? (
                     <p className={styles.error}>{formik.errors.clientPerson}</p>
                   ) : (
@@ -285,6 +284,7 @@ function AddStudioTaskModalContent({
                 inputKey="user"
                 inputValue={selectFilterValue.user}
                 handleInputValue={handleFilterDropdownInputValue}
+                isSquare
               >
                 {filteredUsersForDropdown.map((userOnDrop) => {
                   return (
