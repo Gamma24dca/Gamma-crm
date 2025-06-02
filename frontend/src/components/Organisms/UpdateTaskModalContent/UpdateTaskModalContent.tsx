@@ -410,6 +410,7 @@ function UpdateTaskModalContent({
             inputKey="user"
             inputValue={selectFilterValue.user}
             handleInputValue={handleFilterDropdownInputValue}
+            isSquare={false}
           >
             {filteredUsersForDropdown.map((user) => {
               const isUserChecked = checkIfUserAssigned(

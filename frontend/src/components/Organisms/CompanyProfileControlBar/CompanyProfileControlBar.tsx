@@ -181,6 +181,7 @@ function CompanyProfileControlBar({
               inputKey="client"
               inputValue={selectFilterValue.client}
               handleInputValue={handleFilterDropdownInputValue}
+              isSquare={false}
             >
               {filteredClientsForDropdown.map((cp) => {
                 return (
@@ -202,6 +203,7 @@ function CompanyProfileControlBar({
               inputKey="settled"
               inputValue={selectFilterValue.settled}
               handleInputValue={handleFilterDropdownInputValue}
+              isSquare={false}
             >
               {filteredSettledForDropdown.map((sdd) => {
                 return (

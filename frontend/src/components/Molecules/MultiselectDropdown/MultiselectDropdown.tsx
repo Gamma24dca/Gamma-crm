@@ -11,6 +11,7 @@ function MultiselectDropdown({
   inputKey,
   inputValue,
   handleInputValue,
+  isSquare,
 }) {
   const selectInputRef = useRef(null);
 
@@ -23,7 +24,7 @@ function MultiselectDropdown({
   return (
     <button
       type="button"
-      className={styles.openSelectButton}
+      className={`${isSquare ? styles.squareButton : styles.openSelectButton}`}
       // onClick={() => {
       //   setIsSelectOpen(true);
       // }}
