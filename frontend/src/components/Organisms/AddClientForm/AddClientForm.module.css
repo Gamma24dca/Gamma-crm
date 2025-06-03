@@ -1,0 +1,33 @@
+.input,
+.errorBorder {
+  background-color: #fff;
+  width: 25rem;
+  height: 3.5rem;
+  border: 1px solid #c4c4c4;
+  border-radius: 10px;
+  color: #787878;
+  font-size: 20px;
+  font-weight: 500;
+  padding-left: 0.5rem;
+}
+
+.errorBorder {
+  border: 2px solid var(--color-orange);
+}
+
+.modalWrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.successIcon {
+  color: var(--color-green);
+}
+
+.buttonWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}

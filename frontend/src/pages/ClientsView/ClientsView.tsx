@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './ClientsView.module.css';
 import ControlBar from '../../components/Atoms/ControlBar/ControlBar';
 import ControlBarTitle from '../../components/Atoms/ControlBar/Title/ControlBarTitle';
@@ -8,9 +8,17 @@ import InfoBar from '../../components/Atoms/InfoBar/InfoBar';
 import { getAllClients } from '../../services/clients-service';
 import useClientsContext from '../../hooks/Context/useClientsContext';
 import TileWrapper from '../../components/Atoms/TileWrapper/TileWrapper';
+import SearchInput from '../../components/Atoms/ControlBar/SearchInput/SearchInput';
+import CTA from '../../components/Atoms/CTA/CTA';
+import useModal from '../../hooks/useModal';
+import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplate';
+import AddClientForm from '../../components/Organisms/AddClientForm/AddClientForm';
 
 function ClientsView() {
+  const [searchInputValue, setSearchInputValue] = useState('');
   const { dispatch, clients } = useClientsContext();
+  const { showModal, exitAnim, openModal, closeModal } = useModal();
+
   useEffect(() => {
     const fetchClients = async () => {
       try {
@@ -24,12 +32,36 @@ function ClientsView() {
     fetchClients();
   }, [dispatch]);
 
-  console.log(clients);
-
   return (
     <>
+      <ModalTemplate
+        isOpen={showModal}
+        onClose={() => {
+          closeModal();
+        }}
+        exitAnim={exitAnim}
+      >
+        <AddClientForm />
+      </ModalTemplate>
       <ControlBar>
         <ControlBarTitle>Klienci</ControlBarTitle>
+        <SearchInput
+          value={searchInputValue}
+          onChange={(e) => {
+            setSearchInputValue(e.target.value);
+          }}
+        />
+
+        <div className={styles.buttonsWrapper}>
+          <CTA
+            onClick={() => {
+              openModal();
+            }}
+          >
+            Dodaj klienta
+          </CTA>
+          <CTA onClick={() => {}}>Filtry</CTA>
+        </div>
       </ControlBar>
       <ViewContainer>
         <ListContainer>
@@ -54,15 +86,33 @@ function ClientsView() {
               return (
                 <TileWrapper key={cl._id} index={index}>
                   <div className={styles.clientTileWrapper}>
-                    <p className={styles.clientTileWrapperElement}>{cl.name}</p>
-                    <p className={styles.clientTileWrapperElement}>
+                    <p
+                      className={`${styles.clientTileWrapperElement} ${styles.bolded}`}
+                    >
+                      {cl.name}
+                    </p>
+                    <p
+                      className={`${styles.clientTileWrapperElement} ${styles.bolded}`}
+                    >
                       {cl.company}
                     </p>
                     <p className={styles.clientTileWrapperElement}>
-                      {cl.email}
+                      <a
+                        href={`mailto:${cl.email}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {cl.email}
+                      </a>
                     </p>
                     <p className={styles.clientTileWrapperElement}>
-                      {cl.phone}
+                      <a
+                        href={`tel:${cl.phone}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {cl.phone}
+                      </a>
                     </p>
                   </div>
                 </TileWrapper>
