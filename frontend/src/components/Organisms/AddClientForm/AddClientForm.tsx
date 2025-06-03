@@ -1,15 +1,13 @@
+import { Icon } from '@iconify/react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import Form from '../../Atoms/Form/Form';
 import FormControl from '../../Atoms/FormControl/FormControl';
 import Input from '../../Atoms/Input/Input';
-import inputStyle from '../../Atoms/Input/Input.module.css';
-
 import styles from './AddClientForm.module.css';
 import { addClient } from '../../../services/clients-service';
 import useClientsContext from '../../../hooks/Context/useClientsContext';
 import SubmitButton from '../../Atoms/SubmitBtn/SubmitBtn';
-import { Icon } from '@iconify/react';
 import CheckboxLoader from '../../Atoms/CheckboxLoader/CheckboxLoader';
 
 const createClientSchema = Yup.object({
@@ -19,12 +17,6 @@ const createClientSchema = Yup.object({
   phone: Yup.string().required('Podaj numer'),
 });
 
-const initialClientObject = {
-  name: '',
-  company: '',
-  email: '',
-  phone: '',
-};
 function AddClientForm() {
   const { dispatch } = useClientsContext();
   const formik = useFormik({
@@ -148,7 +140,7 @@ function AddClientForm() {
                     className={
                       touchedProp && errorProp
                         ? `${styles.errorBorder}`
-                        : `${inputStyle.input}`
+                        : `${styles.input}`
                     }
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
