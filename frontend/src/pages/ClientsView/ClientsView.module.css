@@ -1,0 +1,19 @@
+.clientInfoBarContainer {
+  /* padding-left: 2.5%; */
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.clientTileWrapper {
+  width: 100%;
+  display: flex;
+}
+
+.clientTileWrapperElement {
+  width: 25%;
+}
+
+.tileElementInfoBar {
+  width: 25%;
+}

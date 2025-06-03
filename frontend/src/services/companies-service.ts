@@ -43,7 +43,9 @@ export async function getAllCompanies(): Promise<CompaniesType[] | null> {
   }
 }
 
-export async function getCurrentCompany(id): Promise<CompaniesType | null> {
+export async function getCurrentCompany(
+  id: string
+): Promise<CompaniesType | null> {
   try {
     const response = await fetch(
       `${import.meta.env.VITE_API_URL}/api/companies/${id}`,
