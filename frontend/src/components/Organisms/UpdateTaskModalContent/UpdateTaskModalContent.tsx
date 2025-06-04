@@ -64,7 +64,6 @@ function UpdateTaskModalContent({
       setIsReckoTaskLoading(true);
       if (task.reckoTaskID) {
         const reckoTask = await getReckoningTask(task.reckoTaskID);
-        // console.log(reckoTask);
         if (reckoTask !== null) {
           setAssignedReckoTask([reckoTask]);
         } else {

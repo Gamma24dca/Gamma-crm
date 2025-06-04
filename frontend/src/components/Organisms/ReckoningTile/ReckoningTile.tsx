@@ -14,7 +14,13 @@ import useReckoTasksContext from '../../../hooks/Context/useReckoTasksContext';
 import CheckboxLoader from '../../Atoms/CheckboxLoader/CheckboxLoader';
 import summarizeHours from '../../../utils/SummarizeHours';
 
-function ReckoningTile({ reckTask, index, selectedMonthIndex, companies }) {
+function ReckoningTile({
+  reckTask,
+  index,
+  selectedMonthIndex,
+  companies,
+  isAssignedToKanban,
+}) {
   const [formValue, setFormValue] = useState(reckTask);
   const [isTaskDeleteLoading, setIsTaskDeleteLoading] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState({
@@ -249,46 +255,48 @@ function ReckoningTile({ reckTask, index, selectedMonthIndex, companies }) {
             />
             <p>Wyczyść godziny</p>
           </div>
-          <div
-            className={styles.deleteWrapper}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                handleDeleteReckoTask(reckTask._id);
-              }
-            }}
-            onClick={() => {
-              handleBlur(reckTask._id, {
-                client: 'Wybierz firme',
-                clientPerson: 'Wybierz klienta',
-                title: '',
-                description: '',
-                printWhat: '',
-                printWhere: '',
-              });
-              setFormValue((prev) => {
-                return {
-                  ...prev,
+          {!isAssignedToKanban && (
+            <div
+              className={styles.deleteWrapper}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  handleDeleteReckoTask(reckTask._id);
+                }
+              }}
+              onClick={() => {
+                handleBlur(reckTask._id, {
                   client: 'Wybierz firme',
                   clientPerson: 'Wybierz klienta',
                   title: '',
                   description: '',
                   printWhat: '',
                   printWhere: '',
-                };
-              });
-              handleHoursClear();
-            }}
-          >
-            <Icon
-              className={styles.trashIcon}
-              icon="line-md:file-document-off"
-              width="20"
-              height="20"
-            />
-            <p>Wyczyść zlecenie</p>
-          </div>
+                });
+                setFormValue((prev) => {
+                  return {
+                    ...prev,
+                    client: 'Wybierz firme',
+                    clientPerson: 'Wybierz klienta',
+                    title: '',
+                    description: '',
+                    printWhat: '',
+                    printWhere: '',
+                  };
+                });
+                handleHoursClear();
+              }}
+            >
+              <Icon
+                className={styles.trashIcon}
+                icon="line-md:file-document-off"
+                width="20"
+                height="20"
+              />
+              <p>Wyczyść zlecenie</p>
+            </div>
+          )}
         </div>
       </>,
 
@@ -334,6 +342,7 @@ function ReckoningTile({ reckTask, index, selectedMonthIndex, companies }) {
           handleFormValueChange(e, 'client');
           handleBlur(reckTask._id, { client: e.target.value });
         }}
+        disabled={isAssignedToKanban}
       >
         <option value={formValue.client}>{formValue.client}</option>
         {companies.map((comOpt) => {
@@ -352,6 +361,7 @@ function ReckoningTile({ reckTask, index, selectedMonthIndex, companies }) {
           handleBlur(reckTask._id, { clientPerson: e.target.value });
         }}
         className={`${styles.reckTaskItem} ${styles.clientPersonTile}`}
+        disabled={isAssignedToKanban}
       >
         <option value="Klient">{formValue.clientPerson}</option>
         {formValue.client.length > 0 &&
@@ -377,6 +387,7 @@ function ReckoningTile({ reckTask, index, selectedMonthIndex, companies }) {
         id="Title"
         placeholder="Dodaj tytuł..."
         value={formValue.title}
+        disabled={isAssignedToKanban}
         onChange={(e) => {
           handleFormValueChange(e, 'title');
         }}
@@ -392,6 +403,7 @@ function ReckoningTile({ reckTask, index, selectedMonthIndex, companies }) {
         id="Description"
         placeholder="Dodaj opis..."
         value={formValue.description}
+        disabled={isAssignedToKanban}
         onChange={(e) => {
           handleFormValueChange(e, 'description');
         }}
@@ -407,6 +419,7 @@ function ReckoningTile({ reckTask, index, selectedMonthIndex, companies }) {
         id="Description"
         placeholder="Dodaj druk..."
         value={formValue.printWhat}
+        disabled={isAssignedToKanban}
         onChange={(e) => {
           handleFormValueChange(e, 'printWhat');
         }}
@@ -421,6 +434,7 @@ function ReckoningTile({ reckTask, index, selectedMonthIndex, companies }) {
         id="Description"
         placeholder="Dodaj druk..."
         value={formValue.printWhere}
+        disabled={isAssignedToKanban}
         onChange={(e) => {
           handleFormValueChange(e, 'printWhere');
         }}

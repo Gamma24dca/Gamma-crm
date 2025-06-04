@@ -360,6 +360,7 @@ function ReckoningView() {
             index={index}
             selectedMonthIndex={selectedMonthIndex}
             companies={companies}
+            isAssignedToKanban={reckTask.idOfAssignedStudioTask !== undefined}
             // assigneStudioTaskId={reckTask.idOfAssignedStudioTask}
           />
         );
