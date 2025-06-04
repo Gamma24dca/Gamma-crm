@@ -80,6 +80,15 @@ const useStudioTaskUpdate = (task, closeModal) => {
         id: task._id,
         studioTaskData: formValue,
       });
+      if (task.reckoTaskID.length > 0) {
+        await updateReckoningTask({
+          taskId: task.reckoTaskID,
+          value: {
+            title: formValue.title,
+            description: formValue.description,
+          },
+        });
+      }
       // const res = await getAllStudioTasks();
       // dispatch({ type: 'SET_STUDIOTASKS', payload: res });
       const res = await getStudioTask(updatedTask._id);
@@ -137,8 +146,6 @@ const useStudioTaskUpdate = (task, closeModal) => {
         taskId: updatedReckoTask._id,
         value: updatedReckoTask,
       });
-
-      console.log(updatedReckoTask);
     }
 
     const newFormValue = {
@@ -200,8 +207,9 @@ const useStudioTaskUpdate = (task, closeModal) => {
   };
 
   const handleClientChange = async (e) => {
+    const selectedCompany = e.target.value;
     const companyObject = companies.filter(
-      (com) => com.name === e.target.value
+      (com) => com.name === selectedCompany
     );
     const companyFirstClientPerson = companyObject[0].clientPerson[0].value;
     handleFormChange(e, 'client');
@@ -216,15 +224,27 @@ const useStudioTaskUpdate = (task, closeModal) => {
         id: task._id,
         studioTaskData: {
           ...task,
-          client: e.target.value,
+          client: selectedCompany,
           clientPerson: companyFirstClientPerson,
         },
       });
+
+      console.log(selectedCompany);
       // const res = await getAllStudioTasks();
       // dispatch({ type: 'SET_STUDIOTASKS', payload: res });
       const res = await getStudioTask(updatedTask._id);
       dispatch({ type: 'UPDATE_STUDIOTASK', payload: res });
       socket.emit('tasksUpdated', res);
+
+      if (task.reckoTaskID.length > 0) {
+        await updateReckoningTask({
+          taskId: task.reckoTaskID,
+          value: {
+            client: selectedCompany,
+            clientPerson: companyFirstClientPerson,
+          },
+        });
+      }
     } catch (error) {
       console.error(error);
     }
@@ -232,19 +252,27 @@ const useStudioTaskUpdate = (task, closeModal) => {
 
   const handleClientPersonChange = async (e) => {
     handleFormChange(e, 'clientPerson');
+    const selectedClientPerson = e.target.value;
     try {
       const updatedTask = await UpdateStudioTask({
         id: task._id,
         studioTaskData: {
           ...task,
-          clientPerson: e.target.value,
+          clientPerson: selectedClientPerson,
         },
       });
-      // const res = await getAllStudioTasks();
-      // dispatch({ type: 'SET_STUDIOTASKS', payload: res });
       const res = await getStudioTask(updatedTask._id);
       dispatch({ type: 'UPDATE_STUDIOTASK', payload: res });
       socket.emit('tasksUpdated', res);
+
+      if (task.reckoTaskID.length > 0) {
+        await updateReckoningTask({
+          taskId: task.reckoTaskID,
+          value: {
+            clientPerson: selectedClientPerson,
+          },
+        });
+      }
     } catch (error) {
       console.error(error);
     }
