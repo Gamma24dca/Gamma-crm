@@ -13,11 +13,33 @@ import CTA from '../../components/Atoms/CTA/CTA';
 import useModal from '../../hooks/useModal';
 import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplate';
 import AddClientForm from '../../components/Organisms/AddClientForm/AddClientForm';
+import Overlay from '../../components/Atoms/Overlay/Overlay';
+import FilterDropdownContainer from '../../components/Atoms/FilterDropdownContainer/FilterDropdownContainer';
+import DropdownHeader from '../../components/Atoms/DropdownHeader/DropdownHeader';
+import MultiselectDropdown from '../../components/Molecules/MultiselectDropdown/MultiselectDropdown';
+import FilterCheckbox from '../../components/Molecules/FilterCheckbox/FilterCheckbox';
+import FiltersClearButton from '../../components/Atoms/FiltersClearButton/FiltersClearButton';
+import useCompaniesContext from '../../hooks/Context/useCompaniesContext';
+import { getAllCompanies } from '../../services/companies-service';
 
 function ClientsView() {
   const [searchInputValue, setSearchInputValue] = useState('');
+  const [filterDropdown, setFilterDropdown] = useState(false);
+  const [isSelectOpen, setIsSelectOpen] = useState(false);
+  const [selectFilterValue, setSelectFilterValue] = useState({
+    client: '',
+    settled: '',
+  });
+  const [clientPersonToFilter, setClientPersonToFilter] = useState<string[]>(
+    []
+  );
+
   const { dispatch, clients } = useClientsContext();
+  const { companies, dispatch: companiesDispatch } = useCompaniesContext();
+
   const { showModal, exitAnim, openModal, closeModal } = useModal();
+
+  // EXTRACT FILTER DROPDOWN LOGIC TO CUSTOM HOOK
 
   useEffect(() => {
     const fetchClients = async () => {
@@ -31,6 +53,59 @@ function ClientsView() {
 
     fetchClients();
   }, [dispatch]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      if (companies.length === 0) {
+        try {
+          const allCompanies = await getAllCompanies();
+          companiesDispatch({ type: 'SET_COMPANIES', payload: allCompanies });
+        } catch (error) {
+          console.error('Error fetching users:', error);
+        }
+      }
+    };
+    fetchUsers();
+  }, [companiesDispatch, companies]);
+
+  const toggleClientPerson = (clientPerson) => {
+    if (clientPersonToFilter.includes(clientPerson.value)) {
+      setClientPersonToFilter(
+        clientPersonToFilter.filter((part) => part !== clientPerson.value)
+      );
+    } else {
+      setClientPersonToFilter((prev) => {
+        return [...prev, clientPerson.value];
+      });
+    }
+  };
+
+  const handleFilterDropdownInputValue = (e, key) => {
+    const { value } = e.target;
+    setSelectFilterValue((prev) => {
+      return {
+        ...prev,
+        [key]: value,
+      };
+    });
+  };
+
+  const filteredBySearch = clients.filter((c) => {
+    return searchInputValue
+      ? c.company.toLowerCase().includes(searchInputValue.toLowerCase()) ||
+          c.name.toLowerCase().includes(searchInputValue.toLowerCase()) ||
+          c.phone.toLowerCase().includes(searchInputValue.toLowerCase()) ||
+          c.email.toLowerCase().includes(searchInputValue.toLowerCase())
+      : clients;
+  });
+
+  // const filteredClientsForDropdown =
+  //   company &&
+  //   company.clientPerson.filter((u) => {
+  //     return u.value
+  //       .toLocaleLowerCase()
+  //       .includes(selectFilterValue.client.toLocaleLowerCase());
+  //   });
 
   return (
     <>
@@ -52,6 +127,42 @@ function ClientsView() {
           }}
         />
 
+        {filterDropdown && (
+          <>
+            <Overlay closeFunction={setFilterDropdown} />
+            <FilterDropdownContainer>
+              <DropdownHeader>Filtr</DropdownHeader>
+              <br />
+              <MultiselectDropdown
+                label="Firmy"
+                isSelectOpen={isSelectOpen}
+                setIsSelectOpen={setIsSelectOpen}
+                inputKey="client"
+                inputValue={selectFilterValue.client}
+                handleInputValue={handleFilterDropdownInputValue}
+                isSquare={false}
+              >
+                {companies.map((cp) => {
+                  return (
+                    <FilterCheckbox
+                      key={cp._id}
+                      name={cp.name}
+                      isSelected={clientPersonToFilter.includes(cp.name)}
+                      toggleCompany={toggleClientPerson}
+                      filterVariable={cp}
+                    />
+                  );
+                })}
+                <p>test</p>
+              </MultiselectDropdown>
+              <FiltersClearButton
+                handleClear={() => {
+                  setClientPersonToFilter([]);
+                }}
+              />
+            </FilterDropdownContainer>
+          </>
+        )}
         <div className={styles.buttonsWrapper}>
           <CTA
             onClick={() => {
@@ -60,7 +171,13 @@ function ClientsView() {
           >
             Dodaj klienta
           </CTA>
-          <CTA onClick={() => {}}>Filtry</CTA>
+          <CTA
+            onClick={() => {
+              setFilterDropdown((prev) => !prev);
+            }}
+          >
+            Filtry
+          </CTA>
         </div>
       </ControlBar>
       <ViewContainer>
@@ -82,7 +199,7 @@ function ClientsView() {
             </div>
           </InfoBar>
           <>
-            {clients.map((cl, index) => {
+            {filteredBySearch.map((cl, index) => {
               return (
                 <TileWrapper key={cl._id} index={index}>
                   <div className={styles.clientTileWrapper}>
