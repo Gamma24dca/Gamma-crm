@@ -28,11 +28,8 @@ function ClientsView() {
   const [isSelectOpen, setIsSelectOpen] = useState(false);
   const [selectFilterValue, setSelectFilterValue] = useState({
     client: '',
-    settled: '',
   });
-  const [clientPersonToFilter, setClientPersonToFilter] = useState<string[]>(
-    []
-  );
+  const [companyToFilter, setCompanyToFilter] = useState<string[]>([]);
 
   const { dispatch, clients } = useClientsContext();
   const { companies, dispatch: companiesDispatch } = useCompaniesContext();
@@ -69,13 +66,13 @@ function ClientsView() {
   }, [companiesDispatch, companies]);
 
   const toggleClientPerson = (clientPerson) => {
-    if (clientPersonToFilter.includes(clientPerson.value)) {
-      setClientPersonToFilter(
-        clientPersonToFilter.filter((part) => part !== clientPerson.value)
+    if (companyToFilter.includes(clientPerson.name)) {
+      setCompanyToFilter(
+        companyToFilter.filter((part) => part !== clientPerson.name)
       );
     } else {
-      setClientPersonToFilter((prev) => {
-        return [...prev, clientPerson.value];
+      setCompanyToFilter((prev) => {
+        return [...prev, clientPerson.name];
       });
     }
   };
@@ -90,7 +87,14 @@ function ClientsView() {
     });
   };
 
-  const filteredBySearch = clients.filter((c) => {
+  const filteredBySelectDropdown =
+    companyToFilter.length > 0
+      ? clients.filter((c) => {
+          return companyToFilter.includes(c.company);
+        })
+      : clients;
+
+  const filteredBySearch = filteredBySelectDropdown.filter((c) => {
     return searchInputValue
       ? c.company.toLowerCase().includes(searchInputValue.toLowerCase()) ||
           c.name.toLowerCase().includes(searchInputValue.toLowerCase()) ||
@@ -147,7 +151,7 @@ function ClientsView() {
                     <FilterCheckbox
                       key={cp._id}
                       name={cp.name}
-                      isSelected={clientPersonToFilter.includes(cp.name)}
+                      isSelected={companyToFilter.includes(cp.name)}
                       toggleCompany={toggleClientPerson}
                       filterVariable={cp}
                     />
@@ -157,7 +161,7 @@ function ClientsView() {
               </MultiselectDropdown>
               <FiltersClearButton
                 handleClear={() => {
-                  setClientPersonToFilter([]);
+                  setCompanyToFilter([]);
                 }}
               />
             </FilterDropdownContainer>
