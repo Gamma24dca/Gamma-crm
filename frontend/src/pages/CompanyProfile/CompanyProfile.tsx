@@ -123,12 +123,12 @@ function CompanyProfile() {
     const headerHeight = 300;
     const availableHeight = viewportHeight - headerHeight;
 
-    console.log(
-      'viewportHeight:',
-      viewportHeight,
-      'available:',
-      availableHeight
-    );
+    // console.log(
+    //   'viewportHeight:',
+    //   viewportHeight,
+    //   'available:',
+    //   availableHeight
+    // );
 
     const itemsPerPage = Math.floor(availableHeight / tileHeight);
     setItemsPerPage(itemsPerPage > 0 ? itemsPerPage : 1);

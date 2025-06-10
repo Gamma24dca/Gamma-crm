@@ -137,9 +137,13 @@ function AddStudioTaskModalContent({
   });
 
   const handleUserAssign = (userOnDrop) => {
-    if (participantsToAdd.includes(userOnDrop._id)) {
+    if (
+      participantsToAdd.some(
+        (userToCheck) => userToCheck._id === userOnDrop._id
+      )
+    ) {
       setParticipantsToAdd(
-        participantsToAdd.filter((part) => part !== userOnDrop._id)
+        participantsToAdd.filter((part) => part._id !== userOnDrop._id)
       );
 
       setIsSelectOpen(true);

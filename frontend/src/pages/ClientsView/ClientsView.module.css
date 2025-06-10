@@ -16,6 +16,11 @@
 
 .tileElementInfoBar {
   width: 25%;
+
+  p {
+    margin: 5px 0;
+    padding: 0;
+  }
 }
 
 .bolded {

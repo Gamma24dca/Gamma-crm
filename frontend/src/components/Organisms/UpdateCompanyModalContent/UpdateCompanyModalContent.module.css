@@ -11,19 +11,40 @@
     opacity: 0.4;
   }
 }
+.selectsRow {
+  width: 100%;
+  display: flex;
+  gap: 15px;
+}
+
+.selectsRowLeft,
+.selectsRowRight {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  label {
+    margin-left: 5px;
+  }
+}
 
 .firstRow,
 .secondRow {
   display: flex;
+  gap: 15px;
   width: 100%;
 
   div {
     width: 100%;
     display: flex;
+    align-items: flex-start;
     flex-direction: column;
 
     label {
       text-align: center;
+      margin-bottom: 5px;
+      margin-left: 5px;
     }
   }
 }
@@ -81,30 +102,54 @@
 
 .companyInput,
 .hourRateInput {
-  width: 90%;
-  border: 0;
-  border-bottom: 2px solid gray;
-  outline: 0;
-  font-size: 14px;
-  padding: 7px 0;
-  background: transparent;
+  background-color: #fff;
+  width: 100%;
+  height: 40px;
+  border: 1px solid var(--color-navButton);
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 400;
+  /* padding-left: 0.5rem; */
+  padding: 0;
+  text-indent: 15px;
 }
 
 .hourRateInputWrapper {
   display: flex;
-  width: 90%;
-  border-bottom: 2px solid gray;
+  width: 100%;
 }
 
 .hourRateInput {
-  width: 14%;
-  border-bottom: none;
+  position: relative;
+  width: 100%;
+}
+.hourRateContainer {
+  position: relative;
 }
 
 .rateLabel {
-  font-size: 14px;
+  font-size: 16px;
   display: flex;
   align-items: center;
+  position: absolute;
+  left: 17%;
+  height: 40px;
+}
+
+.one {
+  left: 10%;
+}
+
+.two {
+  left: 12%;
+}
+
+.three {
+  left: 16%;
+}
+
+.four {
+  left: 18%;
 }
 
 @media (max-width: 1700px) {
@@ -112,7 +157,40 @@
     font-size: 14px;
   }
 
-  .companyInput {
+  .companyInput,
+  .hourRateInput {
     font-size: 12px;
+    height: 35px;
+  }
+  .rateLabel {
+    font-size: 12px;
+    left: 10%;
+    height: 35px;
+  }
+
+  .one {
+    left: 8%;
+  }
+
+  .two {
+    left: 10%;
+  }
+
+  .three {
+    left: 13%;
+  }
+
+  .four {
+    left: 16%;
+  }
+}
+
+.nameInput {
+  display: flex;
+  flex-direction: column;
+
+  label {
+    margin-bottom: 5px;
+    margin-left: 5px;
   }
 }
