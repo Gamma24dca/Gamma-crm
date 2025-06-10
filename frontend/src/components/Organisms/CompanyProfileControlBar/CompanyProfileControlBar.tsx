@@ -39,8 +39,6 @@ function CompanyProfileControlBar({
     settled: '',
   });
 
-  console.log(company);
-
   const total =
     tasks.length > 0
       ? tasks.reduce((tasksTotalHours, task) => {
