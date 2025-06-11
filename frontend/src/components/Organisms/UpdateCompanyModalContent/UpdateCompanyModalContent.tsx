@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Icon } from '@iconify/react';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   getAllCompanies,
   UpdateCompany,
@@ -40,6 +41,8 @@ function UpdateCompanyModalContent({
     client: '',
   });
   const [clients, setClients] = useState([]);
+  const [isPlusIconVisible, setIsPlusIconVisible] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchClients = async () => {
@@ -77,7 +80,7 @@ function UpdateCompanyModalContent({
       hourRate: currentCompany.hourRate || '',
       website: currentCompany.website || '',
     });
-  }, [currentCompany, setFormValue]);
+  }, [currentCompany]);
 
   const handleFormChange = (e, key) => {
     setFormValue((prev) => ({
@@ -141,10 +144,6 @@ function UpdateCompanyModalContent({
 
       setIsSelectOpen(true);
     } else {
-      // setTeamMembers((prev) => {
-      //   return [...prev, user];
-      // });
-
       setFormValue((prev) => {
         return {
           ...prev,
@@ -161,7 +160,6 @@ function UpdateCompanyModalContent({
         (clientToCheck) => clientToCheck.value === newClient.name
       )
     ) {
-      // setTeamMembers(teamMembers.filter((part) => part._id !== user._id));
       setFormValue((prev) => {
         return {
           ...prev,
@@ -173,10 +171,6 @@ function UpdateCompanyModalContent({
 
       setIsClientsSelectOpen(true);
     } else {
-      // setTeamMembers((prev) => {
-      //   return [...prev, user];
-      // });
-
       setFormValue((prev) => {
         return {
           ...prev,
@@ -251,8 +245,29 @@ function UpdateCompanyModalContent({
         </div>
 
         <div className={styles.selectsRowRight}>
-          <label htmlFor="companyNumber">
+          <label
+            htmlFor="companyNumber"
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                navigate(`/klienci`);
+              }
+            }}
+            onMouseEnter={() => setIsPlusIconVisible(true)}
+            onMouseLeave={() => setIsPlusIconVisible(false)}
+            onClick={() => navigate(`/klienci`)}
+            className={styles.clientsLabel}
+          >
             <strong>Klienci:</strong>
+            {isPlusIconVisible && (
+              <Icon
+                icon="line-md:plus-circle"
+                width="24"
+                height="24"
+                className={styles.addClientIcon}
+              />
+            )}
           </label>
           <MultiselectDropdown
             isSelectOpen={isClientsSelectOpen}

@@ -1,5 +1,6 @@
 .input,
-.errorBorder {
+.errorBorder,
+.selectInput {
   background-color: #fff;
   width: 25rem;
   height: 3.5rem;
@@ -9,6 +10,10 @@
   font-size: 20px;
   font-weight: 500;
   padding-left: 0.5rem;
+}
+
+.selectInput {
+  width: 26rem;
 }
 
 .errorBorder {
