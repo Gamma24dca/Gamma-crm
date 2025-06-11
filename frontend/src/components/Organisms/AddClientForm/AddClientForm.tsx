@@ -1,6 +1,7 @@
 import { Icon } from '@iconify/react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { useEffect } from 'react';
 import Form from '../../Atoms/Form/Form';
 import FormControl from '../../Atoms/FormControl/FormControl';
 import Input from '../../Atoms/Input/Input';
@@ -9,6 +10,11 @@ import { addClient } from '../../../services/clients-service';
 import useClientsContext from '../../../hooks/Context/useClientsContext';
 import SubmitButton from '../../Atoms/SubmitBtn/SubmitBtn';
 import CheckboxLoader from '../../Atoms/CheckboxLoader/CheckboxLoader';
+import useCompaniesContext from '../../../hooks/Context/useCompaniesContext';
+import {
+  getAllCompanies,
+  UpdateCompany,
+} from '../../../services/companies-service';
 
 const createClientSchema = Yup.object({
   name: Yup.string().required('Podaj nazwe'),
@@ -19,6 +25,7 @@ const createClientSchema = Yup.object({
 
 function AddClientForm() {
   const { dispatch } = useClientsContext();
+  const { companies, dispatch: companiesDispatch } = useCompaniesContext();
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -38,7 +45,21 @@ function AddClientForm() {
           phone,
         });
 
+        const filteredCompany = companies.filter((companyTF) => {
+          return companyTF.name === company;
+        });
+
         if (response !== null) {
+          await UpdateCompany({
+            id: filteredCompany[0]._id,
+            companyData: {
+              clientPerson: [
+                ...filteredCompany[0].clientPerson,
+                { label: name, value: name },
+              ],
+            },
+          });
+
           dispatch({ type: 'CREATE_CLIENT', payload: response });
           formik.setStatus('success');
           return;
@@ -61,18 +82,18 @@ function AddClientForm() {
       touchedProp: formik.touched.name,
       errorProp: formik.errors.name,
     },
-    {
-      id: 'company',
-      type: 'text',
-      placeholder: `${
-        formik.errors.company && formik.touched.company
-          ? 'Uzupełnij firmę!'
-          : 'Firma'
-      }`,
-      inValue: formik.values.company,
-      touchedProp: formik.touched.company,
-      errorProp: formik.errors.company,
-    },
+    // {
+    //   id: 'company',
+    //   type: 'text',
+    //   placeholder: `${
+    //     formik.errors.company && formik.touched.company
+    //       ? 'Uzupełnij firmę!'
+    //       : 'Firma'
+    //   }`,
+    //   inValue: formik.values.company,
+    //   touchedProp: formik.touched.company,
+    //   errorProp: formik.errors.company,
+    // },
     {
       id: 'phone',
       type: 'text',
@@ -98,6 +119,20 @@ function AddClientForm() {
       errorProp: formik.errors.email,
     },
   ];
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      if (companies.length === 0) {
+        try {
+          const allCompanies = await getAllCompanies();
+          companiesDispatch({ type: 'SET_COMPANIES', payload: allCompanies });
+        } catch (error) {
+          console.error('Error fetching users:', error);
+        }
+      }
+    };
+    fetchUsers();
+  }, [companiesDispatch, companies]);
 
   const displayModalTitle = () => {
     if (
@@ -128,9 +163,10 @@ function AddClientForm() {
       {displayModalTitle()}
       <Form onSubmit={formik.handleSubmit} isSignInView={false}>
         <>
-          {formInputs.map(
-            ({ id, type, placeholder, inValue, touchedProp, errorProp }) => {
-              return (
+          {formInputs
+            .filter(({ id }) => id !== 'company')
+            .map(
+              ({ id, type, placeholder, inValue, touchedProp, errorProp }) => (
                 <FormControl key={id}>
                   <Input
                     id={id}
@@ -147,9 +183,33 @@ function AddClientForm() {
                     value={inValue}
                   />
                 </FormControl>
-              );
-            }
-          )}
+              )
+            )}
+
+          <FormControl>
+            <select
+              id="company"
+              name="company"
+              className={
+                formik.touched.company && formik.errors.company
+                  ? `${styles.errorBorder} ${styles.selectInput}`
+                  : `${styles.selectInput}`
+              }
+              value={formik.values.company}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            >
+              <option value="">Wybierz firmę</option>
+              {companies.map((company) => (
+                <option key={company._id} value={company.name}>
+                  {company.name}
+                </option>
+              ))}
+            </select>
+            {formik.touched.company && formik.errors.company && (
+              <div className={styles.errorMessage}>{formik.errors.company}</div>
+            )}
+          </FormControl>
         </>
 
         <div className={styles.buttonWrapper}>
