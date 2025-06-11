@@ -23,7 +23,11 @@ import { ChartsRouter } from './Charts/Charts.router';
 import { ClientRouter } from './Client/Client.router';
 
 var corsOptions = {
-  origin: ['https://gamma-crm-frontend.onrender.com', 'http://localhost:5173'],
+  origin: [
+    'https://gamma-crm-frontend.onrender.com',
+    'https://gamma-crm-frontend-production.onrender.com',
+    'http://localhost:5173',
+  ],
   default: 'https://gamma-crm-frontend.onrender.com',
   methods: 'GET,POST,PUT,PATCH,DELETE',
   credentials: true,
@@ -36,6 +40,7 @@ const io = new Server(server, {
   cors: {
     origin: [
       'https://gamma-crm-frontend.onrender.com',
+      'https://gamma-crm-frontend-production.onrender.com',
       'http://localhost:5173',
     ],
     methods: ['GET', 'POST'],
