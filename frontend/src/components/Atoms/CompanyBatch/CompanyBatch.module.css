@@ -10,6 +10,7 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  background-color: var(--color-navButton);
 }
 
 .clientPerson {
