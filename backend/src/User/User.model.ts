@@ -19,7 +19,6 @@ export const UserModel = mongoose.model(
     phone: {
       type: Number,
       required: true,
-      unique: true,
     },
     password: {
       type: String,
