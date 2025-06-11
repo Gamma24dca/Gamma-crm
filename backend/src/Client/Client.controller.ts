@@ -23,4 +23,15 @@ export const ClientController = {
   async deleteClient(id) {
     return await ClientModel.findByIdAndDelete(id);
   },
+
+  async getClientsPerCompany(company) {
+    console.log(company);
+    const clients = await ClientController.getClients();
+
+    const filteredClients = clients.filter((client) => {
+      return client.company.toLowerCase() === company;
+    });
+
+    return await filteredClients;
+  },
 };

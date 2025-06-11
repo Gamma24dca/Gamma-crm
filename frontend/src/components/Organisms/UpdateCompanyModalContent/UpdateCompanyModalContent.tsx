@@ -1,18 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import useSelectUser from '../../../hooks/useSelectUser';
 import {
   getAllCompanies,
   UpdateCompany,
 } from '../../../services/companies-service';
-// import CompanyGraphicTile from '../../Molecules/CompanyGraphicTile/CompanyGraphicTile';
-// import SelectUser from '../../Molecules/SelectUser/SelectUser';
 import styles from './UpdateCompanyModalContent.module.css';
-// import ClientSelect from '../../Molecules/ClientSelect/ClientSelect';
 import useCompaniesContext from '../../../hooks/Context/useCompaniesContext';
 import MultiselectDropdown from '../../Molecules/MultiselectDropdown/MultiselectDropdown';
 import FilterCheckbox from '../../Molecules/FilterCheckbox/FilterCheckbox';
-// import useAuth from '../../../hooks/useAuth';
+import useUsersContext from '../../../hooks/Context/useUsersContext';
+import { getAllUsers } from '../../../services/users-service';
+import { getClientsByCompany } from '../../../services/clients-service';
 
 const initialCompanyObject = {
   name: '',
@@ -31,29 +29,43 @@ function UpdateCompanyModalContent({
   refreshCompanyData,
 }) {
   const params = useParams();
-  // const { user } = useAuth();
-
-  const { dispatch } = useCompaniesContext();
+  const { users, dispatch } = useUsersContext();
+  const { dispatch: CompaniesDispatch } = useCompaniesContext();
+  const [formValue, setFormValue] = useState(initialCompanyObject);
   const [isHourRateInputActive, setIsHourRateInputActive] = useState(false);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
   const [isClientsSelectOpen, setIsClientsSelectOpen] = useState(false);
   const [selectFilterValue, setSelectFilterValue] = useState({
     user: '',
+    client: '',
   });
-  const [teamMembers, setTeamMembers] = useState([]);
+  const [clients, setClients] = useState([]);
 
-  const {
-    users,
-    formValue,
-    setFormValue,
-    // handleAddMember,
-    // handleDeleteMember,
-    // clientInputValue,
-    // setClientInputValue,
-  } = useSelectUser({
-    initialValue: initialCompanyObject,
-    objectKey: 'teamMembers',
-  });
+  useEffect(() => {
+    const fetchClients = async () => {
+      const fetchedClients = await getClientsByCompany(
+        currentCompany.name.toLowerCase()
+      );
+      setClients(fetchedClients);
+    };
+
+    fetchClients();
+  }, []);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      if (users.length === 0) {
+        try {
+          const allUsers = await getAllUsers();
+          dispatch({ type: 'SET_USERS', payload: allUsers });
+        } catch (error) {
+          console.error('Error fetching users:', error);
+        }
+      }
+    };
+
+    fetchUsers();
+  }, [dispatch, users]);
 
   useEffect(() => {
     setFormValue({
@@ -84,7 +96,7 @@ function UpdateCompanyModalContent({
       closeModal();
       refreshCompanyData();
       const companies = await getAllCompanies();
-      dispatch({ type: 'SET_COMPANIES', payload: companies });
+      CompaniesDispatch({ type: 'SET_COMPANIES', payload: companies });
     }
   };
 
@@ -114,15 +126,67 @@ function UpdateCompanyModalContent({
   };
 
   const handleUserAssign = (user) => {
-    if (teamMembers.some((userToCheck) => userToCheck._id === user._id)) {
-      setTeamMembers(teamMembers.filter((part) => part._id !== user._id));
+    if (
+      formValue.teamMembers.some((userToCheck) => userToCheck._id === user._id)
+    ) {
+      // setTeamMembers(teamMembers.filter((part) => part._id !== user._id));
+      setFormValue((prev) => {
+        return {
+          ...prev,
+          teamMembers: formValue.teamMembers.filter(
+            (part) => part._id !== user._id
+          ),
+        };
+      });
 
       setIsSelectOpen(true);
     } else {
-      setTeamMembers((prev) => {
-        return [...prev, user];
+      // setTeamMembers((prev) => {
+      //   return [...prev, user];
+      // });
+
+      setFormValue((prev) => {
+        return {
+          ...prev,
+          teamMembers: [...prev.teamMembers, user],
+        };
       });
       setIsSelectOpen(true);
+    }
+  };
+
+  const handleClientAssign = (newClient) => {
+    if (
+      formValue.clientPerson.some(
+        (clientToCheck) => clientToCheck.value === newClient.name
+      )
+    ) {
+      // setTeamMembers(teamMembers.filter((part) => part._id !== user._id));
+      setFormValue((prev) => {
+        return {
+          ...prev,
+          clientPerson: formValue.clientPerson.filter(
+            (client) => client.value !== newClient.name
+          ),
+        };
+      });
+
+      setIsClientsSelectOpen(true);
+    } else {
+      // setTeamMembers((prev) => {
+      //   return [...prev, user];
+      // });
+
+      setFormValue((prev) => {
+        return {
+          ...prev,
+          clientPerson: [
+            ...prev.clientPerson,
+            { value: newClient.name, label: newClient.name },
+          ],
+        };
+      });
+      setIsClientsSelectOpen(true);
     }
   };
 
@@ -130,6 +194,12 @@ function UpdateCompanyModalContent({
     return u.name
       .toLocaleLowerCase()
       .includes(selectFilterValue.user.toLocaleLowerCase());
+  });
+
+  const filteredClientsForDropdown = clients.filter((u) => {
+    return u.name
+      .toLocaleLowerCase()
+      .includes(selectFilterValue.client.toLocaleLowerCase());
   });
 
   return (
@@ -169,7 +239,9 @@ function UpdateCompanyModalContent({
                 <FilterCheckbox
                   key={u._id}
                   name={u.name}
-                  isSelected={teamMembers.includes(u)}
+                  isSelected={formValue.teamMembers.some(
+                    (tm) => tm._id === u._id
+                  )}
                   toggleCompany={handleUserAssign}
                   filterVariable={u}
                 />
@@ -186,25 +258,24 @@ function UpdateCompanyModalContent({
             isSelectOpen={isClientsSelectOpen}
             setIsSelectOpen={setIsClientsSelectOpen}
             label="Klienci"
-            inputKey="user"
-            inputValue={selectFilterValue.user}
+            inputKey="client"
+            inputValue={selectFilterValue.client}
             handleInputValue={handleFilterDropdownInputValue}
             isSquare
           >
-            <p>test</p>
-            {/* {filteredUsersForDropdown.map((userOnDrop) => {
-          return (
-            user._id !== user[0]._id && (
-              <FilterCheckbox
-                key={userOnDrop._id}
-                name={userOnDrop.name}
-                isSelected={participantsToAdd.includes(userOnDrop)}
-                toggleCompany={handleUserAssign}
-                filterVariable={userOnDrop}
-              />
-            )
-          );
-        })} */}
+            {filteredClientsForDropdown.map((client) => {
+              return (
+                <FilterCheckbox
+                  key={client._id}
+                  name={client.name}
+                  isSelected={formValue.clientPerson.some(
+                    (cp) => cp.value === client.name
+                  )}
+                  toggleCompany={handleClientAssign}
+                  filterVariable={client}
+                />
+              );
+            })}
           </MultiselectDropdown>
         </div>
       </div>

@@ -80,3 +80,18 @@ ClientRouter.delete(
     }
   },
 );
+
+ClientRouter.get(
+  '/bycompany/:company',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const filteredClients = await ClientController.getClientsPerCompany(
+        req.params.company,
+      );
+      res.status(StatusCodes.ACCEPTED).json(filteredClients);
+    } catch (error) {
+      res.status(StatusCodes.BAD_REQUEST).json({ message: error });
+    }
+  },
+);
