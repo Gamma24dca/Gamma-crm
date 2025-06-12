@@ -13,7 +13,7 @@ import CheckboxLoader from '../../Atoms/CheckboxLoader/CheckboxLoader';
 import useCompaniesContext from '../../../hooks/Context/useCompaniesContext';
 import {
   getAllCompanies,
-  UpdateCompany,
+  // UpdateCompany,
 } from '../../../services/companies-service';
 
 const createClientSchema = Yup.object({
@@ -45,20 +45,29 @@ function AddClientForm({ companyName }) {
           phone,
         });
 
-        const filteredCompany = companies.filter((companyTF) => {
-          return companyTF.name === company;
-        });
+        // const filteredCompany = companies.filter((companyTF) => {
+        //   return companyTF.name === company;
+        // });
 
         if (response !== null) {
-          await UpdateCompany({
-            id: filteredCompany[0]._id,
-            companyData: {
-              clientPerson: [
-                ...filteredCompany[0].clientPerson,
-                { label: name, value: name },
-              ],
-            },
-          });
+          // const updatedCompany = await UpdateCompany({
+          //   id: filteredCompany[0]._id,
+          //   companyData: {
+          //     clientPerson: [
+          //       ...filteredCompany[0].clientPerson,
+          //       { label: name, value: name },
+          //     ],
+          //   },
+          // });
+
+          // companiesDispatch({
+          //   type: 'UPDATE_CLIENTPERSON',
+          //   payload: updatedCompany,
+          //   test: response,
+          // });
+
+          const AllCompanies = await getAllCompanies();
+          companiesDispatch({ type: 'SET_COMPANIES', payload: AllCompanies });
 
           dispatch({ type: 'CREATE_CLIENT', payload: response });
           formik.setStatus('success');
