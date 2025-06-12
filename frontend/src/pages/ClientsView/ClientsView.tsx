@@ -120,7 +120,7 @@ function ClientsView() {
         }}
         exitAnim={exitAnim}
       >
-        <AddClientForm />
+        <AddClientForm companyName="" />
       </ModalTemplate>
       <ControlBar>
         <ControlBarTitle>Klienci</ControlBarTitle>

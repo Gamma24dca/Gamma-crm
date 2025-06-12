@@ -12,6 +12,11 @@
   padding-left: 0.5rem;
 }
 
+.addClientModalTitle {
+  width: 100%;
+  text-align: center;
+}
+
 .selectInput {
   width: 26rem;
 }

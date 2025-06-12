@@ -17,6 +17,11 @@
   gap: 15px;
 }
 
+.editCompanyModalTitle {
+  width: 100%;
+  text-align: center;
+}
+
 .selectsRowLeft,
 .selectsRowRight {
   width: 100%;
