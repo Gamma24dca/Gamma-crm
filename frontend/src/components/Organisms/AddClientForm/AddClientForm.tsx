@@ -23,13 +23,13 @@ const createClientSchema = Yup.object({
   phone: Yup.string().required('Podaj numer'),
 });
 
-function AddClientForm() {
+function AddClientForm({ companyName }) {
   const { dispatch } = useClientsContext();
   const { companies, dispatch: companiesDispatch } = useCompaniesContext();
   const formik = useFormik({
     initialValues: {
       name: '',
-      company: '',
+      company: companyName || '',
       email: '',
       phone: '',
     },
@@ -82,18 +82,6 @@ function AddClientForm() {
       touchedProp: formik.touched.name,
       errorProp: formik.errors.name,
     },
-    // {
-    //   id: 'company',
-    //   type: 'text',
-    //   placeholder: `${
-    //     formik.errors.company && formik.touched.company
-    //       ? 'Uzupełnij firmę!'
-    //       : 'Firma'
-    //   }`,
-    //   inValue: formik.values.company,
-    //   touchedProp: formik.touched.company,
-    //   errorProp: formik.errors.company,
-    // },
     {
       id: 'phone',
       type: 'text',
@@ -141,7 +129,9 @@ function AddClientForm() {
       (formik.errors.email && formik.touched.email) ||
       (formik.errors.phone && formik.touched.phone)
     ) {
-      return <h2>Coś poszło nie tak :(</h2>;
+      return (
+        <h2 className={styles.addClientModalTitle}>Coś poszło nie tak :(</h2>
+      );
     } else if (formik.status === 'success') {
       return (
         <div className={styles.modalWrapper}>
@@ -151,12 +141,12 @@ function AddClientForm() {
             height="24"
             className={styles.successIcon}
           />
-          <h2>Klient utworzony!</h2>
+          <h2 className={styles.addClientModalTitle}>Klient utworzony!</h2>
         </div>
       );
     }
 
-    return <h2>Dodaj klienta</h2>;
+    return <h2 className={styles.addClientModalTitle}>Dodaj klienta</h2>;
   };
   return (
     <>
@@ -206,9 +196,12 @@ function AddClientForm() {
                 </option>
               ))}
             </select>
-            {formik.touched.company && formik.errors.company && (
-              <div className={styles.errorMessage}>{formik.errors.company}</div>
-            )}
+            {formik.touched.company &&
+              typeof formik.errors.company === 'string' && (
+                <div className={styles.errorMessage}>
+                  {formik.errors.company}
+                </div>
+              )}
           </FormControl>
         </>
 
