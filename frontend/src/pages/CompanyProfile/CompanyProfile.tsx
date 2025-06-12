@@ -209,15 +209,12 @@ function CompanyProfile() {
             id={companyID}
           />
         ) : (
-          <>
-            <h2>Edytuj</h2>
-            <UpdateCompanyModalContent
-              currentCompany={company}
-              closeModal={closeModal}
-              openCaptcha={setDeleteCaptcha}
-              refreshCompanyData={fetchCompany}
-            />
-          </>
+          <UpdateCompanyModalContent
+            currentCompany={company}
+            closeModal={closeModal}
+            openCaptcha={setDeleteCaptcha}
+            refreshCompanyData={fetchCompany}
+          />
         )}
       </ModalTemplate>
       <ControlBar>

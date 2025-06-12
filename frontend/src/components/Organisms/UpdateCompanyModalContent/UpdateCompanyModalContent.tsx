@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Icon } from '@iconify/react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import {
   getAllCompanies,
   UpdateCompany,
@@ -12,6 +12,7 @@ import FilterCheckbox from '../../Molecules/FilterCheckbox/FilterCheckbox';
 import useUsersContext from '../../../hooks/Context/useUsersContext';
 import { getAllUsers } from '../../../services/users-service';
 import { getClientsByCompany } from '../../../services/clients-service';
+import AddClientForm from '../AddClientForm/AddClientForm';
 
 const initialCompanyObject = {
   name: '',
@@ -42,7 +43,7 @@ function UpdateCompanyModalContent({
   });
   const [clients, setClients] = useState([]);
   const [isPlusIconVisible, setIsPlusIconVisible] = useState(false);
-  const navigate = useNavigate();
+  const [isAddNewClientView, setIsAddNewClientView] = useState(false);
 
   useEffect(() => {
     const fetchClients = async () => {
@@ -197,186 +198,203 @@ function UpdateCompanyModalContent({
   });
 
   return (
-    <div className={styles.inputsWrapper}>
-      <div className={styles.nameInput}>
-        <label htmlFor="companyName">
-          <strong>Nazwa:</strong>
-        </label>
-        <input
-          type="text"
-          name="companyName"
-          id="companyName"
-          maxLength={20}
-          value={formValue.name}
-          onChange={(e) => {
-            handleFormChange(e, 'name');
-          }}
-          className={styles.companyInput}
-        />
-      </div>
-      <div className={styles.selectsRow}>
-        <div className={styles.selectsRowLeft}>
-          <label htmlFor="companyNumber">
-            <strong>Graficy:</strong>
-          </label>
-          <MultiselectDropdown
-            isSelectOpen={isSelectOpen}
-            setIsSelectOpen={setIsSelectOpen}
-            label="Graficy"
-            inputKey="user"
-            inputValue={selectFilterValue.user}
-            handleInputValue={handleFilterDropdownInputValue}
-            isSquare
-          >
-            {filteredUsersForDropdown.map((u) => {
-              return (
-                <FilterCheckbox
-                  key={u._id}
-                  name={u.name}
-                  isSelected={formValue.teamMembers.some(
-                    (tm) => tm._id === u._id
-                  )}
-                  toggleCompany={handleUserAssign}
-                  filterVariable={u}
-                />
-              );
-            })}
-          </MultiselectDropdown>
-        </div>
+    <div>
+      {!isAddNewClientView ? (
+        <div className={styles.inputsWrapper}>
+          {!isAddNewClientView && (
+            <h2 className={styles.editCompanyModalTitle}>Edytuj</h2>
+          )}
 
-        <div className={styles.selectsRowRight}>
-          <label
-            htmlFor="companyNumber"
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                navigate(`/klienci`);
-              }
-            }}
-            onMouseEnter={() => setIsPlusIconVisible(true)}
-            onMouseLeave={() => setIsPlusIconVisible(false)}
-            onClick={() => navigate(`/klienci`)}
-            className={styles.clientsLabel}
-          >
-            <strong>Klienci:</strong>
-            {isPlusIconVisible && (
-              <Icon
-                icon="line-md:plus-circle"
-                width="24"
-                height="24"
-                className={styles.addClientIcon}
-              />
-            )}
-          </label>
-          <MultiselectDropdown
-            isSelectOpen={isClientsSelectOpen}
-            setIsSelectOpen={setIsClientsSelectOpen}
-            label="Klienci"
-            inputKey="client"
-            inputValue={selectFilterValue.client}
-            handleInputValue={handleFilterDropdownInputValue}
-            isSquare
-          >
-            {filteredClientsForDropdown.map((client) => {
-              return (
-                <FilterCheckbox
-                  key={client._id}
-                  name={client.name}
-                  isSelected={formValue.clientPerson.some(
-                    (cp) => cp.value === client.name
-                  )}
-                  toggleCompany={handleClientAssign}
-                  filterVariable={client}
-                />
-              );
-            })}
-          </MultiselectDropdown>
-        </div>
-      </div>
-      <div className={styles.nameInput}>
-        <label htmlFor="companyMail">
-          <strong>E-Mail:</strong>
-        </label>
-        <input
-          type="text"
-          name="companyMail"
-          id="companyMail"
-          maxLength={40}
-          value={formValue.mail}
-          onChange={(e) => {
-            handleFormChange(e, 'mail');
-          }}
-          className={styles.companyInput}
-        />
-      </div>
-      <div className={styles.firstRow}>
-        <div>
-          <label htmlFor="companyNumber">
-            <strong>Numer:</strong>
-          </label>
-          <input
-            type="text"
-            name="companyNumber"
-            id="companyNumber"
-            maxLength={15}
-            value={formValue.phone}
-            onChange={(e) => {
-              handleFormChange(e, 'phone');
-            }}
-            className={styles.companyInput}
-          />
-        </div>
-
-        <div className={styles.hourRateContainer}>
-          <label htmlFor="hourRate">
-            <strong>Stawka:</strong>
-          </label>
-
-          <span className={styles.hourRateInputWrapper}>
+          <div className={styles.nameInput}>
+            <label htmlFor="companyName">
+              <strong>Nazwa:</strong>
+            </label>
             <input
               type="text"
-              name="hourRate"
-              id="hourRate"
-              maxLength={4}
-              value={formValue.hourRate}
-              onClick={() => setIsHourRateInputActive(true)}
-              onBlur={() => setIsHourRateInputActive(false)}
+              name="companyName"
+              id="companyName"
+              maxLength={20}
+              value={formValue.name}
               onChange={(e) => {
-                handleFormChange(e, 'hourRate');
-                setIsHourRateInputActive(true);
+                handleFormChange(e, 'name');
               }}
-              className={styles.hourRateInput}
+              className={styles.companyInput}
             />
-            {!isHourRateInputActive && (
-              <span className={`${styles.rateLabel} ${hourRateLabelStyle()}`}>
-                zł
-              </span>
-            )}
-          </span>
-        </div>
-      </div>
+          </div>
+          <div className={styles.selectsRow}>
+            <div className={styles.selectsRowLeft}>
+              <label htmlFor="companyNumber">
+                <strong>Graficy:</strong>
+              </label>
+              <MultiselectDropdown
+                isSelectOpen={isSelectOpen}
+                setIsSelectOpen={setIsSelectOpen}
+                label="Graficy"
+                inputKey="user"
+                inputValue={selectFilterValue.user}
+                handleInputValue={handleFilterDropdownInputValue}
+                isSquare
+              >
+                {filteredUsersForDropdown.map((u) => {
+                  return (
+                    <FilterCheckbox
+                      key={u._id}
+                      name={u.name}
+                      isSelected={formValue.teamMembers.some(
+                        (tm) => tm._id === u._id
+                      )}
+                      toggleCompany={handleUserAssign}
+                      filterVariable={u}
+                    />
+                  );
+                })}
+              </MultiselectDropdown>
+            </div>
 
-      <div className={styles.optionButtonsWrapper}>
-        <button
-          type="button"
-          onClick={() => {
-            openCaptcha(true);
-          }}
-          className={styles.deleteCompanyButton}
-        >
-          Usuń firmę
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            handleUpdateCompany();
-          }}
-          className={styles.editButton}
-        >
-          Zapisz
-        </button>
-      </div>
+            <div className={styles.selectsRowRight}>
+              <label
+                htmlFor="companyNumber"
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    setIsAddNewClientView(true);
+                  }
+                }}
+                onMouseEnter={() => setIsPlusIconVisible(true)}
+                onMouseLeave={() => setIsPlusIconVisible(false)}
+                onClick={() => setIsAddNewClientView(true)}
+                className={styles.clientsLabel}
+              >
+                <strong>Klienci:</strong>
+                {isPlusIconVisible && (
+                  <Icon
+                    icon="line-md:plus-circle"
+                    width="24"
+                    height="24"
+                    className={styles.addClientIcon}
+                  />
+                )}
+              </label>
+              <MultiselectDropdown
+                isSelectOpen={isClientsSelectOpen}
+                setIsSelectOpen={setIsClientsSelectOpen}
+                label="Klienci"
+                inputKey="client"
+                inputValue={selectFilterValue.client}
+                handleInputValue={handleFilterDropdownInputValue}
+                isSquare
+              >
+                {filteredClientsForDropdown.map((client) => {
+                  return (
+                    <FilterCheckbox
+                      key={client._id}
+                      name={client.name}
+                      isSelected={formValue.clientPerson.some(
+                        (cp) => cp.value === client.name
+                      )}
+                      toggleCompany={handleClientAssign}
+                      filterVariable={client}
+                    />
+                  );
+                })}
+              </MultiselectDropdown>
+            </div>
+          </div>
+          <div className={styles.nameInput}>
+            <label htmlFor="companyMail">
+              <strong>E-Mail:</strong>
+            </label>
+            <input
+              type="text"
+              name="companyMail"
+              id="companyMail"
+              maxLength={40}
+              value={formValue.mail}
+              onChange={(e) => {
+                handleFormChange(e, 'mail');
+              }}
+              className={styles.companyInput}
+            />
+          </div>
+          <div className={styles.firstRow}>
+            <div>
+              <label htmlFor="companyNumber">
+                <strong>Numer:</strong>
+              </label>
+              <input
+                type="text"
+                name="companyNumber"
+                id="companyNumber"
+                maxLength={15}
+                value={formValue.phone}
+                onChange={(e) => {
+                  handleFormChange(e, 'phone');
+                }}
+                className={styles.companyInput}
+              />
+            </div>
+
+            <div className={styles.hourRateContainer}>
+              <label htmlFor="hourRate">
+                <strong>Stawka:</strong>
+              </label>
+
+              <span className={styles.hourRateInputWrapper}>
+                <input
+                  type="text"
+                  name="hourRate"
+                  id="hourRate"
+                  maxLength={4}
+                  value={formValue.hourRate}
+                  onClick={() => setIsHourRateInputActive(true)}
+                  onBlur={() => setIsHourRateInputActive(false)}
+                  onChange={(e) => {
+                    handleFormChange(e, 'hourRate');
+                    setIsHourRateInputActive(true);
+                  }}
+                  className={styles.hourRateInput}
+                />
+                {!isHourRateInputActive && (
+                  <span
+                    className={`${styles.rateLabel} ${hourRateLabelStyle()}`}
+                  >
+                    zł
+                  </span>
+                )}
+              </span>
+            </div>
+          </div>
+
+          <div className={styles.optionButtonsWrapper}>
+            <button
+              type="button"
+              onClick={() => {
+                openCaptcha(true);
+              }}
+              className={styles.deleteCompanyButton}
+            >
+              Usuń firmę
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                handleUpdateCompany();
+              }}
+              className={styles.editButton}
+            >
+              Zapisz
+            </button>
+          </div>
+        </div>
+      ) : (
+        <>
+          <button type="button" onClick={() => setIsAddNewClientView(false)}>
+            wróć
+          </button>
+          <AddClientForm companyName={currentCompany.name} />
+        </>
+      )}
     </div>
   );
 }

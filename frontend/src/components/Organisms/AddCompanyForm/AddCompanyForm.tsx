@@ -10,7 +10,7 @@ import Form from '../../Atoms/Form/Form';
 import useSelectUser from '../../../hooks/useSelectUser';
 import { addCompany } from '../../../services/companies-service';
 import inputStyle from '../../Atoms/Input/Input.module.css';
-import ClientSelect from '../../Molecules/ClientSelect/ClientSelect';
+// import ClientSelect from '../../Molecules/ClientSelect/ClientSelect';
 import useCompaniesContext from '../../../hooks/Context/useCompaniesContext';
 
 const createCompanySchema = Yup.object({
@@ -36,8 +36,8 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
     setFormValue,
     handleAddMember,
     handleDeleteMember,
-    clientInputValue,
-    setClientInputValue,
+    // clientInputValue,
+    // setClientInputValue,
   } = useSelectUser({
     initialValue: initialCompanyObject,
     objectKey: 'teamMembers',
@@ -157,14 +157,14 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
         })}
       </>
 
-      <div className={styles.clientSelectWrapper}>
+      {/* <div className={styles.clientSelectWrapper}>
         <ClientSelect
           value={formValue.clientPerson}
           setValue={setFormValue}
           inputValue={clientInputValue}
           setInputValue={setClientInputValue}
         />
-      </div>
+      </div> */}
 
       <SelectUser users={users} handleAddMember={handleAddMember} />
       {formValue.teamMembers.length > 0 && (
