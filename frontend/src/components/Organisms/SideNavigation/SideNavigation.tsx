@@ -29,14 +29,14 @@ const sideNavButtons = [
     name: 'klienci',
     icon: 'lucide:contact',
   },
-  {
-    name: 'zadania',
-    icon: 'ic:outline-add-task',
-  },
-  {
-    name: 'ankiety',
-    icon: 'fluent:poll-24-regular',
-  },
+  // {
+  //   name: 'zadania',
+  //   icon: 'ic:outline-add-task',
+  // },
+  // {
+  //   name: 'ankiety',
+  //   icon: 'fluent:poll-24-regular',
+  // },
   {
     name: 'magazyn',
     icon: 'material-symbols:warehouse-outline-rounded',

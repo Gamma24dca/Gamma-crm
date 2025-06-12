@@ -19,6 +19,20 @@ export const companiesReducer = (state: CompaniesStateType, action: any) => {
       return { companies: action.payload };
     case 'CREATE_COMPANY':
       return { companies: [action.payload, ...state.companies] };
+    case 'UPDATE_CLIENTPERSON':
+      return {
+        companies: state.companies.map((company) =>
+          company._id === action.payload._id
+            ? {
+                ...company,
+                clientPerson: [
+                  ...company.clientPerson,
+                  { label: action.test.name, value: action.test.name },
+                ],
+              }
+            : company
+        ),
+      };
     case 'DELETE_COMPANY':
       return {
         companies: state.companies.filter(
