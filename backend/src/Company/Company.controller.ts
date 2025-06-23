@@ -55,8 +55,8 @@ export const CompanyController = {
     const filteredCompanies = companies.filter((company) => {
       return (
         company.name.toLowerCase().includes(query.toLowerCase()) ||
-        company.phone.includes(query) ||
-        company.mail.toLowerCase().includes(query.toLowerCase()) ||
+        company.nip.includes(query) ||
+        company.address.toLowerCase().includes(query.toLowerCase()) ||
         company.teamMembers.some(
           (member) =>
             member.name.toLowerCase().includes(query.toLowerCase()) ||
