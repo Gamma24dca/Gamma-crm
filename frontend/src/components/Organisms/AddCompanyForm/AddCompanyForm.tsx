@@ -15,15 +15,15 @@ import useCompaniesContext from '../../../hooks/Context/useCompaniesContext';
 
 const createCompanySchema = Yup.object({
   name: Yup.string().required('Nazwa jest wymagana'),
-  phone: Yup.string(),
+  nip: Yup.string(),
   mail: Yup.string().email('Nieprawidłowy adres email'),
   website: Yup.string(),
 });
 
 const initialCompanyObject = {
   name: '',
-  phone: '',
-  mail: '',
+  nip: '',
+  address: '',
   teamMembers: [],
   website: '',
   clientPerson: [],
@@ -47,15 +47,15 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
   const formik = useFormik({
     initialValues: {
       name: '',
-      phone: '',
-      mail: '',
+      nip: '',
+      address: '',
       website: '',
       hourRate: '',
     },
     validationSchema: createCompanySchema,
     onSubmit: async (values) => {
       try {
-        const { name, phone, mail, website, hourRate } = values;
+        const { name, nip, address, website, hourRate } = values;
 
         const memberObject = formValue.teamMembers.map((member) => {
           return member;
@@ -73,8 +73,8 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
 
         const response = await addCompany({
           name,
-          phone,
-          mail,
+          nip,
+          address,
           website,
           clientPerson: clientsObject,
           hourRate,
@@ -105,16 +105,16 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
       value: formik.values.name,
     },
     {
-      id: 'phone',
+      id: 'nip',
       type: 'text',
-      placeholder: 'Telefon',
-      inValue: formik.values.phone,
+      placeholder: 'NIP',
+      inValue: formik.values.nip,
     },
     {
-      id: 'mail',
-      type: 'email',
-      placeholder: 'Mail',
-      inValue: formik.values.mail,
+      id: 'address',
+      type: 'text',
+      placeholder: 'Adres',
+      inValue: formik.values.address,
     },
     {
       id: 'website',
@@ -144,7 +144,7 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
                 name={id}
                 placeholder={placeholder}
                 className={
-                  formik.touched.mail && formik.errors.mail
+                  formik.touched.address && formik.errors.address
                     ? `${styles.errorBorder}`
                     : `${inputStyle.input}`
                 }

@@ -10,8 +10,8 @@ type ClientPerson = {
 export type CompaniesType = {
   _id?: string;
   name: string;
-  phone: string;
-  mail: string;
+  nip: string;
+  address: string;
   website: string;
   clientPerson: ClientPerson[];
   hourRate: string;
@@ -72,8 +72,8 @@ export async function getCurrentCompany(
 
 export async function addCompany({
   name,
-  phone,
-  mail,
+  nip,
+  address,
   website,
   clientPerson,
   hourRate,
@@ -81,8 +81,8 @@ export async function addCompany({
 }) {
   const formData = {
     name,
-    phone,
-    mail,
+    nip,
+    address,
     website,
     clientPerson,
     hourRate,

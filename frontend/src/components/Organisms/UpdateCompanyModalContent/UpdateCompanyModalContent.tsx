@@ -74,8 +74,8 @@ function UpdateCompanyModalContent({
   useEffect(() => {
     setFormValue({
       name: currentCompany.name || '',
-      phone: currentCompany.phone || '',
-      mail: currentCompany.mail || '',
+      phone: currentCompany.nip || '',
+      mail: currentCompany.address || '',
       teamMembers: currentCompany.teamMembers || [],
       clientPerson: currentCompany.clientPerson || [],
       hourRate: currentCompany.hourRate || '',

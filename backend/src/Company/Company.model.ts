@@ -7,13 +7,11 @@ export const CompanyModel = mongoose.model(
       type: String,
       required: true,
     },
-    phone: {
+    nip: {
       type: String,
-      required: true,
     },
-    mail: {
+    address: {
       type: String,
-      required: true,
     },
     website: {
       type: String,
