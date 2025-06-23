@@ -16,8 +16,8 @@ import AddClientForm from '../AddClientForm/AddClientForm';
 
 const initialCompanyObject = {
   name: '',
-  phone: '',
-  mail: '',
+  nip: '',
+  address: '',
   teamMembers: [],
   website: '',
   clientPerson: [],
@@ -74,8 +74,8 @@ function UpdateCompanyModalContent({
   useEffect(() => {
     setFormValue({
       name: currentCompany.name || '',
-      phone: currentCompany.nip || '',
-      mail: currentCompany.address || '',
+      nip: currentCompany.nip || '',
+      address: currentCompany.address || '',
       teamMembers: currentCompany.teamMembers || [],
       clientPerson: currentCompany.clientPerson || [],
       hourRate: currentCompany.hourRate || '',
@@ -223,7 +223,7 @@ function UpdateCompanyModalContent({
           </div>
           <div className={styles.selectsRow}>
             <div className={styles.selectsRowLeft}>
-              <label htmlFor="companyNumber">
+              <label htmlFor="graphics">
                 <strong>Graficy:</strong>
               </label>
               <MultiselectDropdown
@@ -303,33 +303,33 @@ function UpdateCompanyModalContent({
           </div>
           <div className={styles.nameInput}>
             <label htmlFor="companyMail">
-              <strong>E-Mail:</strong>
+              <strong>Adres:</strong>
             </label>
             <input
               type="text"
-              name="companyMail"
-              id="companyMail"
+              name="companyAddress"
+              id="companyAddress"
               maxLength={40}
-              value={formValue.mail}
+              value={formValue.address}
               onChange={(e) => {
-                handleFormChange(e, 'mail');
+                handleFormChange(e, 'address');
               }}
               className={styles.companyInput}
             />
           </div>
           <div className={styles.firstRow}>
             <div>
-              <label htmlFor="companyNumber">
-                <strong>Numer:</strong>
+              <label htmlFor="companyNIP">
+                <strong>NIP:</strong>
               </label>
               <input
                 type="text"
-                name="companyNumber"
-                id="companyNumber"
+                name="companyNIP"
+                id="companyNIP"
                 maxLength={15}
-                value={formValue.phone}
+                value={formValue.nip}
                 onChange={(e) => {
-                  handleFormChange(e, 'phone');
+                  handleFormChange(e, 'nip');
                 }}
                 className={styles.companyInput}
               />
