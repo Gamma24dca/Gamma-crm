@@ -26,8 +26,8 @@ import Select from '../../components/Atoms/Select/Select';
 
 const initialCompanyObject = {
   name: '',
-  phone: '',
-  mail: '',
+  nip: '',
+  address: '',
   teamMembers: [],
   website: '',
   clientPerson: [],

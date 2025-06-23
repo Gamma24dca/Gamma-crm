@@ -41,8 +41,8 @@ CompanyRouter.post(
     try {
       const newCompany = await CompanyController.addCompany({
         name: req.body.name,
-        nip: req.body.phone,
-        address: req.body.mail,
+        nip: req.body.nip,
+        address: req.body.address,
         website: req.body.website,
         clientPerson: req.body.clientPerson,
         hourRate: req.body.hourRate,
