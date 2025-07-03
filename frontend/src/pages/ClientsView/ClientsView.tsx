@@ -195,10 +195,10 @@ function ClientsView() {
                 <p>Firma</p>
               </div>
               <div className={styles.tileElementInfoBar}>
-                <p>Numer</p>
+                <p>Mail</p>
               </div>
               <div className={styles.tileElementInfoBar}>
-                <p>Mail</p>
+                <p>Numer</p>
               </div>
             </div>
           </InfoBar>
