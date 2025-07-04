@@ -16,6 +16,11 @@ export const ClientController = {
     return await ClientModel.create(client);
   },
 
+  async addManyClients(clients) {
+    const inserted = await ClientModel.insertMany(clients);
+    return await inserted;
+  },
+
   async updateClient(id, clientBody) {
     return await ClientModel.findByIdAndUpdate(id, clientBody);
   },
@@ -25,7 +30,6 @@ export const ClientController = {
   },
 
   async getClientsPerCompany(company) {
-    console.log(company);
     const clients = await ClientController.getClients();
 
     const filteredClients = clients.filter((client) => {

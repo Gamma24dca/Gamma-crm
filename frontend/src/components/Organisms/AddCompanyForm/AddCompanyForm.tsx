@@ -198,6 +198,14 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
               <p>Karina Olejnik</p>
               <Icon icon="line-md:trash" width="24" height="24" />
             </div>
+            <div className={styles.clientTile}>
+              <p>Karina Olejnik</p>
+              <Icon icon="line-md:trash" width="24" height="24" />
+            </div>
+            <div className={styles.clientTile}>
+              <p>Karina Olejnik</p>
+              <Icon icon="line-md:trash" width="24" height="24" />
+            </div>
           </div>
 
           <button type="button" className={styles.addClientButton}>
