@@ -52,6 +52,16 @@ ClientRouter.post(
   },
 );
 
+ClientRouter.post('/bulk', async (req, res) => {
+  try {
+    const clients = req.body;
+    const newClients = await ClientController.addManyClients(clients);
+    res.status(StatusCodes.ACCEPTED).json(newClients);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to insert users', details: error });
+  }
+});
+
 ClientRouter.patch(
   '/:id',
   passport.authenticate('jwt', { session: false }),
