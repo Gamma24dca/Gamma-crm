@@ -1,3 +1,4 @@
+import { Icon } from '@iconify/react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import styles from './AddCompanyForm.module.css';
@@ -130,34 +131,35 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
     },
   ];
   return (
-    <Form onSubmit={formik.handleSubmit} isSignInView={false}>
-      {formik.status === 'error' && (
-        <div className={styles.error}>Tworzenie nie powiodło się</div>
-      )}
-      <>
-        {formInputs.map(({ id, type, placeholder, inValue }) => {
-          return (
-            <FormControl key={id}>
-              <Input
-                id={id}
-                type={type}
-                name={id}
-                placeholder={placeholder}
-                className={
-                  formik.touched.address && formik.errors.address
-                    ? `${styles.errorBorder}`
-                    : `${inputStyle.input}`
-                }
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={inValue}
-              />
-            </FormControl>
-          );
-        })}
-      </>
+    <div className={styles.formsWrapper}>
+      <Form onSubmit={formik.handleSubmit} isSignInView={false}>
+        {formik.status === 'error' && (
+          <div className={styles.error}>Tworzenie nie powiodło się</div>
+        )}
+        <>
+          {formInputs.map(({ id, type, placeholder, inValue }) => {
+            return (
+              <FormControl key={id}>
+                <Input
+                  id={id}
+                  type={type}
+                  name={id}
+                  placeholder={placeholder}
+                  className={
+                    formik.touched.address && formik.errors.address
+                      ? `${styles.errorBorder}`
+                      : `${inputStyle.input}`
+                  }
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={inValue}
+                />
+              </FormControl>
+            );
+          })}
+        </>
 
-      {/* <div className={styles.clientSelectWrapper}>
+        {/* <div className={styles.clientSelectWrapper}>
         <ClientSelect
           value={formValue.clientPerson}
           setValue={setFormValue}
@@ -166,27 +168,45 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
         />
       </div> */}
 
-      <SelectUser users={users} handleAddMember={handleAddMember} />
-      {formValue.teamMembers.length > 0 && (
-        <div className={styles.displayMembersWrapper}>
-          {formValue.teamMembers.map((member) => {
-            return (
-              <CompanyGraphicTile
-                key={member._id}
-                member={member}
-                handleDeleteMember={handleDeleteMember}
-              />
-            );
-          })}
+        <SelectUser users={users} handleAddMember={handleAddMember} />
+        {formValue.teamMembers.length > 0 && (
+          <div className={styles.displayMembersWrapper}>
+            {formValue.teamMembers.map((member) => {
+              return (
+                <CompanyGraphicTile
+                  key={member._id}
+                  member={member}
+                  handleDeleteMember={handleDeleteMember}
+                />
+              );
+            })}
+          </div>
+        )}
+        <SubmitButton
+          disabled={formik.isSubmitting}
+          buttonContent={formik.isSubmitting ? 'Dodawanie...' : 'Dodaj'}
+          isSignInView={false}
+        />
+        <p className={styles.finalMessage}>{successMessage}</p>
+      </Form>
+      <div>
+        <div className={styles.clientsContainer}>
+          <p className={styles.clientSecTitle}>Klienci</p>
+
+          <div className={styles.clientTilesWrapper}>
+            <div className={styles.clientTile}>
+              <p>Karina Olejnik</p>
+              <Icon icon="line-md:trash" width="24" height="24" />
+            </div>
+          </div>
+
+          <button type="button" className={styles.addClientButton}>
+            Dodaj klienta
+            <Icon icon="line-md:plus-circle" width="20" height="20" />
+          </button>
         </div>
-      )}
-      <SubmitButton
-        disabled={formik.isSubmitting}
-        buttonContent={formik.isSubmitting ? 'Dodawanie...' : 'Dodaj'}
-        isSignInView={false}
-      />
-      <p className={styles.finalMessage}>{successMessage}</p>
-    </Form>
+      </div>
+    </div>
   );
 }
 

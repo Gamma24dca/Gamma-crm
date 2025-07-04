@@ -20,6 +20,9 @@ export const CompanyModel = mongoose.model(
       {
         label: { type: String },
         value: { type: String },
+        // company: { type: String },
+        // email: { type: String },
+        // phone: { type: String },
       },
     ],
     hourRate: String,
