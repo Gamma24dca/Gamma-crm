@@ -501,9 +501,9 @@ function UpdateTaskModalContent({
                 if (company.name === formValue.client) {
                   return company.clientPerson.map((cp) => {
                     return (
-                      cp.label !== formValue.clientPerson && (
-                        <option key={cp.value} value={cp.label}>
-                          {cp.label}
+                      cp.name !== formValue.clientPerson && (
+                        <option key={cp.name} value={cp.name}>
+                          {cp.name}
                         </option>
                       )
                     );

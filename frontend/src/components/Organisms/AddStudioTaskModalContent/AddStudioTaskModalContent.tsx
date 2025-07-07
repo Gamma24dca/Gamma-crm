@@ -252,8 +252,8 @@ function AddStudioTaskModalContent({
                     if (company.name === formik.values.client) {
                       return company.clientPerson.map((cp) => {
                         return (
-                          <option key={cp.value} value={cp.label}>
-                            {cp.label}
+                          <option key={cp.name} value={cp.name}>
+                            {cp.name}
                           </option>
                         );
                       });
