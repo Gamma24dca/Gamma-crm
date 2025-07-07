@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Icon } from '@iconify/react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -31,6 +32,16 @@ const initialCompanyObject = {
 };
 
 function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
+  // const [clients, setClients] = useState([]);
+  // const [client, setClient] = useState({
+  //   label: '',
+  //   value: '',
+  //   company: '',
+  //   email: '',
+  //   phone: '',
+  // });
+  const [isAddNewClientFormActive, setIsAddNewClientFormActive] =
+    useState(false);
   const {
     users,
     formValue,
@@ -65,6 +76,9 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
         const clientsObject = formValue.clientPerson.map((client) => ({
           label: client.label,
           value: client.value,
+          company: client.company,
+          email: client.email,
+          phone: client.phone,
         }));
 
         if (companies.some((company) => company.name === name)) {
@@ -191,27 +205,84 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
       </Form>
       <div>
         <div className={styles.clientsContainer}>
-          <p className={styles.clientSecTitle}>Klienci</p>
+          {isAddNewClientFormActive ? (
+            <>
+              <div className={styles.newClientTopBar}>
+                <Icon
+                  icon="ion:arrow-back-outline"
+                  color="#f68c1e"
+                  width="26"
+                  height="26"
+                  className={styles.backButton}
+                  onClick={() => setIsAddNewClientFormActive(false)}
+                />
+                <p className={styles.clientSecTitle}>Nowy klient</p>
+              </div>
+              <div className={styles.inputsWrapper}>
+                <Input
+                  id="name"
+                  type="text"
+                  name="name"
+                  placeholder="Imie i nazwisko"
+                  className={styles.input}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value=""
+                />
+                <Input
+                  id="mail"
+                  type="text"
+                  name="mail"
+                  placeholder="Email"
+                  className={styles.input}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value=""
+                />
+                <Input
+                  id="phone"
+                  type="text"
+                  name="phone"
+                  placeholder="Telefon"
+                  className={styles.input}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value=""
+                />
+              </div>
+              <button type="button" className={styles.addNewClientButton}>
+                Dodaj
+              </button>
+            </>
+          ) : (
+            <>
+              <p className={styles.clientSecTitle}>Klienci</p>
 
-          <div className={styles.clientTilesWrapper}>
-            <div className={styles.clientTile}>
-              <p>Karina Olejnik</p>
-              <Icon icon="line-md:trash" width="24" height="24" />
-            </div>
-            <div className={styles.clientTile}>
-              <p>Karina Olejnik</p>
-              <Icon icon="line-md:trash" width="24" height="24" />
-            </div>
-            <div className={styles.clientTile}>
-              <p>Karina Olejnik</p>
-              <Icon icon="line-md:trash" width="24" height="24" />
-            </div>
-          </div>
+              <div className={styles.clientTilesWrapper}>
+                <div className={styles.clientTile}>
+                  <p>Karina Olejnik</p>
+                  <Icon icon="line-md:trash" width="24" height="24" />
+                </div>
+                <div className={styles.clientTile}>
+                  <p>Karina Olejnik</p>
+                  <Icon icon="line-md:trash" width="24" height="24" />
+                </div>
+                <div className={styles.clientTile}>
+                  <p>Karina Olejnik</p>
+                  <Icon icon="line-md:trash" width="24" height="24" />
+                </div>
+              </div>
 
-          <button type="button" className={styles.addClientButton}>
-            Dodaj klienta
-            <Icon icon="line-md:plus-circle" width="20" height="20" />
-          </button>
+              <button
+                type="button"
+                className={styles.addClientButton}
+                onClick={() => setIsAddNewClientFormActive(true)}
+              >
+                Dodaj klienta
+                <Icon icon="line-md:plus-circle" width="20" height="20" />
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>

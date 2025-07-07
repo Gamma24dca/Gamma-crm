@@ -119,6 +119,34 @@ export async function addClient({ name, company, phone, email }) {
   }
 }
 
+export async function addManyClients(clients) {
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/clients/bulk`,
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(clients),
+      }
+    );
+
+    if (response.ok) {
+      return await response.json();
+    }
+
+    throw new Error(`${response.status} ${response.statusText}`);
+  } catch (error) {
+    console.error(error);
+    if (Config.isDev) {
+      throw new Error('Add client', error.message);
+    }
+    return null;
+  }
+}
+
 export async function deleteClient(id) {
   try {
     const response = await fetch(
