@@ -158,14 +158,14 @@ function UpdateCompanyModalContent({
   const handleClientAssign = (newClient) => {
     if (
       formValue.clientPerson.some(
-        (clientToCheck) => clientToCheck.value === newClient.name
+        (clientToCheck) => clientToCheck.name === newClient.name
       )
     ) {
       setFormValue((prev) => {
         return {
           ...prev,
           clientPerson: formValue.clientPerson.filter(
-            (client) => client.value !== newClient.name
+            (client) => client.name !== newClient.name
           ),
         };
       });
@@ -175,10 +175,7 @@ function UpdateCompanyModalContent({
       setFormValue((prev) => {
         return {
           ...prev,
-          clientPerson: [
-            ...prev.clientPerson,
-            { value: newClient.name, label: newClient.name },
-          ],
+          clientPerson: [...prev.clientPerson, { ...newClient }],
         };
       });
       setIsClientsSelectOpen(true);
@@ -291,7 +288,7 @@ function UpdateCompanyModalContent({
                       key={client._id}
                       name={client.name}
                       isSelected={formValue.clientPerson.some(
-                        (cp) => cp.value === client.name
+                        (cp) => cp.name === client.name
                       )}
                       toggleCompany={handleClientAssign}
                       filterVariable={client}

@@ -14,6 +14,7 @@ import { addCompany } from '../../../services/companies-service';
 import inputStyle from '../../Atoms/Input/Input.module.css';
 // import ClientSelect from '../../Molecules/ClientSelect/ClientSelect';
 import useCompaniesContext from '../../../hooks/Context/useCompaniesContext';
+import { addManyClients } from '../../../services/clients-service';
 
 const createCompanySchema = Yup.object({
   name: Yup.string().required('Nazwa jest wymagana'),
@@ -32,16 +33,17 @@ const initialCompanyObject = {
 };
 
 function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
-  // const [clients, setClients] = useState([]);
-  // const [client, setClient] = useState({
-  //   label: '',
-  //   value: '',
-  //   company: '',
-  //   email: '',
-  //   phone: '',
-  // });
+  const [clients, setClients] = useState([]);
+  const [newClient, setNewClient] = useState({
+    name: '',
+    company: '',
+    email: '',
+    phone: '',
+  });
   const [isAddNewClientFormActive, setIsAddNewClientFormActive] =
     useState(false);
+
+  const [isAddNewClientError, setIsAddNewClientError] = useState(false);
   const {
     users,
     formValue,
@@ -65,6 +67,7 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
       hourRate: '',
     },
     validationSchema: createCompanySchema,
+
     onSubmit: async (values) => {
       try {
         const { name, nip, address, website, hourRate } = values;
@@ -72,14 +75,6 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
         const memberObject = formValue.teamMembers.map((member) => {
           return member;
         });
-
-        const clientsObject = formValue.clientPerson.map((client) => ({
-          label: client.label,
-          value: client.value,
-          company: client.company,
-          email: client.email,
-          phone: client.phone,
-        }));
 
         if (companies.some((company) => company.name === name)) {
           handleSuccesMessage('Ta firma już istnieje');
@@ -91,10 +86,12 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
           nip,
           address,
           website,
-          clientPerson: clientsObject,
+          clientPerson: clients,
           hourRate,
           teamMembers: memberObject,
         });
+
+        await addManyClients(clients);
 
         if (response !== null) {
           dispatch({ type: 'CREATE_COMPANY', payload: response });
@@ -112,36 +109,85 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
     },
   });
 
+  const handleAddNewClientFormChange = (e, key) => {
+    setNewClient((prev) => {
+      return {
+        ...prev,
+        [key]: e.target.value,
+      };
+    });
+  };
+
+  const handlhandleAddNewClientSubmit = (nc, companyName) => {
+    if (nc.name && companyName) {
+      setClients((prev) => {
+        return [...prev, { ...nc, company: companyName }];
+      });
+      setNewClient({
+        name: '',
+        company: '',
+        email: '',
+        phone: '',
+      });
+      setIsAddNewClientFormActive(false);
+      setIsAddNewClientError(false);
+      return;
+    }
+    setIsAddNewClientError(true);
+  };
+
+  const handleDeleteNewClient = (clientName) => {
+    const filteredClients = clients.filter((cl) => cl.name !== clientName);
+    setClients(filteredClients);
+  };
+
   const formInputs = [
     {
       id: 'name',
       type: 'text',
-      placeholder: 'Nazwa',
-      value: formik.values.name,
+      placeholder: `${
+        formik.errors.name && formik.touched.name ? 'Uzupełnij Nazwe!' : 'Nazwa'
+      }`,
+      inValue: formik.values.name,
+      touchedProp: formik.touched.name,
+      errorProp: formik.errors.name,
+      isCap: true,
     },
     {
       id: 'nip',
       type: 'text',
       placeholder: 'NIP',
       inValue: formik.values.nip,
+      touchedProp: formik.touched.nip,
+      errorProp: formik.errors.nip,
+      isCap: false,
     },
     {
       id: 'address',
       type: 'text',
       placeholder: 'Adres',
       inValue: formik.values.address,
+      touchedProp: formik.touched.address,
+      errorProp: formik.errors.address,
+      isCap: true,
     },
     {
       id: 'website',
       type: 'url',
       placeholder: 'Strona',
       inValue: formik.values.website,
+      touchedProp: formik.touched.website,
+      errorProp: formik.errors.website,
+      isCap: false,
     },
     {
       id: 'hourRate',
       type: 'text',
       placeholder: 'Stawka godzinowa',
       inValue: formik.values.hourRate,
+      touchedProp: formik.touched.hourRate,
+      errorProp: formik.errors.hourRate,
+      isCap: false,
     },
   ];
   return (
@@ -151,28 +197,41 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
           <div className={styles.error}>Tworzenie nie powiodło się</div>
         )}
         <>
-          {formInputs.map(({ id, type, placeholder, inValue }) => {
-            return (
-              <FormControl key={id}>
-                <Input
-                  id={id}
-                  type={type}
-                  name={id}
-                  placeholder={placeholder}
-                  className={
-                    formik.touched.address && formik.errors.address
-                      ? `${styles.errorBorder}`
-                      : `${inputStyle.input}`
-                  }
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={inValue}
-                />
-              </FormControl>
-            );
-          })}
+          {formInputs.map(
+            ({
+              id,
+              type,
+              placeholder,
+              inValue,
+              touchedProp,
+              errorProp,
+              isCap,
+            }) => {
+              return (
+                <FormControl key={id}>
+                  <Input
+                    id={id}
+                    type={type}
+                    name={id}
+                    placeholder={placeholder}
+                    className={
+                      touchedProp && errorProp
+                        ? `${inputStyle.errorBorder}`
+                        : `${
+                            isCap
+                              ? inputStyle.capitalizedInput
+                              : inputStyle.input
+                          }`
+                    }
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={inValue}
+                  />
+                </FormControl>
+              );
+            }
+          )}
         </>
-
         {/* <div className={styles.clientSelectWrapper}>
         <ClientSelect
           value={formValue.clientPerson}
@@ -196,12 +255,14 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
             })}
           </div>
         )}
-        <SubmitButton
-          disabled={formik.isSubmitting}
-          buttonContent={formik.isSubmitting ? 'Dodawanie...' : 'Dodaj'}
-          isSignInView={false}
-        />
-        <p className={styles.finalMessage}>{successMessage}</p>
+        <div className={styles.submitBtnWrapper}>
+          <SubmitButton
+            disabled={formik.isSubmitting}
+            buttonContent={formik.isSubmitting ? 'Dodawanie...' : 'Dodaj'}
+            isSignInView={false}
+          />
+          <p className={styles.finalMessage}>{successMessage}</p>
+        </div>
       </Form>
       <div>
         <div className={styles.clientsContainer}>
@@ -214,7 +275,10 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
                   width="26"
                   height="26"
                   className={styles.backButton}
-                  onClick={() => setIsAddNewClientFormActive(false)}
+                  onClick={() => {
+                    setIsAddNewClientFormActive(false);
+                    setIsAddNewClientError(false);
+                  }}
                 />
                 <p className={styles.clientSecTitle}>Nowy klient</p>
               </div>
@@ -223,11 +287,20 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
                   id="name"
                   type="text"
                   name="name"
-                  placeholder="Imie i nazwisko"
-                  className={styles.input}
-                  onChange={formik.handleChange}
+                  placeholder={`${
+                    isAddNewClientError
+                      ? 'Imie i nazwisko wymagane!'
+                      : 'Imie i nazwisko'
+                  }`}
+                  className={`${
+                    isAddNewClientError
+                      ? styles.errorBorder
+                      : styles.capitalizedInput
+                  }`}
+                  onChange={(e) => handleAddNewClientFormChange(e, 'name')}
                   onBlur={formik.handleBlur}
-                  value=""
+                  value={newClient.name}
+                  maxLength={30}
                 />
                 <Input
                   id="mail"
@@ -235,9 +308,10 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
                   name="mail"
                   placeholder="Email"
                   className={styles.input}
-                  onChange={formik.handleChange}
+                  onChange={(e) => handleAddNewClientFormChange(e, 'email')}
                   onBlur={formik.handleBlur}
-                  value=""
+                  value={newClient.email}
+                  maxLength={40}
                 />
                 <Input
                   id="phone"
@@ -245,12 +319,19 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
                   name="phone"
                   placeholder="Telefon"
                   className={styles.input}
-                  onChange={formik.handleChange}
+                  onChange={(e) => handleAddNewClientFormChange(e, 'phone')}
                   onBlur={formik.handleBlur}
-                  value=""
+                  value={newClient.phone}
+                  maxLength={15}
                 />
               </div>
-              <button type="button" className={styles.addNewClientButton}>
+              <button
+                type="button"
+                className={styles.addNewClientButton}
+                onClick={() =>
+                  handlhandleAddNewClientSubmit(newClient, formik.values.name)
+                }
+              >
                 Dodaj
               </button>
             </>
@@ -259,18 +340,26 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
               <p className={styles.clientSecTitle}>Klienci</p>
 
               <div className={styles.clientTilesWrapper}>
-                <div className={styles.clientTile}>
-                  <p>Karina Olejnik</p>
-                  <Icon icon="line-md:trash" width="24" height="24" />
-                </div>
-                <div className={styles.clientTile}>
-                  <p>Karina Olejnik</p>
-                  <Icon icon="line-md:trash" width="24" height="24" />
-                </div>
-                <div className={styles.clientTile}>
-                  <p>Karina Olejnik</p>
-                  <Icon icon="line-md:trash" width="24" height="24" />
-                </div>
+                {clients.length > 0 ? (
+                  clients.map((cl) => {
+                    return (
+                      <div className={styles.clientTile} key={cl.name}>
+                        <p>{cl.name}</p>
+                        <Icon
+                          icon="line-md:trash"
+                          width="24"
+                          height="24"
+                          onClick={() => handleDeleteNewClient(cl.name)}
+                        />
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div className={styles.noClientsWrapper}>
+                    <Icon icon="line-md:person-add" width="24" height="24" />
+                    <p className={styles.noClientsTitle}>Brak klientów</p>
+                  </div>
+                )}
               </div>
 
               <button

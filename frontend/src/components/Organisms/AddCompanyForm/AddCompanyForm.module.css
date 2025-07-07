@@ -46,6 +46,11 @@
   border-radius: 10px;
 }
 
+.submitBtnWrapper {
+  position: relative;
+  right: 0;
+}
+
 .clientSecTitle {
   text-align: center;
   margin: 0 auto;
@@ -166,7 +171,8 @@
 
 .input,
 .errorBorder,
-.selectInput {
+.selectInput,
+.capitalizedInput {
   background-color: #fff;
   /* width: 25rem; */
   width: 80%;
@@ -177,6 +183,14 @@
   font-size: 14px;
   font-weight: 500;
   padding-left: 0.5rem;
+}
+
+.capitalizedInput {
+  text-transform: capitalize;
+}
+
+.errorBorder {
+  border: 2px solid var(--color-orange);
 }
 
 .addNewClientButton {
@@ -197,6 +211,19 @@
     color: var(--color-orange);
     background-color: var(--color-lighter);
   }
+}
+
+.noClientsWrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.noClientsTitle {
+  font-size: 14px;
+  font-weight: 600;
 }
 
 @keyframes appear {

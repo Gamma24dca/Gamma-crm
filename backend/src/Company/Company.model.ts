@@ -18,8 +18,7 @@ export const CompanyModel = mongoose.model(
     },
     clientPerson: [
       {
-        label: { type: String },
-        value: { type: String },
+        name: { type: String },
         company: { type: String },
         email: { type: String },
         phone: { type: String },

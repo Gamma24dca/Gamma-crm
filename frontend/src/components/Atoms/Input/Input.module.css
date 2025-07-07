@@ -1,4 +1,6 @@
-.input {
+.input,
+.errorBorder,
+.capitalizedInput {
   background-color: #fff;
   width: 25rem;
   height: 3.5rem;
@@ -8,4 +10,12 @@
   font-size: 20px;
   font-weight: 500;
   padding-left: 0.5rem;
+}
+
+.capitalizedInput {
+  text-transform: capitalize;
+}
+
+.errorBorder {
+  border: 2px solid var(--color-orange);
 }

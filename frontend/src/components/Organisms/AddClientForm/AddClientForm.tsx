@@ -87,7 +87,7 @@ function AddClientForm({ companyName }) {
       placeholder: `${
         formik.errors.name && formik.touched.name ? 'Uzupełnij nazwe!' : 'Nazwa'
       }`,
-      value: formik.values.name,
+      inValue: formik.values.name,
       touchedProp: formik.touched.name,
       errorProp: formik.errors.name,
     },

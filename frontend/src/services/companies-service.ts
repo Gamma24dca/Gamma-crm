@@ -3,8 +3,10 @@ import { User } from './users-service';
 
 type ClientPerson = {
   id?: string;
-  value: string;
-  label: string;
+  name: string;
+  company: string;
+  email: string;
+  phone: string;
 };
 
 export type CompaniesType = {
