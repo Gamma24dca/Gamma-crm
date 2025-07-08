@@ -1,5 +1,6 @@
 .formsWrapper {
   display: flex;
+  padding-bottom: 70px;
 }
 
 .error {
@@ -27,9 +28,23 @@
   gap: 5px;
 }
 
+.submitBtnWrapper {
+  /* transform: translateX(150%); */
+  position: absolute;
+  right: 50%;
+  transform: translateX(50%);
+  bottom: 45px;
+}
+
 .finalMessage {
   position: absolute;
-  bottom: 0;
+  right: 50%;
+  transform: translateX(50%);
+  font-weight: 600;
+  font-size: 14px;
+  position: absolute;
+  bottom: 15px;
+  margin: 0;
 }
 
 .clientSelectWrapper {
@@ -40,15 +55,10 @@
 .clientsContainer {
   position: relative;
   width: 350px;
-  height: 80%;
+  height: 93%;
   transform: translateY(15px);
   border: 1px solid #c4c4c4;
   border-radius: 10px;
-}
-
-.submitBtnWrapper {
-  position: relative;
-  right: 0;
 }
 
 .clientSecTitle {

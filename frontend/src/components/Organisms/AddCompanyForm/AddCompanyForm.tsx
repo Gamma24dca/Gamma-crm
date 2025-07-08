@@ -103,6 +103,7 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
           ...prevState,
           teamMembers: [],
         }));
+        setClients([]);
       } catch {
         formik.setStatus('error');
       }
@@ -190,6 +191,10 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
       isCap: false,
     },
   ];
+
+  const capitalizeFirst = (text) =>
+    text.charAt(0).toUpperCase() + text.slice(1);
+
   return (
     <div className={styles.formsWrapper}>
       <Form onSubmit={formik.handleSubmit} isSignInView={false}>
@@ -198,15 +203,7 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
         )}
         <>
           {formInputs.map(
-            ({
-              id,
-              type,
-              placeholder,
-              inValue,
-              touchedProp,
-              errorProp,
-              isCap,
-            }) => {
+            ({ id, type, placeholder, inValue, touchedProp, errorProp }) => {
               return (
                 <FormControl key={id}>
                   <Input
@@ -217,13 +214,12 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
                     className={
                       touchedProp && errorProp
                         ? `${inputStyle.errorBorder}`
-                        : `${
-                            isCap
-                              ? inputStyle.capitalizedInput
-                              : inputStyle.input
-                          }`
+                        : `${inputStyle.input}`
                     }
-                    onChange={formik.handleChange}
+                    onChange={(e) => {
+                      const { name, value } = e.target;
+                      formik.setFieldValue(name, capitalizeFirst(value));
+                    }}
                     onBlur={formik.handleBlur}
                     value={inValue}
                   />
@@ -261,8 +257,8 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
             buttonContent={formik.isSubmitting ? 'Dodawanie...' : 'Dodaj'}
             isSignInView={false}
           />
-          <p className={styles.finalMessage}>{successMessage}</p>
         </div>
+        <p className={styles.finalMessage}>{successMessage}</p>
       </Form>
       <div>
         <div className={styles.clientsContainer}>
@@ -293,9 +289,7 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
                       : 'Imie i nazwisko'
                   }`}
                   className={`${
-                    isAddNewClientError
-                      ? styles.errorBorder
-                      : styles.capitalizedInput
+                    isAddNewClientError ? styles.errorBorder : styles.input
                   }`}
                   onChange={(e) => handleAddNewClientFormChange(e, 'name')}
                   onBlur={formik.handleBlur}

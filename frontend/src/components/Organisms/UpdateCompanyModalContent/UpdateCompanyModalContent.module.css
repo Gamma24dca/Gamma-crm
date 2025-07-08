@@ -211,3 +211,17 @@
     margin-left: 5px;
   }
 }
+
+.backButton {
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+
+  svg {
+    transition: all 0.3s ease;
+  }
+
+  &:hover svg {
+    transform: translateX(-5px);
+  }
+}

@@ -386,8 +386,17 @@ function UpdateCompanyModalContent({
         </div>
       ) : (
         <>
-          <button type="button" onClick={() => setIsAddNewClientView(false)}>
-            wróć
+          <button
+            type="button"
+            onClick={() => setIsAddNewClientView(false)}
+            className={styles.backButton}
+          >
+            <Icon
+              icon="ion:arrow-back-outline"
+              color="#f68c1e"
+              width="26"
+              height="26"
+            />
           </button>
           <AddClientForm companyName={currentCompany.name} />
         </>
