@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styles from './ClientProfile.module.css';
 import {
   ClientsType,
+  deleteClient,
   getCurrentClient,
   UpdateClient,
 } from '../../services/clients-service';
@@ -10,7 +11,11 @@ import ViewContainer from '../../components/Atoms/ViewContainer/ViewContainer';
 import ListContainer from '../../components/Atoms/ListContainer/ListContainer';
 import BackButton from '../../components/Atoms/BackButton/BackButton';
 import useCompaniesContext from '../../hooks/Context/useCompaniesContext';
-import { getAllCompanies } from '../../services/companies-service';
+import {
+  getAllCompanies,
+  UpdateCompany,
+} from '../../services/companies-service';
+import useClientsContext from '../../hooks/Context/useClientsContext';
 
 const initialClientObject = {
   name: '',
@@ -22,12 +27,15 @@ const initialClientObject = {
 function ClientProfile() {
   const [client, setClient] = useState<ClientsType>();
   const [formValue, setFormValue] = useState(initialClientObject);
+  const { dispatch } = useClientsContext();
   const { companies, dispatch: companiesDispatch } = useCompaniesContext();
   const [loadingState, setLoadingState] = useState({
     isLoading: false,
     isError: false,
   });
   const params = useParams();
+  const navigate = useNavigate();
+
   const clientID = params.id;
 
   useEffect(() => {
@@ -63,7 +71,6 @@ function ClientProfile() {
           isLoading: true,
           isError: false,
         }));
-        console.log(loadingState);
       } catch (error) {
         errorHappened = true;
         setLoadingState(() => ({
@@ -95,6 +102,34 @@ function ClientProfile() {
     fetchClient();
   };
 
+  const handleDeleteClient = async (id) => {
+    try {
+      const deletedClient = await deleteClient(id);
+      dispatch({ type: 'DELETE_CLIENT', payload: deletedClient });
+      navigate('/klienci');
+
+      const company = companies.find(
+        (com) => com.name === deletedClient.company
+      );
+
+      if (!company) {
+        console.warn(`Company "${deletedClient.company}" not found.`);
+        return;
+      }
+
+      const filteredClientPersons = company.clientPerson.filter(
+        (cp) => cp.name !== deletedClient.name
+      );
+
+      await UpdateCompany({
+        id: company._id,
+        companyData: { clientPerson: filteredClientPersons },
+      });
+    } catch (error) {
+      console.error('Error deleting client:', error);
+    }
+  };
+
   return (
     <ViewContainer>
       <ListContainer>
@@ -105,7 +140,12 @@ function ClientProfile() {
               <h2>{client.name}</h2>
               <div>
                 <button type="button">Dodaj notatke</button>
-                <button type="button">Usuń</button>
+                <button
+                  type="button"
+                  onClick={() => handleDeleteClient(clientID)}
+                >
+                  Usuń
+                </button>
               </div>
             </div>
             <div className={styles.columnsWrapper}>
@@ -179,7 +219,9 @@ function ClientProfile() {
                       {companies.map((com) => {
                         return (
                           com.name !== client.company && (
-                            <option value={com.name}>{com.name}</option>
+                            <option value={com.name} key={com._id}>
+                              {com.name}
+                            </option>
                           )
                         );
                       })}
