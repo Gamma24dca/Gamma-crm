@@ -13,6 +13,7 @@ import CheckboxLoader from '../../Atoms/CheckboxLoader/CheckboxLoader';
 import useCompaniesContext from '../../../hooks/Context/useCompaniesContext';
 import {
   getAllCompanies,
+  UpdateCompany,
   // UpdateCompany,
 } from '../../../services/companies-service';
 
@@ -38,7 +39,7 @@ function AddClientForm({ companyName }) {
       try {
         const { name, company, email, phone } = values;
 
-        const response = await addClient({
+        const newClient = await addClient({
           name,
           company,
           email,
@@ -49,7 +50,7 @@ function AddClientForm({ companyName }) {
         //   return companyTF.name === company;
         // });
 
-        if (response !== null) {
+        if (newClient !== null) {
           // const updatedCompany = await UpdateCompany({
           //   id: filteredCompany[0]._id,
           //   companyData: {
@@ -63,13 +64,36 @@ function AddClientForm({ companyName }) {
           // companiesDispatch({
           //   type: 'UPDATE_CLIENTPERSON',
           //   payload: updatedCompany,
-          //   test: response,
+          //   test: newClient,
           // });
+
+          const filteredCompany = companies.find(
+            (com) => com.name === newClient.company
+          );
+
+          if (!filteredCompany) {
+            console.warn(`Company "${newClient.company}" not found.`);
+            return;
+          }
+
+          const updatedClientPersons = [
+            ...filteredCompany.clientPerson.filter(
+              (person) => person.name !== newClient.name
+            ),
+            newClient,
+          ];
+
+          console.log(updatedClientPersons);
+
+          await UpdateCompany({
+            id: filteredCompany._id,
+            companyData: { clientPerson: updatedClientPersons },
+          });
 
           const AllCompanies = await getAllCompanies();
           companiesDispatch({ type: 'SET_COMPANIES', payload: AllCompanies });
 
-          dispatch({ type: 'CREATE_CLIENT', payload: response });
+          dispatch({ type: 'CREATE_CLIENT', payload: newClient });
           formik.setStatus('success');
           return;
         }

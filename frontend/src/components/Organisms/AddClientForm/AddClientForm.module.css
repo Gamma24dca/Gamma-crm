@@ -13,7 +13,7 @@
 }
 
 .addClientModalTitle {
-  width: 100%;
+  width: 50%;
   text-align: center;
 }
 
@@ -28,6 +28,7 @@
 .modalWrapper {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
 }
 
