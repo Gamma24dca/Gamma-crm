@@ -19,8 +19,8 @@ import {
 const createClientSchema = Yup.object({
   name: Yup.string().required('Podaj nazwe'),
   company: Yup.string().required('Podaj firmę'),
-  email: Yup.string().required('Podaj email'),
-  phone: Yup.string().required('Podaj numer'),
+  email: Yup.string(),
+  phone: Yup.string(),
 });
 
 function AddClientForm({ companyName }) {
