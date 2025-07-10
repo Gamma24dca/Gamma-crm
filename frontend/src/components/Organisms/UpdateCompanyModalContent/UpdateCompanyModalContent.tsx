@@ -158,14 +158,14 @@ function UpdateCompanyModalContent({
   const handleClientAssign = (newClient) => {
     if (
       formValue.clientPerson.some(
-        (clientToCheck) => clientToCheck.name === newClient.name
+        (clientToCheck) => clientToCheck._id === newClient._id
       )
     ) {
       setFormValue((prev) => {
         return {
           ...prev,
-          clientPerson: formValue.clientPerson.filter(
-            (client) => client.name !== newClient.name
+          clientPerson: prev.clientPerson.filter(
+            (client) => client._id !== newClient._id
           ),
         };
       });
