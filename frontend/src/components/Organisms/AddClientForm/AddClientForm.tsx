@@ -46,27 +46,7 @@ function AddClientForm({ companyName }) {
           phone,
         });
 
-        // const filteredCompany = companies.filter((companyTF) => {
-        //   return companyTF.name === company;
-        // });
-
         if (newClient !== null) {
-          // const updatedCompany = await UpdateCompany({
-          //   id: filteredCompany[0]._id,
-          //   companyData: {
-          //     clientPerson: [
-          //       ...filteredCompany[0].clientPerson,
-          //       { label: name, value: name },
-          //     ],
-          //   },
-          // });
-
-          // companiesDispatch({
-          //   type: 'UPDATE_CLIENTPERSON',
-          //   payload: updatedCompany,
-          //   test: newClient,
-          // });
-
           const filteredCompany = companies.find(
             (com) => com.name === newClient.company
           );

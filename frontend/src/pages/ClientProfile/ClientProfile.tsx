@@ -16,6 +16,7 @@ import {
   UpdateCompany,
 } from '../../services/companies-service';
 import useClientsContext from '../../hooks/Context/useClientsContext';
+import ClientProfileViewComponent from '../../components/Organisms/ClientProfileViewComponent/ClientProfileViewComponent';
 
 const initialClientObject = {
   name: '',
@@ -55,35 +56,37 @@ function ClientProfile() {
   const fetchClient = async () => {
     let errorHappened = false;
 
-    const currentClient = await getCurrentClient(clientID);
+    try {
+      const currentClient = await getCurrentClient(clientID);
 
-    if (currentClient) {
-      setClient(currentClient);
-      setFormValue({
-        name: currentClient.name || '',
-        company: currentClient.company || '',
-        email: currentClient.email || '',
-        phone: currentClient.phone || '',
-      });
+      if (currentClient) {
+        setClient(currentClient);
+        setFormValue({
+          name: currentClient.name || '',
+          company: currentClient.company || '',
+          email: currentClient.email || '',
+          phone: currentClient.phone || '',
+        });
 
-      try {
         setLoadingState(() => ({
           isLoading: true,
           isError: false,
         }));
-      } catch (error) {
-        errorHappened = true;
-        setLoadingState(() => ({
-          isLoading: false,
-          isError: true,
-        }));
-      } finally {
-        setLoadingState((prevState) => ({
-          ...prevState,
-          isLoading: false,
-          isError: errorHappened ? true : prevState.isError,
-        }));
+        return;
       }
+      throw new Error('Error fetching client');
+    } catch (error) {
+      errorHappened = true;
+      setLoadingState(() => ({
+        isLoading: false,
+        isError: true,
+      }));
+    } finally {
+      setLoadingState((prevState) => ({
+        ...prevState,
+        isLoading: false,
+        isError: errorHappened ? true : prevState.isError,
+      }));
     }
   };
   useEffect(() => {
@@ -125,6 +128,9 @@ function ClientProfile() {
         id: company._id,
         companyData: { clientPerson: filteredClientPersons },
       });
+
+      const refreshedCompanies = await getAllCompanies();
+      companiesDispatch({ type: 'SET_COMPANIES', payload: refreshedCompanies });
     } catch (error) {
       console.error('Error deleting client:', error);
     }
@@ -134,113 +140,118 @@ function ClientProfile() {
     <ViewContainer>
       <ListContainer>
         {client && (
-          <>
-            <div className={styles.clientProfileTopBar}>
-              <BackButton path="klienci" />
-              <h2>{client.name}</h2>
-              <div>
-                <button type="button">Dodaj notatke</button>
-                <button
-                  type="button"
-                  onClick={() => handleDeleteClient(clientID)}
-                >
-                  Usuń
-                </button>
-              </div>
-            </div>
-            <div className={styles.columnsWrapper}>
-              <div className={styles.leftColumn}>
-                <h3>Informacje</h3>
-                <div className={styles.infoInputsWrapper}>
-                  <div className={styles.inputWrapper}>
-                    <label htmlFor="clientName">
-                      <strong>Imie i nazwisko</strong>
-                    </label>
-                    <input
-                      type="text"
-                      name="clientName"
-                      id="clientName"
-                      maxLength={30}
-                      value={formValue.name}
-                      onChange={(e) => {
-                        handleFormChange(e, 'name');
-                      }}
-                      className={styles.companyInput}
-                    />
-                  </div>
-                  <div className={styles.inputWrapper}>
-                    <label htmlFor="clientMail">
-                      <strong>E-mail</strong>
-                    </label>
-                    <input
-                      type="text"
-                      name="clientMail"
-                      id="clientMail"
-                      maxLength={40}
-                      value={formValue.email}
-                      onChange={(e) => {
-                        handleFormChange(e, 'email');
-                      }}
-                      className={styles.companyInput}
-                    />
-                  </div>
-                  <div className={styles.inputWrapper}>
-                    <label htmlFor="clientPhone">
-                      <strong>Telefon</strong>
-                    </label>
-                    <input
-                      type="text"
-                      name="clientPhone"
-                      id="clientPhone"
-                      maxLength={15}
-                      value={formValue.phone}
-                      onChange={(e) => {
-                        handleFormChange(e, 'phone');
-                      }}
-                      className={styles.companyInput}
-                    />
-                  </div>
-                  <div className={styles.inputWrapper}>
-                    <label htmlFor="companyNIP">
-                      <strong>Firma</strong>
-                    </label>
-                    <select
-                      name="companyNIP"
-                      id="companyNIP"
-                      //   value={formValue.nip}
-                      // onChange={(e) => {
-                      //   handleFormChange(e, 'nip');
-                      // }}
-                      className={styles.companyInput}
-                    >
-                      <option value={formValue.company}>
-                        {client.company}
-                      </option>
-                      {companies.map((com) => {
-                        return (
-                          com.name !== client.company && (
-                            <option value={com.name} key={com._id}>
-                              {com.name}
-                            </option>
-                          )
-                        );
-                      })}
-                    </select>
-                  </div>
+          <ClientProfileViewComponent
+            clientData={client}
+            loadingState={loadingState}
+          >
+            <>
+              <div className={styles.clientProfileTopBar}>
+                <BackButton path="klienci" />
+                <h2>{client.name}</h2>
+                <div>
+                  <button type="button">Dodaj notatke</button>
                   <button
-                    className={styles.saveBtn}
                     type="button"
-                    onClick={handleUpdateClient}
+                    onClick={() => handleDeleteClient(clientID)}
                   >
-                    zapisz
+                    Usuń
                   </button>
                 </div>
               </div>
-              <div className={styles.rightColumn}>
-                <h3>Podsumowanie</h3>
+              <div className={styles.columnsWrapper}>
+                <div className={styles.leftColumn}>
+                  <h3>Informacje</h3>
+                  <div className={styles.infoInputsWrapper}>
+                    <div className={styles.inputWrapper}>
+                      <label htmlFor="clientName">
+                        <strong>Imie i nazwisko</strong>
+                      </label>
+                      <input
+                        type="text"
+                        name="clientName"
+                        id="clientName"
+                        maxLength={30}
+                        value={formValue.name}
+                        onChange={(e) => {
+                          handleFormChange(e, 'name');
+                        }}
+                        className={styles.companyInput}
+                      />
+                    </div>
+                    <div className={styles.inputWrapper}>
+                      <label htmlFor="clientMail">
+                        <strong>E-mail</strong>
+                      </label>
+                      <input
+                        type="text"
+                        name="clientMail"
+                        id="clientMail"
+                        maxLength={40}
+                        value={formValue.email}
+                        onChange={(e) => {
+                          handleFormChange(e, 'email');
+                        }}
+                        className={styles.companyInput}
+                      />
+                    </div>
+                    <div className={styles.inputWrapper}>
+                      <label htmlFor="clientPhone">
+                        <strong>Telefon</strong>
+                      </label>
+                      <input
+                        type="text"
+                        name="clientPhone"
+                        id="clientPhone"
+                        maxLength={15}
+                        value={formValue.phone}
+                        onChange={(e) => {
+                          handleFormChange(e, 'phone');
+                        }}
+                        className={styles.companyInput}
+                      />
+                    </div>
+                    <div className={styles.inputWrapper}>
+                      <label htmlFor="companyNIP">
+                        <strong>Firma</strong>
+                      </label>
+                      <select
+                        name="companyNIP"
+                        id="companyNIP"
+                        //   value={formValue.nip}
+                        // onChange={(e) => {
+                        //   handleFormChange(e, 'nip');
+                        // }}
+                        className={styles.companyInput}
+                      >
+                        <option value={formValue.company}>
+                          {client.company}
+                        </option>
+                        {companies.map((com) => {
+                          return (
+                            com.name !== client.company && (
+                              <option value={com.name} key={com._id}>
+                                {com.name}
+                              </option>
+                            )
+                          );
+                        })}
+                      </select>
+                    </div>
+                    <button
+                      className={styles.saveBtn}
+                      type="button"
+                      onClick={handleUpdateClient}
+                    >
+                      zapisz
+                    </button>
+                  </div>
+                </div>
+                <div className={styles.rightColumn}>
+                  <h3>Podsumowanie</h3>
+                </div>
               </div>
-            </div>
-          </>
+            </>
+          </ClientProfileViewComponent>
         )}
       </ListContainer>
     </ViewContainer>
