@@ -33,17 +33,19 @@ function AddClientForm({ companyName }) {
       company: companyName || '',
       email: '',
       phone: '',
+      notes: [],
     },
     validationSchema: createClientSchema,
     onSubmit: async (values) => {
       try {
-        const { name, company, email, phone } = values;
+        const { name, company, email, phone, notes } = values;
 
         const newClient = await addClient({
           name,
           company,
           email,
           phone,
+          notes,
         });
 
         if (newClient !== null) {
