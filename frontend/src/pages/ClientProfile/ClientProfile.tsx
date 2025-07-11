@@ -39,18 +39,19 @@ function ClientProfile() {
 
   const clientID = params.id;
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      if (companies.length === 0) {
-        try {
-          const allCompanies = await getAllCompanies();
-          companiesDispatch({ type: 'SET_COMPANIES', payload: allCompanies });
-        } catch (error) {
-          console.error('Error fetching users:', error);
-        }
+  const fetchCompanies = async () => {
+    if (companies.length === 0) {
+      try {
+        const allCompanies = await getAllCompanies();
+        companiesDispatch({ type: 'SET_COMPANIES', payload: allCompanies });
+      } catch (error) {
+        console.error('Error fetching users:', error);
       }
-    };
-    fetchUsers();
+    }
+  };
+
+  useEffect(() => {
+    fetchCompanies();
   }, [companiesDispatch, companies]);
 
   const fetchClient = async () => {
@@ -101,7 +102,27 @@ function ClientProfile() {
   };
 
   const handleUpdateClient = async () => {
-    await UpdateClient({ id: clientID, clientData: formValue });
+    const updatedClient = await UpdateClient({
+      id: clientID,
+      clientData: formValue,
+    });
+    const company = companies.find((com) => com.name === updatedClient.company);
+
+    if (!company) {
+      console.warn(`Company "${updatedClient.company}" not found.`);
+      return;
+    }
+
+    const updatedClientPersons = company.clientPerson.map((person) => {
+      return person.name === updatedClient.name ? formValue : person;
+    });
+
+    await UpdateCompany({
+      id: company._id,
+      companyData: { clientPerson: updatedClientPersons },
+    });
+    const allCompanies = await getAllCompanies();
+    companiesDispatch({ type: 'SET_COMPANIES', payload: allCompanies });
     fetchClient();
   };
 
