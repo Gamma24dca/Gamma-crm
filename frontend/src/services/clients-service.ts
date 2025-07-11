@@ -1,11 +1,17 @@
 import { Config } from '../config';
 
+type Note = {
+  date: string;
+  text: string;
+};
+
 export type ClientsType = {
   _id: string;
   name: string;
   company: string;
   phone: string;
   email: string;
+  notes: Note[];
 };
 
 export async function getAllClients(): Promise<ClientsType[] | null> {
@@ -84,12 +90,13 @@ export async function getClientsByCompany(company: string) {
   }
 }
 
-export async function addClient({ name, company, phone, email }) {
+export async function addClient({ name, company, phone, email, notes }) {
   const formData = {
     name,
     company,
     phone,
     email,
+    notes,
   };
 
   try {
