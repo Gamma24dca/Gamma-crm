@@ -1,8 +1,10 @@
 import { Config } from '../config';
 
 type Note = {
+  _id: string;
   date: string;
   text: string;
+  author: string;
 };
 
 export type ClientsType = {
@@ -154,10 +156,68 @@ export async function addManyClients(clients) {
   }
 }
 
+export async function addNote({ text, date, clientID }) {
+  const formData = {
+    text,
+    date,
+  };
+
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/clients/${clientID}/notes`,
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      }
+    );
+
+    if (response.ok) {
+      return await response.json();
+    }
+
+    throw new Error(`${response.status} ${response.statusText}`);
+  } catch (error) {
+    console.error(error);
+    if (Config.isDev) {
+      throw new Error('Add client', error.message);
+    }
+    return null;
+  }
+}
+
 export async function deleteClient(id) {
   try {
     const response = await fetch(
       `${import.meta.env.VITE_API_URL}/api/clients/${id}`,
+      {
+        method: 'DELETE',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    if (response.ok) {
+      return await response.json();
+    }
+    throw new Error(`${response.status} ${response.statusText}`);
+  } catch (error) {
+    console.error(error);
+    if (Config.isDev) {
+      throw new Error('Delete client', error.message);
+    }
+    return null;
+  }
+}
+
+export async function deleteNote(clientID, noteID) {
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/clients/${clientID}/${noteID}/notes`,
       {
         method: 'DELETE',
         credentials: 'include',

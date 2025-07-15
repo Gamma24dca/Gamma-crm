@@ -23,7 +23,7 @@ export const ClientModel = mongoose.model(
           type: String,
         },
         date: {
-          type: String,
+          type: Date,
         },
         author: {
           type: String,

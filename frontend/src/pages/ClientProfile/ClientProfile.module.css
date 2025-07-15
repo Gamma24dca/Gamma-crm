@@ -41,3 +41,56 @@
 
 /* .rightColumn {
 } */
+
+.notesContainer {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  p {
+    margin: 0;
+  }
+}
+
+.noteTile {
+  font-size: 14px;
+  background-color: var(--color-bg);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  gap: 10px;
+}
+
+.noteContentWrapper {
+  width: 100%;
+}
+
+.noteText {
+  max-width: 80%;
+  flex-grow: 1;
+}
+
+.authorName {
+  font-weight: 600;
+}
+
+.noteRow {
+  display: flex;
+}
+
+.trashIcon {
+  cursor: pointer;
+  opacity: 0;
+  animation: appear 0.3s ease forwards;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
