@@ -54,7 +54,7 @@ export default function ClientSelect({
       onChange={(newValue) =>
         setValue((prev) => ({
           ...prev,
-          keyWord: newValue,
+          keyWords: newValue,
         }))
       }
       onInputChange={(newValue) => setInputValue(newValue)}

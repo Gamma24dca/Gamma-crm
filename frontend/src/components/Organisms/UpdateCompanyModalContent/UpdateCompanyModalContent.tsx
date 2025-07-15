@@ -13,6 +13,7 @@ import useUsersContext from '../../../hooks/Context/useUsersContext';
 import { getAllUsers } from '../../../services/users-service';
 import { getClientsByCompany } from '../../../services/clients-service';
 import AddClientForm from '../AddClientForm/AddClientForm';
+import ClientSelect from '../../Molecules/ClientSelect/ClientSelect';
 
 const initialCompanyObject = {
   name: '',
@@ -22,6 +23,7 @@ const initialCompanyObject = {
   website: '',
   clientPerson: [],
   hourRate: '',
+  keyWords: [],
 };
 
 function UpdateCompanyModalContent({
@@ -44,6 +46,7 @@ function UpdateCompanyModalContent({
   const [clients, setClients] = useState([]);
   const [isPlusIconVisible, setIsPlusIconVisible] = useState(false);
   const [isAddNewClientView, setIsAddNewClientView] = useState(false);
+  const [keyWordInputValue, setKeyWordInputValue] = useState('');
 
   useEffect(() => {
     const fetchClients = async () => {
@@ -80,6 +83,7 @@ function UpdateCompanyModalContent({
       clientPerson: currentCompany.clientPerson || [],
       hourRate: currentCompany.hourRate || '',
       website: currentCompany.website || '',
+      keyWords: currentCompany.keyWords || [],
     });
   }, [currentCompany]);
 
@@ -362,7 +366,17 @@ function UpdateCompanyModalContent({
               </span>
             </div>
           </div>
-
+          <div className={styles.nameInput}>
+            <label htmlFor="companyNIP">
+              <strong>Słowa kluczowe:</strong>
+            </label>
+            <ClientSelect
+              value={formValue.keyWords}
+              setValue={setFormValue}
+              inputValue={keyWordInputValue}
+              setInputValue={setKeyWordInputValue}
+            />
+          </div>
           <div className={styles.optionButtonsWrapper}>
             <button
               type="button"
