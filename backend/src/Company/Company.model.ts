@@ -50,6 +50,12 @@ export const CompanyModel = mongoose.model(
         },
       },
     ],
+    keyWords: [
+      {
+        label: { type: String },
+        value: { type: String },
+      },
+    ],
     activeTasks: {
       type: Number,
     },

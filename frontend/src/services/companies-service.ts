@@ -9,6 +9,11 @@ type ClientPerson = {
   phone: string;
 };
 
+type KeyWord = {
+  label: string;
+  value: string;
+};
+
 export type CompaniesType = {
   _id?: string;
   name: string;
@@ -19,6 +24,7 @@ export type CompaniesType = {
   hourRate: string;
   activeTasks?: number;
   teamMembers: User[];
+  keyWords: KeyWord[];
 };
 
 export async function getAllCompanies(): Promise<CompaniesType[] | null> {
@@ -80,6 +86,7 @@ export async function addCompany({
   clientPerson,
   hourRate,
   teamMembers,
+  keyWords,
 }) {
   const formData = {
     name,
@@ -89,6 +96,7 @@ export async function addCompany({
     clientPerson,
     hourRate,
     teamMembers,
+    keyWords,
   };
 
   try {

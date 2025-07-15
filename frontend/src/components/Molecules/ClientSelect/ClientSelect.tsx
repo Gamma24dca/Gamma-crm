@@ -33,7 +33,7 @@ export default function ClientSelect({
       case 'Tab':
         setValue((prevState) => ({
           ...prevState,
-          clientPerson: [...prevState.clientPerson, createOption(inputValue)],
+          keyWords: [...prevState.keyWords, createOption(inputValue)],
         }));
         // setValue((prev) => [...prev, createOption(inputValue)]);
         setInputValue('');
@@ -54,12 +54,12 @@ export default function ClientSelect({
       onChange={(newValue) =>
         setValue((prev) => ({
           ...prev,
-          clientPerson: newValue,
+          keyWord: newValue,
         }))
       }
       onInputChange={(newValue) => setInputValue(newValue)}
       onKeyDown={handleKeyDown}
-      placeholder="Wpisz Imię i nazwisko klienta"
+      placeholder="Wpisz słowa kluczowe..."
       value={value}
       className={styles.clientsInput}
       styles={customStyles}
