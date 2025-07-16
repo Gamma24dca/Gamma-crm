@@ -269,3 +269,28 @@ export async function UpdateClient({ id, clientData }) {
     return null;
   }
 }
+
+export async function getGraphicsPerClientSummary(month, year, clientName) {
+  const fetchUrl = `/api/dashboard/reckoning/graphic-hours-summary-per-client/${month}/${year}/${clientName}`;
+
+  try {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}${fetchUrl}`, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      return await response.json();
+    }
+    throw new Error(`${response.status} ${response.statusText}`);
+  } catch (error) {
+    if (Config.isDev) {
+      throw new Error('Get tasks type summary', error.message);
+    }
+    console.error(error.message);
+    return null;
+  }
+}

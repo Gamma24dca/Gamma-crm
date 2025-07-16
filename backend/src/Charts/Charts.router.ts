@@ -171,3 +171,27 @@ ChartsRouter.get(
     }
   },
 );
+
+///////GRAPHICS HOURS SUMMARY PER CLIENT/////////////
+
+ChartsRouter.get(
+  '/reckoning/graphic-hours-summary-per-client/:month/:year/:clientName',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const year = req.params.year;
+    const month = req.params.month;
+    const clientName = req.params.clientName;
+
+    try {
+      const result = await ChartsController.getClientPersonParticipantsSummary(
+        month,
+        year,
+        clientName,
+      );
+      res.status(StatusCodes.ACCEPTED).json(result);
+    } catch (err) {
+      console.error(err);
+      res.status(StatusCodes.BAD_REQUEST).send('Server error, check API');
+    }
+  },
+);
