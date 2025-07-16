@@ -14,6 +14,8 @@ import { getAllUsers } from '../../../services/users-service';
 import { getClientsByCompany } from '../../../services/clients-service';
 import AddClientForm from '../AddClientForm/AddClientForm';
 import ClientSelect from '../../Molecules/ClientSelect/ClientSelect';
+import DeleteButton from '../../Atoms/DeleteButton/DeleteButton';
+import SaveButton from '../../Atoms/SaveButton/SaveButton';
 
 const initialCompanyObject = {
   name: '',
@@ -378,24 +380,13 @@ function UpdateCompanyModalContent({
             />
           </div>
           <div className={styles.optionButtonsWrapper}>
-            <button
-              type="button"
-              onClick={() => {
-                openCaptcha(true);
-              }}
-              className={styles.deleteCompanyButton}
-            >
+            <DeleteButton callbackFunc={() => openCaptcha(true)}>
               Usuń firmę
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                handleUpdateCompany();
-              }}
-              className={styles.editButton}
-            >
+            </DeleteButton>
+
+            <SaveButton callbackFunc={() => handleUpdateCompany()}>
               Zapisz
-            </button>
+            </SaveButton>
           </div>
         </div>
       ) : (

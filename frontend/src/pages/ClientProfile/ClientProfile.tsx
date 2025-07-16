@@ -10,6 +10,7 @@ import {
   getGraphicsPerClientSummary,
   UpdateClient,
 } from '../../services/clients-service';
+import styles from './ClientProfile.module.css';
 import ViewContainer from '../../components/Atoms/ViewContainer/ViewContainer';
 import ListContainer from '../../components/Atoms/ListContainer/ListContainer';
 import useCompaniesContext from '../../hooks/Context/useCompaniesContext';
@@ -216,6 +217,7 @@ function ClientProfile() {
         isOpen={showModal}
         onClose={() => {
           closeModal();
+          setNoteValue('');
         }}
         exitAnim={exitAnim}
       >
@@ -232,6 +234,7 @@ function ClientProfile() {
           maxLength={1000}
           value={noteValue}
           onChange={(e) => setNoteValue(e.target.value)}
+          className={styles.addNoteInput}
         />
         <CTA onClick={() => handleAddNote(noteValue)}>Dodaj</CTA>
       </ModalTemplate>

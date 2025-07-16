@@ -14,6 +14,8 @@ import { Icon } from '@iconify/react';
 import styles from './ClientProfileViewComponent.module.css';
 import BackButton from '../../Atoms/BackButton/BackButton';
 import DateFormatter from '../../../utils/dateFormatter';
+import DeleteButton from '../../Atoms/DeleteButton/DeleteButton';
+import SaveButton from '../../Atoms/SaveButton/SaveButton';
 
 // import CompanyProfileRow from '../CompanyProfileRow/CompanyProfileRow';
 
@@ -67,25 +69,34 @@ function ClientProfileViewComponent({
     return (
       <div className={styles.container}>
         <div className={styles.clientProfileTopBar}>
-          <BackButton path="klienci" />
-          <h2>{clientData.name}</h2>
-          <div>
-            <button type="button" onClick={openModal}>
+          <div className={styles.clientNameWrapper}>
+            <BackButton path="klienci" />
+            <h2>{clientData.name}</h2>
+            {/* <button
+              type="button"
+              onClick={openModal}
+              className={styles.openModalBtn}
+            >
+              <Icon icon="line-md:plus-circle-filled" width="24" height="24" />
               Dodaj notatke
-            </button>
-            <button type="button" onClick={() => handleDeleteClient(clientID)}>
-              Usuń
-            </button>
+            </button> */}
+
+            <div className={styles.buttonsWrapper}>
+              <SaveButton callbackFunc={() => handleUpdateClient()}>
+                Zapisz
+              </SaveButton>
+              <DeleteButton callbackFunc={() => handleDeleteClient(clientID)}>
+                Usuń
+              </DeleteButton>
+            </div>
           </div>
         </div>
         <div className={styles.columnsWrapper}>
           <div className={styles.leftColumn}>
-            <h3>Informacje</h3>
             <div className={styles.infoInputsWrapper}>
+              <h3>Informacje</h3>
               <div className={styles.inputWrapper}>
-                <label htmlFor="clientName">
-                  <strong>Imie i nazwisko</strong>
-                </label>
+                <label htmlFor="clientName">Imie i nazwisko</label>
                 <input
                   type="text"
                   name="clientName"
@@ -95,13 +106,11 @@ function ClientProfileViewComponent({
                   onChange={(e) => {
                     handleFormChange(e, 'name');
                   }}
-                  className={styles.companyInput}
+                  className={styles.editInput}
                 />
               </div>
               <div className={styles.inputWrapper}>
-                <label htmlFor="clientMail">
-                  <strong>E-mail</strong>
-                </label>
+                <label htmlFor="clientMail">E-mail</label>
                 <input
                   type="text"
                   name="clientMail"
@@ -111,13 +120,11 @@ function ClientProfileViewComponent({
                   onChange={(e) => {
                     handleFormChange(e, 'email');
                   }}
-                  className={styles.companyInput}
+                  className={styles.editInput}
                 />
               </div>
               <div className={styles.inputWrapper}>
-                <label htmlFor="clientPhone">
-                  <strong>Telefon</strong>
-                </label>
+                <label htmlFor="clientPhone">Telefon</label>
                 <input
                   type="text"
                   name="clientPhone"
@@ -127,13 +134,11 @@ function ClientProfileViewComponent({
                   onChange={(e) => {
                     handleFormChange(e, 'phone');
                   }}
-                  className={styles.companyInput}
+                  className={styles.editInput}
                 />
               </div>
               <div className={styles.inputWrapper}>
-                <label htmlFor="companyNIP">
-                  <strong>Firma</strong>
-                </label>
+                <label htmlFor="companyNIP">Firma</label>
                 <select
                   name="companyNIP"
                   id="companyNIP"
@@ -141,7 +146,7 @@ function ClientProfileViewComponent({
                   // onChange={(e) => {
                   //   handleFormChange(e, 'nip');
                   // }}
-                  className={styles.companyInput}
+                  className={styles.editInput}
                 >
                   <option value={formValue.company}>
                     {clientData.company}
@@ -157,20 +162,94 @@ function ClientProfileViewComponent({
                   })}
                 </select>
               </div>
-              <button
-                className={styles.saveBtn}
-                type="button"
-                onClick={handleUpdateClient}
-              >
-                zapisz
-              </button>
+              {/* <div className={styles.ctaWrapper}>
+                <SaveButton callbackFunc={() => handleUpdateClient()}>
+                  Zapisz
+                </SaveButton>
+              </div> */}
+            </div>
+            <div className={styles.notesContainer}>
+              <h3>Notatki</h3>
+              <div className={styles.notesWrapper}>
+                {notes.length > 0 ? (
+                  notes.map((note) => {
+                    return (
+                      <div className={styles.noteTile} key={note._id}>
+                        {isMouseOverIcon.isOver &&
+                        isMouseOverIcon.noteID === note._id ? (
+                          <Icon
+                            className={styles.trashIcon}
+                            icon="line-md:trash"
+                            width="30"
+                            height="30"
+                            onMouseLeave={() =>
+                              setIsMouseOverIcon(() => {
+                                return {
+                                  isOver: false,
+                                  noteID: '',
+                                };
+                              })
+                            }
+                            onClick={() => handleDeleteNote(clientID, note._id)}
+                          />
+                        ) : (
+                          <Icon
+                            className={styles.noteIcon}
+                            icon="line-md:document-list"
+                            width="30"
+                            height="30"
+                            onMouseEnter={() =>
+                              setIsMouseOverIcon(() => {
+                                return {
+                                  isOver: true,
+                                  noteID: note._id,
+                                };
+                              })
+                            }
+                          />
+                        )}
+
+                        <div className={styles.noteContentWrapper}>
+                          <p className={styles.authorName}>
+                            {users.length > 0 &&
+                              users.find((user) => user._id === note.author)
+                                .name}
+                          </p>
+                          <div className={styles.noteRow}>
+                            <p className={styles.noteText}>{note.text}</p>
+                          </div>
+                          <div className={styles.dateWrapper}>
+                            <DateFormatter dateString={note.date} />
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <p>Brak notatek</p>
+                )}
+              </div>
+              <div className={styles.ctaWrapper}>
+                <button
+                  type="button"
+                  onClick={openModal}
+                  className={styles.openModalBtn}
+                >
+                  <Icon
+                    icon="line-md:plus-circle-filled"
+                    width="24"
+                    height="24"
+                  />
+                  Dodaj notatke
+                </button>
+              </div>
             </div>
           </div>
           <div className={styles.rightColumn}>
             <h3>Podsumowanie</h3>
 
             {chartData.length > 0 ? (
-              <ResponsiveContainer width="100%" height="50%">
+              <ResponsiveContainer width="100%" height="70%">
                 <BarChart
                   width={500}
                   height={300}
@@ -197,63 +276,6 @@ function ClientProfileViewComponent({
                 <Icon icon="line-md:coffee-loop" width="24" height="24" />
               </div>
             )}
-
-            <div className={styles.notesContainer}>
-              {notes.length > 0 ? (
-                notes.map((note) => {
-                  return (
-                    <div className={styles.noteTile} key={note._id}>
-                      {isMouseOverIcon.isOver &&
-                      isMouseOverIcon.noteID === note._id ? (
-                        <Icon
-                          className={styles.trashIcon}
-                          icon="line-md:trash"
-                          width="36"
-                          height="36"
-                          onMouseLeave={() =>
-                            setIsMouseOverIcon(() => {
-                              return {
-                                isOver: false,
-                                noteID: '',
-                              };
-                            })
-                          }
-                          onClick={() => handleDeleteNote(clientID, note._id)}
-                        />
-                      ) : (
-                        <Icon
-                          className={styles.noteIcon}
-                          icon="line-md:document-list"
-                          width="36"
-                          height="36"
-                          onMouseEnter={() =>
-                            setIsMouseOverIcon(() => {
-                              return {
-                                isOver: true,
-                                noteID: note._id,
-                              };
-                            })
-                          }
-                        />
-                      )}
-
-                      <div className={styles.noteContentWrapper}>
-                        <p className={styles.authorName}>
-                          {users.length > 0 &&
-                            users.find((user) => user._id === note.author).name}
-                        </p>
-                        <div className={styles.noteRow}>
-                          <p className={styles.noteText}>{note.text}</p>
-                          <DateFormatter dateString={note.date} />
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })
-              ) : (
-                <p>Brak notatek</p>
-              )}
-            </div>
           </div>
         </div>
       </div>
