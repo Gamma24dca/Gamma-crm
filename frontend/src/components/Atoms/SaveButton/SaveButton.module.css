@@ -1,0 +1,19 @@
+.editButton {
+  font-family: 'Montserrat';
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  color: var(--color-lighter);
+  max-width: 130px;
+  border: 1px solid var(--color-orange);
+  border-radius: 10px;
+  background-color: var(--color-orange);
+
+  padding: 10px 15px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: var(--color-lighter);
+    color: #d11a2a;
+  }
+}
