@@ -48,6 +48,73 @@ export const ChartsController = {
     return await companiesMonthSummary;
   },
 
+  async getClientPersonParticipantsSummary(month, year, clientName) {
+    const result = await ReckoningTaskModel.aggregate([
+      // Dopasowanie po nazwie klienta
+      {
+        $match: {
+          clientPerson: clientName,
+        },
+      },
+      { $unwind: '$participants' },
+      { $unwind: '$participants.months' },
+      { $unwind: '$participants.months.hours' },
+      // Dodanie daty z pola months.createdAt
+      {
+        $addFields: {
+          date: {
+            $toDate: '$participants.months.createdAt',
+          },
+        },
+      },
+      {
+        $addFields: {
+          hourNum: '$participants.months.hours.hourNum',
+          month: { $month: '$date' },
+          year: { $year: '$date' },
+        },
+      },
+      // // Filtrowanie po miesiącu i roku
+      {
+        $match: {
+          ...(month ? { month: parseInt(month) } : {}),
+          ...(year ? { year: parseInt(year) } : {}),
+        },
+      },
+      // // Grupowanie godzin po clientPerson + uczestniku
+      {
+        $group: {
+          _id: {
+            clientPerson: '$clientPerson',
+            participantName: '$participants.name',
+          },
+          totalHours: { $sum: '$hourNum' },
+        },
+      },
+      // // Grupowanie per clientPerson, zbieranie uczestników do tablicy
+      {
+        $group: {
+          _id: '$_id.clientPerson',
+          participants: {
+            $push: {
+              name: '$_id.participantName',
+              hours: '$totalHours',
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          clientPerson: '$_id',
+          participants: 1,
+        },
+      },
+    ]);
+
+    return result || { clientPerson: clientName, participants: [] };
+  },
+
   async getClientsPerHourYearly(year) {
     const companiesMonthSummary = await ReckoningTaskModel.aggregate([
       {
