@@ -2,12 +2,9 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import {
-  addNote,
   ClientsType,
   deleteClient,
-  deleteNote,
   getCurrentClient,
-  getGraphicsPerClientSummary,
   UpdateClient,
 } from '../../services/clients-service';
 import styles from './ClientProfile.module.css';
@@ -25,6 +22,9 @@ import { getAllUsers } from '../../services/users-service';
 import useModal from '../../hooks/useModal';
 import ModalTemplate from '../../components/Templates/ModalTemplate/ModalTemplate';
 import CTA from '../../components/Atoms/CTA/CTA';
+import useCurrentDate from '../../hooks/useCurrentDate';
+import useNotes from '../../hooks/useNotes';
+import useClientStats from '../../hooks/useClientStats';
 
 const initialClientObject = {
   name: '',
@@ -33,28 +33,63 @@ const initialClientObject = {
   phone: '',
 };
 
+const initialCompanyObject = {
+  name: '',
+  nip: '',
+  address: '',
+  teamMembers: [],
+  website: '',
+  clientPerson: [],
+  keyWords: [],
+  hourRate: '',
+};
+
 function ClientProfile() {
   const [client, setClient] = useState<ClientsType>();
   const [formValue, setFormValue] = useState(initialClientObject);
-  const [notes, setNotes] = useState([]);
-  const [noteValue, setNoteValue] = useState('');
-  const [chartData, setChartData] = useState([]);
-  const [isMouseOverIcon, setIsMouseOverIcon] = useState({
-    isOver: false,
-    noteID: '',
-  });
-  const { dispatch } = useClientsContext();
-  const { companies, dispatch: companiesDispatch } = useCompaniesContext();
-  const { users, dispatch: usersDispatch } = useUsersContext();
   const [loadingState, setLoadingState] = useState({
     isLoading: false,
     isError: false,
   });
+  const { dispatch } = useClientsContext();
+  const { companies, dispatch: companiesDispatch } = useCompaniesContext();
+  const { users, dispatch: usersDispatch } = useUsersContext();
   const params = useParams();
   const navigate = useNavigate();
   const { showModal, exitAnim, openModal, closeModal } = useModal();
 
+  const {
+    selectedMonth,
+    selectedYear,
+    handleMonthChange,
+    handleYearChange,
+    months,
+    years,
+  } = useCurrentDate();
+
+  const currentMonthIndex = months.indexOf(selectedMonth);
+
   const clientID = params.id;
+
+  const {
+    notes,
+    setNotes,
+    noteValue,
+    setNoteValue,
+    isMouseOverIcon,
+    setIsMouseOverIcon,
+    handleDeleteNote,
+    handleAddNote,
+  } = useNotes(clientID);
+
+  const { chartData, tasksLength, currentCompany } = useClientStats(
+    currentMonthIndex,
+    selectedYear,
+    selectedMonth,
+    client,
+    companies,
+    initialCompanyObject
+  );
 
   const fetchClient = async () => {
     let errorHappened = false;
@@ -87,6 +122,7 @@ function ClientProfile() {
       }
     }
   };
+
   const fetchCompanies = async () => {
     if (companies.length === 0) {
       try {
@@ -109,34 +145,22 @@ function ClientProfile() {
     }
   };
 
-  const getSummary = async () => {
-    try {
-      const test = await getGraphicsPerClientSummary(8, 2025, client.name);
-      if (test) {
-        setChartData(test);
-      }
-      console.log(test);
-    } catch (error) {
-      console.error('Error fetching users:', error);
-    }
-  };
-
   useEffect(() => {
     fetchCompanies();
   }, [companiesDispatch, companies]);
 
   useEffect(() => {
     fetchClient();
-    fetchUsers();
   }, []);
 
   useEffect(() => {
-    if (client?.name) {
-      getSummary();
-    }
-  }, [client]);
+    fetchUsers();
+  }, []);
 
-  const handleFormChange = (e, key) => {
+  const handleFormChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    key: keyof typeof initialClientObject
+  ) => {
     setFormValue((prev) => ({
       ...prev,
       [key]: e.target.value,
@@ -199,18 +223,12 @@ function ClientProfile() {
     }
   };
 
-  const handleDeleteNote = async (clientId, noteID) => {
-    await deleteNote(clientId, noteID);
-    const filteredNotes = notes.filter((note) => note._id !== noteID);
+  const summedHours =
+    chartData.length > 0 &&
+    chartData[0]?.participants?.reduce((summ, cms) => {
+      return Number(summ) + Number(cms.hours || 0);
+    }, 0);
 
-    setNotes(filteredNotes);
-  };
-
-  const handleAddNote = async (text) => {
-    const updatedNotes = await addNote({ text, date: new Date(), clientID });
-
-    setNotes(updatedNotes);
-  };
   return (
     <>
       <ModalTemplate
@@ -256,6 +274,15 @@ function ClientProfile() {
             isMouseOverIcon={isMouseOverIcon}
             setIsMouseOverIcon={setIsMouseOverIcon}
             users={users}
+            selectedMonth={selectedMonth}
+            selectedYear={selectedYear}
+            handleMonthChange={handleMonthChange}
+            handleYearChange={handleYearChange}
+            years={years}
+            months={months}
+            summedHours={summedHours}
+            clientHourRate={currentCompany.hourRate}
+            tasksLength={tasksLength}
           />
         </ListContainer>
       </ViewContainer>
