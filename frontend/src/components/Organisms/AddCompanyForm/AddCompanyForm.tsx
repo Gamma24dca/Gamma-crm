@@ -32,6 +32,7 @@ const initialCompanyObject = {
   website: '',
   clientPerson: [],
   keyWords: [],
+  hourRate: '',
 };
 
 function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {

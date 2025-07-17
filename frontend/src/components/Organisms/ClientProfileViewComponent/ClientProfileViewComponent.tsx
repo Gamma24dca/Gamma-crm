@@ -1,4 +1,3 @@
-// import { useState } from 'react';
 import {
   Bar,
   BarChart,
@@ -16,8 +15,7 @@ import BackButton from '../../Atoms/BackButton/BackButton';
 import DateFormatter from '../../../utils/dateFormatter';
 import DeleteButton from '../../Atoms/DeleteButton/DeleteButton';
 import SaveButton from '../../Atoms/SaveButton/SaveButton';
-
-// import CompanyProfileRow from '../CompanyProfileRow/CompanyProfileRow';
+import Select from '../../Atoms/Select/Select';
 
 function ClientProfileViewComponent({
   loadingState,
@@ -35,8 +33,15 @@ function ClientProfileViewComponent({
   isMouseOverIcon,
   setIsMouseOverIcon,
   users,
-  //   currentMonthIndex,
-  //   companyHourRate,
+  selectedMonth,
+  selectedYear,
+  handleYearChange,
+  handleMonthChange,
+  years,
+  months,
+  summedHours,
+  tasksLength,
+  clientHourRate,
 }) {
   if (loadingState.isError) {
     return (
@@ -72,14 +77,6 @@ function ClientProfileViewComponent({
           <div className={styles.clientNameWrapper}>
             <BackButton path="klienci" />
             <h2>{clientData.name}</h2>
-            {/* <button
-              type="button"
-              onClick={openModal}
-              className={styles.openModalBtn}
-            >
-              <Icon icon="line-md:plus-circle-filled" width="24" height="24" />
-              Dodaj notatke
-            </button> */}
 
             <div className={styles.buttonsWrapper}>
               <SaveButton callbackFunc={() => handleUpdateClient()}>
@@ -142,11 +139,10 @@ function ClientProfileViewComponent({
                 <select
                   name="companyNIP"
                   id="companyNIP"
-                  //   value={formValue.nip}
-                  // onChange={(e) => {
-                  //   handleFormChange(e, 'nip');
-                  // }}
                   className={styles.editInput}
+                  onChange={(e) => {
+                    handleFormChange(e, 'company');
+                  }}
                 >
                   <option value={formValue.company}>
                     {clientData.company}
@@ -162,17 +158,16 @@ function ClientProfileViewComponent({
                   })}
                 </select>
               </div>
-              {/* <div className={styles.ctaWrapper}>
-                <SaveButton callbackFunc={() => handleUpdateClient()}>
-                  Zapisz
-                </SaveButton>
-              </div> */}
             </div>
             <div className={styles.notesContainer}>
               <h3>Notatki</h3>
               <div className={styles.notesWrapper}>
                 {notes.length > 0 ? (
                   notes.map((note) => {
+                    const author = users.find((u) => u._id === note.author);
+                    <p className={styles.authorName}>
+                      {author?.name || 'Nieznany autor'}
+                    </p>;
                     return (
                       <div className={styles.noteTile} key={note._id}>
                         {isMouseOverIcon.isOver &&
@@ -246,7 +241,25 @@ function ClientProfileViewComponent({
             </div>
           </div>
           <div className={styles.rightColumn}>
-            <h3>Podsumowanie</h3>
+            <div className={styles.rightColumnTopBar}>
+              <h3>Podsumowanie</h3>
+              <div className={styles.selectsWrapper}>
+                <Select
+                  value={selectedMonth}
+                  handleValueChange={handleMonthChange}
+                  optionData={months}
+                />
+                <Select
+                  value={selectedYear}
+                  handleValueChange={handleYearChange}
+                  optionData={years}
+                />
+              </div>
+            </div>
+
+            <p className={styles.chartTitle}>
+              {`[h] Podsumowanie grafików - ${selectedMonth}`}{' '}
+            </p>
 
             {chartData.length > 0 ? (
               <ResponsiveContainer width="100%" height="70%">
@@ -276,6 +289,13 @@ function ClientProfileViewComponent({
                 <Icon icon="line-md:coffee-loop" width="24" height="24" />
               </div>
             )}
+            <div className={styles.statsWrapper}>
+              <p>{`Suma godzin: ${summedHours}h`}</p>
+              <p>{`Przychód: ${
+                Number(summedHours) * Number(clientHourRate)
+              }zł`}</p>
+              <p>{`Ilość zleceń: ${tasksLength}`}</p>
+            </div>
           </div>
         </div>
       </div>
