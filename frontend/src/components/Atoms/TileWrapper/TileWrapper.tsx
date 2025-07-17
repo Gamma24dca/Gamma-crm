@@ -22,7 +22,6 @@ function TileWrapper({ children, linkPath, index }: TileWrapperProps) {
     </Link>
   ) : (
     <div className={`${styles.tileWrapper} ${tileClass(index)}`}>
-      {' '}
       {children}
     </div>
   );

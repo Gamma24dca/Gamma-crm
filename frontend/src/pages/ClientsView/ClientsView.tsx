@@ -205,7 +205,7 @@ function ClientsView() {
           <>
             {filteredBySearch.map((cl, index) => {
               return (
-                <TileWrapper key={cl._id} index={index}>
+                <TileWrapper key={cl._id} index={index} linkPath={cl._id}>
                   <div className={styles.clientTileWrapper}>
                     <p
                       className={`${styles.clientTileWrapperElement} ${styles.bolded}`}

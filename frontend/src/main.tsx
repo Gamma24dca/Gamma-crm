@@ -12,8 +12,6 @@ import { StudioTasksContextProvider } from './context/StudioTasksContext';
 import { ReckoTasksContextProvider } from './context/ReckoTasksContext';
 import { ClientsContextProvider } from './context/ClientsContext';
 
-// If you want deploy site to static cdn, use Hashrouter instead
-
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

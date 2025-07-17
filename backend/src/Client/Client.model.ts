@@ -17,5 +17,19 @@ export const ClientModel = mongoose.model(
     phone: {
       type: String,
     },
+    notes: [
+      {
+        text: {
+          type: String,
+        },
+        date: {
+          type: Date,
+        },
+        author: {
+          type: String,
+        },
+        _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
+      },
+    ],
   }),
 );
