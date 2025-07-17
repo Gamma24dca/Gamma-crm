@@ -15,6 +15,7 @@ import inputStyle from '../../Atoms/Input/Input.module.css';
 // import ClientSelect from '../../Molecules/ClientSelect/ClientSelect';
 import useCompaniesContext from '../../../hooks/Context/useCompaniesContext';
 import { addManyClients } from '../../../services/clients-service';
+import ClientSelect from '../../Molecules/ClientSelect/ClientSelect';
 
 const createCompanySchema = Yup.object({
   name: Yup.string().required('Nazwa jest wymagana'),
@@ -30,6 +31,8 @@ const initialCompanyObject = {
   teamMembers: [],
   website: '',
   clientPerson: [],
+  keyWords: [],
+  hourRate: '',
 };
 
 function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
@@ -50,6 +53,8 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
     setFormValue,
     handleAddMember,
     handleDeleteMember,
+    keyWordInputValue,
+    setKeyWordInputValue,
     // clientInputValue,
     // setClientInputValue,
   } = useSelectUser({
@@ -76,6 +81,11 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
           return member;
         });
 
+        const keyWordsObject = formValue.keyWords.map((kw) => ({
+          label: kw.label,
+          value: kw.value,
+        }));
+
         if (companies.some((company) => company.name === name)) {
           handleSuccesMessage('Ta firma już istnieje');
           return;
@@ -89,6 +99,7 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
           clientPerson: clients,
           hourRate,
           teamMembers: memberObject,
+          keyWords: keyWordsObject,
         });
 
         await addManyClients(clients);
@@ -118,6 +129,8 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
       };
     });
   };
+
+  console.log(formValue.keyWords);
 
   const handlhandleAddNewClientSubmit = (nc, companyName) => {
     if (nc.name && companyName) {
@@ -236,6 +249,15 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
           setInputValue={setClientInputValue}
         />
       </div> */}
+
+        <div className={styles.clientSelectWrapper}>
+          <ClientSelect
+            value={formValue.keyWords}
+            setValue={setFormValue}
+            inputValue={keyWordInputValue}
+            setInputValue={setKeyWordInputValue}
+          />
+        </div>
 
         <SelectUser users={users} handleAddMember={handleAddMember} />
         {formValue.teamMembers.length > 0 && (

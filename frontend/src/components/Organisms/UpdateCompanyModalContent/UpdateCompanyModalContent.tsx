@@ -13,6 +13,9 @@ import useUsersContext from '../../../hooks/Context/useUsersContext';
 import { getAllUsers } from '../../../services/users-service';
 import { getClientsByCompany } from '../../../services/clients-service';
 import AddClientForm from '../AddClientForm/AddClientForm';
+import ClientSelect from '../../Molecules/ClientSelect/ClientSelect';
+import DeleteButton from '../../Atoms/DeleteButton/DeleteButton';
+import SaveButton from '../../Atoms/SaveButton/SaveButton';
 
 const initialCompanyObject = {
   name: '',
@@ -22,6 +25,7 @@ const initialCompanyObject = {
   website: '',
   clientPerson: [],
   hourRate: '',
+  keyWords: [],
 };
 
 function UpdateCompanyModalContent({
@@ -44,6 +48,7 @@ function UpdateCompanyModalContent({
   const [clients, setClients] = useState([]);
   const [isPlusIconVisible, setIsPlusIconVisible] = useState(false);
   const [isAddNewClientView, setIsAddNewClientView] = useState(false);
+  const [keyWordInputValue, setKeyWordInputValue] = useState('');
 
   useEffect(() => {
     const fetchClients = async () => {
@@ -80,6 +85,7 @@ function UpdateCompanyModalContent({
       clientPerson: currentCompany.clientPerson || [],
       hourRate: currentCompany.hourRate || '',
       website: currentCompany.website || '',
+      keyWords: currentCompany.keyWords || [],
     });
   }, [currentCompany]);
 
@@ -158,14 +164,14 @@ function UpdateCompanyModalContent({
   const handleClientAssign = (newClient) => {
     if (
       formValue.clientPerson.some(
-        (clientToCheck) => clientToCheck.name === newClient.name
+        (clientToCheck) => clientToCheck._id === newClient._id
       )
     ) {
       setFormValue((prev) => {
         return {
           ...prev,
-          clientPerson: formValue.clientPerson.filter(
-            (client) => client.name !== newClient.name
+          clientPerson: prev.clientPerson.filter(
+            (client) => client._id !== newClient._id
           ),
         };
       });
@@ -362,26 +368,25 @@ function UpdateCompanyModalContent({
               </span>
             </div>
           </div>
-
+          <div className={styles.nameInput}>
+            <label htmlFor="companyNIP">
+              <strong>Słowa kluczowe:</strong>
+            </label>
+            <ClientSelect
+              value={formValue.keyWords}
+              setValue={setFormValue}
+              inputValue={keyWordInputValue}
+              setInputValue={setKeyWordInputValue}
+            />
+          </div>
           <div className={styles.optionButtonsWrapper}>
-            <button
-              type="button"
-              onClick={() => {
-                openCaptcha(true);
-              }}
-              className={styles.deleteCompanyButton}
-            >
+            <DeleteButton callbackFunc={() => openCaptcha(true)}>
               Usuń firmę
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                handleUpdateCompany();
-              }}
-              className={styles.editButton}
-            >
+            </DeleteButton>
+
+            <SaveButton callbackFunc={() => handleUpdateCompany()}>
               Zapisz
-            </button>
+            </SaveButton>
           </div>
         </div>
       ) : (

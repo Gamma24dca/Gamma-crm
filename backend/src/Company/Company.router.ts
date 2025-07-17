@@ -48,6 +48,7 @@ CompanyRouter.post(
         hourRate: req.body.hourRate,
         activeTasks: req.body.activeTasks,
         teamMembers: req.body.teamMembers,
+        keyWords: req.body.keyWords,
       });
       res.status(StatusCodes.ACCEPTED).json(newCompany);
     } catch (error) {
