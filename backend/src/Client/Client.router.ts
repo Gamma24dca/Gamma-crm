@@ -44,6 +44,7 @@ ClientRouter.post(
         company: req.body.company,
         email: req.body.email,
         phone: req.body.phone,
+        notes: req.body.notes,
       });
       res.status(StatusCodes.ACCEPTED).json(newClient);
     } catch (error) {
@@ -51,6 +52,16 @@ ClientRouter.post(
     }
   },
 );
+
+ClientRouter.post('/bulk', async (req, res) => {
+  try {
+    const clients = req.body;
+    const newClients = await ClientController.addManyClients(clients);
+    res.status(StatusCodes.ACCEPTED).json(newClients);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to insert users', details: error });
+  }
+});
 
 ClientRouter.patch(
   '/:id',
@@ -90,6 +101,42 @@ ClientRouter.get(
         req.params.company,
       );
       res.status(StatusCodes.ACCEPTED).json(filteredClients);
+    } catch (error) {
+      res.status(StatusCodes.BAD_REQUEST).json({ message: error });
+    }
+  },
+);
+
+ClientRouter.post(
+  '/:clientID/notes',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const clientID = req.params.clientID;
+      const note = {
+        text: req.body.text,
+        date: req.body.date,
+        author: req.user.id,
+      };
+
+      const updatedNotes = await ClientController.addNote(clientID, note);
+      res.status(StatusCodes.ACCEPTED).json(updatedNotes);
+    } catch (error) {
+      res.status(StatusCodes.BAD_REQUEST).json({ message: error });
+    }
+  },
+);
+
+ClientRouter.delete(
+  '/:clientID/:noteID/notes',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const clientID = req.params.clientID;
+      const noteID = req.params.noteID;
+
+      const updatedNotes = await ClientController.deleteNote(clientID, noteID);
+      res.status(StatusCodes.ACCEPTED).json(updatedNotes);
     } catch (error) {
       res.status(StatusCodes.BAD_REQUEST).json({ message: error });
     }

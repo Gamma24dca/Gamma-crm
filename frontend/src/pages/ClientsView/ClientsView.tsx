@@ -195,17 +195,17 @@ function ClientsView() {
                 <p>Firma</p>
               </div>
               <div className={styles.tileElementInfoBar}>
-                <p>Numer</p>
+                <p>Mail</p>
               </div>
               <div className={styles.tileElementInfoBar}>
-                <p>Mail</p>
+                <p>Numer</p>
               </div>
             </div>
           </InfoBar>
           <>
             {filteredBySearch.map((cl, index) => {
               return (
-                <TileWrapper key={cl._id} index={index}>
+                <TileWrapper key={cl._id} index={index} linkPath={cl._id}>
                   <div className={styles.clientTileWrapper}>
                     <p
                       className={`${styles.clientTileWrapperElement} ${styles.bolded}`}

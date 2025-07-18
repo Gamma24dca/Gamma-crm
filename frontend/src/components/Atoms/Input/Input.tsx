@@ -1,13 +1,13 @@
-type InputProps = {
+import React from 'react';
+
+type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   id: string;
-  type: string;
-  name: string;
   className: string;
-  placeholder: string;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   onBlur: React.ChangeEventHandler<HTMLInputElement>;
   value: string | number;
 };
+
 function Input({
   id,
   type,
@@ -17,6 +17,7 @@ function Input({
   onChange,
   onBlur,
   value,
+
   ...restProps
 }: InputProps) {
   return (

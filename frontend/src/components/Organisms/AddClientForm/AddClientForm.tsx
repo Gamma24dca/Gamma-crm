@@ -13,14 +13,15 @@ import CheckboxLoader from '../../Atoms/CheckboxLoader/CheckboxLoader';
 import useCompaniesContext from '../../../hooks/Context/useCompaniesContext';
 import {
   getAllCompanies,
+  UpdateCompany,
   // UpdateCompany,
 } from '../../../services/companies-service';
 
 const createClientSchema = Yup.object({
   name: Yup.string().required('Podaj nazwe'),
   company: Yup.string().required('Podaj firmę'),
-  email: Yup.string().required('Podaj email'),
-  phone: Yup.string().required('Podaj numer'),
+  email: Yup.string(),
+  phone: Yup.string(),
 });
 
 function AddClientForm({ companyName }) {
@@ -32,44 +33,49 @@ function AddClientForm({ companyName }) {
       company: companyName || '',
       email: '',
       phone: '',
+      notes: [],
     },
     validationSchema: createClientSchema,
     onSubmit: async (values) => {
       try {
-        const { name, company, email, phone } = values;
+        const { name, company, email, phone, notes } = values;
 
-        const response = await addClient({
+        const newClient = await addClient({
           name,
           company,
           email,
           phone,
+          notes,
         });
 
-        // const filteredCompany = companies.filter((companyTF) => {
-        //   return companyTF.name === company;
-        // });
+        if (newClient !== null) {
+          const filteredCompany = companies.find(
+            (com) => com.name === newClient.company
+          );
 
-        if (response !== null) {
-          // const updatedCompany = await UpdateCompany({
-          //   id: filteredCompany[0]._id,
-          //   companyData: {
-          //     clientPerson: [
-          //       ...filteredCompany[0].clientPerson,
-          //       { label: name, value: name },
-          //     ],
-          //   },
-          // });
+          if (!filteredCompany) {
+            console.warn(`Company "${newClient.company}" not found.`);
+            return;
+          }
 
-          // companiesDispatch({
-          //   type: 'UPDATE_CLIENTPERSON',
-          //   payload: updatedCompany,
-          //   test: response,
-          // });
+          const updatedClientPersons = [
+            ...filteredCompany.clientPerson.filter(
+              (person) => person.name !== newClient.name
+            ),
+            newClient,
+          ];
+
+          console.log(updatedClientPersons);
+
+          await UpdateCompany({
+            id: filteredCompany._id,
+            companyData: { clientPerson: updatedClientPersons },
+          });
 
           const AllCompanies = await getAllCompanies();
           companiesDispatch({ type: 'SET_COMPANIES', payload: AllCompanies });
 
-          dispatch({ type: 'CREATE_CLIENT', payload: response });
+          dispatch({ type: 'CREATE_CLIENT', payload: newClient });
           formik.setStatus('success');
           return;
         }
@@ -87,7 +93,7 @@ function AddClientForm({ companyName }) {
       placeholder: `${
         formik.errors.name && formik.touched.name ? 'Uzupełnij nazwe!' : 'Nazwa'
       }`,
-      value: formik.values.name,
+      inValue: formik.values.name,
       touchedProp: formik.touched.name,
       errorProp: formik.errors.name,
     },

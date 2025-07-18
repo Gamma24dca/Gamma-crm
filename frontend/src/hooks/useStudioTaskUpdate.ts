@@ -211,7 +211,7 @@ const useStudioTaskUpdate = (task, closeModal) => {
     const companyObject = companies.filter(
       (com) => com.name === selectedCompany
     );
-    const companyFirstClientPerson = companyObject[0].clientPerson[0].value;
+    const companyFirstClientPerson = companyObject[0].clientPerson[0].name;
     handleFormChange(e, 'client');
     setFormValue((prev) => {
       return {
@@ -229,7 +229,6 @@ const useStudioTaskUpdate = (task, closeModal) => {
         },
       });
 
-      console.log(selectedCompany);
       // const res = await getAllStudioTasks();
       // dispatch({ type: 'SET_STUDIOTASKS', payload: res });
       const res = await getStudioTask(updatedTask._id);

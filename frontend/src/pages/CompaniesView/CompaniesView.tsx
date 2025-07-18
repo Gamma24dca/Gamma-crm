@@ -26,8 +26,8 @@ import Select from '../../components/Atoms/Select/Select';
 
 const initialCompanyObject = {
   name: '',
-  phone: '',
-  mail: '',
+  nip: '',
+  address: '',
   teamMembers: [],
   website: '',
   clientPerson: [],
@@ -210,10 +210,10 @@ function CompaniesView() {
                 <p>Firma</p>
               </div>
               <div className={styles.tileElementInfoBar}>
-                <p>Numer</p>
+                <p>NIP</p>
               </div>
               <div className={styles.tileElementInfoBar}>
-                <p>Email</p>
+                <p>Adres</p>
               </div>
               <div className={styles.tileElementInfoBar}>
                 <p>Strona</p>

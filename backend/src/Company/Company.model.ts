@@ -7,21 +7,21 @@ export const CompanyModel = mongoose.model(
       type: String,
       required: true,
     },
-    phone: {
+    nip: {
       type: String,
-      required: true,
     },
-    mail: {
+    address: {
       type: String,
-      required: true,
     },
     website: {
       type: String,
     },
     clientPerson: [
       {
-        label: { type: String },
-        value: { type: String },
+        name: { type: String },
+        company: { type: String },
+        email: { type: String },
+        phone: { type: String },
       },
     ],
     hourRate: String,
@@ -48,6 +48,12 @@ export const CompanyModel = mongoose.model(
         img: {
           type: String,
         },
+      },
+    ],
+    keyWords: [
+      {
+        label: { type: String },
+        value: { type: String },
       },
     ],
     activeTasks: {

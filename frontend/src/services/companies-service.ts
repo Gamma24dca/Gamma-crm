@@ -3,20 +3,28 @@ import { User } from './users-service';
 
 type ClientPerson = {
   id?: string;
-  value: string;
+  name: string;
+  company: string;
+  email: string;
+  phone: string;
+};
+
+type KeyWord = {
   label: string;
+  value: string;
 };
 
 export type CompaniesType = {
   _id?: string;
   name: string;
-  phone: string;
-  mail: string;
+  nip: string;
+  address: string;
   website: string;
   clientPerson: ClientPerson[];
   hourRate: string;
   activeTasks?: number;
   teamMembers: User[];
+  keyWords: KeyWord[];
 };
 
 export async function getAllCompanies(): Promise<CompaniesType[] | null> {
@@ -72,21 +80,23 @@ export async function getCurrentCompany(
 
 export async function addCompany({
   name,
-  phone,
-  mail,
+  nip,
+  address,
   website,
   clientPerson,
   hourRate,
   teamMembers,
+  keyWords,
 }) {
   const formData = {
     name,
-    phone,
-    mail,
+    nip,
+    address,
     website,
     clientPerson,
     hourRate,
     teamMembers,
+    keyWords,
   };
 
   try {

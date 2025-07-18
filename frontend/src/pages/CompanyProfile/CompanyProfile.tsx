@@ -123,13 +123,6 @@ function CompanyProfile() {
     const headerHeight = 300;
     const availableHeight = viewportHeight - headerHeight;
 
-    // console.log(
-    //   'viewportHeight:',
-    //   viewportHeight,
-    //   'available:',
-    //   availableHeight
-    // );
-
     const itemsPerPage = Math.floor(availableHeight / tileHeight);
     setItemsPerPage(itemsPerPage > 0 ? itemsPerPage : 1);
   }, [viewportHeight]);
@@ -137,7 +130,7 @@ function CompanyProfile() {
   const fetchCompany = async () => {
     let errorHappened = false;
 
-    const currentCompany = await getCurrentCompany(params.id);
+    const currentCompany = await getCurrentCompany(companyID);
 
     if (currentCompany) {
       setCompany(currentCompany);
