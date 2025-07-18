@@ -48,7 +48,8 @@ function ArchivedListView({
   const handleUnarchiveStudioTask = async (task) => {
     const taskColumn = activeGroupedTasks[task.status];
     const taskColumnLength = taskColumn.length;
-    const lastItemOfColumnIndex = taskColumn[taskColumnLength - 1].index + 1;
+    const lastItemOfColumnIndex =
+      taskColumnLength > 0 ? taskColumn[taskColumnLength - 1].index + 1 : 1;
     socket.emit('taskUnarchived', task);
 
     const response = await unarchiveStudioTask({

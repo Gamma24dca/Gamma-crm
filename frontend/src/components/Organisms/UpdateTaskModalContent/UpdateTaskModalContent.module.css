@@ -418,6 +418,10 @@
   }
 }
 
+.noParticipantsPar {
+  font-size: 14px;
+}
+
 @keyframes appear {
   from {
     opacity: 0;

@@ -60,20 +60,19 @@ function CompanyProfileControlBar({
   ];
 
   const toggleClientPerson = (clientPerson) => {
-    if (clientPersonToFilter.includes(clientPerson.value)) {
+    if (clientPersonToFilter.includes(clientPerson.name)) {
       setClientPersonToFilter(
-        clientPersonToFilter.filter((part) => part !== clientPerson.value)
+        clientPersonToFilter.filter((part) => part !== clientPerson.name)
       );
     } else {
       setClientPersonToFilter((prev) => {
-        return [...prev, clientPerson.value];
+        return [...prev, clientPerson.name];
       });
     }
   };
 
   const toggleSettleValue = (settleValue) => {
     if (settleStateFilter) {
-      console.log('saifuhsdiuhsdagiusda');
       setSettleStateFilter('');
     } else {
       setSettleStateFilter(settleValue.value);
@@ -95,7 +94,7 @@ function CompanyProfileControlBar({
   const filteredClientsForDropdown =
     company &&
     company.clientPerson.filter((u) => {
-      return u.value
+      return u.name
         .toLocaleLowerCase()
         .includes(selectFilterValue.client.toLocaleLowerCase());
     });
@@ -187,8 +186,8 @@ function CompanyProfileControlBar({
                 return (
                   <FilterCheckbox
                     key={cp._id}
-                    name={cp.value}
-                    isSelected={clientPersonToFilter.includes(cp.value)}
+                    name={cp.name}
+                    isSelected={clientPersonToFilter.includes(cp.name)}
                     toggleCompany={toggleClientPerson}
                     filterVariable={cp}
                   />

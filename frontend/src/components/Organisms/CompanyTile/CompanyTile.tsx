@@ -10,10 +10,10 @@ function CompanyTile({ company, index }) {
           <p>{company.name}</p>
         </div>
         <div className={styles.tileElement}>
-          <p>{company.phone}</p>
+          <p>{company.nip}</p>
         </div>
         <div className={styles.tileElement}>
-          <p>{company.mail}</p>
+          <p>{company.address}</p>
         </div>
         <div className={styles.tileElement}>
           <p>{company.website}</p>

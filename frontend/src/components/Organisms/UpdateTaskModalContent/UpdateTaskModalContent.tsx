@@ -178,7 +178,11 @@ function UpdateTaskModalContent({
           <div className={styles.secondSection}>
             <div className={styles.usersContainer}>
               <p className={styles.sectionTitle}>Członkowie</p>
-              <UsersDisplay data={task} usersArray={task.participants} />
+              {task.participants.length > 0 ? (
+                <UsersDisplay data={task} usersArray={task.participants} />
+              ) : (
+                <p className={styles.noParticipantsPar}>Brak członków</p>
+              )}
             </div>
             <div>
               <p className={styles.sectionTitle}>Klient</p>
@@ -501,9 +505,9 @@ function UpdateTaskModalContent({
                 if (company.name === formValue.client) {
                   return company.clientPerson.map((cp) => {
                     return (
-                      cp.label !== formValue.clientPerson && (
-                        <option key={cp.value} value={cp.label}>
-                          {cp.label}
+                      cp.name !== formValue.clientPerson && (
+                        <option key={cp.name} value={cp.name}>
+                          {cp.name}
                         </option>
                       )
                     );

@@ -16,6 +16,37 @@ export const ClientController = {
     return await ClientModel.create(client);
   },
 
+  async addManyClients(clients) {
+    const inserted = await ClientModel.insertMany(clients);
+    return await inserted;
+  },
+
+  async addNote(clientID, noteBody) {
+    const client = await ClientModel.findById(clientID).exec();
+    if (!client) {
+      throw new Error(`Client with ID ${clientID} not found.`);
+    }
+
+    if (!Array.isArray(client.notes)) {
+      client.notes = [];
+    }
+    client.notes.push(noteBody);
+    await client.save();
+    return client.notes;
+  },
+
+  async deleteNote(clientID, noteID) {
+    const client = await ClientModel.findById(clientID).exec();
+    if (!client) {
+      throw new Error(`Client with ID ${clientID} not found.`);
+    }
+    client.notes = client.notes.filter(
+      (note) => String(note._id) !== String(noteID),
+    );
+    await client.save();
+    return client.notes;
+  },
+
   async updateClient(id, clientBody) {
     return await ClientModel.findByIdAndUpdate(id, clientBody);
   },
@@ -25,7 +56,6 @@ export const ClientController = {
   },
 
   async getClientsPerCompany(company) {
-    console.log(company);
     const clients = await ClientController.getClients();
 
     const filteredClients = clients.filter((client) => {

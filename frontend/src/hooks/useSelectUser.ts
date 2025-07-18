@@ -11,7 +11,7 @@ const useSelectUser = <T>({
   initialValue,
   objectKey,
 }: UseSelectUserProps<T>) => {
-  const [clientInputValue, setClientInputValue] = useState('');
+  const [keyWordInputValue, setKeyWordInputValue] = useState('');
   const { users, dispatch } = useUsersContext();
   const [formValue, setFormValue] = useState<T>(initialValue);
 
@@ -32,7 +32,7 @@ const useSelectUser = <T>({
 
   const handleAddMember = (userId: string) => {
     const userToAdd = users.find((user) => user._id === userId);
-    console.log(userToAdd);
+
     if (!userToAdd) return;
 
     setFormValue((prev) => {
@@ -68,8 +68,8 @@ const useSelectUser = <T>({
     setFormValue,
     handleAddMember,
     handleDeleteMember,
-    clientInputValue,
-    setClientInputValue,
+    keyWordInputValue,
+    setKeyWordInputValue,
   };
 };
 
