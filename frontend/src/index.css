@@ -180,7 +180,9 @@ select {
 .Shell,
 .ShellSFS,
 .ShellCRT,
-.ShellGlobalProduct {
+.ShellGlobalProduct,
+.ShellB2B,
+.ShellFleetSolutions {
   background-color: #ffc600 !important;
   opacity: 0.8;
 }
@@ -197,7 +199,138 @@ select {
   opacity: 0.8;
 }
 
-.Santander {
+.Santander,
+.SantanderOdrębne,
+.SantanderPR {
   background-color: #ec0000 !important;
   opacity: 0.8;
+}
+
+.Drewmet {
+  background-color: #74b829 !important;
+}
+
+.COTE {
+  background-color: #19d3f3 !important;
+}
+
+.Aksil {
+  background-color: #5dba27 !important;
+}
+
+.Leier {
+  background-color: #0561a0 !important;
+}
+
+.Matsport {
+  background-color: #e02125 !important;
+}
+
+.Medme {
+  background-color: #5fc983 !important;
+}
+
+.Milema {
+  background-color: #f17700 !important;
+}
+
+.Prymat {
+  background-color: #940d15 !important;
+}
+
+.Ridex {
+  background-color: #97a438 !important;
+}
+
+.Rijkzwaan {
+  background-color: #9bc000 !important;
+}
+
+.Romet {
+  background-color: #ed1c24 !important;
+}
+
+.Safran {
+  background-color: #0077c8 !important;
+}
+
+.Selena {
+  background-color: #003a8d !important;
+}
+
+.Sokołów {
+  background-color: #7b0000 !important;
+}
+
+.Somfy {
+  background-color: #fdbb00 !important;
+}
+
+.Steinhoff {
+  background-color: #d22128 !important;
+}
+
+.Transcash {
+  background-color: #ffc913 !important;
+}
+
+.Urtica {
+  background-color: #15295a !important;
+}
+
+.Pharmalink {
+  background-color: #00a6c4 !important;
+}
+
+.Ventor {
+  background-color: #00b4ef !important;
+}
+
+.WP2 {
+  background-color: #00b4ef !important;
+}
+
+.TCDębica {
+  background-color: #00b4ef !important;
+}
+
+.Makita {
+  background-color: #1e86a0 !important;
+}
+
+.Sipeko {
+  background-color: #4c9f3a !important;
+}
+
+.Uniter {
+  background-color: #e17657 !important;
+}
+
+.Mateo {
+  background-color: #a92627 !important;
+}
+
+.Longevity {
+  background-color: #002c41 !important;
+}
+
+.Qair {
+  background-color: #292d88 !important;
+}
+
+.Animex {
+  background-color: #000a8b !important;
+}
+
+.Husqvarna {
+  background-color: #273a60 !important;
+}
+
+.PCC {
+  background-color: #ff5a00 !important;
+}
+
+.Kaczmarski,
+.KaczmarskiGroup {
+  background-color: #fdba33 !important;
 }
