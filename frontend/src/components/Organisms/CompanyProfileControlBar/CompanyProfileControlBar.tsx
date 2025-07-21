@@ -10,7 +10,6 @@ import Overlay from '../../Atoms/Overlay/Overlay';
 import DropdownHeader from '../../Atoms/DropdownHeader/DropdownHeader';
 import MultiselectDropdown from '../../Molecules/MultiselectDropdown/MultiselectDropdown';
 import FilterCheckbox from '../../Molecules/FilterCheckbox/FilterCheckbox';
-import SearchInput from '../../Atoms/ControlBar/SearchInput/SearchInput';
 import FiltersClearButton from '../../Atoms/FiltersClearButton/FiltersClearButton';
 
 function CompanyProfileControlBar({
@@ -30,6 +29,7 @@ function CompanyProfileControlBar({
   setSearchInputValue,
   settleStateFilter,
   setSettleStateFilter,
+  exportToExcel,
 }) {
   const [filterDropdown, setFilterDropdown] = useState(false);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
@@ -105,8 +105,26 @@ function CompanyProfileControlBar({
       .includes(selectFilterValue.settled.toLocaleLowerCase());
   });
 
+  const dataForExcel = () => {
+    return tasks.map((task) => {
+      return {
+        zlecenie_stworzył: task.author.name,
+        id: task._id,
+        numer_karty: task.searchID,
+        firma: task.client,
+        klient: task.clientPerson,
+        tytuł: task.title,
+        opis: task.description,
+        rozliczone: task.isSettled,
+        suma_godzin: summarizeCompanyProfHours(task, currentMonthIndex),
+      };
+    });
+  };
+
+  console.log('asdasasd', dataForExcel());
+
   return (
-    <>
+    <div className={styles.companyProfileControlBarWrapper}>
       <div className={styles.leftSide}>
         <BackButton path="firmy" />
         {company ? (
@@ -150,11 +168,23 @@ function CompanyProfileControlBar({
         />
       </div>
       <div className={styles.center}>
-        <SearchInput
+        {/* <SearchInput
           value={searchInputValue}
           onChange={(e) => {
             setSearchInputValue(e.target.value);
           }}
+        /> */}
+
+        <input
+          id="search"
+          type="text"
+          placeholder="Szukaj"
+          value={searchInputValue}
+          onChange={(e) => {
+            setSearchInputValue(e.target.value);
+          }}
+          className={styles.filterInput}
+          name="search"
         />
       </div>
       <div className={styles.totalHoursContainer}>
@@ -235,8 +265,16 @@ function CompanyProfileControlBar({
         >
           Filtry
         </CTA>
+        <CTA
+          type="button"
+          onClick={() => {
+            exportToExcel(dataForExcel());
+          }}
+        >
+          Eksportuj
+        </CTA>
       </div>
-    </>
+    </div>
   );
 }
 

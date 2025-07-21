@@ -1,3 +1,5 @@
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Icon } from '@iconify/react';
@@ -185,6 +187,22 @@ function CompanyProfile() {
     return reckoningTasks;
   };
 
+  const exportToExcel = (tasks) => {
+    const currentDay = new Date();
+    const worksheet = XLSX.utils.json_to_sheet(tasks);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Tasks');
+
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array',
+    });
+
+    const data = new Blob([excelBuffer], { type: 'application/octet-stream' });
+
+    saveAs(data, `${currentDay.toString().slice(0, 10)}_zlecenia.xlsx`);
+  };
+
   return (
     <>
       <ModalTemplate
@@ -228,6 +246,7 @@ function CompanyProfile() {
           setSearchInputValue={setSearchInputValue}
           settleStateFilter={settleStateFilter}
           setSettleStateFilter={setSettleStateFilter}
+          exportToExcel={exportToExcel}
         />
       </ControlBar>
 
