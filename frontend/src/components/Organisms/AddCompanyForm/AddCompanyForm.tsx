@@ -130,8 +130,6 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
     });
   };
 
-  console.log(formValue.keyWords);
-
   const handlhandleAddNewClientSubmit = (nc, companyName) => {
     if (nc.name && companyName) {
       setClients((prev) => {
@@ -231,7 +229,11 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
                     }
                     onChange={(e) => {
                       const { name, value } = e.target;
-                      formik.setFieldValue(name, capitalizeFirst(value));
+                      if (id === name) {
+                        formik.setFieldValue(name, capitalizeFirst(value));
+                      } else {
+                        formik.setFieldValue(name, value);
+                      }
                     }}
                     onBlur={formik.handleBlur}
                     value={inValue}
