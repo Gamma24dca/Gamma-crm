@@ -1,0 +1,9 @@
+.clientTilesWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+  height: 65%;
+  max-height: 300px;
+  overflow-y: scroll;
+}
