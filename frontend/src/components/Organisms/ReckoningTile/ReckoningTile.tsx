@@ -458,10 +458,26 @@ function ReckoningTile({
                 }`}
                 type="number"
                 min="0"
+                max="99"
+                // maxLength="2"
                 key={dayIndex}
                 value={dayTile.hourNum === 0 ? '' : dayTile.hourNum}
                 onChange={(e) => {
+                  // Allow only max 2 digits
+                  if (e.target.value.length > 2) return;
+
                   handleHourChange(dayTile._id, e);
+                  // handleDayUpdate(
+                  //   reckTask._id,
+                  //   currentUserId,
+                  //   dayTile._id,
+                  //   {
+                  //     hourNum: e.target.value !== '' ? e.target.value : 0,
+                  //   },
+                  //   selectedMonthIndex
+                  // );
+                }}
+                onBlur={(e) => {
                   handleDayUpdate(
                     reckTask._id,
                     currentUserId,

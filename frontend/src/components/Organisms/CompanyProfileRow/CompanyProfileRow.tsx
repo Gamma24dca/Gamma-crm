@@ -10,6 +10,10 @@ const tileClass = (tileIndex) => {
     : styles.darkerReckoningTaskListElement;
 };
 
+const tileHeight = (participantsLength) => {
+  return participantsLength >= 5 ? styles.bigTile : styles.smallTile;
+};
+
 function CompanyProfileRow({
   task,
   index,
@@ -48,7 +52,7 @@ function CompanyProfileRow({
         isChecked.checkedValue && isChecked.checkedID === task._id
           ? styles.checked
           : null
-      }`}
+      } ${tileHeight(task.participants.length)}`}
     >
       <div className={styles.reckoningTaskListElementTile}>
         <input
@@ -69,8 +73,8 @@ function CompanyProfileRow({
         <p>{task.clientPerson}</p>
       </div>
       {/* <div className={styles.reckoningTaskListElementTile}>
-            <p>{task.startDate.slice(0, 10)}</p>
-          </div> */}
+        <p>{task.startDate.slice(0, 10)}</p>
+      </div> */}
       <div className={styles.reckoningTaskListElementTile}>
         <UsersDisplay data={task} usersArray={task.participants} />
       </div>
