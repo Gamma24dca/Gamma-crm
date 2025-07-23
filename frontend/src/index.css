@@ -172,7 +172,9 @@ select {
 .Goodyear,
 .GoodyearBelgia,
 .GoodyearLuxemburg,
-.GoodyearOTR {
+.GoodyearOTR,
+.GoodyearWa-WaBrand,
+.GoodyearWa-WaTrade {
   background-color: rgb(0, 78, 168) !important;
 }
 
@@ -359,4 +361,8 @@ select {
 
 .Elit {
   background-color: #004b84 !important;
+}
+
+.GAMMA {
+  background-color: var(--color-orange) !important;
 }

@@ -125,6 +125,11 @@ function CompanyProfile() {
     const headerHeight = 300;
     const availableHeight = viewportHeight - headerHeight;
 
+    // const tileHeight =
+    //   currentTasks.reduce((summ, task) => {
+    //     return summ + (task.participants.length > 5 ? 70 : 30);
+    //   }, 0) / currentTasks.length;
+
     const itemsPerPage = Math.floor(availableHeight / tileHeight);
     setItemsPerPage(itemsPerPage > 0 ? itemsPerPage : 1);
   }, [viewportHeight]);
@@ -188,7 +193,8 @@ function CompanyProfile() {
   };
 
   const exportToExcel = (tasks) => {
-    const currentDay = new Date();
+    const currentDate = new Date();
+    const dayIndex = currentDate.getMonth();
     const worksheet = XLSX.utils.json_to_sheet(tasks);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Tasks');
@@ -198,11 +204,13 @@ function CompanyProfile() {
       type: 'array',
     });
 
+    console.log(dayIndex);
+
     const data = new Blob([excelBuffer], { type: 'application/octet-stream' });
 
     saveAs(
       data,
-      `${company.name}_${currentDay.toString().slice(0, 10)}_zlecenia.xlsx`
+      `${company.name}_${currentDate.toString().slice(0, 10)}_zlecenia.xlsx`
     );
   };
 
