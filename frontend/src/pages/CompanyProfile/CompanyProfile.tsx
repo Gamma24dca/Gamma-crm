@@ -200,7 +200,10 @@ function CompanyProfile() {
 
     const data = new Blob([excelBuffer], { type: 'application/octet-stream' });
 
-    saveAs(data, `${currentDay.toString().slice(0, 10)}_zlecenia.xlsx`);
+    saveAs(
+      data,
+      `${company.name}_${currentDay.toString().slice(0, 10)}_zlecenia.xlsx`
+    );
   };
 
   return (
