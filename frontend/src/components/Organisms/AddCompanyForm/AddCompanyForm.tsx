@@ -20,6 +20,7 @@ import NoClientsTitle from '../../Atoms/NoClientsTitle/NoClientsTitle';
 import ClientTile from '../../Atoms/ClientTile/ClientTile';
 import AddNewClientTopBar from '../../Atoms/AddNewClientTopBar/AddNewClientTopBar';
 import ClientTilesWrapper from '../../Atoms/ClientTilesWrapper/ClientTilesWrapper';
+import useClientsData from '../../../hooks/useClientsData';
 
 const createCompanySchema = Yup.object({
   name: Yup.string().required('Nazwa jest wymagana'),
@@ -41,16 +42,6 @@ const initialCompanyObject = {
 
 function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
   const [clients, setClients] = useState([]);
-  const [newClient, setNewClient] = useState({
-    name: '',
-    company: '',
-    email: '',
-    phone: '',
-  });
-  const [isAddNewClientFormActive, setIsAddNewClientFormActive] =
-    useState(false);
-
-  const [isAddNewClientError, setIsAddNewClientError] = useState(false);
   const {
     users,
     formValue,
@@ -59,8 +50,6 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
     handleDeleteMember,
     keyWordInputValue,
     setKeyWordInputValue,
-    // clientInputValue,
-    // setClientInputValue,
   } = useSelectUser({
     initialValue: initialCompanyObject,
     objectKey: 'teamMembers',
@@ -124,15 +113,15 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
       }
     },
   });
-
-  const handleAddNewClientFormChange = (e, key) => {
-    setNewClient((prev) => {
-      return {
-        ...prev,
-        [key]: e.target.value,
-      };
-    });
-  };
+  const {
+    newClient,
+    setNewClient,
+    isAddNewClientError,
+    setIsAddNewClientError,
+    handleAddNewClientFormChange,
+    isAddNewClientView,
+    setIsAddNewClientView,
+  } = useClientsData(formik.values.name);
 
   const handlhandleAddNewClientSubmit = (nc, companyName) => {
     if (nc.name && companyName) {
@@ -145,7 +134,7 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
         email: '',
         phone: '',
       });
-      setIsAddNewClientFormActive(false);
+      setIsAddNewClientView(false);
       setIsAddNewClientError(false);
       return;
     }
@@ -282,11 +271,11 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
       </Form>
       <div>
         <div className={styles.clientsContainer}>
-          {isAddNewClientFormActive ? (
+          {isAddNewClientView ? (
             <>
               <AddNewClientTopBar
                 callbackFn={() => {
-                  setIsAddNewClientFormActive(false);
+                  setIsAddNewClientView(false);
                   setIsAddNewClientError(false);
                 }}
               />
@@ -364,7 +353,7 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
               </ClientTilesWrapper>
 
               <AddNewClientButton
-                callbackFn={() => setIsAddNewClientFormActive(true)}
+                callbackFn={() => setIsAddNewClientView(true)}
               />
             </>
           )}

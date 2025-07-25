@@ -164,6 +164,10 @@
   height: 10px;
 } */
 
+.spacer {
+  height: 10px;
+}
+
 .summaryContainer {
   display: flex;
   width: 200px;

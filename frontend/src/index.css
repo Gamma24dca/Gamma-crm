@@ -7,6 +7,7 @@
   --color-lighter: #ffffff;
   --color-shadow: #364e7e1a;
   --color-orange: #f68c1e;
+  --color-violet: #ad32f4;
   --color-navButton: #828fa3;
   --color-border: #e4ebfa;
   --color-light-grey: #c4c4c4;
@@ -364,5 +365,5 @@ select {
 }
 
 .GAMMA {
-  background-color: var(--color-orange) !important;
+  background-color: var(--color-violet) !important;
 }

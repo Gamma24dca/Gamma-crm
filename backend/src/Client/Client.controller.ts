@@ -21,6 +21,11 @@ export const ClientController = {
     return await inserted;
   },
 
+  async deleteManyClients(clientIds) {
+    const deleted = await ClientModel.deleteMany({ _id: { $in: clientIds } });
+    return await deleted;
+  },
+
   async addNote(clientID, noteBody) {
     const client = await ClientModel.findById(clientID).exec();
     if (!client) {

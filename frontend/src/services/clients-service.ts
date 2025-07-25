@@ -156,6 +156,34 @@ export async function addManyClients(clients) {
   }
 }
 
+export async function deleteManyClients(clientIds) {
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/clients/bulk`,
+      {
+        method: 'DELETE',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(clientIds),
+      }
+    );
+
+    if (response.ok) {
+      return await response.json();
+    }
+
+    throw new Error(`${response.status} ${response.statusText}`);
+  } catch (error) {
+    console.error(error);
+    if (Config.isDev) {
+      throw new Error('Add client', error.message);
+    }
+    return null;
+  }
+}
+
 export async function addNote({ text, date, clientID }) {
   const formData = {
     text,
