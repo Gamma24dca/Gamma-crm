@@ -56,8 +56,25 @@ ClientRouter.post(
 ClientRouter.post('/bulk', async (req, res) => {
   try {
     const clients = req.body;
+
     const newClients = await ClientController.addManyClients(clients);
     res.status(StatusCodes.ACCEPTED).json(newClients);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to insert users', details: error });
+  }
+});
+
+ClientRouter.delete('/bulk', async (req, res) => {
+  try {
+    const clientIds = req.body;
+
+    if (!Array.isArray(clientIds)) {
+      res.status(400).json({ error: 'Expected array of Ids' });
+      return;
+    }
+    const result = await ClientController.deleteManyClients(clientIds);
+
+    res.status(StatusCodes.ACCEPTED).json(result);
   } catch (error) {
     res.status(500).json({ error: 'Failed to insert users', details: error });
   }

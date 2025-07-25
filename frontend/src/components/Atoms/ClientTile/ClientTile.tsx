@@ -9,7 +9,11 @@ function ClientTile({ children, deleteCallback, ...restProps }) {
         icon="line-md:trash"
         width="24"
         height="24"
-        onClick={deleteCallback}
+        onClick={(e) => {
+          e.stopPropagation(); // stop bubbling
+          e.preventDefault();
+          deleteCallback();
+        }}
       />
     </div>
   );

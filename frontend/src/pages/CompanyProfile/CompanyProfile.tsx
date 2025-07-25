@@ -194,23 +194,23 @@ function CompanyProfile() {
 
   const exportToExcel = (tasks) => {
     const currentDate = new Date();
-    const dayIndex = currentDate.getMonth();
+    const dayIndex = currentDate.getDate();
+    const monthIndex = currentDate.getMonth();
+    const year = currentDate.getFullYear();
     const worksheet = XLSX.utils.json_to_sheet(tasks);
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Tasks');
+    XLSX.utils.book_append_sheet(workbook, worksheet, `${company.name}`);
 
     const excelBuffer = XLSX.write(workbook, {
       bookType: 'xlsx',
       type: 'array',
     });
 
-    console.log(dayIndex);
-
     const data = new Blob([excelBuffer], { type: 'application/octet-stream' });
 
     saveAs(
       data,
-      `${company.name}_${currentDate.toString().slice(0, 10)}_zlecenia.xlsx`
+      `${company.name}_${dayIndex}_${monthIndex + 1}_${year}_zlecenia.xlsx`
     );
   };
 

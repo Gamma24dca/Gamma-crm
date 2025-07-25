@@ -108,31 +108,53 @@ function ClientProfileViewComponent({
               </div>
               <div className={styles.inputWrapper}>
                 <label htmlFor="clientMail">E-mail</label>
-                <input
-                  type="text"
-                  name="clientMail"
-                  id="clientMail"
-                  maxLength={40}
-                  value={formValue.email}
-                  onChange={(e) => {
-                    handleFormChange(e, 'email');
-                  }}
-                  className={styles.editInput}
-                />
+                <div className={styles.inputRow}>
+                  <input
+                    type="text"
+                    name="clientMail"
+                    id="clientMail"
+                    maxLength={40}
+                    value={formValue.email}
+                    onChange={(e) => {
+                      handleFormChange(e, 'email');
+                    }}
+                    className={styles.editInput}
+                  />
+                  {formValue.email && (
+                    <a href={`mailto: ${formValue.email}`}>
+                      <Icon
+                        icon="line-md:email-arrow-right"
+                        width="32"
+                        height="32"
+                      />
+                    </a>
+                  )}
+                </div>
               </div>
               <div className={styles.inputWrapper}>
                 <label htmlFor="clientPhone">Telefon</label>
-                <input
-                  type="text"
-                  name="clientPhone"
-                  id="clientPhone"
-                  maxLength={15}
-                  value={formValue.phone}
-                  onChange={(e) => {
-                    handleFormChange(e, 'phone');
-                  }}
-                  className={styles.editInput}
-                />
+                <div className={styles.inputRow}>
+                  <input
+                    type="text"
+                    name="clientPhone"
+                    id="clientPhone"
+                    maxLength={15}
+                    value={formValue.phone}
+                    onChange={(e) => {
+                      handleFormChange(e, 'phone');
+                    }}
+                    className={styles.editInput}
+                  />
+                  {formValue.phone && (
+                    <a href={`tel: ${formValue.phone}`}>
+                      <Icon
+                        icon="line-md:phone-outgoing"
+                        width="32"
+                        height="32"
+                      />
+                    </a>
+                  )}
+                </div>
               </div>
               <div className={styles.inputWrapper}>
                 <label htmlFor="companyNIP">Firma</label>
