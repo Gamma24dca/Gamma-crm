@@ -1,0 +1,37 @@
+.addClientButton {
+  opacity: 0;
+  font-weight: 600;
+  width: 90%;
+  height: 50px;
+  margin: 0 auto;
+  background-color: transparent;
+  border-radius: 5px;
+  border: 1px dashed var(--color-navButton);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: transform 0.3s ease;
+  animation: appear 0.3s 0.2s ease forwards;
+
+  svg {
+    transition: all 0.3s ease;
+  }
+  &:hover {
+    transform: scale(1.01);
+    svg {
+      color: var(--color-orange);
+      transform: scale(1.05);
+    }
+  }
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

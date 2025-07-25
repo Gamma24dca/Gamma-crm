@@ -7,8 +7,10 @@
   --color-lighter: #ffffff;
   --color-shadow: #364e7e1a;
   --color-orange: #f68c1e;
+  --color-violet: #ad32f4;
   --color-navButton: #828fa3;
   --color-border: #e4ebfa;
+  --color-light-grey: #c4c4c4;
   --color-title: #030136;
   --color-error: #ff0033;
   --color-green: #adebb3;
@@ -168,7 +170,12 @@ select {
   border-radius: 10px;
 }
 
-.Goodyear {
+.Goodyear,
+.GoodyearBelgia,
+.GoodyearLuxemburg,
+.GoodyearOTR,
+.GoodyearWa-WaBrand,
+.GoodyearWa-WaTrade {
   background-color: rgb(0, 78, 168) !important;
 }
 
@@ -314,7 +321,8 @@ select {
   background-color: #002c41 !important;
 }
 
-.Qair {
+.Qair,
+.QairPolskaSA {
   background-color: #292d88 !important;
 }
 
@@ -326,11 +334,36 @@ select {
   background-color: #273a60 !important;
 }
 
-.PCC {
+.PCC,
+.PCCRokitaSA {
   background-color: #ff5a00 !important;
 }
 
 .Kaczmarski,
 .KaczmarskiGroup {
   background-color: #fdba33 !important;
+}
+
+.Argenesi {
+  background-color: #846643 !important;
+}
+
+.Davinci {
+  background-color: #546737 !important;
+}
+
+.Kaizen {
+  background-color: #d91117 !important;
+}
+
+.Marbud {
+  background-color: #b03a2e !important;
+}
+
+.Elit {
+  background-color: #004b84 !important;
+}
+
+.GAMMA {
+  background-color: var(--color-violet) !important;
 }

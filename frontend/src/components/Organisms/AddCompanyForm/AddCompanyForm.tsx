@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Icon } from '@iconify/react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import styles from './AddCompanyForm.module.css';
@@ -16,6 +15,12 @@ import inputStyle from '../../Atoms/Input/Input.module.css';
 import useCompaniesContext from '../../../hooks/Context/useCompaniesContext';
 import { addManyClients } from '../../../services/clients-service';
 import ClientSelect from '../../Molecules/ClientSelect/ClientSelect';
+import AddNewClientButton from '../../Atoms/AddNewClientButton/AddNewClientButton';
+import NoClientsTitle from '../../Atoms/NoClientsTitle/NoClientsTitle';
+import ClientTile from '../../Atoms/ClientTile/ClientTile';
+import AddNewClientTopBar from '../../Atoms/AddNewClientTopBar/AddNewClientTopBar';
+import ClientTilesWrapper from '../../Atoms/ClientTilesWrapper/ClientTilesWrapper';
+import useClientsData from '../../../hooks/useClientsData';
 
 const createCompanySchema = Yup.object({
   name: Yup.string().required('Nazwa jest wymagana'),
@@ -37,16 +42,6 @@ const initialCompanyObject = {
 
 function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
   const [clients, setClients] = useState([]);
-  const [newClient, setNewClient] = useState({
-    name: '',
-    company: '',
-    email: '',
-    phone: '',
-  });
-  const [isAddNewClientFormActive, setIsAddNewClientFormActive] =
-    useState(false);
-
-  const [isAddNewClientError, setIsAddNewClientError] = useState(false);
   const {
     users,
     formValue,
@@ -55,8 +50,6 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
     handleDeleteMember,
     keyWordInputValue,
     setKeyWordInputValue,
-    // clientInputValue,
-    // setClientInputValue,
   } = useSelectUser({
     initialValue: initialCompanyObject,
     objectKey: 'teamMembers',
@@ -120,17 +113,15 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
       }
     },
   });
-
-  const handleAddNewClientFormChange = (e, key) => {
-    setNewClient((prev) => {
-      return {
-        ...prev,
-        [key]: e.target.value,
-      };
-    });
-  };
-
-  console.log(formValue.keyWords);
+  const {
+    newClient,
+    setNewClient,
+    isAddNewClientError,
+    setIsAddNewClientError,
+    handleAddNewClientFormChange,
+    isAddNewClientView,
+    setIsAddNewClientView,
+  } = useClientsData(formik.values.name);
 
   const handlhandleAddNewClientSubmit = (nc, companyName) => {
     if (nc.name && companyName) {
@@ -143,7 +134,7 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
         email: '',
         phone: '',
       });
-      setIsAddNewClientFormActive(false);
+      setIsAddNewClientView(false);
       setIsAddNewClientError(false);
       return;
     }
@@ -231,7 +222,11 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
                     }
                     onChange={(e) => {
                       const { name, value } = e.target;
-                      formik.setFieldValue(name, capitalizeFirst(value));
+                      if (id === name) {
+                        formik.setFieldValue(name, capitalizeFirst(value));
+                      } else {
+                        formik.setFieldValue(name, value);
+                      }
                     }}
                     onBlur={formik.handleBlur}
                     value={inValue}
@@ -241,14 +236,6 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
             }
           )}
         </>
-        {/* <div className={styles.clientSelectWrapper}>
-        <ClientSelect
-          value={formValue.clientPerson}
-          setValue={setFormValue}
-          inputValue={clientInputValue}
-          setInputValue={setClientInputValue}
-        />
-      </div> */}
 
         <div className={styles.clientSelectWrapper}>
           <ClientSelect
@@ -284,22 +271,15 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
       </Form>
       <div>
         <div className={styles.clientsContainer}>
-          {isAddNewClientFormActive ? (
+          {isAddNewClientView ? (
             <>
-              <div className={styles.newClientTopBar}>
-                <Icon
-                  icon="ion:arrow-back-outline"
-                  color="#f68c1e"
-                  width="26"
-                  height="26"
-                  className={styles.backButton}
-                  onClick={() => {
-                    setIsAddNewClientFormActive(false);
-                    setIsAddNewClientError(false);
-                  }}
-                />
-                <p className={styles.clientSecTitle}>Nowy klient</p>
-              </div>
+              <AddNewClientTopBar
+                callbackFn={() => {
+                  setIsAddNewClientView(false);
+                  setIsAddNewClientError(false);
+                }}
+              />
+
               <div className={styles.inputsWrapper}>
                 <Input
                   id="name"
@@ -355,37 +335,26 @@ function AddCompanyForm({ companies, successMessage, handleSuccesMessage }) {
             <>
               <p className={styles.clientSecTitle}>Klienci</p>
 
-              <div className={styles.clientTilesWrapper}>
+              <ClientTilesWrapper>
                 {clients.length > 0 ? (
                   clients.map((cl) => {
                     return (
-                      <div className={styles.clientTile} key={cl.name}>
-                        <p>{cl.name}</p>
-                        <Icon
-                          icon="line-md:trash"
-                          width="24"
-                          height="24"
-                          onClick={() => handleDeleteNewClient(cl.name)}
-                        />
-                      </div>
+                      <ClientTile
+                        key={cl.name}
+                        deleteCallback={() => handleDeleteNewClient(cl.name)}
+                      >
+                        {cl.name}
+                      </ClientTile>
                     );
                   })
                 ) : (
-                  <div className={styles.noClientsWrapper}>
-                    <Icon icon="line-md:person-add" width="24" height="24" />
-                    <p className={styles.noClientsTitle}>Brak klientów</p>
-                  </div>
+                  <NoClientsTitle />
                 )}
-              </div>
+              </ClientTilesWrapper>
 
-              <button
-                type="button"
-                className={styles.addClientButton}
-                onClick={() => setIsAddNewClientFormActive(true)}
-              >
-                Dodaj klienta
-                <Icon icon="line-md:plus-circle" width="20" height="20" />
-              </button>
+              <AddNewClientButton
+                callbackFn={() => setIsAddNewClientView(true)}
+              />
             </>
           )}
         </div>

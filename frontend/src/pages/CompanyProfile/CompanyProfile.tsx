@@ -125,6 +125,11 @@ function CompanyProfile() {
     const headerHeight = 300;
     const availableHeight = viewportHeight - headerHeight;
 
+    // const tileHeight =
+    //   currentTasks.reduce((summ, task) => {
+    //     return summ + (task.participants.length > 5 ? 70 : 30);
+    //   }, 0) / currentTasks.length;
+
     const itemsPerPage = Math.floor(availableHeight / tileHeight);
     setItemsPerPage(itemsPerPage > 0 ? itemsPerPage : 1);
   }, [viewportHeight]);
@@ -188,10 +193,13 @@ function CompanyProfile() {
   };
 
   const exportToExcel = (tasks) => {
-    const currentDay = new Date();
+    const currentDate = new Date();
+    const dayIndex = currentDate.getDate();
+    const monthIndex = currentDate.getMonth();
+    const year = currentDate.getFullYear();
     const worksheet = XLSX.utils.json_to_sheet(tasks);
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Tasks');
+    XLSX.utils.book_append_sheet(workbook, worksheet, `${company.name}`);
 
     const excelBuffer = XLSX.write(workbook, {
       bookType: 'xlsx',
@@ -200,7 +208,10 @@ function CompanyProfile() {
 
     const data = new Blob([excelBuffer], { type: 'application/octet-stream' });
 
-    saveAs(data, `${currentDay.toString().slice(0, 10)}_zlecenia.xlsx`);
+    saveAs(
+      data,
+      `${company.name}_${dayIndex}_${monthIndex + 1}_${year}_zlecenia.xlsx`
+    );
   };
 
   return (
