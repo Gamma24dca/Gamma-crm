@@ -121,8 +121,6 @@ function CompanyProfileControlBar({
     });
   };
 
-  console.log('asdasasd', dataForExcel());
-
   return (
     <div className={styles.companyProfileControlBarWrapper}>
       <div className={styles.leftSide}>
@@ -186,13 +184,48 @@ function CompanyProfileControlBar({
           className={styles.filterInput}
           name="search"
         />
+
+        <button
+          type="button"
+          onClick={() => {
+            exportToExcel(dataForExcel());
+          }}
+          className={styles.exportButton}
+        >
+          <Icon
+            icon="line-md:downloading-loop"
+            width="36"
+            height="36"
+            className={styles.exportIcon}
+          />
+        </button>
+
+        {/* <CTA
+          type="button"
+          onClick={() => {
+            exportToExcel(dataForExcel());
+          }}
+        >
+          Eksportuj
+        </CTA> */}
       </div>
-      <div className={styles.totalHoursContainer}>
+      {/* <div className={styles.totalHoursContainer}>
         <p className={styles.summPar}>Suma:</p>
         <div className={styles.summWrapper}>
           <p className={styles.summValue}>{total}h</p>
-
           <p className={styles.summValue}>
+            {company && total * Number(company.hourRate)}zł
+          </p>
+        </div>
+      </div> */}
+
+      <div className={styles.summaryContainer}>
+        <p className={styles.summTitle}>Suma:</p>
+        <div className={styles.hoursTile}>
+          <p>{total}</p>
+        </div>
+        <div className={styles.revTile}>
+          <p className={styles.summText}>
             {company && total * Number(company.hourRate)}zł
           </p>
         </div>
@@ -264,14 +297,6 @@ function CompanyProfileControlBar({
           }}
         >
           Filtry
-        </CTA>
-        <CTA
-          type="button"
-          onClick={() => {
-            exportToExcel(dataForExcel());
-          }}
-        >
-          Eksportuj
         </CTA>
       </div>
     </div>

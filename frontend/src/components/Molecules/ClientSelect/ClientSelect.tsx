@@ -15,7 +15,7 @@ const customStyles = {
   control: (provided) => ({
     ...provided,
     borderRadius: '10px',
-    border: '1px solid #c4c4c4',
+    border: '1px solid var(--color-navButton)',
     cursor: 'pointer',
   }),
 };

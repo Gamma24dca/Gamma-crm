@@ -11,6 +11,12 @@
     opacity: 0.4;
   }
 }
+
+.modalWrapper {
+  display: flex;
+  gap: 30px;
+}
+
 .selectsRow {
   width: 100%;
   display: flex;
@@ -66,7 +72,7 @@
 }
 
 .inputsWrapper {
-  width: 600px;
+  width: 500px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -117,19 +123,19 @@
 }
 
 .one {
-  left: 10%;
+  left: 8%;
 }
 
 .two {
-  left: 12%;
+  left: 14%;
 }
 
 .three {
-  left: 16%;
+  left: 18%;
 }
 
 .four {
-  left: 18%;
+  left: 22%;
 }
 
 @media (max-width: 1700px) {
@@ -204,4 +210,74 @@
 .keyWordLabel {
   margin-bottom: 5px;
   margin-left: 5px;
+}
+
+.clientsContainer {
+  position: relative;
+  width: 350px;
+  max-height: 410px;
+  /* transform: translateY(15px); */
+  border: 1px solid var(--color-navButton);
+  border-radius: 10px;
+}
+
+.clientSecTitle {
+  text-align: center;
+  margin: 0 auto;
+  font-weight: 800;
+  /* padding-top: 10px; */
+  margin: 15px 0 20px 0;
+}
+
+.clientInputsWrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.input,
+.errorBorder,
+.selectInput,
+.capitalizedInput {
+  background-color: #fff;
+  /* width: 25rem; */
+  width: 80%;
+  height: 40px;
+  border: 1px solid #c4c4c4;
+  border-radius: 5px;
+  color: #787878;
+  font-size: 14px;
+  font-weight: 500;
+  padding-left: 0.5rem;
+}
+
+.capitalizedInput {
+  text-transform: capitalize;
+}
+
+.errorBorder {
+  border: 2px solid var(--color-orange);
+}
+
+.addNewClientButton {
+  cursor: pointer;
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--color-orange);
+  border: 1px solid var(--color-orange);
+  color: var(--color-lighter);
+  padding: 10px 30px;
+  border-radius: 5px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+
+  &:hover {
+    color: var(--color-orange);
+    background-color: var(--color-lighter);
+  }
 }

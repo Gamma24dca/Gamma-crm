@@ -1,3 +1,8 @@
+.rowsContainer {
+  max-height: 330px;
+  overflow-y: scroll;
+}
+
 .loaderWrapper {
   display: flex;
   align-items: center;

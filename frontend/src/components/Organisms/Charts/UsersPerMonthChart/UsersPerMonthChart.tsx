@@ -16,38 +16,42 @@ function UsersPerMonthChart({ usersMonthSummary, isLoading, isYearly }) {
   }
 
   if (usersMonthSummary.length > 0 && !isLoading && !isYearly) {
-    return usersMonthSummary.map((user) => {
-      return (
-        <div className={styles.usersMonthSummaryRow} key={user._id}>
-          <div className={styles.userWrapper}>
-            <img src={user.img} className={styles.userImg} alt="" />
-            <p className={styles.userName}>{user.name}</p>
-          </div>
+    return (
+      <div className={styles.rowsContainer}>
+        {usersMonthSummary.map((user) => {
+          return (
+            <div className={styles.usersMonthSummaryRow} key={user._id}>
+              <div className={styles.userWrapper}>
+                <img src={user.img} className={styles.userImg} alt="" />
+                <p className={styles.userName}>{user.name}</p>
+              </div>
 
-          <div className={styles.daysRow}>
-            <div className={styles.sumTile}>
-              {user.days &&
-                user.days.reduce((summ, days) => {
-                  return Number(summ) + Number(days.totalHours);
-                }, 0)}
+              <div className={styles.daysRow}>
+                <div className={styles.sumTile}>
+                  {user.days &&
+                    user.days.reduce((summ, days) => {
+                      return Number(summ) + Number(days.totalHours);
+                    }, 0)}
+                </div>
+                {user.days &&
+                  user.days.map((day) => {
+                    return (
+                      <div
+                        key={day.day}
+                        className={`${
+                          day.isWeekend ? styles.weekendDay : styles.dayTile
+                        }`}
+                      >
+                        {day.totalHours}
+                      </div>
+                    );
+                  })}
+              </div>
             </div>
-            {user.days &&
-              user.days.map((day) => {
-                return (
-                  <div
-                    key={day.day}
-                    className={`${
-                      day.isWeekend ? styles.weekendDay : styles.dayTile
-                    }`}
-                  >
-                    {day.totalHours}
-                  </div>
-                );
-              })}
-          </div>
-        </div>
-      );
-    });
+          );
+        })}
+      </div>
+    );
   }
 
   if (usersMonthSummary.length > 0 && !isLoading && isYearly) {
