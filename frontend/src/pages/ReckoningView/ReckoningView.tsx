@@ -35,6 +35,7 @@ import socket from '../../socket';
 import generateDaysArray from '../../utils/generateDaysArray';
 import useCompaniesContext from '../../hooks/Context/useCompaniesContext';
 import { getAllCompanies } from '../../services/companies-service';
+import { getNumberOfReckoTasks } from '../../services/dashboard-service';
 
 // function generateDaysArray(month, year) {
 //   const daysInMonth = new Date(year, month, 0).getDate();
@@ -211,8 +212,21 @@ function ReckoningView() {
 
       const startDate = new Date(selectedYear, selectedMonthIndex, 1);
 
+      const numberOfReckoTasks = await getNumberOfReckoTasks(
+        selectedMonthIndex,
+        selectedYear
+      );
+
+      console.log(
+        numberOfReckoTasks,
+        'month',
+        selectedMonthIndex,
+        'year',
+        selectedYear
+      );
+
       const addResponse = await addReckoningTask({
-        searchID: generateSearchID(),
+        searchID: generateSearchID(numberOfReckoTasks),
         idOfAssignedStudioTask: '',
         client: 'Wybierz firme',
         clientPerson: 'Wybierz klienta',

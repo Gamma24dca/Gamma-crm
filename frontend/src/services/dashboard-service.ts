@@ -190,3 +190,55 @@ export async function getUsersPerCompany(
     return null;
   }
 }
+
+export async function getNumberOfTasks(month: number, year: number) {
+  try {
+    const response = await fetch(
+      `${
+        import.meta.env.VITE_API_URL
+      }/api/dashboard/reckoning/number-of-tasks/${month}/${year}`,
+      {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    if (response.ok) {
+      return await response.json();
+    }
+    return null;
+  } catch (error) {
+    if (Config.isDev) {
+      throw new Error('Delete subtask', error.message);
+    }
+    return null;
+  }
+}
+
+export async function getNumberOfReckoTasks(month: number, year: number) {
+  try {
+    const response = await fetch(
+      `${
+        import.meta.env.VITE_API_URL
+      }/api/dashboard/reckoning/number-of-recko-tasks/${month}/${year}`,
+      {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    if (response.ok) {
+      return await response.json();
+    }
+    return null;
+  } catch (error) {
+    if (Config.isDev) {
+      throw new Error('Delete subtask', error.message);
+    }
+    return null;
+  }
+}

@@ -583,4 +583,49 @@ export const ChartsController = {
 
     return await usersPerCompany;
   },
+
+  async getNumberOfTasks(month, year) {
+    const result = await StudioTaskModel.aggregate([
+      {
+        $addFields: {
+          start: { $toDate: '$startDate' },
+          month: { $month: { $toDate: '$startDate' } },
+          year: { $year: { $toDate: '$startDate' } },
+        },
+      },
+      {
+        $match: {
+          ...(month ? { month: parseInt(month) } : {}),
+          ...(year ? { year: parseInt(year) } : {}),
+        },
+      },
+      {
+        $count: 'taskCount',
+      },
+    ]);
+
+    return result.length > 0 ? result[0].taskCount : 0;
+  },
+  async getNumberOfReckoTasks(month, year) {
+    const result = await ReckoningTaskModel.aggregate([
+      {
+        $addFields: {
+          start: { $toDate: '$startDate' },
+          month: { $month: { $toDate: '$startDate' } },
+          year: { $year: { $toDate: '$startDate' } },
+        },
+      },
+      {
+        $match: {
+          ...(month ? { month: parseInt(month) } : {}),
+          ...(year ? { year: parseInt(year) } : {}),
+        },
+      },
+      {
+        $count: 'taskCount',
+      },
+    ]);
+
+    return result.length > 0 ? result[0].taskCount : 0;
+  },
 };
