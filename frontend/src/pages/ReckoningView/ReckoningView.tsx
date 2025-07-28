@@ -552,14 +552,12 @@ function ReckoningView() {
       <ViewContainer>
         <ListContainer>
           <div className={styles.reckoningContainer}>
-            <div className={styles.infoBar}>
-              <p className={styles.infoBarElement}>&nbsp;</p>
-              <p className={styles.infoBarElement}>Firma</p>
-              <p className={styles.infoBarElement}>Klient</p>
-              <p className={styles.infoBarElement}>Tytuł</p>
-              <p className={styles.infoBarElement}>Opis</p>
-              <p className={styles.infoBarElement}>Druk(co)</p>
-              <p className={styles.infoBarElement}>Druk(gdzie)</p>
+            <div className={styles.commonGrid}>
+              <p className={`${styles.infoBarElement} `}>&nbsp;</p>
+              <p className={`${styles.infoBarElement} `}>Firma</p>
+              <p className={`${styles.infoBarElement} `}>Klient</p>
+              <p className={`${styles.infoBarElement} `}>Tytuł</p>
+
               <div className={styles.daysWrapper}>
                 <div className={styles.summHoursInfoEl}>
                   <Icon
@@ -577,6 +575,11 @@ function ReckoningView() {
                   );
                 })}
               </div>
+              <p className={`${styles.infoBarElement} `}>Komentarz</p>
+              <p className={`${styles.infoBarElement} `}>Druk(co)</p>
+              <p className={`${styles.infoBarElement} ${styles.printPar}`}>
+                Druk(gdzie)
+              </p>
             </div>
             {renderReckoTasks()}
             {reckoTasks.length > 0 && !taskLoadingState.isGetMyTasksLoading && (
