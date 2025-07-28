@@ -22,6 +22,7 @@ function UsersPerMonthChart({ usersMonthSummary, isLoading, isYearly }) {
         {usersMonthSummary.map((user) => {
           return (
             <div className={styles.usersMonthSummaryRow} key={user._id}>
+
               <Link
                 to={`/użytkownicy/${user._id}`}
                 className={styles.userWrapper}
