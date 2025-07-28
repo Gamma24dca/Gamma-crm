@@ -3,7 +3,7 @@ import omit from 'lodash.omit';
 
 export const UserController = {
   async getUsers() {
-    const users = await UserModel.find().exec();
+    const users = await UserModel.find().sort({ name: 1 }).exec();
     return users.map((user) => omit(user.toObject(), ['password']));
   },
 

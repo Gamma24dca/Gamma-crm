@@ -305,7 +305,7 @@ function ReckoningTile({
   }
 
   return (
-    <div className={styles.reckoningItemContainer}>
+    <div className={styles.commonGrid}>
       <div className={styles.editButtonWrapper}>
         <button
           type="button"
@@ -381,7 +381,7 @@ function ReckoningTile({
           })}
       </select>
       <input
-        className={`${tileClass(index)}`}
+        className={`${tileClass(index)} ${styles.titleInput}`}
         type="text"
         name="Title"
         id="Title"
@@ -390,53 +390,6 @@ function ReckoningTile({
         disabled={isAssignedToKanban}
         onChange={(e) => {
           handleFormValueChange(e, 'title');
-        }}
-        onBlur={() => {
-          handleBlur(reckTask._id, formValue);
-        }}
-      />
-
-      <input
-        className={`${tileClass(index)}`}
-        type="text"
-        name="Description"
-        id="Description"
-        placeholder="Dodaj opis..."
-        value={formValue.description}
-        disabled={isAssignedToKanban}
-        onChange={(e) => {
-          handleFormValueChange(e, 'description');
-        }}
-        onBlur={() => {
-          handleBlur(reckTask._id, formValue);
-        }}
-      />
-
-      <input
-        className={`${tileClass(index)}`}
-        type="text"
-        name="Description"
-        id="Description"
-        placeholder="Dodaj druk..."
-        value={formValue.printWhat}
-        disabled={isAssignedToKanban}
-        onChange={(e) => {
-          handleFormValueChange(e, 'printWhat');
-        }}
-        onBlur={() => {
-          handleBlur(reckTask._id, formValue);
-        }}
-      />
-      <input
-        className={`${tileClass(index)}`}
-        type="text"
-        name="Description"
-        id="Description"
-        placeholder="Dodaj druk..."
-        value={formValue.printWhere}
-        disabled={isAssignedToKanban}
-        onChange={(e) => {
-          handleFormValueChange(e, 'printWhere');
         }}
         onBlur={() => {
           handleBlur(reckTask._id, formValue);
@@ -458,13 +411,13 @@ function ReckoningTile({
                 }`}
                 type="number"
                 min="0"
-                max="99"
+                max="24"
                 // maxLength="2"
                 key={dayIndex}
                 value={dayTile.hourNum === 0 ? '' : dayTile.hourNum}
                 onChange={(e) => {
-                  // Allow only max 2 digits
-                  if (e.target.value.length > 2) return;
+                  if (e.target.value.length > 2 || Number(e.target.value) >= 25)
+                    return;
 
                   handleHourChange(dayTile._id, e);
                   // handleDayUpdate(
@@ -492,6 +445,51 @@ function ReckoningTile({
             );
           })}
       </div>
+      <input
+        className={`${tileClass(index)}`}
+        type="text"
+        name="Description"
+        id="Description"
+        placeholder="Dodaj komentarz..."
+        value={formValue.description}
+        disabled={isAssignedToKanban}
+        onChange={(e) => {
+          handleFormValueChange(e, 'description');
+        }}
+        onBlur={() => {
+          handleBlur(reckTask._id, formValue);
+        }}
+      />
+      <input
+        className={`${tileClass(index)}`}
+        type="text"
+        name="PrintWhat"
+        id="PrintWhat"
+        placeholder="Dodaj druk..."
+        value={formValue.printWhat}
+        disabled={isAssignedToKanban}
+        onChange={(e) => {
+          handleFormValueChange(e, 'printWhat');
+        }}
+        onBlur={() => {
+          handleBlur(reckTask._id, formValue);
+        }}
+      />
+      <input
+        className={`${tileClass(index)}`}
+        type="text"
+        name="PrintWhere"
+        id="PrintWhere"
+        placeholder="Dodaj druk..."
+        value={formValue.printWhere}
+        disabled={isAssignedToKanban}
+        onChange={(e) => {
+          handleFormValueChange(e, 'printWhere');
+        }}
+        onBlur={() => {
+          handleBlur(reckTask._id, formValue);
+        }}
+      />
     </div>
   );
 }

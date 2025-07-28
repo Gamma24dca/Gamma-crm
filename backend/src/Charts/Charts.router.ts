@@ -195,3 +195,37 @@ ChartsRouter.get(
     }
   },
 );
+
+ChartsRouter.get(
+  '/reckoning/number-of-tasks/:month/:year/',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const year = req.params.year;
+    const month = req.params.month;
+
+    try {
+      const result = await ChartsController.getNumberOfTasks(month, year);
+      res.status(StatusCodes.ACCEPTED).json(result);
+    } catch (err) {
+      console.error(err);
+      res.status(StatusCodes.BAD_REQUEST).send('Server error, check API');
+    }
+  },
+);
+
+ChartsRouter.get(
+  '/reckoning/number-of-recko-tasks/:month/:year/',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const year = req.params.year;
+    const month = req.params.month;
+
+    try {
+      const result = await ChartsController.getNumberOfReckoTasks(month, year);
+      res.status(StatusCodes.ACCEPTED).json(result);
+    } catch (err) {
+      console.error(err);
+      res.status(StatusCodes.BAD_REQUEST).send('Server error, check API');
+    }
+  },
+);
