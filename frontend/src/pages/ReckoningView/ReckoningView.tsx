@@ -35,6 +35,7 @@ import socket from '../../socket';
 import generateDaysArray from '../../utils/generateDaysArray';
 import useCompaniesContext from '../../hooks/Context/useCompaniesContext';
 import { getAllCompanies } from '../../services/companies-service';
+import { getNumberOfReckoTasks } from '../../services/dashboard-service';
 
 // function generateDaysArray(month, year) {
 //   const daysInMonth = new Date(year, month, 0).getDate();
@@ -211,8 +212,21 @@ function ReckoningView() {
 
       const startDate = new Date(selectedYear, selectedMonthIndex, 1);
 
+      const numberOfReckoTasks = await getNumberOfReckoTasks(
+        selectedMonthIndex,
+        selectedYear
+      );
+
+      console.log(
+        numberOfReckoTasks,
+        'month',
+        selectedMonthIndex,
+        'year',
+        selectedYear
+      );
+
       const addResponse = await addReckoningTask({
-        searchID: generateSearchID(),
+        searchID: generateSearchID(numberOfReckoTasks),
         idOfAssignedStudioTask: '',
         client: 'Wybierz firme',
         clientPerson: 'Wybierz klienta',
@@ -538,14 +552,12 @@ function ReckoningView() {
       <ViewContainer>
         <ListContainer>
           <div className={styles.reckoningContainer}>
-            <div className={styles.infoBar}>
-              <p className={styles.infoBarElement}>&nbsp;</p>
-              <p className={styles.infoBarElement}>Firma</p>
-              <p className={styles.infoBarElement}>Klient</p>
-              <p className={styles.infoBarElement}>Tytuł</p>
-              <p className={styles.infoBarElement}>Opis</p>
-              <p className={styles.infoBarElement}>Druk(co)</p>
-              <p className={styles.infoBarElement}>Druk(gdzie)</p>
+            <div className={styles.commonGrid}>
+              <p className={`${styles.infoBarElement} `}>&nbsp;</p>
+              <p className={`${styles.infoBarElement} `}>Firma</p>
+              <p className={`${styles.infoBarElement} `}>Klient</p>
+              <p className={`${styles.infoBarElement} `}>Tytuł</p>
+
               <div className={styles.daysWrapper}>
                 <div className={styles.summHoursInfoEl}>
                   <Icon
@@ -563,6 +575,11 @@ function ReckoningView() {
                   );
                 })}
               </div>
+              <p className={`${styles.infoBarElement} `}>Komentarz</p>
+              <p className={`${styles.infoBarElement} `}>Druk(co)</p>
+              <p className={`${styles.infoBarElement} ${styles.printPar}`}>
+                Druk(gdzie)
+              </p>
             </div>
             {renderReckoTasks()}
             {reckoTasks.length > 0 && !taskLoadingState.isGetMyTasksLoading && (

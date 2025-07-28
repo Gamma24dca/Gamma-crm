@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import styles from './UsersPerMonthChart.module.css';
 
@@ -21,10 +22,13 @@ function UsersPerMonthChart({ usersMonthSummary, isLoading, isYearly }) {
         {usersMonthSummary.map((user) => {
           return (
             <div className={styles.usersMonthSummaryRow} key={user._id}>
-              <div className={styles.userWrapper}>
+              <Link
+                to={`/użytkownicy/${user._id}`}
+                className={styles.userWrapper}
+              >
                 <img src={user.img} className={styles.userImg} alt="" />
                 <p className={styles.userName}>{user.name}</p>
-              </div>
+              </Link>
 
               <div className={styles.daysRow}>
                 <div className={styles.sumTile}>
