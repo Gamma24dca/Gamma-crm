@@ -539,7 +539,6 @@ function ReckoningTile({
             );
           })}
       </div>
-
     </div>
   );
 }
