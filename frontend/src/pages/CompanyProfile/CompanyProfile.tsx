@@ -89,6 +89,7 @@ function CompanyProfile() {
           cts.description
             .toLowerCase()
             .includes(searchInputValue.toLowerCase()) ||
+          cts.comment.toLowerCase().includes(searchInputValue.toLowerCase()) ||
           cts.clientPerson
             .toLowerCase()
             .includes(searchInputValue.toLowerCase()) ||
@@ -337,16 +338,16 @@ function CompanyProfile() {
                 className={`${styles.reckoningTaskListElementTile} ${styles.companyInfoBarTile}`}
                 role="button"
                 tabIndex={0}
-                onClick={() => handleSortChange('description')}
+                onClick={() => handleSortChange('comment')}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
-                    handleSortChange('description');
+                    handleSortChange('comment');
                   }
                 }}
               >
                 <p>
                   Komentarz{' '}
-                  {sortColumn === 'description' &&
+                  {sortColumn === 'comment' &&
                     (sortOrder === 'asc' ? '↑' : '↓')}
                 </p>
               </div>
