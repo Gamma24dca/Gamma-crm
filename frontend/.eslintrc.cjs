@@ -51,6 +51,7 @@ module.exports = {
     'react/no-array-index-key': 'off',
     'react/require-default-props': 'off',
     'import/prefer-default-export': 'off',
+    'no-alert': 'off',
 
     'react/jsx-filename-extension': [
       1,
