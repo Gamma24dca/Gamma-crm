@@ -35,7 +35,7 @@ import socket from '../../socket';
 import generateDaysArray from '../../utils/generateDaysArray';
 import useCompaniesContext from '../../hooks/Context/useCompaniesContext';
 import { getAllCompanies } from '../../services/companies-service';
-import { getNumberOfReckoTasks } from '../../services/dashboard-service';
+// import { getNumberOfReckoTasks } from '../../services/dashboard-service';
 
 // function generateDaysArray(month, year) {
 //   const daysInMonth = new Date(year, month, 0).getDate();
@@ -145,6 +145,7 @@ function ReckoningView() {
           cts.description
             .toLowerCase()
             .includes(searchInputValue.toLowerCase()) ||
+          cts.comment.toLowerCase().includes(searchInputValue.toLowerCase()) ||
           cts.clientPerson
             .toLowerCase()
             .includes(searchInputValue.toLowerCase()) ||
@@ -212,26 +213,19 @@ function ReckoningView() {
 
       const startDate = new Date(selectedYear, selectedMonthIndex, 1);
 
-      const numberOfReckoTasks = await getNumberOfReckoTasks(
-        selectedMonthIndex,
-        selectedYear
-      );
-
-      console.log(
-        numberOfReckoTasks,
-        'month',
-        selectedMonthIndex,
-        'year',
-        selectedYear
-      );
+      // const numberOfReckoTasks = await getNumberOfReckoTasks(
+      //   selectedMonthIndex,
+      //   selectedYear
+      // );
 
       const addResponse = await addReckoningTask({
-        searchID: generateSearchID(numberOfReckoTasks),
+        searchID: generateSearchID(),
         idOfAssignedStudioTask: '',
         client: 'Wybierz firme',
         clientPerson: 'Wybierz klienta',
         title: '',
         description: '',
+        comment: '',
         author: user[0],
         printWhat: '',
         printWhere: '',
@@ -285,6 +279,7 @@ function ReckoningView() {
         clientPerson,
         title,
         description,
+        comment: '',
         author: user[0],
         printWhat: '',
         printWhere: '',

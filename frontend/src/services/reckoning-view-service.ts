@@ -16,6 +16,7 @@ export type ReckoningTaskTypes = {
   clientPerson: string;
   title: string;
   description: string;
+  comment: string;
   isSettled?: boolean;
   author: Omit<User, 'password'>;
   printWhat: string;
@@ -124,6 +125,7 @@ export async function addReckoningTask({
   clientPerson,
   title,
   description,
+  comment,
   author,
   printWhat,
   printWhere,
@@ -137,6 +139,7 @@ export async function addReckoningTask({
     clientPerson,
     title,
     description,
+    comment,
     author,
     printWhat,
     printWhere,
@@ -177,6 +180,7 @@ export async function addReckoningTaskFromKanban({
   clientPerson,
   title,
   description,
+  comment,
   author,
   printWhat,
   printWhere,
@@ -192,6 +196,7 @@ export async function addReckoningTaskFromKanban({
     clientPerson,
     title,
     description,
+    comment,
     author,
     printWhat,
     printWhere,

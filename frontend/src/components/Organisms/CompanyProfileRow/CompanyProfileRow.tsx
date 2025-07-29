@@ -83,7 +83,7 @@ function CompanyProfileRow({
       </div>
 
       <div className={styles.reckoningTaskListElementTile}>
-        <p>{task.description}</p>
+        <p>{task.comment}</p>
       </div>
       <div className={styles.reckoningTaskListElementTile}>
         <p>{summarizeCompanyProfHours(task, currentMonthIndex)}</p>

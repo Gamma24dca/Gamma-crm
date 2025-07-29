@@ -23,6 +23,10 @@ export const ReckoningTaskModel = mongoose.model(
       type: String,
     },
 
+    comment: {
+      type: String,
+    },
+
     isSettled: Boolean,
 
     author: {
