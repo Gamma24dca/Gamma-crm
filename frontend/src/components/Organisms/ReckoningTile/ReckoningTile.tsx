@@ -448,13 +448,13 @@ function ReckoningTile({
       <input
         className={`${tileClass(index)}`}
         type="text"
-        name="Description"
-        id="Description"
+        name="Comment"
+        id="Comment"
         placeholder="Dodaj komentarz..."
-        value={formValue.description}
-        disabled={isAssignedToKanban}
+        value={formValue.comment}
+        disabled={false}
         onChange={(e) => {
-          handleFormValueChange(e, 'description');
+          handleFormValueChange(e, 'comment');
         }}
         onBlur={() => {
           handleBlur(reckTask._id, formValue);
@@ -467,7 +467,7 @@ function ReckoningTile({
         id="PrintWhat"
         placeholder="Dodaj druk..."
         value={formValue.printWhat}
-        disabled={isAssignedToKanban}
+        disabled={false}
         onChange={(e) => {
           handleFormValueChange(e, 'printWhat');
         }}
@@ -482,7 +482,7 @@ function ReckoningTile({
         id="PrintWhere"
         placeholder="Dodaj druk..."
         value={formValue.printWhere}
-        disabled={isAssignedToKanban}
+        disabled={false}
         onChange={(e) => {
           handleFormValueChange(e, 'printWhere');
         }}

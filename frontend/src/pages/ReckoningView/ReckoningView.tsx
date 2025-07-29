@@ -145,6 +145,7 @@ function ReckoningView() {
           cts.description
             .toLowerCase()
             .includes(searchInputValue.toLowerCase()) ||
+          cts.comment.toLowerCase().includes(searchInputValue.toLowerCase()) ||
           cts.clientPerson
             .toLowerCase()
             .includes(searchInputValue.toLowerCase()) ||
@@ -232,6 +233,7 @@ function ReckoningView() {
         clientPerson: 'Wybierz klienta',
         title: '',
         description: '',
+        comment: '',
         author: user[0],
         printWhat: '',
         printWhere: '',
@@ -285,6 +287,7 @@ function ReckoningView() {
         clientPerson,
         title,
         description,
+        comment: '',
         author: user[0],
         printWhat: '',
         printWhere: '',
