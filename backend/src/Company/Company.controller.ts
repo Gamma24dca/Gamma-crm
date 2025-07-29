@@ -3,7 +3,7 @@ import { CompanyModel } from './Company.model';
 
 export const CompanyController = {
   async getCompanies() {
-    const companies = await CompanyModel.find().exec();
+    const companies = await CompanyModel.find().sort({ name: 1 }).exec();
     return companies;
   },
 

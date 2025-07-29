@@ -305,7 +305,7 @@ function ReckoningTile({
   }
 
   return (
-    <div className={styles.reckoningItemContainer}>
+    <div className={styles.commonGrid}>
       <div className={styles.editButtonWrapper}>
         <button
           type="button"
@@ -381,7 +381,7 @@ function ReckoningTile({
           })}
       </select>
       <input
-        className={`${tileClass(index)}`}
+        className={`${tileClass(index)} ${styles.titleInput}`}
         type="text"
         name="Title"
         id="Title"
@@ -396,12 +396,61 @@ function ReckoningTile({
         }}
       />
 
+      <div className={styles.daysWrapper}>
+        <div className={styles.summHoursContainer}>{totalHours}</div>
+
+        {days.length > 0 &&
+          days[0].hours.map((dayTile, dayIndex) => {
+            return (
+              <input
+                className={`${
+                  dayTile.isWeekend ? styles.weekendDayTile : styles.dayTile
+                } ${
+                  dayIndex + 1 === currentDate.getDate() &&
+                  styles.highlightCurrentDay
+                }`}
+                type="number"
+                min="0"
+                max="24"
+                // maxLength="2"
+                key={dayIndex}
+                value={dayTile.hourNum === 0 ? '' : dayTile.hourNum}
+                onChange={(e) => {
+                  if (e.target.value.length > 2 || Number(e.target.value) >= 25)
+                    return;
+
+                  handleHourChange(dayTile._id, e);
+                  // handleDayUpdate(
+                  //   reckTask._id,
+                  //   currentUserId,
+                  //   dayTile._id,
+                  //   {
+                  //     hourNum: e.target.value !== '' ? e.target.value : 0,
+                  //   },
+                  //   selectedMonthIndex
+                  // );
+                }}
+                onBlur={(e) => {
+                  handleDayUpdate(
+                    reckTask._id,
+                    currentUserId,
+                    dayTile._id,
+                    {
+                      hourNum: e.target.value !== '' ? e.target.value : 0,
+                    },
+                    selectedMonthIndex
+                  );
+                }}
+              />
+            );
+          })}
+      </div>
       <input
         className={`${tileClass(index)}`}
         type="text"
         name="Description"
         id="Description"
-        placeholder="Dodaj opis..."
+        placeholder="Dodaj komentarz..."
         value={formValue.description}
         disabled={isAssignedToKanban}
         onChange={(e) => {
@@ -411,12 +460,11 @@ function ReckoningTile({
           handleBlur(reckTask._id, formValue);
         }}
       />
-
       <input
         className={`${tileClass(index)}`}
         type="text"
-        name="Description"
-        id="Description"
+        name="PrintWhat"
+        id="PrintWhat"
         placeholder="Dodaj druk..."
         value={formValue.printWhat}
         disabled={isAssignedToKanban}
@@ -430,8 +478,8 @@ function ReckoningTile({
       <input
         className={`${tileClass(index)}`}
         type="text"
-        name="Description"
-        id="Description"
+        name="PrintWhere"
+        id="PrintWhere"
         placeholder="Dodaj druk..."
         value={formValue.printWhere}
         disabled={isAssignedToKanban}
@@ -442,7 +490,6 @@ function ReckoningTile({
           handleBlur(reckTask._id, formValue);
         }}
       />
-
       <div className={styles.daysWrapper}>
         <div className={styles.summHoursContainer}>{totalHours}</div>
 
