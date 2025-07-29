@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-const secretSequence = ['s', 'p', 'g']; // lowercase letters
+const secretSequence = ['g', 's', 's']; // lowercase letters
 
 export function useSecretShortcut(callback: () => void) {
   const [input, setInput] = useState<string[]>([]);
