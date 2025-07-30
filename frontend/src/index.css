@@ -174,8 +174,8 @@ select {
 .GoodyearBelgia,
 .GoodyearLuxemburg,
 .GoodyearOTR,
-.GoodyearWa-WaBrand,
-.GoodyearWa-WaTrade {
+.GoodyearWa-waBrand,
+.GoodyearWa-waTrade {
   background-color: rgb(0, 78, 168) !important;
 }
 
