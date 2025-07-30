@@ -6,7 +6,6 @@ export function useSecretShortcut(callback: () => void) {
   const [input, setInput] = useState<string[]>([]);
 
   useEffect(() => {
-    console.log(input);
     const handleKeyDown = (e: KeyboardEvent) => {
       const key = e.key.toLowerCase(); // normalize input
       setInput((prev) => {
@@ -14,7 +13,7 @@ export function useSecretShortcut(callback: () => void) {
         if (newInput.join(',') === secretSequence.join(',')) {
           callback();
         }
-        return newInput;
+        return newInput || input;
       });
     };
 

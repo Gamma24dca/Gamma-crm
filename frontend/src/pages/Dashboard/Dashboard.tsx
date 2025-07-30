@@ -133,7 +133,21 @@ function Dashboard() {
           selectedYear,
           viewVariable === 'Roczne'
         );
-        setUsersMonthSummary(users);
+
+        const filteredAndSortedUsers = users
+          .map((user) => {
+            const arrayToReduce =
+              viewVariable === 'Roczne' ? user.months : user.days;
+            const totalHours = arrayToReduce?.reduce(
+              (sum, item) => sum + item.totalHours,
+              0
+            );
+            return { ...user, totalHours };
+          })
+          .filter((user) => user.totalHours > 0)
+          .sort((a, b) => b.totalHours - a.totalHours);
+
+        setUsersMonthSummary(filteredAndSortedUsers);
 
         const tasks = await getTasksTypeSummary(viewVariable === 'Roczne');
         setTasksTypeSummary(tasks);

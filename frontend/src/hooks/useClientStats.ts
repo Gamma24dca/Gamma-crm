@@ -30,7 +30,13 @@ const useClientStats = (
           client.name
         );
         if (response) {
-          setChartData(response);
+          const filteredClientParticipants = response.map((cl) => {
+            return {
+              ...cl,
+              participants: cl.participants.filter((part) => part.hours > 0),
+            };
+          });
+          setChartData(filteredClientParticipants);
         }
       } catch (error) {
         console.error('Error fetching users:', error);

@@ -115,30 +115,31 @@
 
 .daysWrapper {
   display: flex;
-  gap: 3px;
+  gap: 2px;
   margin: 0 0 0 5px;
 }
 
 .dayTile,
 .weekendDayTile {
-  width: 20px;
+  width: 18px;
   height: 28px;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--color-shadow);
+  background-color: transparent;
+  border: 1px solid var(--color-shadow);
   border-radius: 5px;
   /* padding: 2px 12px; */
   font-size: 14px;
   font-weight: 600;
-  border: none;
   padding: 0;
   text-align: center;
 }
 
 .weekendDayTile {
-  background-color: var(--color-orange);
-  opacity: 0.4;
+  background-color: rgba(130, 143, 163, 0.05);
+
+  /* opacity: 0.3; */
 }
 
 .dayTile::-webkit-outer-spin-button,
@@ -204,8 +205,10 @@
 }
 
 .highlightCurrentDay {
-  background-color: var(--color-navButton);
-  color: var(--color-lighter);
+  background-color: rgba(255, 165, 0, 0.2);
+
+  /* color: var(--color-lighter); */
+  border: 1px solid rgba(255, 165, 0, 0.3);
 }
 
 @keyframes appear {
