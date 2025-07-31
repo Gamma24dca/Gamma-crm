@@ -27,6 +27,10 @@ function ReckoningTile({
     isOpen: false,
     position: null,
   });
+  const [isMouseOver, setIsMouseOver] = useState({
+    isOver: false,
+    elementId: '',
+  });
 
   const { dispatch } = useReckoTasksContext();
   const currentDate = new Date();
@@ -92,6 +96,10 @@ function ReckoningTile({
       : styles.darkerReckTaskItem;
   };
 
+  const dayTileClass = (tileIndex) => {
+    return tileIndex % 2 === 0 ? styles.lighterDayTile : styles.darkerDayTile;
+  };
+
   const handleHourChange = (dayId, e) => {
     setDays((prevData) => {
       const updatedData = prevData.map((day, dayIndex) => {
@@ -110,10 +118,10 @@ function ReckoningTile({
     });
   };
 
-  const handleDayUpdate = async (taskId, userId, dayId, value, month) => {
+  const handleDayUpdate = async (taskId, userId, dayId, value, monthId) => {
     try {
       setIsTaskDeleteLoading(true);
-      await updateDay({ taskId, userId, dayId, value, month });
+      await updateDay({ taskId, userId, dayId, value, monthId });
       dispatch({
         type: 'UPDATE_HOUR_NUM',
         payload: {
@@ -197,6 +205,8 @@ function ReckoningTile({
       setIsTaskDeleteLoading(false);
     }
   };
+
+  console.log(days);
 
   function ReckoTaskEditSelect(position) {
     if (!position) return null;
@@ -396,7 +406,7 @@ function ReckoningTile({
         }}
       />
 
-      <div className={styles.daysWrapper}>
+      <div className={`${styles.daysWrapper} ${dayTileClass(index)}`}>
         <div className={styles.summHoursContainer}>{totalHours}</div>
 
         {days.length > 0 &&
@@ -438,7 +448,7 @@ function ReckoningTile({
                     {
                       hourNum: e.target.value !== '' ? e.target.value : 0,
                     },
-                    selectedMonthIndex
+                    days[0]._id
                   );
                 }}
               />
@@ -453,6 +463,22 @@ function ReckoningTile({
         placeholder="Dodaj komentarz..."
         value={formValue.comment}
         disabled={false}
+        onMouseEnter={() => {
+          setIsMouseOver(() => {
+            return {
+              isOver: true,
+              elementId: 'comment',
+            };
+          });
+        }}
+        onMouseLeave={() => {
+          setIsMouseOver(() => {
+            return {
+              isOver: false,
+              elementId: '',
+            };
+          });
+        }}
         onChange={(e) => {
           handleFormValueChange(e, 'comment');
         }}
@@ -460,6 +486,9 @@ function ReckoningTile({
           handleBlur(reckTask._id, formValue);
         }}
       />
+      {isMouseOver.isOver && isMouseOver.elementId === 'comment' ? (
+        <p className={styles.hoverElement}>dupa dupa dupa</p>
+      ) : null}
       <input
         className={`${tileClass(index)}`}
         type="text"

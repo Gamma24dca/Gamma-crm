@@ -260,7 +260,7 @@ export async function updateReckoningTask({ taskId, value }) {
   }
 }
 
-export async function updateDay({ taskId, userId, dayId, value, month }) {
+export async function updateDay({ taskId, userId, dayId, value, monthId }) {
   try {
     const subtaskBody = {
       ...value,
@@ -268,7 +268,7 @@ export async function updateDay({ taskId, userId, dayId, value, month }) {
     const response = await fetch(
       `${
         import.meta.env.VITE_API_URL
-      }/api/reckoningtasks/${taskId}/dayUpdate/${userId}/${dayId}/${month}`,
+      }/api/reckoningtasks/${taskId}/dayUpdate/${userId}/${dayId}/${monthId}`,
       {
         method: 'PATCH',
         credentials: 'include',

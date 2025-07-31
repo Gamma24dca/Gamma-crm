@@ -117,11 +117,21 @@
   display: flex;
   gap: 2px;
   margin: 0 0 0 5px;
+  /* background-color: red; */
+}
+
+.daysWrapper input.highlightCurrentDay {
+  background-color: rgba(255, 165, 0, 0.2);
+  border: 1px solid rgba(255, 165, 0, 0.3);
+}
+
+.daysWrapper input.weekendDayTile {
+  background-color: rgba(232, 232, 232, 1);
 }
 
 .dayTile,
 .weekendDayTile {
-  width: 18px;
+  width: 20px;
   height: 28px;
   display: flex;
   justify-content: center;
@@ -136,10 +146,18 @@
   text-align: center;
 }
 
-.weekendDayTile {
-  background-color: rgba(130, 143, 163, 0.05);
+/* .weekendDayTile {
+  background-color: rgba(130, 143, 163, 0.05) !important;
+} */
 
-  /* opacity: 0.3; */
+.darkerDayTile {
+  input {
+    background-color: #f8f8f8;
+  }
+}
+
+.dupa {
+  width: 100%;
 }
 
 .dayTile::-webkit-outer-spin-button,
@@ -204,11 +222,15 @@
   color: var(--color-orange);
 }
 
-.highlightCurrentDay {
-  background-color: rgba(255, 165, 0, 0.2);
-
-  /* color: var(--color-lighter); */
+/* .highlightCurrentDay {
+  background-color: rgba(255, 165, 0, 0.2) !important;
   border: 1px solid rgba(255, 165, 0, 0.3);
+} */
+
+.hoverElement {
+  position: absolute;
+  font-size: 14px;
+  right: 0;
 }
 
 @keyframes appear {

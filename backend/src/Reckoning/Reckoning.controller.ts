@@ -1,3 +1,4 @@
+import { Types } from 'mongoose';
 import { ReckoningTaskModel } from './Reckoning.model';
 
 export const ReckoningTaskController = {
@@ -177,40 +178,41 @@ export const ReckoningTaskController = {
     }
   },
 
-  async updateDay(taskId, dayId, userId, value, month) {
-    const task = await ReckoningTaskController.getReckoningTask(taskId);
-    const filteredParticipant = task.participants.filter((user) => {
-      return user._id === userId;
-    });
+  async updateDay(taskId, dayId, userId, value, monthId) {
+    try {
+      const updatedDay = await ReckoningTaskModel.updateOne(
+        {
+          _id: taskId,
+          'participants._id': userId,
+          'participants.months._id': monthId,
+          'participants.months.hours._id': dayId,
+        },
+        {
+          $set: {
+            'participants.$[p].months.$[m].hours.$[h].hourNum': value.hourNum,
+            'participants.$[p].months.$[m].hours.$[h].isWeekend':
+              value.isWeekend,
+            'participants.$[p].months.$[m].hours.$[h].dayIndex': value.dayIndex,
+          },
+        },
+        {
+          arrayFilters: [
+            { 'p._id': new Types.ObjectId(userId) },
+            { 'm._id': new Types.ObjectId(monthId) },
+            { 'h._id': new Types.ObjectId(dayId) },
+          ],
+        },
+      );
 
-    filteredParticipant[0].months = filteredParticipant[0].months.map(
-      (monthObj) => {
-        const monthDate = new Date(monthObj.createdAt);
+      if (updatedDay.modifiedCount === 0) {
+        throw new Error('No document was updated. Check IDs and structure.');
+      }
 
-        if (monthDate.getUTCMonth() + 1 === Number(month)) {
-          const updatedHours = monthObj.hours.map((obj) => {
-            return String(obj._id) === String(dayId)
-              ? { ...obj, ...value }
-              : obj;
-          });
-
-          return {
-            ...monthObj,
-            hours: updatedHours,
-          };
-        }
-
-        return monthObj;
-      },
-    );
-
-    // filteredParticipant[0].hours = filteredParticipant[0].hours.map((obj) => {
-    //   return String(obj._id) === String(dayId) ? { ...obj, ...value } : obj;
-    // });
-
-    await ReckoningTaskController.updateReckoningTask(taskId, task);
-    const updatedStudioTask =
-      await ReckoningTaskController.getReckoningTask(taskId);
-    return updatedStudioTask;
+      const updatedTask = await ReckoningTaskModel.findById(taskId);
+      return updatedTask;
+    } catch (err) {
+      console.error('Error in atomic day update', err);
+      throw err;
+    }
   },
 };
