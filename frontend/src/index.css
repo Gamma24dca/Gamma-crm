@@ -367,3 +367,7 @@ select {
 .GAMMA {
   background-color: var(--color-violet) !important;
 }
+
+.Soccer {
+  background-color: #e44d0c !important;
+}

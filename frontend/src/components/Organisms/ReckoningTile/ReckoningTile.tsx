@@ -9,10 +9,12 @@ import {
   updateReckoningTask,
 } from '../../../services/reckoning-view-service';
 import useAuth from '../../../hooks/useAuth';
-import Overlay from '../../Atoms/Overlay/Overlay';
+// import Overlay from '../../Atoms/Overlay/Overlay';
 import useReckoTasksContext from '../../../hooks/Context/useReckoTasksContext';
 import CheckboxLoader from '../../Atoms/CheckboxLoader/CheckboxLoader';
 import summarizeHours from '../../../utils/SummarizeHours';
+import EditReckoTilePortal from '../../Molecules/EditReckoTilePortal/EditReckoTilePortal';
+import HoverLabel from '../../Atoms/HoverLabel/HoverLabel';
 
 function ReckoningTile({
   reckTask,
@@ -27,9 +29,13 @@ function ReckoningTile({
     isOpen: false,
     position: null,
   });
-  const [isMouseOver, setIsMouseOver] = useState({
+  const [isMouseOverComment, setIsMouseOverComment] = useState({
     isOver: false,
-    elementId: '',
+    position: null,
+  });
+  const [isMouseOverTitle, setIsMouseOverTitle] = useState({
+    isOver: false,
+    position: null,
   });
 
   const { dispatch } = useReckoTasksContext();
@@ -206,8 +212,6 @@ function ReckoningTile({
     }
   };
 
-  console.log(days);
-
   function ReckoTaskEditSelect(position) {
     if (!position) return null;
 
@@ -220,99 +224,30 @@ function ReckoningTile({
     };
 
     return ReactDOM.createPortal(
-      <>
-        <Overlay closeFunction={setIsEditOpen} />
-        <div className={styles.editModal} style={style}>
-          <div
-            className={styles.deleteWrapper}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                handleDeleteReckoTask(reckTask._id);
-              }
-            }}
-            onClick={() => {
-              handleDeleteReckoTask(reckTask._id);
-            }}
-          >
-            <Icon
-              className={styles.trashIcon}
-              icon="line-md:document-delete"
-              width="20"
-              height="20"
-            />
-            <p>Usuń zlecenie</p>
-          </div>
-          <div
-            className={styles.deleteWrapper}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                handleDeleteReckoTask(reckTask._id);
-              }
-            }}
-            onClick={() => {
-              handleHoursClear();
-            }}
-          >
-            <Icon
-              className={styles.trashIcon}
-              icon="mdi:clock-minus-outline"
-              width="20"
-              height="20"
-            />
-            <p>Wyczyść godziny</p>
-          </div>
-          {!isAssignedToKanban && (
-            <div
-              className={styles.deleteWrapper}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  handleDeleteReckoTask(reckTask._id);
-                }
-              }}
-              onClick={() => {
-                handleBlur(reckTask._id, {
-                  client: 'Wybierz firme',
-                  clientPerson: 'Wybierz klienta',
-                  title: '',
-                  description: '',
-                  printWhat: '',
-                  printWhere: '',
-                });
-                setFormValue((prev) => {
-                  return {
-                    ...prev,
-                    client: 'Wybierz firme',
-                    clientPerson: 'Wybierz klienta',
-                    title: '',
-                    description: '',
-                    printWhat: '',
-                    printWhere: '',
-                  };
-                });
-                handleHoursClear();
-              }}
-            >
-              <Icon
-                className={styles.trashIcon}
-                icon="line-md:file-document-off"
-                width="20"
-                height="20"
-              />
-              <p>Wyczyść zlecenie</p>
-            </div>
-          )}
-        </div>
-      </>,
+      <EditReckoTilePortal
+        reckTask={reckTask}
+        style={style}
+        setIsEditOpen={setIsEditOpen}
+        setFormValue={setFormValue}
+        handleDeleteReckoTask={handleDeleteReckoTask}
+        handleHoursClear={handleHoursClear}
+        handleBlur={handleBlur}
+        isAssignedToKanban={isAssignedToKanban}
+      />,
 
       document.getElementById('select-root')
     );
   }
+
+  const handleHover = (setter, rect, isOver) => {
+    setter({
+      position: {
+        top: rect.bottom + 5 + window.scrollY,
+        left: rect.left + window.scrollX,
+      },
+      isOver,
+    });
+  };
 
   return (
     <div className={styles.commonGrid}>
@@ -404,7 +339,26 @@ function ReckoningTile({
         onBlur={() => {
           handleBlur(reckTask._id, formValue);
         }}
+        onMouseEnter={(e) =>
+          handleHover(
+            setIsMouseOverTitle,
+            e.currentTarget.getBoundingClientRect(),
+            true
+          )
+        }
+        onMouseLeave={() =>
+          setIsMouseOverTitle({ position: null, isOver: false })
+        }
       />
+      {/* {isMouseOverTitle.isOver && formValue.title.length > 20 && (
+        <>{ReckoCommentHover(isMouseOverTitle.position, formValue.title)}</>
+      )} */}
+
+      {isMouseOverTitle.isOver && formValue.title.length > 20 && (
+        <HoverLabel position={isMouseOverTitle.position} root="select-root">
+          {formValue.title}
+        </HoverLabel>
+      )}
 
       <div className={`${styles.daysWrapper} ${dayTileClass(index)}`}>
         <div className={styles.summHoursContainer}>{totalHours}</div>
@@ -430,15 +384,6 @@ function ReckoningTile({
                     return;
 
                   handleHourChange(dayTile._id, e);
-                  // handleDayUpdate(
-                  //   reckTask._id,
-                  //   currentUserId,
-                  //   dayTile._id,
-                  //   {
-                  //     hourNum: e.target.value !== '' ? e.target.value : 0,
-                  //   },
-                  //   selectedMonthIndex
-                  // );
                 }}
                 onBlur={(e) => {
                   handleDayUpdate(
@@ -463,19 +408,18 @@ function ReckoningTile({
         placeholder="Dodaj komentarz..."
         value={formValue.comment}
         disabled={false}
-        onMouseEnter={() => {
-          setIsMouseOver(() => {
-            return {
-              isOver: true,
-              elementId: 'comment',
-            };
-          });
+        onMouseEnter={(e) => {
+          handleHover(
+            setIsMouseOverComment,
+            e.currentTarget.getBoundingClientRect(),
+            true
+          );
         }}
         onMouseLeave={() => {
-          setIsMouseOver(() => {
+          setIsMouseOverComment((prev) => {
             return {
-              isOver: false,
-              elementId: '',
+              position: null,
+              isOver: !prev.isOver,
             };
           });
         }}
@@ -486,39 +430,23 @@ function ReckoningTile({
           handleBlur(reckTask._id, formValue);
         }}
       />
-      {isMouseOver.isOver && isMouseOver.elementId === 'comment' ? (
-        <p className={styles.hoverElement}>dupa dupa dupa</p>
-      ) : null}
-      <input
-        className={`${tileClass(index)}`}
-        type="text"
-        name="PrintWhat"
-        id="PrintWhat"
-        placeholder="Dodaj druk..."
-        value={formValue.printWhat}
-        disabled={false}
-        onChange={(e) => {
-          handleFormValueChange(e, 'printWhat');
-        }}
-        onBlur={() => {
-          handleBlur(reckTask._id, formValue);
-        }}
-      />
-      <input
-        className={`${tileClass(index)}`}
-        type="text"
-        name="PrintWhere"
-        id="PrintWhere"
-        placeholder="Dodaj druk..."
-        value={formValue.printWhere}
-        disabled={false}
-        onChange={(e) => {
-          handleFormValueChange(e, 'printWhere');
-        }}
-        onBlur={() => {
-          handleBlur(reckTask._id, formValue);
-        }}
-      />
+      {isMouseOverComment.isOver && formValue.comment.length > 25 && (
+        <HoverLabel position={isMouseOverComment.position} root="select-root">
+          {formValue.comment}
+        </HoverLabel>
+      )}
+
+      {['printWhat', 'printWhere'].map((field) => (
+        <input
+          key={field}
+          className={tileClass(index)}
+          type="text"
+          value={formValue[field]}
+          placeholder="Dodaj druk..."
+          onChange={(e) => handleFormValueChange(e, field)}
+          onBlur={() => handleBlur(reckTask._id, formValue)}
+        />
+      ))}
     </div>
   );
 }
