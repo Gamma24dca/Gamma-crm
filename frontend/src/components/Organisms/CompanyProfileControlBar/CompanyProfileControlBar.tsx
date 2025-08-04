@@ -105,20 +105,57 @@ function CompanyProfileControlBar({
       .includes(selectFilterValue.settled.toLocaleLowerCase());
   });
 
+  // const dataForExcel = () => {
+  //   return tasks.map((task) => {
+  //     return {
+  //       zlecenie_stworzył: task.author.name,
+  //       numer_karty: task.searchID,
+  //       firma: task.client,
+  //       klient: task.clientPerson,
+  //       tytuł: task.title,
+  //       opis: task.description,
+  //       rozliczone: task.isSettled,
+  //       suma_godzin: summarizeCompanyProfHours(task, currentMonthIndex),
+  //     };
+  //   });
+  // };
+
   const dataForExcel = () => {
-    return tasks.map((task) => {
-      return {
-        zlecenie_stworzył: task.author.name,
-        id: task._id,
-        numer_karty: task.searchID,
-        firma: task.client,
-        klient: task.clientPerson,
-        tytuł: task.title,
-        opis: task.description,
-        rozliczone: task.isSettled,
-        suma_godzin: summarizeCompanyProfHours(task, currentMonthIndex),
-      };
-    });
+    return tasks.flatMap((task) =>
+      task.participants.flatMap((participant) => {
+        const author = {
+          _id: participant._id,
+          name: participant.name,
+          img: participant.img,
+        };
+
+        const currentMonth = participant.months.find((month) => {
+          const date = new Date(month.createdAt);
+          return date.getUTCMonth() === currentMonthIndex;
+        });
+
+        if (!currentMonth) return [];
+
+        return currentMonth.hours
+          .filter((hour) => hour.hourNum > 0)
+          .map((hour) => {
+            const day = String(hour.dayIndex).padStart(2, '0');
+            const month = String(currentMonthIndex + 1).padStart(2, '0');
+
+            return {
+              Numer_karty: task.searchID,
+              Autor: author.name,
+              Data: `${day}.${month}`,
+              Firma: task.client,
+              Klient: task.clientPerson,
+              Godziny: hour.hourNum,
+              Tytuł: task.title,
+              Opis: task.description,
+              Rozliczone: task.isSettled,
+            };
+          });
+      })
+    );
   };
 
   return (
