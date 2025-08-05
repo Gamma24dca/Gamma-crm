@@ -7,6 +7,7 @@ import styles from './AddStudioTaskModalContent.module.css';
 import useAuth from '../../../hooks/useAuth';
 import {
   addStudioTask,
+  getHighestSearchID,
   StudioTaskTypes,
 } from '../../../services/studio-tasks-service';
 import generateSearchID from '../../../utils/generateSearchId';
@@ -18,7 +19,6 @@ import socket from '../../../socket';
 import CheckboxLoader from '../../Atoms/CheckboxLoader/CheckboxLoader';
 import MultiselectDropdown from '../../Molecules/MultiselectDropdown/MultiselectDropdown';
 import FilterCheckbox from '../../Molecules/FilterCheckbox/FilterCheckbox';
-import { getNumberOfTasks } from '../../../services/dashboard-service';
 
 type StatusType =
   | 'do_wzięcia'
@@ -68,26 +68,24 @@ function AddStudioTaskModalContent({
   const [participantsToAdd, setParticipantsToAdd] = useState([]);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
   const [deadline, setDeadline] = useState('');
-  const [numberOfTasks, setNumberOfTasks] = useState<number>(0);
+  const [newSearchID, setNewSearchID] = useState<number>(0);
   const { dispatch } = useStudioTasksContext();
   const { user } = useAuth();
 
   useEffect(() => {
-    const getNumberOfTasksFn = async () => {
+    const getNewSearchID = async () => {
       const date = new Date();
       const month = date.getMonth() + 1;
       const year = date.getFullYear();
 
-      const response = await getNumberOfTasks(month, year);
+      const response = await getHighestSearchID(year, month);
       if (response) {
-        setNumberOfTasks(response);
+        setNewSearchID(response);
       }
     };
 
-    getNumberOfTasksFn();
+    getNewSearchID();
   }, []);
-
-  console.log(numberOfTasks);
 
   const formik = useFormik<StudioTaskFormValues>({
     initialValues: {
@@ -110,7 +108,7 @@ function AddStudioTaskModalContent({
       // const { deadline } = values;
 
       const currentDate = new Date();
-      const searchID = generateSearchID(numberOfTasks);
+      const searchID = generateSearchID(newSearchID);
       const statusValue: StudioTaskTypes['status'] =
         status as StudioTaskTypes['status'];
 

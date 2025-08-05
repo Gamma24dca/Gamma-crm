@@ -297,8 +297,10 @@ select {
   background-color: #00b4ef !important;
 }
 
-.TCDębica {
-  background-color: #00b4ef !important;
+.TCDębica,
+.TC,
+.Dębica {
+  background-color: #fdb62a !important;
 }
 
 .Makita {

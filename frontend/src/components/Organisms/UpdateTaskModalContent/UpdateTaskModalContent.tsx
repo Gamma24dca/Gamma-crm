@@ -233,7 +233,9 @@ function UpdateTaskModalContent({
             <p className={styles.descriptionTitle}>Rozliczenie</p>
           </ModalSectionTitle>
 
-          <div className={styles.reckoTableWrapper}>{renderReckoSection()}</div>
+          <div className={`${styles.reckoTableWrapper} `}>
+            {renderReckoSection()}
+          </div>
 
           <ModalSectionTitle iconName="fluent:text-description-ltr-24-filled">
             <p className={styles.descriptionTitle}>Opis</p>

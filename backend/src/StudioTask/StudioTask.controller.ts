@@ -14,6 +14,22 @@ export const StudioTaskController = {
     return studioTask;
   },
 
+  async getHighestSearchIDByMonth(year, month) {
+    const startDate = new Date(Date.UTC(Number(year), Number(month) - 1, 1));
+    const endDate = new Date(Date.UTC(Number(year), Number(month), 1));
+
+    const tasks = await StudioTaskModel.find({
+      startDate: { $gte: startDate, $lt: endDate },
+    })
+      .sort({ searchID: 1 })
+      .exec();
+    if (tasks.length === 0) {
+      return `${year.slice(2, 4)}${month.padStart(2, 0)}0000`;
+    }
+    const lastItem = tasks[tasks.length - 1];
+    return String(lastItem.searchID);
+  },
+
   async addStudioTask(studioTask) {
     await StudioTaskModel.validate(studioTask);
     return await StudioTaskModel.create(studioTask);

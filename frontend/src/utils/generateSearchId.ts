@@ -7,8 +7,9 @@ function generateSearchID(numberOfTasks?) {
   //   4,
   //   '0'
   // )}${Math.floor(100000 + Math.random() * 900000)}`;
+  const addOne = Number(numberOfTasks) + 1;
   const searchID = numberOfTasks
-    ? `${year}${month}${String(numberOfTasks).padStart(4, '0')}`
+    ? `${year}${month}${String(addOne).slice(4, 8)}`
     : `${year}${month}${Math.floor(1000 + Math.random() * 9000)}`;
   return Number(searchID);
 }

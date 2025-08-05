@@ -36,6 +36,25 @@ StudioTaskRouter.get(
   },
 );
 
+StudioTaskRouter.get(
+  '/:year/:month',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const year = req.params.year;
+    const month = req.params.month;
+    try {
+      const studioTask = await StudioTaskController.getHighestSearchIDByMonth(
+        year,
+        month,
+      );
+      res.status(StatusCodes.ACCEPTED).json(studioTask);
+    } catch (error) {
+      console.error(error);
+      res.status(StatusCodes.BAD_REQUEST).json({ message: error });
+    }
+  },
+);
+
 StudioTaskRouter.post(
   '/',
   passport.authenticate('jwt', { session: false }),
