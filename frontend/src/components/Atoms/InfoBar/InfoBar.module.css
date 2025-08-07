@@ -8,7 +8,7 @@
 }
 
 .infoBar {
-  width: 90%;
+  width: 95%;
   background-color: var(--color-lighter);
   display: flex;
   align-items: center;

@@ -3,10 +3,21 @@ import styles from './DroppableColumn.module.css';
 import DraggableCard from '../DraggableCard/DraggableCard';
 import { statusNames } from '../../../statuses';
 
+const test = {
+  do_wzięcia: styles.dwz,
+  na_później: styles.np,
+  do_zrobienia: styles.dzr,
+  w_trakcie: styles.wtr,
+  wysłane: styles.wys,
+};
 function DroppableColumn({ status, tasks, isDragAllowed, isLoading }) {
+  console.log(status);
   return (
     <div className={styles.columnWrapper}>
-      <p className={styles.statusName}>{statusNames[status]}</p>
+      <div className={styles.columnTitleWrapper}>
+        <div className={`${styles.bullet} ${test[status]}`} />
+        <p className={styles.statusName}>{statusNames[status]}</p>
+      </div>
       <Droppable droppableId={status}>
         {(droppableProvided, snapshot) => {
           return (

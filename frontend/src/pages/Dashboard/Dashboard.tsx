@@ -451,14 +451,6 @@ function Dashboard() {
                       sum
                     </div>
 
-                    {/* {usersMonthSummary.length > 0 &&
-                    usersMonthSummary[0].days.map((infoDay) => {
-                      return (
-                        <div className={styles.infoDayNumber} key={infoDay.day}>
-                          {infoDay.day}
-                        </div>
-                      );
-                    })} */}
                     {usersChartInfoBar()}
                   </div>
                 </div>

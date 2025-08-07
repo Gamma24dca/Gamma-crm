@@ -1,8 +1,18 @@
-.columnsWrapper {
-  height: fit-content;
-  width: 95%;
+.columnsContainer {
+  /* height: fit-content; */
+  flex-grow: 1;
+  min-height: 0;
+  width: 100%;
   display: flex;
-  gap: 10px;
   justify-content: center;
-  padding: 1% 0 0 2%;
+  /* align-items: center; */
+  margin-top: 10px;
+}
+
+.columnsWrapper {
+  width: 98%;
+  height: 100%;
+  gap: 10px;
+  display: flex;
+  /* align-items: center; */
 }

@@ -1,4 +1,9 @@
 .rowsContainer {
+  width: 98%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   max-height: 330px;
   overflow-y: scroll;
 }
@@ -26,6 +31,10 @@
   margin-bottom: 7px;
   /* padding: 0 10px; */
   /* padding-left: 10px; */
+}
+
+.infoMonthSummaryRow {
+  width: 98%;
 }
 
 .userWrapper {

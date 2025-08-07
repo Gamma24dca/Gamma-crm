@@ -201,18 +201,20 @@ function KanbanView({ filterArray, companiesFilterArray }) {
 
   return (
     <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
-      <div className={styles.columnsWrapper}>
-        {statuses.map((status) => {
-          return (
-            <DroppableColumn
-              key={status}
-              status={status}
-              tasks={tasksByStatus[status]}
-              isDragAllowed={isDragAllowed}
-              isLoading={isStudioTasksLoading}
-            />
-          );
-        })}
+      <div className={styles.columnsContainer}>
+        <div className={styles.columnsWrapper}>
+          {statuses.map((status) => {
+            return (
+              <DroppableColumn
+                key={status}
+                status={status}
+                tasks={tasksByStatus[status]}
+                isDragAllowed={isDragAllowed}
+                isLoading={isStudioTasksLoading}
+              />
+            );
+          })}
+        </div>
       </div>
     </DragDropContext>
   );
