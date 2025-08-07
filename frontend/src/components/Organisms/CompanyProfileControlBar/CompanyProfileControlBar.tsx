@@ -259,7 +259,7 @@ function CompanyProfileControlBar({
       <div className={styles.summaryContainer}>
         <p className={styles.summTitle}>Suma:</p>
         <div className={styles.hoursTile}>
-          <p>{total}</p>
+          <p>{total}h</p>
         </div>
         <div className={styles.revTile}>
           <p className={styles.summText}>

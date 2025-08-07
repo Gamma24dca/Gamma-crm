@@ -11,8 +11,8 @@
   display: flex;
   align-items: center;
   /* justify-content: center; */
-  width: 95%;
-  height: 50px;
+  width: 99%;
+  height: 40px;
   background-color: var(--color-lighter);
   margin: 0 auto;
   border-radius: 10px;

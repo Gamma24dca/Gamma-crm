@@ -171,11 +171,15 @@
 .summaryContainer {
   display: flex;
   width: 200px;
+  height: 40px;
 }
 
 .summTitle {
   font-weight: 800;
-  margin-right: 10px;
+  margin: 0 10px 0 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .hoursTile,
@@ -183,11 +187,13 @@
   height: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
   background-color: var(--color-orange);
 
   p {
     font-weight: 800;
     color: var(--color-lighter);
+    margin: 0;
   }
 }
 

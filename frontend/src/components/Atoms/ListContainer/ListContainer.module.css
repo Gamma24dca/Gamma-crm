@@ -1,6 +1,6 @@
 .listContainer {
   position: relative;
-  width: 95%;
+  width: 99%;
   height: 97%; /* ważne! */
   background-color: var(--color-lighter);
   border-radius: 10px;

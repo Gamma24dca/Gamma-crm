@@ -8,7 +8,7 @@
 }
 
 .totalHoursContainer {
-  max-height: 50px;
+  max-height: 40px;
   width: 4%;
   transform: translateX(-10%);
   display: flex;

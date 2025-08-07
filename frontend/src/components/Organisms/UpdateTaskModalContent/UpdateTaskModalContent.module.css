@@ -87,8 +87,10 @@
 }
 
 .subtaskContent {
+  font-family: Arial, Helvetica, sans-serif;
   margin: 0;
   flex-grow: 2;
+  font-size: 14px;
 }
 
 .subtaskInputEditMode {
@@ -99,6 +101,7 @@
 }
 
 .trashIcon {
+  min-width: 26px;
   transition: all 0.3s ease;
   opacity: 0;
   &:hover {

@@ -27,6 +27,7 @@ function UpdateTaskModalContent({
   const [selectFilterValue, setSelectFilterValue] = useState({
     user: '',
   });
+  // const [isCalendarEditOpen, setIsCalendarEditOpen] = useState(false);
   const {
     users,
     companies,
