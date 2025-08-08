@@ -160,6 +160,8 @@
 
 .descriptionInput {
   width: 80%;
+  max-width: 90%;
+  min-width: 75%;
   min-height: 250px;
   margin-left: 5%;
   border: none;
