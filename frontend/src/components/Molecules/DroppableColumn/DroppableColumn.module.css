@@ -10,14 +10,17 @@
 .columnContainer,
 .draggedColumn {
   border: 1px solid rgba(130, 143, 163, 0.5);
-
   border-radius: 10px;
   height: 95%;
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  padding: 20px 5px;
+  gap: 5px;
+  padding: 10px 5px;
+}
+
+.noBorder {
+  border: none;
 }
 
 .columnTitleWrapper {

@@ -11,9 +11,8 @@ const test = {
   wysłane: styles.wys,
 };
 function DroppableColumn({ status, tasks, isDragAllowed, isLoading }) {
-  console.log(status);
   return (
-    <div className={styles.columnWrapper}>
+    <div className={`${styles.columnWrapper} `}>
       <div className={styles.columnTitleWrapper}>
         <div className={`${styles.bullet} ${test[status]}`} />
         <p className={styles.statusName}>{statusNames[status]}</p>
@@ -28,6 +27,10 @@ function DroppableColumn({ status, tasks, isDragAllowed, isLoading }) {
                 snapshot.isDraggingOver
                   ? styles.draggedColumn
                   : styles.columnContainer
+              } ${
+                tasks.some((task) => task.status === status)
+                  ? styles.noBorder
+                  : null
               }`}
             >
               {!isLoading ? (
