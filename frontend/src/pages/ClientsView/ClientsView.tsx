@@ -23,9 +23,9 @@ import useCompaniesContext from '../../hooks/Context/useCompaniesContext';
 import { getAllCompanies } from '../../services/companies-service';
 
 function ClientsView() {
-  const [searchInputValue, setSearchInputValue] = useState('');
-  const [filterDropdown, setFilterDropdown] = useState(false);
-  const [isSelectOpen, setIsSelectOpen] = useState(false);
+  const [searchInputValue, setSearchInputValue] = useState<string>('');
+  const [filterDropdown, setFilterDropdown] = useState<boolean>(false);
+  const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
   const [selectFilterValue, setSelectFilterValue] = useState({
     client: '',
   });

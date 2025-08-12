@@ -1,5 +1,9 @@
+import ReactDOM from 'react-dom';
 import { Icon } from '@iconify/react';
+import { DayPicker, DateRange } from 'react-day-picker';
+import 'react-day-picker/style.css';
 import { useEffect, useState } from 'react';
+import { pl } from 'date-fns/locale';
 import { Link } from 'react-router-dom';
 import DateFormatter from '../../../utils/dateFormatter';
 import CheckboxLoader from '../../Atoms/CheckboxLoader/CheckboxLoader';
@@ -15,6 +19,11 @@ import CompanyBatch from '../../Atoms/CompanyBatch/CompanyBatch';
 import { getReckoningTask } from '../../../services/reckoning-view-service';
 import summarizeHours from '../../../utils/SummarizeHours';
 import { months } from '../../../hooks/useCurrentDate';
+import {
+  getStudioTask,
+  UpdateStudioTask,
+} from '../../../services/studio-tasks-service';
+import useStudioTasksContext from '../../../hooks/Context/useStudioTasksContext';
 
 function UpdateTaskModalContent({
   task,
@@ -27,7 +36,18 @@ function UpdateTaskModalContent({
   const [selectFilterValue, setSelectFilterValue] = useState({
     user: '',
   });
-  // const [isCalendarEditOpen, setIsCalendarEditOpen] = useState(false);
+  const [isCalendarEditOpen, setIsCalendarEditOpen] = useState({
+    isOpen: false,
+    position: null,
+  });
+  const [range, setRange] = useState<DateRange | undefined>({
+    from: task.startDate,
+    to: task.deadline,
+  });
+  const { dispatch } = useStudioTasksContext();
+  const [saving, setSaving] = useState(false);
+  const isRangeValid = !!(range?.from && range?.to);
+
   const {
     users,
     companies,
@@ -100,6 +120,28 @@ function UpdateTaskModalContent({
       .toLocaleLowerCase()
       .includes(selectFilterValue.user.toLocaleLowerCase());
   });
+
+  const handleCalendarSave = async () => {
+    if (!isRangeValid || saving) return;
+    setSaving(true);
+    try {
+      const updated = await UpdateStudioTask({
+        id: task._id,
+        studioTaskData: {
+          startDate: range.from,
+          deadline: range.to,
+        },
+      });
+
+      const res = await getStudioTask(updated._id);
+      dispatch({ type: 'UPDATE_STUDIOTASK', payload: res });
+      setIsCalendarEditOpen({ isOpen: false, position: null });
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSaving(false);
+    }
+  };
 
   const renderReckoSection = () => {
     if (isReckoTaskLoading) {
@@ -204,7 +246,126 @@ function UpdateTaskModalContent({
           </div>
 
           <div className={styles.thirdSection}>
-            <div className={styles.cardNumberWrapper}>
+            {isCalendarEditOpen.isOpen &&
+              ReactDOM.createPortal(
+                <>
+                  <div
+                    className={styles.overlay}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === 'Escape') {
+                        setIsCalendarEditOpen(() => {
+                          return {
+                            isOpen: false,
+                            position: null,
+                          };
+                        });
+                      }
+                    }}
+                    onClick={() => {
+                      setIsCalendarEditOpen(() => {
+                        return {
+                          isOpen: false,
+                          position: null,
+                        };
+                      });
+                    }}
+                  />
+
+                  <div
+                    className={styles.editDateContainer}
+                    style={{
+                      position: 'absolute',
+                      top: isCalendarEditOpen.position?.top ?? 0,
+                      left: isCalendarEditOpen.position?.left ?? 0,
+                      zIndex: 1000,
+                    }}
+                  >
+                    <DayPicker
+                      mode="range"
+                      selected={range}
+                      onSelect={setRange}
+                      numberOfMonths={1}
+                      // disabled={{ before: task.startDate }}
+                      min={1}
+                      max={180}
+                      locale={pl}
+                    />
+
+                    <div className={styles.buttonsWrapper}>
+                      <button
+                        type="button"
+                        className={`${styles.calendarBtn} ${styles.saveBtn}`}
+                        onClick={handleCalendarSave}
+                        disabled={!isRangeValid || saving}
+                      >
+                        {saving ? 'Zapisywanie…' : 'Zapisz'}
+                      </button>
+                      <button
+                        type="button"
+                        className={`${styles.calendarBtn} ${styles.abortBtn}`}
+                        onClick={() => {
+                          setIsCalendarEditOpen(() => {
+                            return {
+                              isOpen: false,
+                              position: null,
+                            };
+                          });
+
+                          setRange(() => {
+                            return {
+                              from: task.startDate,
+                              to: task.deadline,
+                            };
+                          });
+                        }}
+                      >
+                        Anuluj
+                      </button>
+                    </div>
+                  </div>
+                </>,
+
+                document.getElementById('calendar-root')
+              )}
+            <div
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === 'Escape') {
+                  const rect = (
+                    e.currentTarget as HTMLElement
+                  ).getBoundingClientRect();
+
+                  setIsCalendarEditOpen((prev) => {
+                    return {
+                      position: {
+                        top: rect.bottom + 5 + window.scrollY,
+                        left: rect.left + window.scrollX,
+                      },
+                      isOpen: !prev.isOpen,
+                    };
+                  });
+                }
+              }}
+              className={styles.cardNumberWrapper}
+              onClick={(e) => {
+                const rect = (
+                  e.target as HTMLButtonElement
+                ).getBoundingClientRect();
+
+                setIsCalendarEditOpen((prev) => {
+                  return {
+                    position: {
+                      top: rect.bottom + 5 + window.scrollY,
+                      left: rect.left + window.scrollX,
+                    },
+                    isOpen: !prev.isOpen,
+                  };
+                });
+              }}
+            >
               <p className={styles.sectionTitle}>Data</p>
               <div
                 className={`${styles.modalDatesWrapper} ${
