@@ -24,6 +24,7 @@ import {
   UpdateStudioTask,
 } from '../../../services/studio-tasks-service';
 import useStudioTasksContext from '../../../hooks/Context/useStudioTasksContext';
+import handleCopy from '../../../utils/handleCopy';
 
 function UpdateTaskModalContent({
   task,
@@ -142,20 +143,6 @@ function UpdateTaskModalContent({
     } finally {
       setSaving(false);
     }
-  };
-
-  const handleCopy = (textToCopy) => {
-    navigator.clipboard
-      .writeText(textToCopy)
-      .then(() => {
-        setSearchIDCopied(true);
-        setTimeout(() => {
-          setSearchIDCopied(false);
-        }, 1500);
-      })
-      .catch((err) => {
-        console.error('Failed to copy text: ', err);
-      });
   };
 
   const renderReckoSection = () => {
@@ -413,11 +400,11 @@ function UpdateTaskModalContent({
                   tabIndex={0}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === 'Escape') {
-                      handleCopy(task.searchID);
+                      handleCopy(task.searchID, setSearchIDCopied);
                     }
                   }}
+                  onClick={() => handleCopy(task.searchID, setSearchIDCopied)}
                   className={styles.cardNumber}
-                  onClick={() => handleCopy(task.searchID)}
                 >
                   #{task.searchID}
                 </p>
