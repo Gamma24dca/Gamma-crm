@@ -44,6 +44,7 @@ function UpdateTaskModalContent({
     from: task.startDate,
     to: task.deadline,
   });
+  const [searchIDCopied, setSearchIDCopied] = useState(false);
   const { dispatch } = useStudioTasksContext();
   const [saving, setSaving] = useState(false);
   const isRangeValid = !!(range?.from && range?.to);
@@ -141,6 +142,20 @@ function UpdateTaskModalContent({
     } finally {
       setSaving(false);
     }
+  };
+
+  const handleCopy = (textToCopy) => {
+    navigator.clipboard
+      .writeText(textToCopy)
+      .then(() => {
+        setSearchIDCopied(true);
+        setTimeout(() => {
+          setSearchIDCopied(false);
+        }, 1500);
+      })
+      .catch((err) => {
+        console.error('Failed to copy text: ', err);
+      });
   };
 
   const renderReckoSection = () => {
@@ -385,9 +400,28 @@ function UpdateTaskModalContent({
                 )}
               </div>
             </div>
-            <div>
+            <div className={styles.searchIDContainer}>
               <p className={styles.sectionTitle}>Numer</p>
-              <p className={styles.cardNumber}>#{task.searchID}</p>
+              {searchIDCopied ? (
+                <div className={styles.copiedInfo}>
+                  <span>Skopiowano</span>
+                  <Icon icon="line-md:folder-check" width="20" height="20" />
+                </div>
+              ) : (
+                <p
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === 'Escape') {
+                      handleCopy(task.searchID);
+                    }
+                  }}
+                  className={styles.cardNumber}
+                  onClick={() => handleCopy(task.searchID)}
+                >
+                  #{task.searchID}
+                </p>
+              )}
             </div>
           </div>
 

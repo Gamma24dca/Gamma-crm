@@ -178,9 +178,26 @@
   width: 150px;
   cursor: pointer;
 }
+.searchIDContainer {
+  position: relative;
+}
+
+.copiedInfo {
+  display: flex;
+  gap: 5px;
+  position: absolute;
+  font-size: 12px;
+  font-weight: 600;
+  animation: appear 0.3s ease forwards;
+
+  svg {
+    color: var(--color-green);
+  }
+}
 
 .cardNumber,
 .modalDatesWrapper {
+  cursor: pointer;
   width: fit-content;
   margin: 0;
   padding: 2px 8px;
@@ -189,6 +206,7 @@
   font-weight: 600;
   color: var(--color-lighter);
   background-color: var(--color-navButton);
+  animation: appear 0.3s ease forwards;
 }
 .modalDatesWrapper {
   display: flex;
