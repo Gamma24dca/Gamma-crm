@@ -207,6 +207,14 @@
   color: var(--color-lighter);
   background-color: var(--color-navButton);
   animation: appear 0.3s ease forwards;
+  transition: all 0.3s ease;
+  border: 1px solid var(--color-navButton);
+
+  &:hover {
+    transform: scale(1.05);
+    background-color: transparent;
+    color: var(--color-navButton);
+  }
 }
 .modalDatesWrapper {
   display: flex;
