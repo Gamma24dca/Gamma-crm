@@ -9,6 +9,7 @@ export type User = {
   name: string;
   password: string;
   phone: number;
+  roles: string[];
 };
 
 export async function getAllUsers(): Promise<User[] | null> {

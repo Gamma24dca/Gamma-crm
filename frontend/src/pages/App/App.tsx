@@ -15,6 +15,8 @@ import ReckoningView from '../ReckoningView/ReckoningView';
 import Dashboard from '../Dashboard/Dashboard';
 import ClientsView from '../ClientsView/ClientsView';
 import ClientProfile from '../ClientProfile/ClientProfile';
+import NotAllowedPage from '../../components/Templates/NotAllowedPage/notAllowedPage';
+import RouteProtection from '../../components/Templates/RouteProtection/RouteProtection';
 
 function App() {
   const { user } = useAuth();
@@ -23,10 +25,26 @@ function App() {
     <MainTemplate>
       <Routes>
         <Route path="*" element={<HomePage />} />
+        <Route path="/403" element={<NotAllowedPage />} />
         <Route path="/signin" element={<Navigate to="/pulpit" />} />
         <Route path="/" element={<Navigate to="/pulpit" />} />
-        <Route path="/pulpit" element={<Dashboard />} />
-        <Route path="/użytkownicy" element={<UsersView />} />
+        <Route
+          path="/pulpit"
+          element={
+            <RouteProtection roles={['admin']}>
+              <Dashboard />
+            </RouteProtection>
+          }
+        />
+
+        <Route
+          path="/użytkownicy"
+          element={
+            <RouteProtection roles={['admin']}>
+              <UsersView />
+            </RouteProtection>
+          }
+        />
         <Route path="/użytkownicy/:id" element={<UserProfile />} />
         <Route path="/zlecenia" element={<StudioTaskView />} />
         <Route path="/zlecenia/:id" element={<TaskProfile />} />
