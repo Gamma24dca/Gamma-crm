@@ -40,7 +40,6 @@ UserRouter.get(
 UserRouter.patch(
   '/:id',
   passport.authenticate('jwt', { session: false }),
-
   async (req, res) => {
     const id = req.params.id === 'me' ? req.user.id : req.params.id;
     try {

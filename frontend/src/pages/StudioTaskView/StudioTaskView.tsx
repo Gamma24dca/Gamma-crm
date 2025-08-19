@@ -49,6 +49,7 @@ const initialTaskObject: StudioTaskTypes = {
     lastname: '',
     name: '',
     phone: 0,
+    roles: [],
   },
   taskType: '',
   participants: [],

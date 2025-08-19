@@ -9,13 +9,13 @@ import UserProfile from '../UserProfile/UserProfile';
 import TaskProfile from '../TaskProfile/TaskProfile';
 import CompaniesView from '../CompaniesView/CompaniesView';
 import CompanyProfile from '../CompanyProfile/CompanyProfile';
+import NotAllowedPage from '../../components/Templates/NotAllowedPage/NotAllowedPage';
 import StudioTaskView from '../StudioTaskView/StudioTaskView';
 import TasksView from '../TasksView/TasksView';
 import ReckoningView from '../ReckoningView/ReckoningView';
 import Dashboard from '../Dashboard/Dashboard';
 import ClientsView from '../ClientsView/ClientsView';
 import ClientProfile from '../ClientProfile/ClientProfile';
-import NotAllowedPage from '../../components/Templates/NotAllowedPage/notAllowedPage';
 import RouteProtection from '../../components/Templates/RouteProtection/RouteProtection';
 
 function App() {
@@ -50,9 +50,23 @@ function App() {
         <Route path="/zlecenia/:id" element={<TaskProfile />} />
         <Route path="/rozliczenie" element={<ReckoningView />} />
         <Route path="/firmy" element={<CompaniesView />} />
-        <Route path="/firmy/:id" element={<CompanyProfile />} />
+        <Route
+          path="/firmy/:id"
+          element={
+            <RouteProtection roles={['admin']}>
+              <CompanyProfile />
+            </RouteProtection>
+          }
+        />
         <Route path="/klienci" element={<ClientsView />} />
-        <Route path="/klienci/:id" element={<ClientProfile />} />
+        <Route
+          path="/klienci/:id"
+          element={
+            <RouteProtection roles={['admin']}>
+              <ClientProfile />
+            </RouteProtection>
+          }
+        />
         <Route path="/magazyn" element={<TasksView />} />
       </Routes>
     </MainTemplate>
